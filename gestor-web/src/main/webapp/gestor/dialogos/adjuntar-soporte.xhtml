@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <div style="margin-top: 10px; text-align: center;">
+        <p:outputPanel id="opAdjunto">
+            <h2>                
+                <h:outputText value="Adjuntar Soportes"/>
+                Item Asociado #{uiEvaluacionAdjuntos.sdiSeleccionado.detalle}
+            </h2>
+
+            <br/>
+            <h:panelGrid columns="2" cellspacing="10">
+
+                <h:panelGrid id="pgAdjunto" columns="2" cellspacing="10">
+                    <h:outputLabel value="Item Asociado: " style="font-weight: bold;"/>
+                    <h:outputLabel value="#{uiEvaluacionAdjuntos.sdiSeleccionado.detalle}" />
+
+                    <h:outputLabel value="Nombre: " style="font-weight: bold;"/>
+                    <p:inputText value="#{evaluacionAdjuntos.nombre}" placeholder="Registra un nombre para identificar el adjunto">
+                        <p:ajax event="blur" process="@this" update="pgSoporteAdjunto"/>
+                    </p:inputText>
+
+
+                    <h:outputLabel value="Descripcion: " style="font-weight: bold;"/>
+                    <p:inputTextarea value="#{evaluacionAdjuntos.descripcion}" placeholder="Registra la descripcion del adjunto">
+                        <p:ajax event="blur" process="@this" update="pgSoporteAdjunto"/>
+                    </p:inputTextarea>
+
+                    <h:outputLabel value="Vigencia Archivo: " style="font-weight: bold;"/>
+                    <p:selectOneMenu value="#{evaluacionAdjuntos.mesesVigencia}" style="width:125px">
+                        <f:selectItem itemLabel="No aplica vigencia" itemValue="0" noSelectionOption="true"/>
+                        <f:selectItems value="#{uiEvaluacionAdjuntos.itemsVigenciaArchivos}" />
+                    </p:selectOneMenu>
+
+                    <h:outputLabel value="Archivo: " style="font-weight: bold;" />
+                    <h:panelGrid columns="2" style="border: none">
+                        <h:outputLabel class="ui-icon ui-icon-document" rendered="#{not empty uiEvaluacionAdjuntos.file.fileName}"/>
+                        <p:outputLabel id="olAdjunto" value="#{uiEvaluacionAdjuntos.file.fileName}" style="text-align: left"/>
+                    </h:panelGrid>
+
+                    <h:outputLabel value="Archivo Eliminar: " style="font-weight: bold;" rendered="#{not empty uiEvaluacionAdjuntos.archivoEliminar}"/>
+                    <h:panelGrid columns="2" style="border: none" rendered="#{not empty uiEvaluacionAdjuntos.archivoEliminar}">
+                        <h:outputLabel class="ui-icon ui-icon-document" rendered="#{not empty uiEvaluacionAdjuntos.archivoEliminar}"/>
+                        <p:outputLabel value="#{uiEvaluacionAdjuntos.archivoEliminar}" style="text-align: left" rendered="#{not empty uiEvaluacionAdjuntos.archivoEliminar}"/>
+                    </h:panelGrid>
+
+                </h:panelGrid>
+
+                <p:dataTable  value="#{uiEvaluacionAdjuntos.evaluacionAdjuntosList}" var="varEvaluacionAdjunto" emptyMessage="El ítem no tiene soportes adjuntos."
+                              rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable">
+                    <f:facet name="header">
+                        Soportes Cargados
+                    </f:facet>
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column  headerText="Opciones"  />
+                            <p:column headerText="Nombre" filterBy="#{varEvaluacionAdjunto.nombre}" sortBy="#{varEvaluacionAdjunto.nombre}"/>
+                            <p:column  headerText="Descripción"/>
+                            <p:column  headerText="Fecha" sortBy="#{varEvaluacionAdjunto.fecha}"/>
+                            <p:column  headerText="Archivo" filterBy="#{varEvaluacionAdjunto.archivo}"/>
+                        </p:row> 
+                    </p:columnGroup>
+
+                    <p:column>
+                        <p:panelGrid columns="3">
+                            <p:commandButton icon="ui-icon-pencil" title="Modificar Adjunto" action="#{uiEvaluacionAdjuntos.modificarAdjunto()}" update="formSeccionDetalleItems:opAdjunto"/>
+                            <p:commandButton icon="ui-icon-arrowthick-1-s" title="Ver Adjunto" ajax="false">
+                                <p:fileDownload value="#{uiEvaluacionAdjuntos.fileDownload}" />
+                            </p:commandButton>
+                            <p:commandButton icon="ui-icon-trash" title="Eliminar Adjunto" action="#{uiEvaluacionAdjuntos.eliminarAdjunto()}" update="formSeccionDetalleItems:opAdjunto">
+                                <p:confirm header="Eliminar Soporte" message="Desea eliminar el soporte?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:panelGrid>
+                    </p:column>
+                    <p:column >
+                        <h:outputText value="#{varEvaluacionAdjunto.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacionAdjunto.descripcion}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacionAdjunto.fecha}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column>
+                        <p:panelGrid columns="2" style="border: none" rendered="#{not empty varEvaluacionAdjunto.archivo}">
+                            <h:outputLabel class="ui-icon ui-icon-document" />
+                            <h:outputText value="#{varEvaluacionAdjunto.archivoSimple}"/>
+                        </p:panelGrid>
+                    </p:column>
+
+                </p:dataTable>
+            </h:panelGrid>
+            <br/>
+            <h:panelGrid id="pgSoporteAdjunto">
+                <p:fileUpload value="#{uiEvaluacionAdjuntos.file}" mode="advanced" skinSimple="true" label="Seleccionar" fileUploadListener="#{uiEvaluacionAdjuntos.cargarAdjunto}"
+                              auto="true"  update="pgAdjunto" immediate="true" process="@this"/>
+            </h:panelGrid>
+
+            <br/>
+
+
+        </p:outputPanel>
+
+        <br/>
+
+        <p:toolbar style="height: 45px;" >
+            <p:toolbarGroup align="center" style="margin: auto auto;  align-content: center">
+                <h:panelGrid columns="3" cellspacing="10" style="align-content: center; display: inline-block;">
+                    <p:commandButton value="Guardar Soporte" icon="ui-icon-disk" action="#{uiEvaluacionAdjuntos.guardarAdjunto()}" 
+                                     process="@parent" update="opAdjunto"/>
+                    <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" oncomplete="PF('dialog').hide();"/>
+                    <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiEvaluacionAdjuntos.limpiar()}" update="opAdjunto" process="@this"/>
+                </h:panelGrid>
+            </p:toolbarGroup>
+        </p:toolbar> 
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+</ui:composition>

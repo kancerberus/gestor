@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Gestor</title>
+    </h:head>
+    <h:body id="body" > 
+        <!--        #254468 #2f5770 #0078ae-->
+        <h:outputScript library="js" name="general.js"/>
+        <h:outputStylesheet library="css" name="global.css"/> 
+        <div class="banner" >
+            <div align="left" >
+                <h:form id="formulario"  >
+                    <tr>
+                        <td>
+                            <p:panel style="background:transparent; width: 50%; border-radius: 10px; border-color: black; margin-top: 20%; margin-left: 20%; font-size: 12px; text-align: center">
+                                <h1 style="color: #0078ae">GESTOR</h1>
+                            </p:panel>
+
+                            <p:panel style="width: 50%; border-radius: 10px; background:#0078ae;border-color: black; margin-top: 1px; margin-left: 20%; font-size: 12px; text-align: center" >
+                                <p:messages id="messages" showDetail="true" autoUpdate="true"/>
+
+                                <p:focus context="grid"/>
+                                <p:spacer height="40"/>
+
+                                <p:focus  for="inTxtUsuario"/>
+                                <h:panelGrid id="grid" style="margin: auto auto;" columns="1" >
+                                    <p:spacer height="10"/>
+                                    <p:inputText id="inTxtUsuario" value="#{uiUsuario.usuario}" 
+                                                 placeholder="Usuario"
+                                                 style="width: 200px; border-radius: 10px;">
+                                    </p:inputText>
+
+                                    <p:password id="pwClave" value="#{uiUsuario.clave}" feedback="true" placeholder="Contraseña" 
+                                                promptLabel="Digite Clave" weakLabel="Insegura"
+                                                goodLabel="Segura" strongLabel="Segura" style="width: 200px; border-radius: 10px;"/>
+
+                                    <p:commandButton value="Ingresar" style="margin: auto auto;width: 210px;height: 40px; border-radius: 10px;" 
+                                                     action="#{uiUsuario.validarUsuario()}"/>
+
+                                    <p:spacer height="10"/>
+                                </h:panelGrid>
+                                <p:spacer height="40"/>
+                                <div align="left">
+                                    <p:outputLabel value="18.8.1.4" styleClass="letraBlanca" style="font-family: Open Sans; font-weight: 900;"/>
+                                </div>
+                            </p:panel> 
+
+                        </td>
+                    </tr>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage value="/resources/imagenes/barra.gif" />
+                    </p:dialog>
+                </h:form>
+            </div>
+        </div>
+    </h:body>
+
+</html>

@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:head>         
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+        <title>Gestor</title>
+    </h:head>
+
+    <f:view >
+        <h:body id="template">
+            <h:outputScript library="js" name="general.js"/>
+            <h:outputStylesheet library="css" name="global.css"/> 
+
+            <style>
+                .ui-progressbar .ui-widget-header {
+                    /*background: #3b6e84;*/
+                    /*background: #ffe600;*/
+                    background: #f47920;
+                    /*background: #7fb80e;*/
+                }
+
+
+            </style>
+
+
+            <br/>
+            <div align="center">
+                <p:separator style="height: 3px"/>
+
+            </div>
+            <div style="margin:auto auto">
+                <h:form id="menu" style="font-size: 12px;">
+                    <ui:include src="/inicio/menu.xhtml"/>
+                    <div align="right">
+                        <p:panelGrid columns="2">
+                            <span class="ui-icon ui-icon-person" />
+                            <p:outputLabel value="#{sesion.usuarios.nombre} #{sesion.usuarios.apellido}" styleClass="letra"/>
+                        </p:panelGrid>
+                    </div>
+                    <div>
+                        <p:messages id="messagesUp" showDetail="true" closable="true" showSummary="false">
+                            <p:autoUpdate/>
+                        </p:messages>
+                    </div>
+                </h:form>
+            </div>
+
+            <p:outputPanel id="contenido">
+                <h:form>
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage value="/imagenes/loader.gif" />
+                    </p:dialog>
+                </h:form>
+                <div id="content" align="center">
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" style="font-size: small;">
+                        <p:commandButton value="Aceptar" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+                        <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+                    </p:confirmDialog>
+                    <ui:insert name="content">Contenido sin definir</ui:insert>
+                </div>
+                <div id="msn" align="center">
+                    <br/>
+                    <h:panelGrid columns="1">
+
+                        <p:messages id="messages" showDetail="true" showSummary="false">
+                            <p:autoUpdate/>
+                            <p:effect type="pulsate" event="load" delay="1000"/>
+                        </p:messages>
+                    </h:panelGrid>
+                </div>
+            </p:outputPanel>
+        </h:body>
+    </f:view>
+</html>

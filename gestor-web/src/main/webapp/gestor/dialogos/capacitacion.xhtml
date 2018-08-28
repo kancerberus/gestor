@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <div style="margin-top: 10px; text-align: center;">
+        <p:outputPanel id="opCapacitacion">
+            <h3>                
+                <h:outputText value="Capactiación Ítem"/>
+                Item Asociado #{uiCapacitacion.sdiSeleccionado.detalle}
+            </h3>
+
+            <br/>
+            <h:panelGrid columns="2" cellspacing="10">
+                <h:panelGrid id="pgCapacitacion" columns="2" cellspacing="10">
+                    <h:outputLabel value="Nombre: " style="font-weight: bold;"/>
+                    <p:inputText value="#{evaluacionCapacitacionDetalle.nombre}" placeholder="Registra el nombre de la capacitación">
+                        <p:ajax event="blur" process="@this"/>
+                    </p:inputText>
+
+                    <h:outputLabel value="Descripción: " style="font-weight: bold;"/>
+                    <p:inputTextarea value="#{evaluacionCapacitacionDetalle.descripcion}" placeholder="Registra la descripción de la  capacitación">
+                        <p:ajax event="blur" process="@this"/>
+                    </p:inputTextarea>
+
+                </h:panelGrid>
+
+                <p:dataTable id="dtCapacitacionDetalle"  value="#{uiCapacitacion.evaluacionCapacitacionDetalles}" var="varCapacitacionDetalle" emptyMessage="El ítem no tiene capacitaciones registradas."
+                              rowStyleClass="letra-xx-small-centro" >
+                    <f:facet name="header">
+                        Planes de Acción
+                    </f:facet>
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column  headerText="Opciones" />
+                            <p:column headerText="Nombre" filterBy="#{varCapacitacionDetalle.nombre}" sortBy="#{varCapacitacionDetalle.nombre}"/>
+                            <p:column  headerText="Descripción"/>
+                            <p:column  headerText="Fecha" sortBy="#{varCapacitacionDetalle.fechaRegistro}"/>
+                            <p:column  headerText="Usuario" filterBy="#{varCapacitacionDetalle.usuarios.usuario}"/>
+                            <p:column  headerText="Estado" filterBy="#{varCapacitacionDetalle.estado}"/>
+                        </p:row> 
+                    </p:columnGroup>
+
+                    <p:column>
+                        <p:panelGrid columns="3">
+                            <p:commandButton icon="ui-icon-pencil" title="Modificar Capacitación" action="#{uiCapacitacion.modificarPlanAccion()}" update="formSeccionDetalleItems:opCapacitacion formSeccionDetalleItems:opcionesMenuCapacitacion"/>
+                            <p:commandButton icon="ui-icon-trash" title="Eliminar Capacitación" action="#{uiCapacitacion.eliminarCapacitacion()}" update="formSeccionDetalleItems:opCapacitacion">
+                                <p:confirm header="Eliminar Capacitación" message="Desea eliminar la capacitación ?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:panelGrid>
+                    </p:column>
+                    <p:column >
+                        <h:outputText value="#{varCapacitacionDetalle.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varCapacitacionDetalle.descripcion}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varCapacitacionDetalle.fechaRegistro}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varCapacitacionDetalle.usuarios.usuario}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varCapacitacionDetalle.estado}"/>
+                    </p:column>
+
+
+                </p:dataTable>
+
+            </h:panelGrid>
+
+
+        </p:outputPanel>
+
+        <br/>
+
+        <p:toolbar id="opcionesMenuCapacitacion" style="height: 45px;">
+            <p:toolbarGroup align="center" style="margin: auto auto;  align-content: center">
+                <h:panelGrid columns="3" cellspacing="10" style="align-content: center; display: inline-block;">
+                    <p:commandButton value="Generar Capacitación" icon="ui-icon-disk" action="#{uiCapacitacion.procesarCapacitacion()}" process="@parent" update="pgCapacitacion dtCapacitacionDetalle"
+                                     rendered="#{not uiCapacitacion.modificarActivo}"/>
+                    <p:commandButton value="Modificar Capacitación" icon="ui-icon-disk" action="#{uiCapacitacion.procesarCapacitacionModificar()}" process="@parent" update="pgCapacitacion dtCapacitacionDetalle"
+                                     rendered="#{uiCapacitacion.modificarActivo}"/>
+                    
+                    <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" oncomplete="PF('dialog').hide();"/>
+                    <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiCapacitacion.limpiar()}" update="opCapacitacion" process="@this"/>
+                </h:panelGrid>
+            </p:toolbarGroup>
+        </p:toolbar> 
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+</ui:composition>

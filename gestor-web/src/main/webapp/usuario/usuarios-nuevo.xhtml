@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml">
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formNuevoUsuario" style="font-size: small;">
+            <p:spacer height="10" width="50" />
+            <h:panelGrid columns="2" cellspacing="10">
+                <h:outputText value="Documento usuario:"/>
+                <p:inputText value="#{usuarios.usuariosPK.documentoUsuario}" placeholder="documento" style="width: 250px;"/>
+                <h:outputText value="Nombre:" />                        
+                <p:inputText value="#{usuarios.nombre}" placeholder="nombre" style="width: 250px;"/>
+                <h:outputText value="Apellido:" />                       
+                <p:inputText value="#{usuarios.apellido}" placeholder="apellido" style="width: 250px;"/>
+                <h:outputText value="Correo:"/>
+                <p:inputText value="#{usuarios.correo}" placeholder="pepito.perez@domain.com" style="width: 250px;"/>
+                <h:outputText value="Usuario:"/>
+                <p:inputText id="usuario" value="#{usuarios.usuario}" placeholder="usuario" style="width: 250px;"/>
+                <h:outputText value="Clave:"/>   
+                <p:password id="clave" value="#{usuarios.clave}" feedback="true" placeholder="clave" style="width: 250px;"/>  
+            </h:panelGrid>
+            <p:spacer height="0" width="50" />
+            <p:separator/>
+            <p:spacer height="0" width="50" />
+
+            <p:toolbar style="height: 45px;">
+                <p:toolbarGroup align="center" style="margin: auto auto;">
+                    <h:panelGrid columns="2" cellspacing="10">
+                        <p:commandButton value="Crear Usuario" icon="ui-icon-person" action="#{uiUsuario.nuevoCrear()}" update="formNuevoUsuario"/>
+                        <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" action="#{uiUsuario.volverUsuario()}"/>
+                    </h:panelGrid>
+                </p:toolbarGroup>
+            </p:toolbar> 
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

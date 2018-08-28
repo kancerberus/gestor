@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml"
+                >
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formEstablecimientos" style="font-size: small;">
+            <p:panel id="panelEstablecimientos"  header="Administrar Establecimientos" >
+                <h:panelGrid columns="7" >
+                    <h:outputText value="Nombre"/>
+                    <h:outputText value="Municipio"/>
+                    <h:outputText value="Nit"/>
+                    <h:outputText value="Dirección"/>
+                    <h:outputText value="Telefono"/>
+                    <h:outputText value="Correo"/>
+                    <h:outputText value="Establecimiento"/>
+
+                    <p:inputText value="#{uiEstablecimiento.establecimiento.nombre}" placeholder="Nombre Establecimiento"/>
+                    <p:selectOneMenu id="somItemsMunicipios" value="#{uiEstablecimiento.establecimiento.municipios}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;">  
+                        <f:selectItems value="#{uiEstablecimiento.municipiosList}" var="muni" itemLabel="#{muni.nombre}" itemValue="#{muni}"/>
+                    </p:selectOneMenu>
+                    <p:inputText value="#{uiEstablecimiento.establecimiento.nit}" placeholder="Nit"/>
+                    <p:inputText value="#{uiEstablecimiento.establecimiento.direccion}" placeholder="Dirección"/>
+                    <p:inputText value="#{uiEstablecimiento.establecimiento.telefono}" placeholder="Telefono"/>
+                    <p:inputText value="#{uiEstablecimiento.establecimiento.correo}" placeholder="Correo"/>
+
+                </h:panelGrid>
+
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Crear / Modificar" action="#{uiEstablecimiento.guardarEstablecimiento()}"
+                                     icon="ui-icon-disk"
+                                     update="formEstablecimientos"/>
+                    <p:commandButton value="Limpiar" action="#{uiEstablecimiento.limpiar()}"
+                                     icon="ui-icon-cancel"
+                                     update="formEstablecimientos"/>
+                </h:panelGrid>
+                <p:dataTable  value="#{uiEstablecimiento.establecimientoList}" var="varEstablecimiento" emptyMessage="No hay establecimientos"
+                              rowStyleClass="Centro">
+
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column  headerText="Opciones" />
+                            <p:column headerText="Codigo"/>
+                            <p:column  headerText="Nombre"/>
+                            <p:column  headerText="Municipio"/>
+                            <p:column  headerText="Nit" />
+                            <p:column  headerText="Dirección" />
+                            <p:column  headerText="Telefono" />
+                            <p:column  headerText="Correo" />
+                        </p:row> 
+                    </p:columnGroup>
+
+                    <p:column>
+                        <p:commandButton icon="ui-icon-pencil" title="Modificar Establecimiento" update="formEstablecimientos"
+                                         action="#{uiEstablecimiento.subirItemEstablecimiento()}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEstablecimiento.codigoEstablecimiento}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEstablecimiento.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEstablecimiento.municipios.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEstablecimiento.nit}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEstablecimiento.direccion}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEstablecimiento.telefono}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEstablecimiento.correo}"/>
+                    </p:column>
+
+                </p:dataTable>
+
+            </p:panel>
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}" update="dialog" />
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

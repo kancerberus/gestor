@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core">
+
+
+    <div style="margin-top: 10px; text-align: center; width: 100%;">
+        <h3>                
+            <h:outputText value="¿ Desea iniciar una nueva auto-evaluación ?"/>
+        </h3>
+
+        <br/>
+        <center>
+            <p:outputPanel id="opEstablecimiento">
+                <h:panelGrid columns="2" >
+                    <p:dataGrid var="varEstablecimiento" value="#{sesion.establecimientoList}" columns="3" layout="grid"
+                                rows="4" paginator="true" id="dtEstablecimientos"
+                                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                rendered="#{empty uiEvaluacion.establecimiento.codigoEstablecimiento}"
+                                >
+                        <f:facet name="header">
+                            Seleccionar Empresa Evaluar
+                        </f:facet>
+
+                        <p:panelGrid columns="1" style="width:100%; border: none; width: auto">
+                            <p:commandLink action="#{uiEvaluacion.seleccionarEstablecimiento()}" title="Seleccionar Empresa"
+                                           update="formEvaluaciones:opEstablecimiento">
+                                <p:graphicImage url="/resources/imagenes/establecimientos/#{varEstablecimiento.nombre.toLowerCase()}.png"/> 
+                                <h:outputText styleClass="ui-icon ui-icon-newwin" style="margin:0 auto;" />
+                            </p:commandLink>
+                        </p:panelGrid>
+                    </p:dataGrid>
+
+                    <p:panelGrid  columns="2" rendered="#{not empty uiEvaluacion.establecimiento.codigoEstablecimiento}" style="width: 30%"
+                                  >
+                        <f:facet name="header">
+                            <p:graphicImage url="/resources/imagenes/establecimientos/#{uiEvaluacion.establecimiento.nombre.toLowerCase()}.png"/> 
+                        </f:facet>
+
+                        <h:outputText value="Codigo:" />
+                        <h:outputText value="#{uiEvaluacion.establecimiento.codigoEstablecimiento}" />
+
+                        <h:outputText value="Nombre:" />
+                        <h:outputText value="#{uiEvaluacion.establecimiento.nombre}" />
+
+                        <h:outputText value="Dirección:" />
+                        <h:outputText value="#{uiEvaluacion.establecimiento.direccion}" />
+
+                        <h:outputText value="Telefono:" />
+                        <h:outputText value="#{uiEvaluacion.establecimiento.telefono}" />
+                    </p:panelGrid>
+                </h:panelGrid>
+            </p:outputPanel>
+        </center>
+        <center>
+            <h:panelGrid columns="1" cellspacing="10">
+                <p:outputLabel for="calFechaEvaluacion" value="Fecha Evaluación"/>
+                <p:calendar id="calFechaEvaluacion" mode="inline" value="#{evaluacion.fecha}" 
+                            />
+            </h:panelGrid>
+        </center>
+
+
+
+
+        <p:commandButton value="SI" action="#{uiEvaluacion.procesarEvaluacion()}" 
+                         process="@parent" icon="ui-icon-check" />
+        <p:commandButton value="NO" oncomplete="PF('dialog').hide();" icon="ui-icon-closethick"
+                         action="#{uiEvaluacion.cancelarProcesarEvaluacion()}"/>
+
+
+
+    </div>
+
+
+</ui:composition>

@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <style>
+        ul.ui-menu-child {
+            white-space: nowrap;
+            width: auto !important;
+        }
+
+
+    </style>
+
+    <style>
+/*        .colorFondo{
+            background: #CEE3F6;
+        }
+        .colorFondo2{
+            background: #FFFFFF;
+        }
+        .colorFondoRojo{
+            background: #ff6767;
+        }
+        .colorFondoVerde{
+            background: #95fb93;
+        }*/
+
+        body{
+            font-size: 10px;
+        }
+
+        table #tGeneral th {
+            background-color: #CEE3F6;
+            width: 100%;
+            padding: 2px;
+            text-align: left;
+        }
+        table #tPrincipal{
+            width: 100%;
+            padding: 2px;
+        }
+        .paneles{
+            width: 100%; 
+            padding: 2px;
+        }
+
+        .ui-widget-content .titulos{
+            font-weight: bold;
+            padding: 2px;
+            background: #CEE3F6 !important;
+        }
+        .ui-menu {
+            width: auto;
+            padding: .3em;
+            position: relative;
+            outline: 0 none;
+        }
+        .ui-selectonemenu{
+            display: inline-block;
+            position: relative;
+            min-width: 80% !important;
+            zoom: 1;
+            cursor: pointer;
+            padding-right: 2em;
+        }
+        .ui-selectonemenu-items-wrapper{
+            overflow-x: hidden !important;
+        }
+        .ui-menu ,.ui-menu-child{
+            border: 1px solid #77d5f7;
+            background: #0078ae;
+            font-weight: normal;
+        }
+
+        .ui-menu a {
+            color: #fff;
+        }
+
+/*        .ui-widget-content .ui-icon {
+            background-image: url("/gestor/faces/javax.faces.resource/images/ui-icons_e0fdff_256x240.png?ln=primefaces-start");
+        }
+
+        .ui-menuitem-active .ui-state-hover .ui-icon {
+            background-image: url("/gestor/faces/javax.faces.resource/images/ui-icons_0078ae_256x240.png?ln=primefaces-start");
+        }
+        .ui-widget-content .ui-state-hover .ui-icon{
+            background-image: url("/gestor/faces/javax.faces.resource/images/ui-icons_0078ae_256x240.png?ln=primefaces-start");
+        }*/
+
+    </style>
+
+
+
+    <p:megaMenu orientation="Horizontal" style="margin-top:20px" >
+        <p:submenu label="Configuracion" icon="ui-icon-check" style="margin-left: 2%">
+            <p:column>
+                <p:submenu label="Configuración">
+                    <p:menuitem  value="Administrar Usuarios" style="font-size: 11px;"
+                                 action="/usuario/usuarios.xhtml"/>
+                    <p:menuitem  value="Administrar Empresas"  style="font-size: 11px;"
+                                 action="/configuracion/establecimientos.xhtml"/>
+                </p:submenu>
+            </p:column>
+        </p:submenu>
+        <p:submenu label="Estandares" icon="ui-icon-pencil" style="margin-left: 2%">
+            <p:column>
+                <p:submenu label="Evaluación" >
+                    <p:menuitem  value="Autoevaluación Estandares Mín."  style="font-size: 11px;"
+                                 action="/gestor/evaluaciones.xhtml"/>
+                    <p:menuitem  value="Resumen Autoevaluación"  style="font-size: 11px;"/>
+                </p:submenu>
+                <p:submenu label="Análisis" >
+                    <p:menuitem  value="Capacitaciones General"  style="font-size: 11px;"/>
+                    <p:menuitem  value="Informe Gráfica"  style="font-size: 11px;"/>
+                    <p:menuitem  value="Gráfica Comparativa"  style="font-size: 11px;"/>
+                </p:submenu>
+            </p:column>
+        </p:submenu>
+
+        <p:menuitem value="Cerrar Sesión" action="#{uiSesion.cerrarSesion()}" icon="ui-icon-close" />
+
+
+    </p:megaMenu>
+
+
+
+
+</ui:composition>

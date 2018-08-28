@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml">
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formGuardarEvaluacion" style="font-size: small;">
+            <h2>Finalizar Auto-Evaluación Empresa</h2>
+            <h3 style="margin-top:0">                
+                <h:outputText value="¿ Desea finalizar la evaluación ?"/>
+                <h:outputText value="Tenga en cuenta que ya no se podran realizar más cambios y se ejecutaran las acciones relacionadas en el acta."/>
+            </h3>
+
+            <br/>
+            <p:dataTable var="varResumenActa" value="#{uiEvaluacion.resumenEvaluacionList}"
+                         widgetVar="resumenActaTable" rowStyleClass="Centro"
+                         emptyMessage="No se pudo cargar el resumen, intentelo de nuevo."
+                         >
+                <p:column headerText="Ciclo" filterBy="#{varResumenActa.seccionDetalle.seccion.ciclo.nombre}">
+                    <h:outputText value="#{varResumenActa.seccionDetalle.seccion.ciclo.nombre}" />
+                </p:column>
+                <p:column headerText="Seccion" filterBy="#{varResumenActa.seccionDetalle.seccion.nombre}">
+                    <h:outputText value="#{varResumenActa.seccionDetalle.seccion.nombre}" />
+                </p:column>
+                <p:column headerText="Detalle" filterBy="#{varResumenActa.seccionDetalle.nombre}">
+                    <h:outputText value="#{varResumenActa.seccionDetalle.nombre}" />
+                </p:column>
+                <p:column headerText="Item" filterBy="#{varResumenActa.nombre}">
+                    <h:outputText value="#{varResumenActa.nombre}" />
+                </p:column>
+                <p:column headerText="Item Detalle" filterBy="#{varResumenActa.detalle}" width="25%;">
+                    <h:outputText value="#{varResumenActa.detalle}" />
+                </p:column>
+                <p:column headerText="Calificación">
+                    <p:selectOneRadio id="sorPuntaje" value="#{varResumenActa.evaluacionPuntajes.descripcion}" layout="responsive" columns="4"
+                                      disabled="true" style="text-align: center; font-size: 10px; margin-top:0;">
+                        <f:selectItems value="#{varResumenActa.evaluacionPuntajesItems}" var="c" 
+                                       itemLabel="#{c eq 'Cumple Totalmente'?'CT':c eq 'No Cumple'?'NC':c eq 'Justifica'?'JU':c eq 'No Justifica'?'NJ':c}" 
+                                       />
+                    </p:selectOneRadio>
+                </p:column>
+                <p:column headerText="Plan Acción" filterBy="#{varResumenActa.evaluacionPuntajes.planAccion}"
+                          filterMatchMode="equals">
+                    <f:facet name="filter">
+                        <p:selectOneButton onchange="PF('resumenActaTable').filter()" style="font-size: 10px;" >
+                            <f:converter converterId="javax.faces.Boolean" />
+                            <f:selectItem itemLabel="SI" itemValue="true" />
+                            <f:selectItem itemLabel="NO" itemValue="false" />
+                        </p:selectOneButton>
+                    </f:facet>
+                    <p:selectBooleanButton value="#{varResumenActa.evaluacionPuntajes.planAccion}" onLabel="SI" offLabel="NO" onIcon="ui-icon-check" offIcon="ui-icon-close" />
+                </p:column>
+                <p:column headerText="Capacitación"
+                          filterBy="#{varResumenActa.evaluacionPuntajes.capacitacion}"
+                          filterMatchMode="equals">
+                    <f:facet name="filter">
+                        <p:selectOneButton onchange="PF('resumenActaTable').filter()"
+                                           style="font-size: 10px;">
+                            <f:converter converterId="javax.faces.Boolean" />
+                            <f:selectItem itemLabel="SI" itemValue="true" />
+                            <f:selectItem itemLabel="NO" itemValue="false" />
+                        </p:selectOneButton>
+                    </f:facet>
+                    <p:selectBooleanButton value="#{varResumenActa.evaluacionPuntajes.capacitacion}" onLabel="SI" offLabel="NO" onIcon="ui-icon-check" offIcon="ui-icon-close" />
+                </p:column>
+
+            </p:dataTable>
+
+
+            <p:separator/>
+            <p:spacer height="0" width="50" />
+
+            <p:toolbar style="height: 45px;">
+                <p:toolbarGroup align="center" style="margin: auto auto;">
+                    <h:panelGrid columns="2" cellspacing="10">
+                        <p:commandButton value="Finalizar" icon="ui-icon-person" disabled="#{uiEvaluacion.finalizarActivo}" action="#{uiEvaluacion.finalizarEvaluacion()}" update="@parent"/>
+                        <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" action="#{uiEvaluacion.volverEvaluacion()}"/>
+                    </h:panelGrid>
+                </p:toolbarGroup>
+            </p:toolbar> 
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

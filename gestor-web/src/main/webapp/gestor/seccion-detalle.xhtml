@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml"
+                >
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formSeccionDetalle" style="font-size: small;">
+
+            <p:panel>
+                
+                <f:facet name="header">
+                    <h:outputText value="Código Evaluacion: #{evaluacion.evaluacionPK.codEvaluacion}"/>
+                    <p:progressBar value="#{uiEvaluacion.avanceEvaluacion}" labelTemplate="{value}%" displayOnly="true" interval="10"/>
+                    <br/>
+                    <p:progressBar value="#{uiEvaluacion.avanceEvaluacionPlanear}" labelTemplate="Planear {value}%" displayOnly="true" interval="10" style="width: 50%;" rendered="#{ciclo.codCiclo eq 'P'}"/>
+                    <p:progressBar value="#{uiEvaluacion.avanceEvaluacionHacer}" labelTemplate="Hacer {value}%" displayOnly="true" interval="10" style="width: 50%;" rendered="#{ciclo.codCiclo eq 'H'}"/>
+                    <p:progressBar value="#{uiEvaluacion.avanceEvaluacionVerificar}" labelTemplate="Verificar {value}%" displayOnly="true" interval="10" style="width: 50%;" rendered="#{ciclo.codCiclo eq 'V'}"/>
+                    <p:progressBar value="#{uiEvaluacion.avanceEvaluacionActuar}" labelTemplate="Actuar {value}%" displayOnly="true" interval="10" style="width: 50%;" rendered="#{ciclo.codCiclo eq 'A'}"/>
+                    <br/>
+                    <p:button outcome="evaluacion" icon="ui-icon-arrowthickstop-1-w" title="Ciclos"
+                              style="font-size: 9px;"/>
+                    <p:spacer width="10px;"/>
+                    <p:button outcome="seccion" value="CICLO #{ciclo.nombre}" icon="ui-icon-arrowreturn-1-e" style="font-size: 9px;"/>
+                    <p:spacer width="10px;"/>
+                    <p:button outcome="seccion-detalle" value="SECCIÓN #{seccion.nombre}" icon="ui-icon-arrowreturn-1-e" style="font-size: 9px;"
+                              rendered="#{not empty seccion.seccionPK.codSeccion}" styleClass="ui-state-active" disabled="true"/>
+                    <p:spacer width="10px;"/>
+                    <p:button outcome="seccion-detalle-items" value="ITEM #{seccionDetalle.nombre}" icon="ui-icon-arrowreturn-1-e" style="font-size: 9px;"
+                              rendered="#{not empty seccionDetalle.seccionDetallePK.codDetalle}"/>
+                </f:facet>
+
+                <p:dataGrid var="varSeccionDetalle" value="#{seccion.seccionDetalleList}" columns="2" layout="grid"
+                            rows="4" paginator="true" id="dtSeccionDetalle"
+                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            >
+
+                    <f:facet name="header">
+                        Seccion Detalle Evaluar (#{seccion.nombre})
+                    </f:facet>
+
+                    <p:panel header="#{varSeccionDetalle.numeralNombre}" style="text-align:center" >
+                        <h:panelGrid columns="1" style="width:100%">
+                            <p:commandLink action="#{uiEvaluacion.cargarSeccionDetalleItems()}" title="Evaluar Detalle">
+                                <p:graphicImage url="/resources/imagenes/ciclos/#{varSeccionDetalle.imagen}"/> 
+                                <h:outputText styleClass="ui-icon ui-icon-newwin" style="margin:0 auto;" />
+                            </p:commandLink>
+                        </h:panelGrid>
+                        <p align="left">#{varSeccionDetalle.detalle}</p>
+                    </p:panel>
+
+                </p:dataGrid>
+
+            </p:panel>
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}"  update="dialog" />
+
+            <ui:include src="/barra.xhtml">
+                <ui:param name="bean" value="#{uiEvaluacion}"/>
+            </ui:include>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

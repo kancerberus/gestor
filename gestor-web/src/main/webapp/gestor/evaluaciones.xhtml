@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml"
+                >
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formEvaluaciones" style="font-size: small;">
+
+            <p:panel id="panelEstablecimientos"  header="Auto-evaluación Estandares Mínimos" >
+
+                <p:dataTable  value="#{uiEvaluacion.evaluacionList}" var="varEvaluacion" emptyMessage="No hay evaluaciones generadas."
+                              rowStyleClass="Centro">
+
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column  headerText="Opciones" />
+                            <p:column headerText="Código"/>
+                            <p:column  headerText="Empresa"/>
+                            <p:column  headerText="Evaluador"/>
+                            <p:column  headerText="Fecha Evaluación"/>
+                            <p:column  headerText="Fecha Creación" />
+                            <p:column  headerText="Estado" />
+                        </p:row> 
+                    </p:columnGroup>
+                    
+                    <p:column>
+                        <p:commandButton icon="ui-icon-pencil" title="Continuar Evaluación" 
+                                         update="formEvaluaciones" rendered="#{varEvaluacion.estado eq 'A'}"
+                                         action="#{uiEvaluacion.continuarEvaluacion()}"/>
+                    </p:column>
+
+                    <p:column>
+                        <h:outputText value="#{varEvaluacion.evaluacionPK.codEvaluacion}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacion.establecimiento.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacion.usuarios.nombre} #{varEvaluacion.usuarios.apellido}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacion.fecha}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacion.fechaRegistro}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacion.estadoCompleto}"/>
+                    </p:column>
+
+                </p:dataTable>
+
+            </p:panel>
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
+                      onHide="limpiarModal()" width="#{dialogo.width}">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}"  update="dialog" />
+
+            <ui:include src="/barra.xhtml">
+                <ui:param name="bean" value="#{uiEvaluacion}"/>
+            </ui:include>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml"
+                >
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formSeccionDetalleItems" style="font-size: small;">
+
+            <p:panel>
+
+                <f:facet name="header">
+                    <h:outputText value="Código Evaluacion: #{evaluacion.evaluacionPK.codEvaluacion}"/>
+                    <h:panelGroup id="pgAvance">
+                        <p:progressBar id="pbAvance" value="#{uiEvaluacion.avanceEvaluacion}" labelTemplate="{value}%" displayOnly="true" interval="10"/>
+                        <br/>
+                        <p:progressBar value="#{uiEvaluacion.avanceEvaluacionPlanear}" labelTemplate="Planear {value}%" displayOnly="true" interval="10" style="width: 50%;" rendered="#{ciclo.codCiclo eq 'P'}"/>
+                        <p:progressBar value="#{uiEvaluacion.avanceEvaluacionHacer}" labelTemplate="Hacer {value}%" displayOnly="true" interval="10" style="width: 50%;" rendered="#{ciclo.codCiclo eq 'H'}"/>
+                        <p:progressBar value="#{uiEvaluacion.avanceEvaluacionVerificar}" labelTemplate="Verificar {value}%" displayOnly="true" interval="10" style="width: 50%;" rendered="#{ciclo.codCiclo eq 'V'}"/>
+                        <p:progressBar value="#{uiEvaluacion.avanceEvaluacionActuar}" labelTemplate="Actuar {value}%" displayOnly="true" interval="10" style="width: 50%;" rendered="#{ciclo.codCiclo eq 'A'}"/>
+                        <br/>
+                        <p:button outcome="evaluacion" icon="ui-icon-arrowthickstop-1-w" title="Ciclos"
+                                  style="font-size: 9px;"/>
+                        <p:spacer width="10px;"/>
+                        <p:button outcome="seccion" value="CICLO #{ciclo.nombre}" icon="ui-icon-arrowreturn-1-e" style="font-size: 9px;"/>
+                        <p:spacer width="10px;"/>
+                        <p:button outcome="seccion-detalle" value="SECCIÓN #{seccion.nombre}" icon="ui-icon-arrowreturn-1-e" style="font-size: 9px;"
+                                  rendered="#{not empty seccion.seccionPK.codSeccion}"/>
+                        <p:spacer width="10px;"/>
+                        <p:button outcome="seccion-detalle-items" value="ITEM #{seccionDetalle.nombre}" icon="ui-icon-arrowreturn-1-e" style="font-size: 9px;"
+                                  rendered="#{not empty seccionDetalle.seccionDetallePK.codDetalle}" styleClass="ui-state-active" disabled="true"/>
+                    </h:panelGroup>
+                </f:facet>
+
+                <p:dataGrid var="varSeccionDetalleItems" value="#{seccionDetalle.seccionDetalleItemsList}" columns="1" layout="grid"
+                            rows="1" paginator="true" id="dtSeccionDetalleItems"
+                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            >
+                    <f:facet name="header">
+                        Seccion Detalle Evaluar (#{seccionDetalle.nombre}")
+                    </f:facet>
+
+                    <p:panel header="#{varSeccionDetalleItems.numeralNombre}" style="text-align:left" >
+                        <center>
+                            <p align="left" class="letraBackgroundWhite">#{varSeccionDetalleItems.detalle}</p>
+                            <br/>
+                            <p:outputLabel for="sorPuntaje" value="Puntaje Posible" styleClass="labelOpcion" style="font-size: 20px;"/>
+                            <p:selectOneRadio id="sorPuntaje" value="#{varSeccionDetalleItems.evaluacionPuntajes.descripcion}" layout="responsive" columns="4" tabindex="#{varSeccionDetalleItems.orden}"
+                                               >
+                                <f:selectItems value="#{varSeccionDetalleItems.evaluacionPuntajesItems}" var="c" itemLabel="#{descripcion}" itemValue="#{descripcion}"/>
+                                <p:ajax event="change" process="@this" listener="#{uiEvaluacion.guardarSeccionDetalleItems()}" update=":formSeccionDetalleItems:pgAvance"/>
+                            </p:selectOneRadio>
+                        </center>
+                        <br/>
+                        <p:dataGrid value="#{uiEvaluacion.seccionDetalleItemsOpcionesLista.listaDetalleList}" var="varSdiOpciones" styleClass="Centro"
+                                    layout="grid" columns="4">
+                            <h:panelGrid >  
+                                <p:commandLink oncomplete="#{varSdiOpciones.getPropiedad('comando')}">
+                                    <p:graphicImage url="#{varSdiOpciones.getPropiedad('imagen')}" 
+                                                    width="30%"/> 
+                                </p:commandLink>
+                                <h:outputText value="#{varSdiOpciones.getPropiedad('descripcion')}" style="font-weight: bold; font-size: 70%;" />
+                                <p:remoteCommand name="mostrarAyudaItem" action="#{uiEvaluacion.mostrarAyudaItem()}" update=":formSeccionDetalleItems:dialog"/>
+                                <p:remoteCommand name="adjuntarSoporte" action="#{uiEvaluacionAdjuntos.adjuntarSoporte()}" update=":formSeccionDetalleItems:dialog"/>
+                                <p:remoteCommand name="planAccion" action="#{uiPlanAccion.mostrarDialogoPlanAccion()}" update=":formSeccionDetalleItems:dialog"/>
+                                <p:remoteCommand name="capacitacion" action="#{uiCapacitacion.mostrarDialogoCapacitacion()}" update=":formSeccionDetalleItems:dialog"/>
+                            </h:panelGrid>
+                        </p:dataGrid>
+
+
+                    </p:panel>  
+
+                </p:dataGrid>
+
+            </p:panel>
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}" width="#{dialogo.width}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}"  update="dialog" />
+
+            <ui:include src="/barra.xhtml">
+                <ui:param name="bean" value="#{uiEvaluacion}"/>
+            </ui:include>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

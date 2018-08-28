@@ -1,0 +1,225 @@
+body {
+    margin-left: 0px;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+}
+
+.letra{
+    font-weight: bold;
+    font-family: Helvetica;
+    font-size: 13px;
+}
+
+.letraBackgroundWhite{
+    font-weight: bold;
+    font-family: Helvetica;
+    font-size: 14px;
+    background-color: #ffffff;
+}
+
+.letraBlanca{
+    font-weight: bold;
+    font-family: Helvetica;
+    font-size: 13px;
+    color: #ffffff;
+}
+
+.letraTabla{
+    font-size: small;
+    text-align: center;
+}
+
+.labelMenu{
+    font-weight: bold;
+    font-family: Helvetica;
+    font-size: 20px;
+}
+
+.labelOpcion{
+    font-weight: bold;
+    font-family: Helvetica;
+    font-size: 25px;
+    font-weight: 900;
+    color: #0078ae;
+}
+
+.letraTitulo{
+    font-weight: bold;
+    font-family: Calibri;
+    font-size: 40px;
+    color: #255329;
+}
+
+.mensajeError {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 10px;
+    color: #FF0000;
+}
+
+.tooltip {
+    border-width: 2px;
+    font-weight: bold;
+    padding: 5px;
+    text-align: center;
+    width: 150px;
+}
+
+.letraVentana {
+    background-image: url(/imagenes/barramenu.gif);
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.menuCabecera{
+    text-align: center;
+}
+
+.botonOpcion{
+    width: 80px;
+}
+
+.Centro {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: small;
+    text-align: center;
+}
+
+.letra-xx-small {
+    font-size:xx-small;
+}
+
+.letra-xx-small-centro {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size:xx-small;
+    text-align: center;
+}
+
+.value {
+    width: 1000px;
+}
+
+.selectOneMenu {
+    width: 250px;
+}
+
+.som .ui-selectonemenu-label { 
+    width: 150px;
+}
+
+.panelGrid .inputTextarea .inputText{
+    width: 100%;
+}
+
+root {
+    display: block;
+}
+
+.formInput {
+    width: 170px;
+}
+
+.formLabel {
+    width: 270px;
+}
+
+.gridLeftColumn {
+    text-align: right;
+    background: white;
+    width: 200px;
+    font-style: italic;
+}
+
+.gridRightColumn {
+    text-align: left;
+    background: #99ccff;
+
+}
+
+.gridMessageColumn {
+
+}
+
+.panelGridColumn {
+    vertical-align: top;
+}
+
+.panel {
+    font-size: 70%;
+}
+.ui-panelgrid td, .ui-panelgrid tr
+{
+    background: none !important;
+    border-style: none !important;
+}
+.body-image
+{
+    background-image: url(../images/fondo.jpg);
+    background-attachment:fixed;
+    background-position:center;
+}
+.logo {
+    /*background-image: url(../images/logo.jpg);*/
+    background-repeat: no-repeat;
+    background-position: right center;
+    width: 216px;
+    height: 70px;
+    float: left;
+}
+.wrapper {
+    margin: 0px auto;
+    width: 1007px;
+    height: auto;
+    background-color: #ffffff;
+}
+.navigation {
+    /*background-image: url(../images/fondo_menu.gif);*/
+    background-repeat: no-repeat;
+    background-position: center top;
+    width: 80%;
+    height: 70px;
+}
+
+.banner {
+    /*background: url("../resources/imagenes/about-bg.jpg") center top no-repeat fixed;*/
+    /*opacity: 0.2;*/
+    background-size: cover;
+    padding: 60px 0 40px 0;
+    position: relative;
+    z-index: 9;
+}
+
+.banner.content{
+    opacity: 1;
+}
+
+.opacity-default {
+    opacity: 1;
+}
+
+
+
+
+
+
+.version{
+    font-weight: bold;
+    color: #99ccff;
+    font-family: sans-serif;
+    font-size: small;   
+}
+.topAligned {
+    vertical-align: top;
+    text-align: center;
+}
+
+
+.ui-progressbar .ui-widget-header {
+    /*background: #3b6e84;*/
+    /*background: #ffe600;*/
+    background: #f47920;
+    /*background: #7fb80e;*/
+}

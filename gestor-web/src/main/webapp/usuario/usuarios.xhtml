@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml">
+    <ui:define name="content">       
+        <h:form enctype="multipart/form-data" id="formNuevoUsuario" style="font-size: small;">
+
+            <h2>
+                Configuración de usuarios
+            </h2>
+
+            <p:panel style="font-size: small">
+                <h:panelGrid columns="2" cellspacing="10">
+                    <h:outputText value="Usuario: " />   
+                    <p:autoComplete id="acUsuario" value="#{uiUsuario.usuarioBuscar}" completeMethod="#{uiUsuario.autoCompletaUsuario}"  
+                                    maxResults="10" style="font-size: small;" onfocus="this.value = ''">
+                        <p:ajax event="itemSelect" listener="#{uiUsuario.cargarUsuario()}" update="formNuevoUsuario" />                    
+                    </p:autoComplete>
+                </h:panelGrid>
+            </p:panel>
+
+            <p:outputPanel id="panelDatosUsuario" rendered="#{not empty usuarios.usuariosPK.documentoUsuario}" style="font-size: small; ">
+                <h:outputText value="#{uiUsuario.usuarioBuscar != null?'Configuración actual para':''} #{uiUsuario.usuarioBuscar}"/>
+
+                <p:tabView orientation="left" activeIndex="0" rendered="#{not empty usuarios.usuariosPK.documentoUsuario}" 
+                           style="font-size: small;">
+                    <p:tab title="Usuario" >
+                        <h:panelGrid columns="3">
+                            <h:panelGrid columns="2" style="font-size: small" cellspacing="10">
+                                <h:outputText value="Documento usuario:" />
+                                <h:outputText value="#{usuarios.usuariosPK.documentoUsuario}" />
+                                <h:outputText value="Nombre:" />
+                                <p:inplace id="inplaceNombre" editor="true">
+                                    <h:inputText value="#{usuarios.nombre}" required="true" requiredMessage="El nombre es requerido"/>
+                                </p:inplace>  
+                                <h:outputText value="Apellido:" />
+                                <p:inplace id="inplaceApellido" editor="true">
+                                    <h:inputText value="#{usuarios.apellido}" required="true" requiredMessage="El apellido es requerido"/>
+                                </p:inplace>  
+                                <h:outputText value="Correo:"/>
+                                <p:inplace id="inplaceCorreo" editor="true">  
+                                    <h:inputText value="#{usuarios.correo}" />
+                                </p:inplace>
+                            </h:panelGrid>
+                        </h:panelGrid> 
+                    </p:tab>
+
+                    <p:tab title="Sistema">
+                        <h:panelGrid columns="2" style="font-size: small" cellspacing="10"> 
+                            <h:outputText value="Usuario:"/>
+                            <p:inplace id="inplaceUsuario" editor="true">
+                                <h:inputText value="#{usuarios.usuario}" title="Usuario" required="true" requiredMessage="El usuario es requerido"/>
+                            </p:inplace>                               
+                            <h:outputText value="Clave:"/>
+                            <p:inplace id="inplaceClave" editor="true">
+                                <h:inputText value="#{usuarios.clave}" title="Clave" required="true" requiredMessage="La clave es requerida"/>
+                            </p:inplace>                           
+                            <h:outputText value="Rol:"/>
+                            <p:selectOneMenu value="#{usuarios.roles}" converter="convertidorGenerico" effect="fade" >  
+                                <f:selectItem itemLabel="Seleccionar rol" itemValue="" />  
+                                <f:selectItems value="#{uiUsuario.itemsRoles}" var="rol" itemLabel="#{rol.nombre}" itemValue="#{rol}"/>
+                            </p:selectOneMenu> 
+                            <h:outputText value="Estado:"/>
+                            <p:inputSwitch value="#{usuarios.activo}" onLabel="ACTIVO" offLabel="INACTIVO"/>
+
+                        </h:panelGrid>
+                    </p:tab>
+                </p:tabView>
+
+            </p:outputPanel> 
+            <br/>
+            <ui:include src="/barra.xhtml">
+                <ui:param name="bean" value="#{uiUsuario}"/>
+            </ui:include>
+        </h:form>
+
+    </ui:define>
+</ui:composition>
