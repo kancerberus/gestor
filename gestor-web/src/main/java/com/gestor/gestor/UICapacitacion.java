@@ -34,16 +34,30 @@ public class UICapacitacion {
     private Boolean modificarActivo = Boolean.FALSE;
 
     public void limpiar() {
-        modificarActivo = Boolean.FALSE;
-        UtilJSF.setBean("evaluacionCapacitacionDetalle", new EvaluacionCapacitacionDetalle(), UtilJSF.SESSION_SCOPE);
+        try {
+            GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
+            modificarActivo = Boolean.FALSE;
+            UtilJSF.setBean("evaluacionCapacitacionDetalle", new EvaluacionCapacitacionDetalle(), UtilJSF.SESSION_SCOPE);
+            
+            evaluacionCapacitacionDetalles = new ArrayList<>();
+            evaluacionCapacitacionDetalles.addAll(gestorEvaluacionCapacitacion.cargarListaEvaluacionCapacitacionDetalle(
+                    sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodEvaluacion(),
+                    sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodigoEstablecimiento(),
+                    sdiSeleccionado.getSeccionDetalleItemsPK().getCodCiclo(),
+                    sdiSeleccionado.getSeccionDetalleItemsPK().getCodSeccion(),
+                    sdiSeleccionado.getSeccionDetalleItemsPK().getCodDetalle(),
+                    sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem()
+            ));
+        } catch (Exception e) {
+        }
 
     }
 
-    public void modificarPlanAccion() {
+    public void modificarCapacitacion() {
         EvaluacionCapacitacionDetalle epad = (EvaluacionCapacitacionDetalle) UtilJSF.getBean("varCapacitacionDetalle");
         evaluacionCapacitacionDetalles.remove(epad);
         modificarActivo = Boolean.TRUE;
-        UtilJSF.setBean("evaluacionPlanAccionDetalle", epad, UtilJSF.SESSION_SCOPE);
+        UtilJSF.setBean("evaluacionCapacitacionDetalle", epad, UtilJSF.SESSION_SCOPE);
     }
 
     public void eliminarCapacitacion() {
@@ -86,7 +100,7 @@ public class UICapacitacion {
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodDetalle(),
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem()
             ));
-            
+
             UtilJSF.setBean("evaluacionCapacitacionDetalle", new EvaluacionCapacitacionDetalle(), UtilJSF.SESSION_SCOPE);
 
         } catch (Exception e) {

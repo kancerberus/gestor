@@ -56,8 +56,12 @@ public class UIEvaluacionAdjuntos {
 
     public UIEvaluacionAdjuntos() {
         Lista listaVigenciaArchivos = ((Sesion) UtilJSF.getBean("sesion")).getListaVigenciaArchivos();
-        for (ListaDetalle ld : listaVigenciaArchivos.getListaDetalleList()) {
-            itemsVigenciaArchivos.put(ld.getPropiedadInt("valor"), ld.getPropiedad("nombre"));
+        if (listaVigenciaArchivos != null) {
+            for (ListaDetalle ld : listaVigenciaArchivos.getListaDetalleList()) {
+                itemsVigenciaArchivos.put(ld.getPropiedadInt("valor"), ld.getPropiedad("nombre"));
+            }
+        } else {
+            UtilMSG.addWarningMsg("Lista Vigencia Adjuntos", "No se pudo cargar la lista de vigencia de adjuntos, contacte a soporte para asitirle.");
         }
     }
 
@@ -164,7 +168,9 @@ public class UIEvaluacionAdjuntos {
             if (archivoEliminar != null && !archivoEliminar.equalsIgnoreCase("") && (file == null || file.getFileName() == null || file.getFileName().equalsIgnoreCase(""))) {
                 UtilMSG.addErrorMsg("Cargar Adjunto", "Selecciona el archivo a guardar.");
                 return;
-            } else {
+            }
+
+            if (archivoEliminar != null && !archivoEliminar.equalsIgnoreCase("")) {
                 procesarAdjunto = Boolean.FALSE;
             }
             String fileName = codAdjunto + "-" + file.getFileName();
@@ -174,9 +180,8 @@ public class UIEvaluacionAdjuntos {
 
             GestorEvaluacionAdjuntos gestorEvaluacionAdjuntos = new GestorEvaluacionAdjuntos();
             evaluacionAdjuntos.setEstado(App.EVALUACION_ADJUNTOS_ESTADO_ACTIVO);
-            
-            GregorianCalendar fechaInicioVigencia = new GregorianCalendar();
-            fechaInicioVigencia.setTime(gestorGeneral.now());
+
+            evaluacionAdjuntos.setFechaInicioVigencia(gestorGeneral.now());
             evaluacionAdjuntos = gestorEvaluacionAdjuntos.validarEvaluacionAdjuntos(evaluacionAdjuntos);
             evaluacionAdjuntos = gestorEvaluacionAdjuntos.calcularVigenciaAdjunto(evaluacionAdjuntos);
 
@@ -216,7 +221,7 @@ public class UIEvaluacionAdjuntos {
             } else {
                 UtilMSG.addSuccessMsg("Soporte Actualizo", "Registro actualizado correctamente, sin modificar archivo.");
             }
-            
+
             UtilJSF.setBean("evaluacionAdjuntos", new EvaluacionAdjuntos(), UtilJSF.SESSION_SCOPE);
             this.file = null;
             this.archivoEliminar = null;
@@ -235,7 +240,7 @@ public class UIEvaluacionAdjuntos {
             UtilMSG.addSupportMsg();
         } catch (Exception ex) {
             if (UtilLog.causaControlada(ex)) {
-                UtilMSG.addWarningMsg(ex.getMessage());
+                UtilMSG.addWarningMsg(ex.getCause().getMessage(), ex.getMessage());
             } else {
                 UtilLog.generarLog(this.getClass(), ex);
                 UtilMSG.addSupportMsg();
