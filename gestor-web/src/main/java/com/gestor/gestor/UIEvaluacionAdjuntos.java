@@ -19,14 +19,15 @@ import com.gestor.publico.EvaluacionAdjuntos;
 import com.gestor.publico.EvaluacionAdjuntosPK;
 import com.gestor.publico.Lista;
 import com.gestor.publico.ListaDetalle;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,17 +53,28 @@ public class UIEvaluacionAdjuntos {
     private List<EvaluacionAdjuntos> evaluacionAdjuntosList = new ArrayList<>();
     private String archivoEliminar;
     private StreamedContent fileDownload;
-    private Map<Integer, String> itemsVigenciaArchivos = new HashMap<Integer, String>();
+    private Map<String, Integer> itemsVigenciaArchivos = new HashMap<String, Integer>();
 
     public UIEvaluacionAdjuntos() {
-        Lista listaVigenciaArchivos = ((Sesion) UtilJSF.getBean("sesion")).getListaVigenciaArchivos();
-        if (listaVigenciaArchivos != null) {
-            for (ListaDetalle ld : listaVigenciaArchivos.getListaDetalleList()) {
-                itemsVigenciaArchivos.put(ld.getPropiedadInt("valor"), ld.getPropiedad("nombre"));
+        try {
+            Lista listaVigenciaArchivos = ((Sesion) UtilJSF.getBean("sesion")).getListaVigenciaArchivos();
+            if (listaVigenciaArchivos != null) {
+                for (ListaDetalle ld : listaVigenciaArchivos.getListaDetalleList()) {
+                    JsonArray json = ld.getPropiedadArray("items_vigencia_archivos");
+                    for (JsonElement je : json) {
+                        JsonObject itemsJson = je.getAsJsonObject();
+                        itemsVigenciaArchivos.put(itemsJson.get("nombre").getAsString(), itemsJson.get("valor").getAsInt());
+                    }
+
+                }
+            } else {
+                UtilMSG.addWarningMsg("Lista Vigencia Adjuntos", "No se pudo cargar la lista de vigencia de adjuntos, contacte a soporte para asitirle.");
             }
-        } else {
-            UtilMSG.addWarningMsg("Lista Vigencia Adjuntos", "No se pudo cargar la lista de vigencia de adjuntos, contacte a soporte para asitirle.");
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+            UtilMSG.addSupportMsg();
         }
+
     }
 
     public void limpiar() {
@@ -327,15 +339,16 @@ public class UIEvaluacionAdjuntos {
     /**
      * @return the itemsVigenciaArchivos
      */
-    public Map<Integer, String> getItemsVigenciaArchivos() {
+    public Map<String, Integer> getItemsVigenciaArchivos() {
         return itemsVigenciaArchivos;
     }
 
     /**
      * @param itemsVigenciaArchivos the itemsVigenciaArchivos to set
      */
-    public void setItemsVigenciaArchivos(Map<Integer, String> itemsVigenciaArchivos) {
+    public void setItemsVigenciaArchivos(Map<String, Integer> itemsVigenciaArchivos) {
         this.itemsVigenciaArchivos = itemsVigenciaArchivos;
     }
+
 
 }

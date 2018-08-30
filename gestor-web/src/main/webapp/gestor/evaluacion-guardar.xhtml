@@ -7,11 +7,7 @@
                 template="/template.xhtml">
     <ui:define name="content">
         <h:form enctype="multipart/form-data" id="formGuardarEvaluacion" style="font-size: small;">
-            <h2>Finalizar Auto-Evaluación Empresa</h2>
-            <h3 style="margin-top:0">                
-                <h:outputText value="¿ Desea finalizar la evaluación ?"/>
-                <h:outputText value="Tenga en cuenta que ya no se podran realizar más cambios y se ejecutaran las acciones relacionadas en el acta."/>
-            </h3>
+            <h2>RESUMEN EVALUACIÓN</h2>
 
             <br/>
             <p:dataTable var="varResumenActa" value="#{uiEvaluacion.resumenEvaluacionList}"

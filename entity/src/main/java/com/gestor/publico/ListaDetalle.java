@@ -5,6 +5,7 @@
  */
 package com.gestor.publico;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.Serializable;
@@ -112,6 +113,11 @@ public class ListaDetalle implements Serializable {
     public String getPropiedad(String p) {
         JsonObject parametrosTimeOutJson = (JsonObject) new JsonParser().parse(this.valor);
         return parametrosTimeOutJson.get(p).getAsString();
+    }
+    
+    public JsonArray getPropiedadArray(String p) {
+        JsonObject parametrosTimeOutJson = (JsonObject) new JsonParser().parse(this.valor);
+        return parametrosTimeOutJson.get(p).getAsJsonArray();
     }
     
     public Integer getPropiedadInt(String p) {
