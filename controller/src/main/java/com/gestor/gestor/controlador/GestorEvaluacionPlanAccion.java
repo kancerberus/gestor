@@ -10,6 +10,7 @@ import com.gestor.entity.UtilLog;
 import com.gestor.gestor.EvaluacionPlanAccion;
 import com.gestor.gestor.EvaluacionPlanAccionDetalle;
 import com.gestor.gestor.dao.EvaluacionPlanAccionDAO;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -30,8 +31,12 @@ public class GestorEvaluacionPlanAccion extends Gestor {
         if (epd.getDescripcion() == null || epd.getDescripcion().equalsIgnoreCase("")) {
             throw new Exception("Ingrese el nombre del plan de acción.", UtilLog.TW_VALIDACION);
         }
+        if (epd.getResponsable() == null || epd.getResponsable().equalsIgnoreCase("")) {
+            throw new Exception("Ingrese el responsable del plan de acción.", UtilLog.TW_VALIDACION);
+        }
         epd.setNombre(epd.getNombre().toUpperCase().trim());
         epd.setDescripcion(epd.getDescripcion().toUpperCase().trim());
+        epd.setResponsable(epd.getResponsable().toUpperCase().trim());
         return epd;
     }
 
@@ -82,10 +87,18 @@ public class GestorEvaluacionPlanAccion extends Gestor {
     public void actualizarEvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetalle epd) throws Exception {
         try {
             this.abrirConexion();
-
             EvaluacionPlanAccionDAO evaluacionPlanAccionDAO = new EvaluacionPlanAccionDAO(conexion);
             evaluacionPlanAccionDAO.actualizarEvaluacionPlanAccionDetalle(epd);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
 
+    public Collection<? extends EvaluacionPlanAccionDetalle> cargarListaEvaluacionPlanAccion(String condicion) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionPlanAccionDAO evaluacionPlanAccionDAO = new EvaluacionPlanAccionDAO(conexion);
+            return evaluacionPlanAccionDAO.cargarListaEvaluacionPlanAccion(condicion);
         } finally {
             this.cerrarConexion();
         }

@@ -17,14 +17,14 @@
             <h:panelGrid columns="2" cellspacing="10">
                 <h:panelGrid id="pgCapacitacion" columns="2" cellspacing="10">
                     <h:outputLabel value="Nombre: " style="font-weight: bold;"/>
-                    <p:inputText value="#{evaluacionCapacitacionDetalle.nombre}" placeholder="Registra el nombre de la capacitación">
-                        <p:ajax event="blur" process="@this"/>
-                    </p:inputText>
+                    <p:inputText value="#{evaluacionCapacitacionDetalle.nombre}" placeholder="Registra el nombre de la capacitación"/>
 
                     <h:outputLabel value="Descripción: " style="font-weight: bold;"/>
-                    <p:inputTextarea value="#{evaluacionCapacitacionDetalle.descripcion}" placeholder="Registra la descripción de la  capacitación">
-                        <p:ajax event="blur" process="@this"/>
-                    </p:inputTextarea>
+                    <p:inputTextarea value="#{evaluacionCapacitacionDetalle.descripcion}" placeholder="Registra la descripción de la  capacitación"/>
+                    
+                    
+                    <h:outputLabel value="Responsable: " style="font-weight: bold;"/>
+                    <p:inputText value="#{evaluacionCapacitacionDetalle.responsable}" placeholder="Registra el reponsable de la capacitación"/>
 
                 </h:panelGrid>
 
@@ -83,9 +83,9 @@
         <p:toolbar id="opcionesMenuCapacitacion" style="height: 45px;">
             <p:toolbarGroup align="center" style="margin: auto auto;  align-content: center">
                 <h:panelGrid columns="3" cellspacing="10" style="align-content: center; display: inline-block;">
-                    <p:commandButton value="Generar Capacitación" icon="ui-icon-disk" action="#{uiCapacitacion.procesarCapacitacion()}" process="@parent" update="pgCapacitacion dtCapacitacionDetalle"
+                    <p:commandButton value="Generar Capacitación" icon="ui-icon-disk" action="#{uiCapacitacion.procesarCapacitacion()}" process="@parent pgCapacitacion" update="pgCapacitacion dtCapacitacionDetalle"
                                      rendered="#{not uiCapacitacion.modificarActivo}"/>
-                    <p:commandButton value="Modificar Capacitación" icon="ui-icon-disk" action="#{uiCapacitacion.procesarCapacitacionModificar()}" process="@parent" update="pgCapacitacion dtCapacitacionDetalle"
+                    <p:commandButton value="Modificar Capacitación" icon="ui-icon-disk" action="#{uiCapacitacion.procesarCapacitacionModificar()}" process="@parent pgCapacitacion" update="pgCapacitacion dtCapacitacionDetalle"
                                      rendered="#{uiCapacitacion.modificarActivo}"/>
                     
                     <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" oncomplete="PF('dialog').hide();"/>

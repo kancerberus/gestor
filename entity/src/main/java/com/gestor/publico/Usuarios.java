@@ -98,6 +98,10 @@ public class Usuarios implements Serializable, Cloneable {
         return nombre;
     }
 
+    public String getNombreApellido() {
+        return nombre + " " + apellido;
+    }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }

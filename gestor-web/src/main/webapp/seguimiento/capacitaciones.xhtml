@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml">
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formCapacitaciones" style="font-size: small;">
+            <h2>SEGUIMIENTO CAPACITACIONES</h2>
+
+            <br/>
+            <p:dataTable var="varCapacitacionDetalle" value="#{uiCapacitacion.evaluacionCapacitacionDetalles}"
+                         widgetVar="capacitacionDetalleTable" rowStyleClass="letra-xx-small-centro"
+                         emptyMessage="No tiene capacitaciones abiertas."
+                         >
+                <p:column headerText="Opciones">
+                    <p:panelGrid>
+                        <p:commandButton icon="ui-icon-pencil"/>
+                    </p:panelGrid>
+                </p:column>
+                <p:column headerText="Código" filterBy="#{varCapacitacionDetalle.evaluacionCapacitacionDetallePK.codEvaluacion}">
+                    <h:outputText value="#{varCapacitacionDetalle.evaluacionCapacitacionDetallePK.codEvaluacion}" />    
+                </p:column>
+                <p:column headerText="Empresa" filterBy="#{varCapacitacionDetalle.establecimiento.nombre}">
+                    <h:outputText value="#{varCapacitacionDetalle.establecimiento.nombre}" />
+                </p:column>
+
+                <p:column headerText="Evaluador" filterBy="#{varCapacitacionDetalle.usuarios.nombreApellido}">
+                    <h:outputText value="#{varCapacitacionDetalle.usuarios.nombreApellido}" />
+                </p:column>
+                <p:column headerText="Responsable" filterBy="#{varCapacitacionDetalle.responsable}">
+                    <h:outputText value="#{varCapacitacionDetalle.responsable}" />
+                </p:column>
+
+                <p:column headerText="Ciclo" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.seccionDetalle.seccion.ciclo.nombre}">
+                    <h:outputText value="#{varCapacitacionDetalle.seccionDetalleItems.seccionDetalle.seccion.ciclo.nombre}" />
+                </p:column>
+                <p:column headerText="Sección" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.seccionDetalle.seccion.nombre}">
+                    <h:outputText value="#{varCapacitacionDetalle.seccionDetalleItems.seccionDetalle.seccion.nombre}" />
+                </p:column> 
+                <p:column headerText="Detalle" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.seccionDetalle.nombre}" >
+                    <h:outputText value="#{varCapacitacionDetalle.seccionDetalleItems.seccionDetalle.nombre}" />
+                </p:column>
+                <p:column headerText="Item" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.nombre}">
+                    <h:outputText value="#{varCapacitacionDetalle.seccionDetalleItems.nombre}" />
+                </p:column>
+                <p:column headerText="Item Detalle" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.detalle}" >
+                    <h:outputText value="#{varCapacitacionDetalle.seccionDetalleItems.detalle}" />
+                </p:column>
+                <p:column headerText="Nombre" filterBy="#{varCapacitacionDetalle.nombre}" >
+                    <h:outputText value="#{varCapacitacionDetalle.nombre}" />
+                </p:column>
+                <p:column headerText="Descripción" filterBy="#{varCapacitacionDetalle.descripcion}" >
+                    <h:outputText value="#{varCapacitacionDetalle.descripcion}" />
+                </p:column>
+
+                <p:column headerText="Estado"
+                          filterBy="#{varCapacitacionDetalle.estado}"
+                          filterMatchMode="equals">
+                    <f:facet name="filter">
+                        <p:selectOneButton onchange="PF('capacitacionDetalleTable').filter()"
+                                           style="font-size: 10px;">
+                            <f:selectItem itemLabel="ABIERTO" itemValue="A" />
+                            <f:selectItem itemLabel="CERRADO" itemValue="C" />
+                        </p:selectOneButton>
+                    </f:facet>
+                    <h:outputText value="#{varCapacitacionDetalle.estado}" />
+                </p:column>
+
+
+            </p:dataTable>
+
+
+            <p:separator/>
+
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

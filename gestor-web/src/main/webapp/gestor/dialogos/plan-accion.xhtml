@@ -16,21 +16,21 @@
             <br/>
             <h:panelGrid columns="2" cellspacing="10">
                 <h:panelGrid id="pgPlanAccion" columns="2" cellspacing="10">
+                    
                     <h:outputLabel value="Nombre: " style="font-weight: bold;"/>
                     <p:inputText value="#{evaluacionPlanAccionDetalle.nombre}" placeholder="Registra el nombre del plan de accción"
-                                 >
-                        <p:ajax event="blur" process="@this"/>
-                    </p:inputText>
+                                 />
 
                     <h:outputLabel value="Descripción: " style="font-weight: bold;"/>
-                    <p:inputTextarea value="#{evaluacionPlanAccionDetalle.descripcion}" placeholder="Registra la descripción del plan de accción">
-                        <p:ajax event="blur" process="@this"/>
-                    </p:inputTextarea>
+                    <p:inputTextarea value="#{evaluacionPlanAccionDetalle.descripcion}" placeholder="Registra la descripción del plan de accción"/>
 
-                </h:panelGrid>
+                    <h:outputLabel value="Responsable: " style="font-weight: bold;"/>
+                    <p:inputText value="#{evaluacionPlanAccionDetalle.responsable}" placeholder="Registra el reponsable de la tarea"/>
+
+                </h:panelGrid>  
 
                 <p:dataTable id="dtPlanAccionDetalle"  value="#{uiPlanAccion.evaluacionPlanAccionDetalles}" var="varPlanAccionDetalle" emptyMessage="El ítem no tiene planes de acción."
-                              rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable">
+                             rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable">
                     <f:facet name="header">
                         Planes de Acción
                     </f:facet>
@@ -84,18 +84,18 @@
         <p:toolbar id="opcionesMenuPlanAccion" style="height: 45px;">
             <p:toolbarGroup align="center" style="margin: auto auto;  align-content: center">
                 <h:panelGrid columns="3" cellspacing="10" style="align-content: center; display: inline-block;">
-                    <p:commandButton value="Generar Plan Acción" icon="ui-icon-disk" action="#{uiPlanAccion.procesarPlanAccion()}" process="@parent" update="pgPlanAccion dtPlanAccionDetalle"
+                    <p:commandButton value="Generar Plan Acción" icon="ui-icon-disk" action="#{uiPlanAccion.procesarPlanAccion()}" process="@parent pgPlanAccion" update="pgPlanAccion dtPlanAccionDetalle"
                                      rendered="#{not uiPlanAccion.modificarActivo}"/>
-                    <p:commandButton value="Modificar Plan Acción" icon="ui-icon-disk" action="#{uiPlanAccion.procesarPlanAccionModificar()}" process="@parent" update="pgPlanAccion dtPlanAccionDetalle"
+                    <p:commandButton value="Modificar Plan Acción" icon="ui-icon-disk" action="#{uiPlanAccion.procesarPlanAccionModificar()}" process="@parent pgPlanAccion" update="pgPlanAccion dtPlanAccionDetalle"
                                      rendered="#{uiPlanAccion.modificarActivo}"/>
-                    
+
                     <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" oncomplete="PF('dialog').hide();"/>
                     <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiPlanAccion.limpiar()}" update="opPlanAccion" process="@this"/>
                 </h:panelGrid>
             </p:toolbarGroup>
         </p:toolbar> 
-        
-        
+
+
 
 
 

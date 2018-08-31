@@ -37,7 +37,7 @@ public class EvaluacionCapacitacionDAO {
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_evaluacion, codigo_establecimiento, cod_capacitacion, cod_capacitacion_detalle,"
                     + " cod_ciclo, cod_seccion, cod_detalle, cod_item, ECD.nombre, descripcion,"
-                    + " estado,ECD.fecha_registro,"
+                    + " estado,ECD.fecha_registro, responsable,"
                     + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario"
                     + " FROM gestor.evaluacion_capacitacion_detalle ECD"
                     + " JOIN public.usuarios U USING (documento_usuario)"
@@ -55,6 +55,7 @@ public class EvaluacionCapacitacionDAO {
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
                         ), rs.getDate("fecha_registro")
                 );
+                ecd.setResponsable(rs.getString("responsable"));
                 evaluacionCapacitacionDetalles.add(ecd);
             }
             return evaluacionCapacitacionDetalles;
@@ -125,11 +126,11 @@ public class EvaluacionCapacitacionDAO {
                     "INSERT INTO gestor.evaluacion_capacitacion_detalle("
                     + " cod_evaluacion, codigo_establecimiento, cod_capacitacion, cod_capacitacion_detalle,"
                     + " cod_ciclo, cod_seccion, cod_detalle, cod_item, nombre, descripcion,"
-                    + " estado, documento_usuario)"
+                    + " estado, documento_usuario, responsable)"
                     + " VALUES (" + ecd.getEvaluacionCapacitacionDetallePK().getCodEvaluacion() + ", " + ecd.getEvaluacionCapacitacionDetallePK().getCodigoEstablecimiento()
                     + " , " + ecd.getEvaluacionCapacitacionDetallePK().getCodCapacitacion() + " , DEFAULT,"
                     + " '" + ecd.getCodCiclo() + "', " + ecd.getCodSeccion() + ", " + ecd.getCodDetalle() + ", " + ecd.getCodItem() + ", '" + ecd.getNombre() + "', '" + ecd.getDescripcion() + "'"
-                    + " , '" + ecd.getEstado() + "','" + ecd.getDocumentoUsuario() + "');"
+                    + " , '" + ecd.getEstado() + "','" + ecd.getDocumentoUsuario() + "','" + ecd.getResponsable() + "');"
             );
             consulta.actualizar(sql);
         } finally {
@@ -168,11 +169,49 @@ public class EvaluacionCapacitacionDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "UPDATE gestor.evaluacion_capacitacion_detalle"
-                    + " SET nombre='" + ecd.getNombre() + "', descripcion='" + ecd.getDescripcion() + "', fecha_actualiza=NOW()"
+                    + " SET nombre='" + ecd.getNombre() + "', descripcion='" + ecd.getDescripcion() + "', fecha_actualiza=NOW(), responsable='" + ecd.getResponsable() + "'"
                     + " WHERE cod_evaluacion=" + ecd.getEvaluacionCapacitacionDetallePK().getCodEvaluacion() + " AND codigo_establecimiento=" + ecd.getEvaluacionCapacitacionDetallePK().getCodigoEstablecimiento()
                     + " AND cod_capacitacion=" + ecd.getEvaluacionCapacitacionDetallePK().getCodCapacitacion() + " AND cod_capacitacion_detalle=" + ecd.getEvaluacionCapacitacionDetallePK().getCodCapacitacionDetalle()
             );
             consulta.actualizar(sql);
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public Collection<? extends EvaluacionCapacitacionDetalle> cargarListaEvaluacionCapacitacionDetalle(String condicion) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT cod_evaluacion, codigo_establecimiento, cod_capacitacion, cod_capacitacion_detalle,"
+                    + " cod_ciclo, cod_seccion, cod_detalle, cod_item, ECD.nombre, descripcion,"
+                    + " estado,ECD.fecha_registro, responsable,"
+                    + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario"
+                    + " FROM gestor.evaluacion_capacitacion_detalle ECD"
+                    + " JOIN public.usuarios U USING (documento_usuario)" + condicion
+            );
+            rs = consulta.ejecutar(sql);
+
+            Collection<EvaluacionCapacitacionDetalle> evaluacionCapacitacionDetalles = new ArrayList<>();
+            while (rs.next()) {
+
+                EvaluacionCapacitacionDetalle ecd = new EvaluacionCapacitacionDetalle(new EvaluacionCapacitacionDetallePK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento"), rs.getLong("cod_capacitacion"), rs.getInt("cod_capacitacion_detalle")),
+                        rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("nombre"), rs.getString("descripcion"), rs.getString("estado"),
+                        new Usuarios(
+                                new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
+                        ), rs.getDate("fecha_registro")
+                );
+                ecd.setResponsable(rs.getString("responsable"));
+                evaluacionCapacitacionDetalles.add(ecd);
+            }
+            return evaluacionCapacitacionDetalles;
         } finally {
             if (rs != null) {
                 rs.close();

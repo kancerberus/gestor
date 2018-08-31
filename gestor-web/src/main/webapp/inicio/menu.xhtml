@@ -112,8 +112,13 @@
                                  action="/gestor/evaluaciones.xhtml"/>
                     <p:menuitem  value="Resumen Autoevaluación"  style="font-size: 11px;"/>
                 </p:submenu>
+                <p:submenu label="Seguimiento" >
+                    <p:menuitem  value="Capacitación General"  style="font-size: 11px;"
+                                 action="#{uiCapacitacion.cargarCapacitacionGeneral()}"/>
+                    <p:menuitem  value="Plan Acción General"  style="font-size: 11px;"
+                                 action="#{uiPlanAccion.cargarPlanAccionGeneral()}"/>
+                </p:submenu>
                 <p:submenu label="Análisis" >
-                    <p:menuitem  value="Capacitaciones General"  style="font-size: 11px;"/>
                     <p:menuitem  value="Informe Gráfica"  style="font-size: 11px;"/>
                     <p:menuitem  value="Gráfica Comparativa"  style="font-size: 11px;"/>
                 </p:submenu>

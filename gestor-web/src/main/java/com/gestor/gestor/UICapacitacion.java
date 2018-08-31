@@ -11,10 +11,11 @@ import com.gestor.entity.Dialogo;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
+import com.gestor.entity.UtilTexto;
 import com.gestor.gestor.controlador.GestorEvaluacionCapacitacion;
 import com.gestor.gestor.controlador.GestorEvaluacionPlanAccion;
 import com.gestor.modelo.Sesion;
-import com.gestor.publico.controlador.GestorEstablecimiento;
+import com.gestor.publico.Usuarios;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
@@ -33,12 +34,36 @@ public class UICapacitacion {
 
     private Boolean modificarActivo = Boolean.FALSE;
 
+    
+    public String cargarCapacitacionGeneral() {
+        try {
+            Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
+            evaluacionCapacitacionDetalles = new ArrayList<>();
+            GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
+
+            List<String> condicionesConsulta = new ArrayList<>();
+            condicionesConsulta.add(App.CONDICION_WHERE);
+            condicionesConsulta.add(EvaluacionCapacitacionDetalle.EVALUACION_CAPACITACION_DETALLE_CONDICION_DOCUMENTO_USUARIO.replace("?", UtilTexto.CARACTER_COMILLA + usuarios.getUsuariosPK().getDocumentoUsuario() + UtilTexto.CARACTER_COMILLA));
+            condicionesConsulta.add(App.CONDICION_AND);
+            condicionesConsulta.add(EvaluacionCapacitacionDetalle.EVALUACION_CAPACITACION_DETALLE_CONDICION_ESTADO.replace("?", UtilTexto.CARACTER_COMILLA + App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO + UtilTexto.CARACTER_COMILLA));
+
+            evaluacionCapacitacionDetalles.addAll(gestorEvaluacionCapacitacion.cargarListaEvaluacionCapacitacionDetalle(
+                    UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
+            )
+            );
+            return ("/seguimiento/capacitacion.xhtml?faces-redirect=true");
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+        return null;
+    }
+    
     public void limpiar() {
         try {
             GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
             modificarActivo = Boolean.FALSE;
             UtilJSF.setBean("evaluacionCapacitacionDetalle", new EvaluacionCapacitacionDetalle(), UtilJSF.SESSION_SCOPE);
-            
+
             evaluacionCapacitacionDetalles = new ArrayList<>();
             evaluacionCapacitacionDetalles.addAll(gestorEvaluacionCapacitacion.cargarListaEvaluacionCapacitacionDetalle(
                     sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodEvaluacion(),
@@ -89,6 +114,7 @@ public class UICapacitacion {
         try {
             EvaluacionCapacitacionDetalle ecd = (EvaluacionCapacitacionDetalle) UtilJSF.getBean("evaluacionCapacitacionDetalle");;
             GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
+            ecd = gestorEvaluacionCapacitacion.validarEvaluacionCapacitacionDetalle(ecd);
             gestorEvaluacionCapacitacion.actualizarEvaluacionCapacitacionDetalle(ecd);
 
             evaluacionCapacitacionDetalles = new ArrayList<>();

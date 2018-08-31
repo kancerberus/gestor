@@ -5,6 +5,7 @@
  */
 package com.gestor.gestor;
 
+import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Usuarios;
 import java.io.Serializable;
 import java.util.Date;
@@ -35,6 +36,11 @@ import javax.persistence.Table;
 public class EvaluacionCapacitacionDetalle implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_DOCUMENTO_USUARIO = "U.DOCUMENTO_USUARIO IN (?)";
+    public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_ESTADO = "ECD.ESTADO IN (?)";
+    
+    
     @EmbeddedId
     protected EvaluacionCapacitacionDetallePK evaluacionCapacitacionDetallePK;
 
@@ -60,11 +66,17 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
         @JoinColumn(name = "cod_capacitacion", referencedColumnName = "cod_capacitacion", insertable = false, updatable = false)})
     @ManyToOne(optional = false)
     private EvaluacionCapacitacion evaluacionCapacitacion;
-    
+
     private String documentoUsuario;
+    private String responsable;
 
     private Usuarios usuarios = new Usuarios();
+
     private Date fechaRegistro;
+
+    private SeccionDetalleItems seccionDetalleItems;
+    private Evaluacion evaluacion;
+    private Establecimiento establecimiento;
 
     public EvaluacionCapacitacionDetalle() {
     }
@@ -257,6 +269,62 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
      */
     public void setDocumentoUsuario(String documentoUsuario) {
         this.documentoUsuario = documentoUsuario;
+    }
+
+    /**
+     * @return the responsable
+     */
+    public String getResponsable() {
+        return responsable;
+    }
+
+    /**
+     * @param responsable the responsable to set
+     */
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
+    }
+
+    /**
+     * @return the seccionDetalleItems
+     */
+    public SeccionDetalleItems getSeccionDetalleItems() {
+        return seccionDetalleItems;
+    }
+
+    /**
+     * @param seccionDetalleItems the seccionDetalleItems to set
+     */
+    public void setSeccionDetalleItems(SeccionDetalleItems seccionDetalleItems) {
+        this.seccionDetalleItems = seccionDetalleItems;
+    }
+
+    /**
+     * @return the evaluacion
+     */
+    public Evaluacion getEvaluacion() {
+        return evaluacion;
+    }
+
+    /**
+     * @param evaluacion the evaluacion to set
+     */
+    public void setEvaluacion(Evaluacion evaluacion) {
+        this.evaluacion = evaluacion;
+    }
+
+    /**
+     * @return the establecimiento
+     */
+    public Establecimiento getEstablecimiento() {
+        return establecimiento;
+    }
+
+    /**
+     * @param establecimiento the establecimiento to set
+     */
+    public void setEstablecimiento(Establecimiento establecimiento) {
+        this.establecimiento = establecimiento;
     }
 
 }

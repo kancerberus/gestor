@@ -19,10 +19,11 @@ import java.util.regex.Pattern;
 public class UtilTexto {
 
     public static String CARACTER_COMILLA = "'";
+    public static String SEPARADOR_ESPACIO = " ";
+
     /*
      * Toma una cadena y la transforma reemplazando todos los caracteres especiales como tildes, ñ, etc.
      */
-
     public static String normalizar(String cadena) {
         String cadenaNormalizada = Normalizer.normalize(cadena, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
@@ -85,6 +86,12 @@ public class UtilTexto {
         if (cadena.length() > 0) {
             cadena = cadena.substring(0, cadena.length() - 1);
         }
+        return cadena;
+    }
+
+    public static String listToString(List<?> lista, String separador) {
+        String cadena = "";
+        cadena = lista.stream().map((o) -> separador + o + separador).reduce(cadena, String::concat);
         return cadena;
     }
 

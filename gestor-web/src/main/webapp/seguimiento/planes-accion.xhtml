@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml">
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formPlanesAccion" style="font-size: small;">
+            <h2>SEGUIMIENTO PLANES DE ACCIÓN</h2>
+
+            <br/>
+            <p:dataTable var="varPlanAccionDetalle" value="#{uiPlanAccion.evaluacionPlanAccionDetalles}"
+                         widgetVar="planAccionDetalleTable" rowStyleClass="letra-xx-small-centro"
+                         emptyMessage="No tiene planes de acción abiertos."
+                         >
+                <p:column headerText="Opciones" filterBy="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codEvaluacion}">
+                    <p:panelGrid>
+                        <p:commandButton icon="ui-icon-pencil"/>
+                    </p:panelGrid>
+                </p:column>
+                <p:column headerText="Código" filterBy="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codEvaluacion}">
+                    <h:outputText value="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codEvaluacion}" />    
+                </p:column>
+                <p:column headerText="Empresa" filterBy="#{varPlanAccionDetalle.establecimiento.nombre}">
+                    <h:outputText value="#{varPlanAccionDetalle.establecimiento.nombre}" />
+                </p:column>
+                
+                <p:column headerText="Evaluador" filterBy="#{varPlanAccionDetalle.usuarios.nombreApellido}">
+                    <h:outputText value="#{varPlanAccionDetalle.usuarios.nombreApellido}" />
+                </p:column>
+                <p:column headerText="Responsable" filterBy="#{varPlanAccionDetalle.responsable}">
+                    <h:outputText value="#{varPlanAccionDetalle.responsable}" />
+                </p:column>
+                
+                <p:column headerText="Ciclo" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.seccionDetalle.seccion.ciclo.nombre}">
+                    <h:outputText value="#{varPlanAccionDetalle.seccionDetalleItems.seccionDetalle.seccion.ciclo.nombre}" />
+                </p:column>
+                <p:column headerText="Sección" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.seccionDetalle.seccion.nombre}">
+                    <h:outputText value="#{varPlanAccionDetalle.seccionDetalleItems.seccionDetalle.seccion.nombre}" />
+                </p:column> 
+                <p:column headerText="Detalle" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.seccionDetalle.nombre}" >
+                    <h:outputText value="#{varPlanAccionDetalle.seccionDetalleItems.seccionDetalle.nombre}" />
+                </p:column>
+                <p:column headerText="Item" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.nombre}">
+                    <h:outputText value="#{varPlanAccionDetalle.seccionDetalleItems.nombre}" />
+                </p:column>
+                <p:column headerText="Item Detalle" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.detalle}" >
+                    <h:outputText value="#{varPlanAccionDetalle.seccionDetalleItems.detalle}" />
+                </p:column>
+                <p:column headerText="Nombre" filterBy="#{varPlanAccionDetalle.nombre}" >
+                    <h:outputText value="#{varPlanAccionDetalle.nombre}" />
+                </p:column>
+                <p:column headerText="Descripción" filterBy="#{varPlanAccionDetalle.descripcion}" >
+                    <h:outputText value="#{varPlanAccionDetalle.descripcion}" />
+                </p:column>
+                
+                <p:column headerText="Estado"
+                          filterBy="#{varPlanAccionDetalle.estado}"
+                          filterMatchMode="equals">
+                    <f:facet name="filter">
+                        <p:selectOneButton onchange="PF('planAccionDetalleTable').filter()"
+                                           style="font-size: 10px;">
+                            <f:selectItem itemLabel="ABIERTO" itemValue="A" />
+                            <f:selectItem itemLabel="CERRADO" itemValue="C" />
+                        </p:selectOneButton>
+                    </f:facet>
+                    <h:outputText value="#{varPlanAccionDetalle.estado}" />
+                </p:column>
+                
+
+            </p:dataTable>
+
+
+            <p:separator/>
+
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

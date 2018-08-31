@@ -11,8 +11,10 @@ import com.gestor.entity.Dialogo;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
+import com.gestor.entity.UtilTexto;
 import com.gestor.gestor.controlador.GestorEvaluacionPlanAccion;
 import com.gestor.modelo.Sesion;
+import com.gestor.publico.Usuarios;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
@@ -30,6 +32,29 @@ public class UIPlanAccion {
     private SeccionDetalleItems sdiSeleccionado;
     private List<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles = new ArrayList<>();
     private Boolean modificarActivo = Boolean.FALSE;
+
+    public String cargarPlanAccionGeneral() {
+        try {
+            Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
+            evaluacionPlanAccionDetalles = new ArrayList<>();
+            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
+
+            List<String> condicionesConsulta = new ArrayList<>();
+            condicionesConsulta.add(App.CONDICION_WHERE);
+            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_DOCUMENTO_USUARIO.replace("?", UtilTexto.CARACTER_COMILLA + usuarios.getUsuariosPK().getDocumentoUsuario() + UtilTexto.CARACTER_COMILLA));
+            condicionesConsulta.add(App.CONDICION_AND);
+            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_ESTADO.replace("?", UtilTexto.CARACTER_COMILLA + App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO + UtilTexto.CARACTER_COMILLA));
+
+            evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
+                    UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
+            )
+            );
+            return ("/seguimiento/planes-accion.xhtml?faces-redirect=true");
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+        return null;
+    }
 
     public void limpiar() {
         try {
@@ -89,6 +114,7 @@ public class UIPlanAccion {
         try {
             EvaluacionPlanAccionDetalle epd = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("evaluacionPlanAccionDetalle");
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
+            epd = gestorEvaluacionPlanAccion.validarEvaluacionPlanAccionDetalle(epd);
             gestorEvaluacionPlanAccion.actualizarEvaluacionPlanAccionDetalle(epd);
 
             evaluacionPlanAccionDetalles = new ArrayList<>();

@@ -5,6 +5,7 @@
  */
 package com.gestor.gestor;
 
+import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Usuarios;
 import java.io.Serializable;
 import java.util.Date;
@@ -30,6 +31,10 @@ import javax.persistence.Table;
 @ManagedBean
 @SessionScoped
 public class EvaluacionPlanAccionDetalle implements Serializable {
+    
+    public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_DOCUMENTO_USUARIO = "U.DOCUMENTO_USUARIO IN (?)";
+    public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_ESTADO = "EPAD.ESTADO IN (?)";
+    public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_LIMITE_600 = "LIMIT 600";
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -50,10 +55,15 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     @Column(name = "estado")
     private String estado;
     private String documentoUsuario;
+    private String responsable;
     
     private Usuarios usuarios;
     
     private Date fechaRegistro;
+    
+    private SeccionDetalleItems seccionDetalleItems;
+    private Evaluacion evaluacion;
+    private Establecimiento establecimiento;
     
     public EvaluacionPlanAccionDetalle() {
     }
@@ -166,10 +176,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
             return false;
         }
         EvaluacionPlanAccionDetalle other = (EvaluacionPlanAccionDetalle) object;
-        if ((this.evaluacionPlanAccionDetallePK == null && other.evaluacionPlanAccionDetallePK != null) || (this.evaluacionPlanAccionDetallePK != null && !this.evaluacionPlanAccionDetallePK.equals(other.evaluacionPlanAccionDetallePK))) {
-            return false;
-        }
-        return true;
+        return !((this.evaluacionPlanAccionDetallePK == null && other.evaluacionPlanAccionDetallePK != null) || (this.evaluacionPlanAccionDetallePK != null && !this.evaluacionPlanAccionDetallePK.equals(other.evaluacionPlanAccionDetallePK)));
     }
 
     @Override
@@ -217,6 +224,62 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
      */
     public void setDocumentoUsuario(String documentoUsuario) {
         this.documentoUsuario = documentoUsuario;
+    }
+
+    /**
+     * @return the seccionDetalleItems
+     */
+    public SeccionDetalleItems getSeccionDetalleItems() {
+        return seccionDetalleItems;
+    }
+
+    /**
+     * @param seccionDetalleItems the seccionDetalleItems to set
+     */
+    public void setSeccionDetalleItems(SeccionDetalleItems seccionDetalleItems) {
+        this.seccionDetalleItems = seccionDetalleItems;
+    }
+
+    /**
+     * @return the evaluacion
+     */
+    public Evaluacion getEvaluacion() {
+        return evaluacion;
+    }
+
+    /**
+     * @param evaluacion the evaluacion to set
+     */
+    public void setEvaluacion(Evaluacion evaluacion) {
+        this.evaluacion = evaluacion;
+    }
+
+    /**
+     * @return the establecimiento
+     */
+    public Establecimiento getEstablecimiento() {
+        return establecimiento;
+    }
+
+    /**
+     * @param establecimiento the establecimiento to set
+     */
+    public void setEstablecimiento(Establecimiento establecimiento) {
+        this.establecimiento = establecimiento;
+    }
+
+    /**
+     * @return the responsable
+     */
+    public String getResponsable() {
+        return responsable;
+    }
+
+    /**
+     * @param responsable the responsable to set
+     */
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
     }
 
 }

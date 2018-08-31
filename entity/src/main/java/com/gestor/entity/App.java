@@ -28,9 +28,13 @@ public class App {
     public static final String LISTA_VIGENCIA_ARCHIVOS = "VIGENCIA_ARCHIVOS";
     public static final String ADJUNTO_PREFIJO = "E-";
     public static final String NUMERAL_SEPARADOR = " - ";
+
     public static String EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ELIMINADO = "E";
+
     public static String EVALUACION_CAPACITACION_ESTADO_ABIERTO = "A";
     public static String EVALUACION_CAPACITACION_DETALLE_ESTADO_ABIERTO = "A";
     public static String EVALUACION_CAPACITACION_DETALLE_ESTADO_ELIMINADO = "E";
+    public static String CONDICION_WHERE = "WHERE";
+    public static String CONDICION_AND = "AND";
 
 }

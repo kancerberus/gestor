@@ -36,13 +36,17 @@ public class GestorEvaluacionCapacitacion extends Gestor {
 
     public EvaluacionCapacitacionDetalle validarEvaluacionCapacitacionDetalle(EvaluacionCapacitacionDetalle ecd) throws Exception {
         if (ecd.getNombre() == null || ecd.getNombre().equalsIgnoreCase("")) {
-            throw new Exception("Ingrese el nombre del plan de acción.", UtilLog.TW_VALIDACION);
+            throw new Exception("Ingrese el nombre de la capacitación.", UtilLog.TW_VALIDACION);
         }
         if (ecd.getDescripcion() == null || ecd.getDescripcion().equalsIgnoreCase("")) {
-            throw new Exception("Ingrese el nombre del plan de acción.", UtilLog.TW_VALIDACION);
+            throw new Exception("Ingrese el nombre de la capacitación.", UtilLog.TW_VALIDACION);
+        }
+        if (ecd.getResponsable() == null || ecd.getResponsable().equalsIgnoreCase("")) {
+            throw new Exception("Ingrese el responsable de la capacitación.", UtilLog.TW_VALIDACION);
         }
         ecd.setNombre(ecd.getNombre().toUpperCase().trim());
         ecd.setDescripcion(ecd.getDescripcion().toUpperCase().trim());
+        ecd.setResponsable(ecd.getResponsable().toUpperCase().trim());
 
         return ecd;
     }
@@ -86,6 +90,16 @@ public class GestorEvaluacionCapacitacion extends Gestor {
             this.abrirConexion();
             EvaluacionCapacitacionDAO evaluacionCapacitacionDAO = new EvaluacionCapacitacionDAO(conexion);
             evaluacionCapacitacionDAO.actualizarEvaluacionCapacitacionDetalle(ecd);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+
+    public Collection<? extends EvaluacionCapacitacionDetalle> cargarListaEvaluacionCapacitacionDetalle(String condicion) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionCapacitacionDAO evaluacionCapacitacionDAO = new EvaluacionCapacitacionDAO(conexion);
+            return evaluacionCapacitacionDAO.cargarListaEvaluacionCapacitacionDetalle(condicion);
         } finally {
             this.cerrarConexion();
         }
