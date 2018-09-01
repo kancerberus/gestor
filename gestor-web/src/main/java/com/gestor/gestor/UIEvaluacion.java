@@ -113,7 +113,7 @@ public class UIEvaluacion {
         try {
             Sesion sesion = (Sesion) UtilJSF.getBean("sesion");
 
-            GestorCiclo gestorCiclos = new GestorCiclo();
+//            GestorCiclo gestorCiclos = new GestorCiclo();
             GestorEvaluacion gestorEvaluacion = new GestorEvaluacion();
             GestorSeccionDetalleItems gestorSeccionDetalleItems = new GestorSeccionDetalleItems();
 

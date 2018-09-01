@@ -51,7 +51,7 @@ public class UICapacitacion {
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
             )
             );
-            return ("/seguimiento/capacitacion.xhtml?faces-redirect=true");
+            return ("/seguimiento/capacitaciones.xhtml?faces-redirect=true");
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }

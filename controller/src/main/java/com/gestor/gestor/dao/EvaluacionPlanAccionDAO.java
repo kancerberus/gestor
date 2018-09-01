@@ -6,9 +6,19 @@
 package com.gestor.gestor.dao;
 
 import com.gestor.entity.App;
+import com.gestor.gestor.Ciclo;
+import com.gestor.gestor.Evaluacion;
+import com.gestor.gestor.EvaluacionPK;
 import com.gestor.gestor.EvaluacionPlanAccion;
 import com.gestor.gestor.EvaluacionPlanAccionDetalle;
 import com.gestor.gestor.EvaluacionPlanAccionDetallePK;
+import com.gestor.gestor.Seccion;
+import com.gestor.gestor.SeccionDetalle;
+import com.gestor.gestor.SeccionDetalleItems;
+import com.gestor.gestor.SeccionDetalleItemsPK;
+import com.gestor.gestor.SeccionDetallePK;
+import com.gestor.gestor.SeccionPK;
+import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.UsuariosPK;
 import conexion.Consulta;
@@ -186,12 +196,27 @@ public class EvaluacionPlanAccionDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle,"
-                    + " cod_ciclo, cod_seccion, cod_detalle, cod_item, EPAD.nombre, descripcion,"
-                    + " estado, EPAD.fecha_registro, responsable,"
-                    + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario"
+                    " SELECT EPAD.cod_evaluacion, EPAD.codigo_establecimiento, EPAD.cod_plan, EPAD.cod_plan_detalle,"
+                    + " EPAD.cod_ciclo, EPAD.cod_seccion, EPAD.cod_detalle, EPAD.cod_item, EPAD.nombre AS epad_nombre, EPAD.descripcion,"
+                    + " EPAD.estado, EPAD.fecha_registro, EPAD.responsable,"
+                    + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario,"
+                    + " SDI.cod_item AS sdi_cod_item, SDI.nombre AS sdi_nombre, SDI.detalle AS sdi_detalle, SDI.peso AS sdi_peso, SDI.activo AS sdi_activo, SDI.imagen AS sdi_imagen, SDI.orden AS sdi_orden, SDI.numeral AS sdi_numeral,"
+                    + " SD.cod_detalle AS sd_cod_detalle, SD.nombre AS sd_nombre, SD.detalle AS sd_detalle, SD.orden AS sd_orden, SD.peso AS sd_peso, SD.imagen AS sd_imagen, SD.activo AS sd_activo, SD.numeral AS sd_numeral,"
+                    + " S.cod_seccion AS s_cod_seccion, S.nombre AS s_nombre, S.activo AS s_activo, S.peso AS s_peso, S.imagen AS s_imagen, S.orden AS s_orden, S.numeral AS s_numeral,"
+                    + " E.cod_evaluacion AS e_cod_evaluacion, E.fecha AS e_fecha, E.fecha_registro AS e_fecha_registro, E.estado AS e_estado,"
+                    + " ES.nombre AS es_nombre,"
+                    + " C.cod_ciclo AS c_cod_ciclo, C.nombre AS c_nombre, C.numeral AS c_numeral"
                     + " FROM gestor.evaluacion_plan_accion_detalle EPAD"
-                    + " JOIN public.usuarios U USING (documento_usuario)" + condicion
+                    + " JOIN public.usuarios U USING (documento_usuario)"
+                    + " JOIN gestor.evaluacion_plan_accion EPA USING (cod_evaluacion, codigo_establecimiento, cod_plan)"
+                    + " JOIN gestor.evaluacion E USING (cod_evaluacion, codigo_establecimiento)"
+                    + " JOIN public.establecimiento ES USING (codigo_establecimiento)"
+                    + " JOIN gestor.seccion_detalle_items SDI USING (cod_seccion, cod_detalle, cod_ciclo, cod_item)"
+                    + " JOIN gestor.seccion_detalle SD USING (cod_seccion, cod_ciclo, cod_detalle)"
+                    + " JOIN gestor.seccion S USING (cod_seccion, cod_ciclo)"
+                    + " JOIN gestor.ciclo C USING (cod_ciclo)"
+                    + condicion
+                    + " ORDER BY C.numeral, S.numeral, SD.numeral, SDI.numeral"
             );
             System.out.println("condicion => " + condicion);
             System.out.println("sql => " + sql);
@@ -199,13 +224,44 @@ public class EvaluacionPlanAccionDAO {
             Collection<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles = new ArrayList<EvaluacionPlanAccionDetalle>();
             while (rs.next()) {
                 EvaluacionPlanAccionDetalle epad = new EvaluacionPlanAccionDetalle(new EvaluacionPlanAccionDetallePK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento"), rs.getLong("cod_plan"), rs.getInt("cod_plan_detalle")),
-                        rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("nombre"), rs.getString("descripcion"), rs.getString("estado"),
+                        rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("epad_nombre"), rs.getString("descripcion"), rs.getString("estado"),
                         new Usuarios(
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
                         ), rs.getDate("fecha_registro"
                         )
                 );
                 epad.setResponsable(rs.getString("responsable"));
+
+                //evaluacion
+                Evaluacion e = new Evaluacion(new EvaluacionPK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento")), rs.getString("documento_usuario"),
+                        rs.getDate("e_fecha"), rs.getDate("e_fecha_registro"), rs.getString("e_estado"));
+                e.setUsuarios(new Usuarios(new UsuariosPK(rs.getString("e_documento_usuario"))));
+                e.setEstablecimiento(new Establecimiento(rs.getInt("codigo_establecimiento"), rs.getString("es_nombre")));
+                epad.setEvaluacion(e);
+
+                epad.setEstablecimiento(new Establecimiento(rs.getInt("codigo_establecimiento"), rs.getString("es_nombre")));
+
+                SeccionDetalleItems sdi = new SeccionDetalleItems(new SeccionDetalleItemsPK(rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("sdi_cod_item")),
+                        rs.getString("sdi_nombre"), rs.getString("sdi_detalle"), rs.getDouble("sdi_peso"), rs.getBoolean("sdi_activo"), rs.getString("sdi_imagen"), rs.getInt("sdi_orden"));
+                sdi.setNumeral(rs.getString("sdi_numeral"));
+
+                SeccionDetalle sd = new SeccionDetalle(new SeccionDetallePK(rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("sd_cod_detalle")),
+                        rs.getString("sd_nombre"), rs.getString("sd_detalle"), rs.getInt("sd_orden"), rs.getDouble("sd_peso"), rs.getString("sd_imagen"), rs.getBoolean("sd_activo"));
+                sd.setNumeral(rs.getString("sd_numeral"));
+
+                Seccion s = new Seccion(new SeccionPK(rs.getString("cod_ciclo"), rs.getInt("s_cod_seccion")), rs.getString("s_nombre"), rs.getBoolean("s_activo"), rs.getDouble("s_peso"),
+                        rs.getString("s_imagen"), rs.getInt("s_orden")
+                );
+                s.setNumeral(rs.getString("s_numeral"));
+
+                Ciclo c = new Ciclo(rs.getString("c_cod_ciclo"), rs.getString("c_nombre"));
+                c.setNumeral(rs.getString("c_numeral"));
+
+                c.setEvaluacion(e);
+                s.setCiclo(c);
+                sd.setSeccion(s);
+                sdi.setSeccionDetalle(sd);
+                epad.setSeccionDetalleItems(sdi);
 
                 evaluacionPlanAccionDetalles.add(epad);
             }
