@@ -94,7 +94,7 @@
                          >
                 <p:column headerText="Opciones" filterBy="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codEvaluacion}">
                     <p:panelGrid>
-                        <p:commandButton icon="ui-icon-clipboard" title="Notas"/>
+                        <p:commandButton icon="ui-icon-clipboard" title="Notas" action="#{uiPlanAccion.mostrarNotaSeguimiento()}" update=":formPlanesAccion:dialog"/>
                         <p:commandButton icon="ui-icon-disk" title="Finalizar" rendered="#{varPlanAccionDetalle.estado eq 'A'}"/>
                     </p:panelGrid>
                 </p:column>
@@ -159,7 +159,11 @@
 
 
             <p:separator/>
-
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}" width="#{dialogo.width}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}"  update="dialog" />
 
         </h:form>
 

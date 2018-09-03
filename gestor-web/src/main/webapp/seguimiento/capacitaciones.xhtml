@@ -88,7 +88,7 @@
                          >
                 <p:column headerText="Opciones">
                     <p:panelGrid>
-                        <p:commandButton icon="ui-icon-clipboard" title="Notas"/>
+                        <p:commandButton icon="ui-icon-clipboard" title="Notas" action="#{uiCapacitacion.mostrarNotaSeguimiento()}" update=":formCapacitaciones:dialog"/>
                         <p:commandButton icon="ui-icon-disk" title="Finalizar" rendered="#{varCapacitacionDetalle.estado eq 'A'}"/>
                     </p:panelGrid>
                 </p:column>

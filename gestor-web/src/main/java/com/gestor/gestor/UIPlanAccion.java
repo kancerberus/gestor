@@ -37,6 +37,7 @@ public class UIPlanAccion {
 
     private SeccionDetalleItems sdiSeleccionado;
     private List<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles = new ArrayList<>();
+    private EvaluacionPlanAccionDetalle evaluacionPlanAccionDetalle = new EvaluacionPlanAccionDetalle();
     private Boolean modificarActivo = Boolean.FALSE;
     private Boolean filtroActivo = Boolean.TRUE;
 
@@ -84,6 +85,19 @@ public class UIPlanAccion {
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }
+    }
+    
+    public void mostrarNotaSeguimiento() {
+        try {
+            evaluacionPlanAccionDetalle = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("varPlanAccionDetalle");
+            
+            Dialogo dialogo = new Dialogo("dialogos/plan-accion-notas.xhtml", "Seguimiento Plan Acción", "clip", Dialogo.WIDTH_80);
+            UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
+            UtilJSF.execute("PF('dialog').show();");
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+
     }
 
     private List<String> filtrarOpcionesSeleccionadas() {
@@ -579,6 +593,20 @@ public class UIPlanAccion {
      */
     public void setFiltroActivo(Boolean filtroActivo) {
         this.filtroActivo = filtroActivo;
+    }
+
+    /**
+     * @return the evaluacionPlanAccionDetalle
+     */
+    public EvaluacionPlanAccionDetalle getEvaluacionPlanAccionDetalle() {
+        return evaluacionPlanAccionDetalle;
+    }
+
+    /**
+     * @param evaluacionPlanAccionDetalle the evaluacionPlanAccionDetalle to set
+     */
+    public void setEvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetalle evaluacionPlanAccionDetalle) {
+        this.evaluacionPlanAccionDetalle = evaluacionPlanAccionDetalle;
     }
 
 }

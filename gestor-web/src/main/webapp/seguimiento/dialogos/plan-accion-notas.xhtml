@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <div style="margin-top: 10px; text-align: center;">
+        <p:outputPanel id="opPlanAccionNota">
+            <h3>                
+                <h:outputText value="Nota de Seguimiento"/>
+                #{uiPlanAccion.evaluacionPlanAccionDetalle.nombre}
+            </h3>
+
+            <br/>
+            <h:panelGrid columns="2" cellspacing="10">
+                <h:panelGrid id="pgPlanAccionNota" columns="2" cellspacing="10">
+
+                    <h:outputLabel value="Descripción: " style="font-weight: bold;"/>
+                    <p:inputTextarea value="#{evaluacionPlanAccionDetalle.descripcion}" placeholder="Registra la descripción del plan de accción"/>
+
+                </h:panelGrid>  
+
+                <p:dataTable id="dtPlanAccionNota"  value="#{uiPlanAccion.evaluacionPlanAccionDetalles}" var="varPlanAccionNota" emptyMessage="No se tienen notas de seguimiento registradas."
+                             rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable">
+                    <f:facet name="header">
+                        Notas de Seguimiento
+                    </f:facet>
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column  headerText="Opciones" />
+                            <p:column headerText="Nombre" filterBy="#{varPlanAccionNota.nombre}" sortBy="#{varPlanAccionNota.nombre}"/>
+                            <p:column  headerText="Descripción"/>
+                            <p:column  headerText="Fecha" sortBy="#{varPlanAccionNota.fechaRegistro}"/>
+                            <p:column  headerText="Usuario" filterBy="#{varPlanAccionNota.usuarios.usuario}"/>
+                            <p:column  headerText="Estado" filterBy="#{varPlanAccionNota.estado}"/>
+                        </p:row> 
+                    </p:columnGroup>
+
+                    <p:column>
+                        <p:panelGrid columns="3">
+                            <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Acción" action="#{uiPlanAccion.modificarPlanAccion()}" update="formSeccionDetalleItems:opPlanAccionNota"/>
+                            <p:commandButton icon="ui-icon-trash" title="Eliminar Plan Acción" action="#{uiPlanAccion.eliminarPlanAccion()}" update="formSeccionDetalleItems:opPlanAccionNota">
+                                <p:confirm header="Eliminar Plan Acción" message="Desea eliminar el plan de acción ?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:panelGrid>
+                    </p:column>
+                    <p:column >
+                        <h:outputText value="#{varPlanAccionNota.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionNota.descripcion}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionNota.fechaRegistro}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionNota.usuarios.usuario}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionNota.estado}"/>
+                    </p:column>
+
+
+                </p:dataTable>
+
+            </h:panelGrid>
+
+
+        </p:outputPanel>
+
+        <br/>
+
+        <p:toolbar style="height: 45px;">
+            <p:toolbarGroup align="center" style="margin: auto auto;  align-content: center">
+                <h:panelGrid columns="3" cellspacing="10" style="align-content: center; display: inline-block;">
+                    <p:commandButton value="Guardar Nota" icon="ui-icon-disk" action="#{uiPlanAccion.procesarPlanAccion()}" process="@parent pgPlanAccionNota" update="pgPlanAccionNota dtPlanAccionNota"
+                                     rendered="#{not uiPlanAccion.modificarActivo}"/>
+                    <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" oncomplete="PF('dialog').hide();"/>
+                    <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiPlanAccion.limpiar()}" update="pgPlanAccionNota" process="@this"/>
+                </h:panelGrid>
+            </p:toolbarGroup>
+        </p:toolbar> 
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+</ui:composition>

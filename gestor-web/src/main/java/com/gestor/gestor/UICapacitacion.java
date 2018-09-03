@@ -36,6 +36,7 @@ public class UICapacitacion {
 
     private SeccionDetalleItems sdiSeleccionado;
     private List<EvaluacionCapacitacionDetalle> evaluacionCapacitacionDetalles = new ArrayList<>();
+    private EvaluacionCapacitacionDetalle evaluacionCapacitacionDetalle = new EvaluacionCapacitacionDetalle();
 
     private Boolean modificarActivo = Boolean.FALSE;
     private Boolean filtroActivo = Boolean.TRUE;
@@ -77,13 +78,26 @@ public class UICapacitacion {
             capacitacionEstado.put(App.EVALUACION_CAPACITACION_DETALLE_ESTADO_CERRADO_TEXTO, App.EVALUACION_CAPACITACION_DETALLE_ESTADO_CERRADO);
             capacitacionEstado.put(App.EVALUACION_CAPACITACION_DETALLE_ESTADO_ABIERTO_TEXTO, App.EVALUACION_CAPACITACION_DETALLE_ESTADO_ABIERTO);
             capacitacionEstadoSeleccionado.add(App.EVALUACION_CAPACITACION_DETALLE_ESTADO_ABIERTO);
-            
+
             usuariosList = new ArrayList<>();
             usuariosList.addAll(gestorUsuario.cargarListaUsuarios());
 
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }
+    }
+
+    public void mostrarNotaSeguimiento() {
+        try {
+            evaluacionCapacitacionDetalle = (EvaluacionCapacitacionDetalle) UtilJSF.getBean("varCapacitacionDetalle");
+            
+            Dialogo dialogo = new Dialogo("dialogos/capacitacion-notas.xhtml", "Seguimiento Capacitación", "clip", Dialogo.WIDTH_80);
+            UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
+            UtilJSF.execute("PF('dialog').show();");
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+
     }
 
     private List<String> filtrarOpcionesSeleccionadas() {
@@ -573,6 +587,20 @@ public class UICapacitacion {
      */
     public void setFiltroActivo(Boolean filtroActivo) {
         this.filtroActivo = filtroActivo;
+    }
+
+    /**
+     * @return the evaluacionCapacitacionDetalle
+     */
+    public EvaluacionCapacitacionDetalle getEvaluacionCapacitacionDetalle() {
+        return evaluacionCapacitacionDetalle;
+    }
+
+    /**
+     * @param evaluacionCapacitacionDetalle the evaluacionCapacitacionDetalle to set
+     */
+    public void setEvaluacionCapacitacionDetalle(EvaluacionCapacitacionDetalle evaluacionCapacitacionDetalle) {
+        this.evaluacionCapacitacionDetalle = evaluacionCapacitacionDetalle;
     }
 
 }

@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <div style="margin-top: 10px; text-align: center;">
+        <p:outputPanel id="opCapacitacionNota">
+            <h3>                
+                <h:outputText value="Nota de Seguimiento"/>
+                #{uiCapacitacion.evaluacionCapacitacionDetalle.nombre}
+            </h3>
+
+            <br/>
+            <h:panelGrid columns="2" cellspacing="10">
+                <h:panelGrid id="pgCapacitacionNota" columns="2" cellspacing="10">
+
+                    <h:outputLabel value="Descripción: " style="font-weight: bold;"/>
+                    <p:inputTextarea value="#{evaluacionCapacitacionDetalle.descripcion}" placeholder="Registra la descripción del seguimiento"/>
+
+                </h:panelGrid>
+
+                <p:dataTable id="dtCapacitacionNota"  value="#{uiCapacitacion.evaluacionCapacitacionDetalles}" var="varCapacitacionNota" emptyMessage="No se tienen notas de seguimiento registradas."
+                             rowStyleClass="letra-xx-small-centro" >
+                    <f:facet name="header">
+                        Notas de Seguimiento
+                    </f:facet>
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column  headerText="Opciones" />
+                            <p:column headerText="Nombre" filterBy="#{varCapacitacionNota.nombre}" sortBy="#{varCapacitacionNota.nombre}"/>
+                            <p:column  headerText="Descripción"/>
+                            <p:column  headerText="Fecha" sortBy="#{varCapacitacionNota.fechaRegistro}"/>
+                            <p:column  headerText="Usuario" filterBy="#{varCapacitacionNota.usuarios.usuario}"/>
+                            <p:column  headerText="Estado" filterBy="#{varCapacitacionNota.estado}"/>
+                        </p:row> 
+                    </p:columnGroup>
+
+                    <p:column>
+                        <p:panelGrid columns="3">
+                            <p:commandButton icon="ui-icon-pencil" title="Modificar Capacitación" action="#{uiCapacitacion.modificarCapacitacion()}" update="formSeccionDetalleItems:opCapacitacionNota"/>
+                            <p:commandButton icon="ui-icon-trash" title="Eliminar Capacitación" action="#{uiCapacitacion.eliminarCapacitacion()}" update="formSeccionDetalleItems:opCapacitacionNota">
+                                <p:confirm header="Eliminar Capacitación" message="Desea eliminar la capacitación ?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:panelGrid>
+                    </p:column>
+                    <p:column >
+                        <h:outputText value="#{varCapacitacionNota.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varCapacitacionNota.descripcion}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varCapacitacionNota.fechaRegistro}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varCapacitacionNota.usuarios.usuario}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varCapacitacionNota.estado}"/>
+                    </p:column>
+
+
+                </p:dataTable>
+
+            </h:panelGrid>
+
+
+        </p:outputPanel>
+
+        <br/>
+
+        <p:toolbar style="height: 45px;">
+            <p:toolbarGroup align="center" style="margin: auto auto;  align-content: center">
+                <h:panelGrid columns="3" cellspacing="10" style="align-content: center; display: inline-block;">
+                    <p:commandButton value="Guardar Nota" icon="ui-icon-disk" action="#{uiCapacitacion.procesarCapacitacion()}" process="@parent pgCapacitacionNota" update="pgCapacitacionNota dtCapacitacionNota"/>
+                    <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" oncomplete="PF('dialog').hide();"/>
+                    <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiCapacitacion.limpiar()}" update="opCapacitacionNota" process="@this"/>
+                </h:panelGrid>
+            </p:toolbarGroup>
+        </p:toolbar> 
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+</ui:composition>
