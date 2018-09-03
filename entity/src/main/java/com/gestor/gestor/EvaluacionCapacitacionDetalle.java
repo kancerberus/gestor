@@ -39,6 +39,12 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
     
     public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_DOCUMENTO_USUARIO = "U.DOCUMENTO_USUARIO IN (?)";
     public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_ESTADO = "ECD.ESTADO IN (?)";
+    public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_COD_ESTABLECIMIENTO = "ECD.codigo_establecimiento IN (?)";
+    public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_COD_EVALUACION = "ECD.cod_evaluacion IN (?)";
+    public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_COD_CICLO = "ECD.cod_ciclo IN (?)";
+    public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_RESPONSABLE = "ECD.responsable ILIKE (?)";
+    public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_FECHA_REGISTRO_GTE = "ECD.fecha_registro::DATE >= ?";
+    public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_FECHA_REGISTRO_LTE = "ECD.fecha_registro::DATE <= ?";
     
     
     @EmbeddedId

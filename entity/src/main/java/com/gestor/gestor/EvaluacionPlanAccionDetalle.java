@@ -31,10 +31,17 @@ import javax.persistence.Table;
 @ManagedBean
 @SessionScoped
 public class EvaluacionPlanAccionDetalle implements Serializable {
-    
+
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_DOCUMENTO_USUARIO = "U.DOCUMENTO_USUARIO IN (?)";
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_ESTADO = "EPAD.ESTADO IN (?)";
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_LIMITE_600 = "LIMIT 600";
+
+    public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO = "EPAD.codigo_establecimiento IN (?)";
+    public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_EVALUACION = "EPAD.cod_evaluacion IN (?)";
+    public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_CICLO = "EPAD.cod_ciclo IN (?)";
+    public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_RESPONSABLE = "EPAD.responsable ILIKE (?)";
+    public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_FECHA_REGISTRO_GTE = "EPAD.fecha_registro::DATE >= ?";
+    public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_FECHA_REGISTRO_LTE = "EPAD.fecha_registro::DATE <= ?";
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -56,15 +63,15 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private String estado;
     private String documentoUsuario;
     private String responsable;
-    
+
     private Usuarios usuarios;
-    
+
     private Date fechaRegistro;
-    
+
     private SeccionDetalleItems seccionDetalleItems;
     private Evaluacion evaluacion;
     private Establecimiento establecimiento;
-    
+
     public EvaluacionPlanAccionDetalle() {
     }
 

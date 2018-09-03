@@ -7,16 +7,95 @@
                 template="/template.xhtml">
     <ui:define name="content">
         <h:form enctype="multipart/form-data" id="formPlanesAccion" style="font-size: small;">
-            <h2>SEGUIMIENTO PLANES DE ACCIÓN</h2>
 
+            <h2>SEGUIMIENTO PLANES DE ACCIÓN</h2>
+            <h:panelGrid columns="2">
+                <h:outputText value="Filtro Busqueda: " />
+                <p:inputSwitch label="Filtro" onLabel="SI" offLabel="NO" value="#{uiPlanAccion.filtroActivo}" styleClass="letra-xx-small-centro">
+                    <p:ajax update="formPlanesAccion"  />
+                </p:inputSwitch>
+            </h:panelGrid>
+
+
+
+
+            <h:panelGroup rendered="#{uiPlanAccion.filtroActivo}">
+                <p:separator style="height: 3px"/>
+                <p:panelGrid columns="3" styleClass="letra-xx-small-centro" style="font-size: xx-small">
+                    <f:facet name="header">
+                        Filtros de Búsqueda
+                    </f:facet>
+
+                    <h:panelGrid>
+
+                        <h:outputLabel value="Evaluador"/>
+                        <p:selectOneMenu value="#{uiPlanAccion.usuariosSeleccionado}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccione Evaluador" noSelectionOption="true"/>
+                            <f:selectItems value="#{uiPlanAccion.usuariosList}" var="varUsuarios" itemLabel="#{varUsuarios.nombreApellido}" itemValue="#{varUsuarios}"/>
+                        </p:selectOneMenu>
+
+                        <h:outputLabel value="Empresas"/>
+                        <p:selectManyMenu value="#{uiPlanAccion.establecimientoListSeleccionado}" converter="establecimientoConverter"
+                                          var="t" filter="true" filterMatchMode="contains" showCheckbox="true" styleClass="Centro" >
+                            <f:selectItems value="#{uiPlanAccion.establecimientoList}" var="varEmpresa" itemLabel="#{varEmpresa.nombre}" itemValue="#{varEmpresa}" />
+
+                            <p:column>
+                                <p:graphicImage url="/resources/imagenes/establecimientos/#{t.nombre.toLowerCase()}.png" width="70%"/> 
+                            </p:column>
+
+                            <p:column>
+                                <h:outputText value="#{t.nombre}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText styleClass="ui-icon ui-icon-grip-dotted-horizontal" style="margin:0 auto;" />
+
+                            </p:column>
+                        </p:selectManyMenu>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="Cod Evaluación"/>
+                        <p:inputText placeholder="Cod Evaluación" value="#{uiPlanAccion.codEvaluacion}"/>
+
+                        <h:outputText value="Ciclos" />
+                        <p:selectManyButton value="#{uiPlanAccion.ciclosStringSeleccionado}" >
+                            <f:selectItems value="#{uiPlanAccion.ciclosString}"/>
+                        </p:selectManyButton>
+
+                        <h:outputLabel value="Responsable"/>
+                        <p:inputText placeholder="Responsable" value="#{uiPlanAccion.responsable}"/>
+
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2">
+                        <h:outputText value="Estado Capacitacion" />
+                        <p:selectManyButton value="#{uiPlanAccion.capacitacionEstadoSeleccionado}" >
+                            <f:selectItems value="#{uiPlanAccion.capacitacionEstado}"/>
+                        </p:selectManyButton>
+
+                        <h:outputText value="Fecha Inicio" />
+                        <p:calendar value="#{uiPlanAccion.fechaPlanInicio}" pattern="dd/MM/yyyy" placeholder="Fecha Plan Acción"/>
+
+                        <h:outputText value="Fecha Fin" />
+                        <p:calendar value="#{uiPlanAccion.fechaPlanFin}" pattern="dd/MM/yyyy" placeholder="Fecha Plan Acción"/>
+
+                    </h:panelGrid>
+                </p:panelGrid>
+                <p:commandButton value="Consultar" style="margin: auto auto;width: 210px;height: 30px; border-radius: 10px;"
+                                 action="#{uiPlanAccion.consultarSeguimientoPlanAccion()}" update="formPlanesAccion"/>
+                <p:separator style="height: 3px"/>
+
+            </h:panelGroup>
+            <br/>
             <br/>
             <p:dataTable var="varPlanAccionDetalle" value="#{uiPlanAccion.evaluacionPlanAccionDetalles}"
-                         widgetVar="planAccionDetalleTable" rowStyleClass="letra-xx-small-centro"
+                         widgetVar="planAccionDetalleTable" rowStyleClass="letra-xx-small-centro" style="font-size: 10px;" 
                          emptyMessage="No tiene planes de acción abiertos."
                          >
                 <p:column headerText="Opciones" filterBy="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codEvaluacion}">
                     <p:panelGrid>
-                        <p:commandButton icon="ui-icon-pencil"/>
+                        <p:commandButton icon="ui-icon-clipboard" title="Notas"/>
+                        <p:commandButton icon="ui-icon-disk" title="Finalizar" rendered="#{varPlanAccionDetalle.estado eq 'A'}"/>
                     </p:panelGrid>
                 </p:column>
                 <p:column headerText="Código" filterBy="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codEvaluacion}">
@@ -25,14 +104,20 @@
                 <p:column headerText="Empresa" filterBy="#{varPlanAccionDetalle.establecimiento.nombre}">
                     <h:outputText value="#{varPlanAccionDetalle.establecimiento.nombre}" />
                 </p:column>
-                
+
+                <p:column headerText="Fecha" filterBy="#{varPlanAccionDetalle.fechaRegistro}">
+                    <h:outputText value="#{varPlanAccionDetalle.fechaRegistro}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+
                 <p:column headerText="Evaluador" filterBy="#{varPlanAccionDetalle.usuarios.nombreApellido}">
                     <h:outputText value="#{varPlanAccionDetalle.usuarios.nombreApellido}" />
                 </p:column>
                 <p:column headerText="Responsable" filterBy="#{varPlanAccionDetalle.responsable}">
                     <h:outputText value="#{varPlanAccionDetalle.responsable}" />
                 </p:column>
-                
+
                 <p:column headerText="Ciclo" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.seccionDetalle.seccion.ciclo.nombre}">
                     <h:outputText value="#{varPlanAccionDetalle.seccionDetalleItems.seccionDetalle.seccion.ciclo.nombre}" />
                 </p:column>
@@ -54,20 +139,21 @@
                 <p:column headerText="Descripción" filterBy="#{varPlanAccionDetalle.descripcion}" >
                     <h:outputText value="#{varPlanAccionDetalle.descripcion}" />
                 </p:column>
-                
+
                 <p:column headerText="Estado"
                           filterBy="#{varPlanAccionDetalle.estado}"
                           filterMatchMode="equals">
                     <f:facet name="filter">
                         <p:selectOneButton onchange="PF('planAccionDetalleTable').filter()"
-                                           style="font-size: 10px;">
+                                           style="font-size: 8px;">
                             <f:selectItem itemLabel="ABIERTO" itemValue="A" />
                             <f:selectItem itemLabel="CERRADO" itemValue="C" />
+                            <f:selectItem itemLabel="ELIMINADO" itemValue="E" />
                         </p:selectOneButton>
                     </f:facet>
                     <h:outputText value="#{varPlanAccionDetalle.estado}" />
                 </p:column>
-                
+
 
             </p:dataTable>
 

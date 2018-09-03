@@ -75,7 +75,7 @@ public class UsuarioDAO {
 
         try {
             consulta = new Consulta(this.conexion);
-            String sql = "SELECT codigo_establecimiento, documento_usuario, nombre, apellido, usuario, clave, activo, correo, fecha_ingreso, fecha_retiro"
+            String sql = "SELECT documento_usuario, nombre, apellido, usuario, clave, activo, correo, fecha_ingreso, fecha_retiro"
                     + " FROM usuarios";
             rs = consulta.ejecutar(sql);
             while (rs.next()) {

@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 public class UtilTexto {
 
     public static String CARACTER_COMILLA = "'";
+    public static String CARACTER_PORCENTAJE = "%";
     public static String SEPARADOR_ESPACIO = " ";
 
     /*

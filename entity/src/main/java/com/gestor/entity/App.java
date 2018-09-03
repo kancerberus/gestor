@@ -17,7 +17,14 @@ public class App {
     public static final String EVALUACION_ESTADO_CERRADO = "C";
     public static final String EVALUACION_ESTADO_ELIMINADO = "E";
     public static final String EVALUACION_PLAN_ACCION_ESTADO_ABIERTO = "A";
+
     public static final String EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO = "A";
+    public static final String EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO_TEXTO = "ABIERTO";
+    public static final String EVALUACION_PLAN_ACCION_DETALLE_ESTADO_CERRADO = "C";
+    public static final String EVALUACION_PLAN_ACCION_DETALLE_ESTADO_CERRADO_TEXTO = "CERRADO";
+    public static final String EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ELIMINADO = "E";
+    public static final String EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ELIMINADO_TEXTO = "ELIMINADO";
+
     public static final String EVALUACION_ADJUNTOS_ESTADO_ACTIVO = "A";
     public static final String CONFIGURACION_MOSTRAR_EVALUACIONES = "MOSTRAR_EVALUACIONES";
     public static final String COD_CICLO_PLANEAR = "P";
@@ -29,12 +36,16 @@ public class App {
     public static final String ADJUNTO_PREFIJO = "E-";
     public static final String NUMERAL_SEPARADOR = " - ";
 
-    public static String EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ELIMINADO = "E";
+    public static final String EVALUACION_CAPACITACION_ESTADO_ABIERTO = "A";
 
-    public static String EVALUACION_CAPACITACION_ESTADO_ABIERTO = "A";
-    public static String EVALUACION_CAPACITACION_DETALLE_ESTADO_ABIERTO = "A";
-    public static String EVALUACION_CAPACITACION_DETALLE_ESTADO_ELIMINADO = "E";
-    public static String CONDICION_WHERE = "WHERE";
-    public static String CONDICION_AND = "AND";
+    public static final String EVALUACION_CAPACITACION_DETALLE_ESTADO_ABIERTO = "A";
+    public static final String EVALUACION_CAPACITACION_DETALLE_ESTADO_ABIERTO_TEXTO = "ABIERTO";
+    public static final String EVALUACION_CAPACITACION_DETALLE_ESTADO_ELIMINADO = "E";
+    public static final String EVALUACION_CAPACITACION_DETALLE_ESTADO_ELIMINADO_TEXTO = "ELIMINADO";
+    public static final String EVALUACION_CAPACITACION_DETALLE_ESTADO_CERRADO = "C";
+    public static final String EVALUACION_CAPACITACION_DETALLE_ESTADO_CERRADO_TEXTO = "CERRADO";
+
+    public static final String CONDICION_WHERE = "WHERE";
+    public static final String CONDICION_AND = "AND";
 
 }

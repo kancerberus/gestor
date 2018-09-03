@@ -6,42 +6,90 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 template="/template.xhtml">
     <ui:define name="content">
-        
-        
+
+
         <h:form enctype="multipart/form-data" id="formCapacitaciones" style="font-size: small;">
             <h2>SEGUIMIENTO CAPACITACIONES</h2>
+            <h:panelGrid columns="2">
+                <h:outputText value="Filtro Busqueda: " />
+                <p:inputSwitch label="Filtro" onLabel="SI" offLabel="NO" value="#{uiCapacitacion.filtroActivo}" styleClass="letra-xx-small-centro">
+                    <p:ajax update="formCapacitaciones"  />
+                </p:inputSwitch>
+            </h:panelGrid>
 
-            <div class="ui-g ui-fluid">
-                <div class="ui-g-12 ui-md-4">
-                    <div class="ui-inputgroup">
-                        <span class="ui-inputgroup-addon"><i class="fa fa-user"></i></span>
-                        <p:inputText placeholder="Username" />      
-                    </div>
-                </div>
-                <div class="ui-g-12 ui-md-4">
-                    <div class="ui-inputgroup">
-                        <span class="ui-inputgroup-addon">$</span>
-                        <p:inputText placeholder="Price" />
-                        <span class="ui-inputgroup-addon">.00</span>      
-                    </div>
-                </div>
+            <h:panelGroup rendered="#{uiCapacitacion.filtroActivo}">
+                <p:separator style="height: 3px"/>
+                <p:panelGrid columns="3" styleClass="letra-xx-small-centro" style="font-size: xx-small">
+                    <f:facet name="header">
+                        Filtros de Búsqueda
+                    </f:facet>
 
-                <div class="ui-g-12 ui-md-4">
-                    <div class="ui-inputgroup">
-                        <span class="ui-inputgroup-addon">www</span>
-                        <p:inputText placeholder="Website" />   
-                    </div>
-                </div>
-            </div>
+                    <h:panelGrid>
 
+                        <h:outputLabel value="Evaluador"/>
+                        <p:selectOneMenu value="#{uiCapacitacion.usuariosSeleccionado}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccione Evaluador" noSelectionOption="true"/>
+                            <f:selectItems value="#{uiCapacitacion.usuariosList}" var="varUsuarios" itemLabel="#{varUsuarios.nombreApellido}" itemValue="#{varUsuarios}"/>
+                        </p:selectOneMenu>
+
+                        <h:outputLabel value="Empresas"/>
+                        <p:selectManyMenu value="#{uiCapacitacion.establecimientoListSeleccionado}" converter="establecimientoConverter"    
+                                          var="t" filter="true" filterMatchMode="contains" showCheckbox="true" styleClass="Centro" >
+                            <f:selectItems value="#{uiCapacitacion.establecimientoList}" var="varEmpresa" itemLabel="#{varEmpresa.nombre}" itemValue="#{varEmpresa}" />
+                            <p:column>
+                                <p:graphicImage url="/resources/imagenes/establecimientos/#{t.nombre.toLowerCase()}.png" width="70%"/> 
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{t.nombre}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText styleClass="ui-icon ui-icon-grip-dotted-horizontal" style="margin:0 auto;" />
+                            </p:column>
+                        </p:selectManyMenu>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="Cod Evaluación"/>
+                        <p:inputText placeholder="Cod Evaluación" value="#{uiCapacitacion.codEvaluacion}"/>
+
+                        <h:outputText value="Ciclos" />
+                        <p:selectManyButton value="#{uiCapacitacion.ciclosStringSeleccionado}" >
+                            <f:selectItems value="#{uiCapacitacion.ciclosString}"/>
+                        </p:selectManyButton>
+
+                        <h:outputLabel value="Responsable"/>
+                        <p:inputText placeholder="Responsable" value="#{uiCapacitacion.responsable}"/>
+
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2">
+                        <h:outputText value="Estado Capacitacion" />
+                        <p:selectManyButton value="#{uiCapacitacion.capacitacionEstadoSeleccionado}" >
+                            <f:selectItems value="#{uiCapacitacion.capacitacionEstado}"/>
+                        </p:selectManyButton>
+
+                        <h:outputText value="Fecha Inicio" />
+                        <p:calendar value="#{uiCapacitacion.fechaCapacitacionInicio}" pattern="dd/MM/yyyy" placeholder="Fecha Capacitación"/>
+
+                        <h:outputText value="Fecha Fin" />
+                        <p:calendar value="#{uiCapacitacion.fechaCapacitacionFin}" pattern="dd/MM/yyyy" placeholder="Fecha Capacitación"/>
+
+                    </h:panelGrid>
+                </p:panelGrid>
+                <p:commandButton value="Consultar" style="margin: auto auto;width: 210px;height: 30px; border-radius: 10px;"
+                                 action="#{uiCapacitacion.consultarSeguimientoCapacitaciones()}" update="formCapacitaciones"/>
+                <p:separator style="height: 3px"/>
+            </h:panelGroup>
+            <br/>
             <br/>
             <p:dataTable var="varCapacitacionDetalle" value="#{uiCapacitacion.evaluacionCapacitacionDetalles}"
-                         widgetVar="capacitacionDetalleTable" rowStyleClass="letra-xx-small-centro"
+                         widgetVar="capacitacionDetalleTable" rowStyleClass="letra-xx-small-centro" style="font-size: 10px;"
                          emptyMessage="No tiene capacitaciones abiertas."
                          >
                 <p:column headerText="Opciones">
                     <p:panelGrid>
-                        <p:commandButton icon="ui-icon-pencil"/>
+                        <p:commandButton icon="ui-icon-clipboard" title="Notas"/>
+                        <p:commandButton icon="ui-icon-disk" title="Finalizar" rendered="#{varCapacitacionDetalle.estado eq 'A'}"/>
                     </p:panelGrid>
                 </p:column>
                 <p:column headerText="Código" filterBy="#{varCapacitacionDetalle.evaluacionCapacitacionDetallePK.codEvaluacion}">
@@ -49,6 +97,12 @@
                 </p:column>
                 <p:column headerText="Empresa" filterBy="#{varCapacitacionDetalle.establecimiento.nombre}">
                     <h:outputText value="#{varCapacitacionDetalle.establecimiento.nombre}" />
+                </p:column>
+
+                <p:column headerText="Fecha" filterBy="#{varCapacitacionDetalle.fechaRegistro}">
+                    <h:outputText value="#{varCapacitacionDetalle.fechaRegistro}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
                 </p:column>
 
                 <p:column headerText="Evaluador" filterBy="#{varCapacitacionDetalle.usuarios.nombreApellido}">
@@ -85,9 +139,10 @@
                           filterMatchMode="equals">
                     <f:facet name="filter">
                         <p:selectOneButton onchange="PF('capacitacionDetalleTable').filter()"
-                                           style="font-size: 10px;">
+                                           style="font-size: 8px;">
                             <f:selectItem itemLabel="ABIERTO" itemValue="A" />
                             <f:selectItem itemLabel="CERRADO" itemValue="C" />
+                            <f:selectItem itemLabel="ELIMINADO" itemValue="E" />
                         </p:selectOneButton>
                     </f:facet>
                     <h:outputText value="#{varCapacitacionDetalle.estado}" />
@@ -139,6 +194,12 @@
 
             </style>
 
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}" width="#{dialogo.width}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}"  update="dialog" />
         </h:form>
 
     </ui:define>
