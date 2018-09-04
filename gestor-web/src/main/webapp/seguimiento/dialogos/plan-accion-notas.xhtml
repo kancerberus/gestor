@@ -40,8 +40,8 @@
 
                     <p:column>
                         <p:panelGrid columns="3">
-                            <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Acción" action="#{uiPlanAccion.modificarPlanAccion()}" update="formSeccionDetalleItems:opPlanAccionNota"/>
-                            <p:commandButton icon="ui-icon-trash" title="Eliminar Plan Acción" action="#{uiPlanAccion.eliminarPlanAccion()}" update="formSeccionDetalleItems:opPlanAccionNota">
+                            <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Acción" action="#{uiPlanAccion.modificarPlanAccion()}" update="formPlanesAccion:opPlanAccionNota"/>
+                            <p:commandButton icon="ui-icon-trash" title="Eliminar Plan Acción" action="#{uiPlanAccion.eliminarPlanAccion()}" update="formPlanesAccion:opPlanAccionNota">
                                 <p:confirm header="Eliminar Plan Acción" message="Desea eliminar el plan de acción ?" icon="ui-icon-alert" />
                             </p:commandButton>
                         </p:panelGrid>

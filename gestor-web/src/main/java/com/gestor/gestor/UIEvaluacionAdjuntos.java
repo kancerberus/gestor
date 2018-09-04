@@ -177,29 +177,30 @@ public class UIEvaluacionAdjuntos {
                     sdiSeleccionado.getSeccionDetalle().getSeccionDetallePK().getCodDetalle(), sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem(), codAdjunto)
             );
             Boolean procesarAdjunto = Boolean.TRUE;
-            if (archivoEliminar != null && !archivoEliminar.equalsIgnoreCase("") && (file == null || file.getFileName() == null || file.getFileName().equalsIgnoreCase(""))) {
-                UtilMSG.addErrorMsg("Cargar Adjunto", "Selecciona el archivo a guardar.");
+            if (archivoEliminar != null && archivoEliminar.equalsIgnoreCase("") && (file == null || file.getFileName() == null || file.getFileName().equalsIgnoreCase(""))) {
+                UtilMSG.addWarningMsg("Cargar Adjunto", "Selecciona el archivo a guardar.");
                 return;
             }
 
             if (archivoEliminar != null && !archivoEliminar.equalsIgnoreCase("")) {
                 procesarAdjunto = Boolean.FALSE;
             }
-            String fileName = codAdjunto + "-" + file.getFileName();
-            evaluacionAdjuntos.setArchivo(fileName);
-            evaluacionAdjuntos.setExtension(FilenameUtils.getExtension(file.getFileName()));
-            evaluacionAdjuntos.setDocumentoUsuario(sesion.getUsuarios().getUsuariosPK().getDocumentoUsuario());
 
             GestorEvaluacionAdjuntos gestorEvaluacionAdjuntos = new GestorEvaluacionAdjuntos();
+            evaluacionAdjuntos.setDocumentoUsuario(sesion.getUsuarios().getUsuariosPK().getDocumentoUsuario());
             evaluacionAdjuntos.setEstado(App.EVALUACION_ADJUNTOS_ESTADO_ACTIVO);
-
+            Properties p = Propiedades.getInstancia().getPropiedades();
             evaluacionAdjuntos.setFechaInicioVigencia(gestorGeneral.now());
             evaluacionAdjuntos = gestorEvaluacionAdjuntos.validarEvaluacionAdjuntos(evaluacionAdjuntos);
             evaluacionAdjuntos = gestorEvaluacionAdjuntos.calcularVigenciaAdjunto(evaluacionAdjuntos);
+            String rutaTemporal = null;
 
-            Properties p = Propiedades.getInstancia().getPropiedades();
-            String rutaTemporal = p.getProperty("rutaTemporal") + File.separator + file.getFileName();
             if (procesarAdjunto) {
+                String fileName = codAdjunto + "-" + file.getFileName();
+                rutaTemporal = p.getProperty("rutaTemporal") + File.separator + file.getFileName();
+                evaluacionAdjuntos.setArchivo(fileName);
+                evaluacionAdjuntos.setExtension(FilenameUtils.getExtension(file.getFileName()));
+
                 String ruta = p.getProperty("rutaAdjunto");
                 String rutaDestino = ruta + File.separator + App.ADJUNTO_PREFIJO + sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodEvaluacion();
 
@@ -231,7 +232,7 @@ public class UIEvaluacionAdjuntos {
             if (procesarAdjunto) {
                 UtilMSG.addSuccessMsg("Soporte Almacenado", "Adjunto almacenado correctamente.");
             } else {
-                UtilMSG.addSuccessMsg("Soporte Actualizo", "Registro actualizado correctamente, sin modificar archivo.");
+                UtilMSG.addSuccessMsg("Soporte Actualizado", "Registro actualizado correctamente, sin modificar archivo.");
             }
 
             UtilJSF.setBean("evaluacionAdjuntos", new EvaluacionAdjuntos(), UtilJSF.SESSION_SCOPE);
@@ -349,6 +350,5 @@ public class UIEvaluacionAdjuntos {
     public void setItemsVigenciaArchivos(Map<String, Integer> itemsVigenciaArchivos) {
         this.itemsVigenciaArchivos = itemsVigenciaArchivos;
     }
-
 
 }

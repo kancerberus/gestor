@@ -6,6 +6,7 @@
 package com.gestor.gestor.controlador;
 
 import com.gestor.controller.Gestor;
+import com.gestor.entity.App;
 import com.gestor.entity.UtilLog;
 import com.gestor.gestor.dao.EvaluacionAdjuntosDAO;
 import com.gestor.publico.EvaluacionAdjuntos;
@@ -34,8 +35,8 @@ public class GestorEvaluacionAdjuntos extends Gestor {
         if (evaluacionAdjuntos.getDescripcion() == null || evaluacionAdjuntos.getDescripcion().equalsIgnoreCase("")) {
             throw new Exception("Ingresa la descripción del adjunto.", UtilLog.TW_VALIDACION);
         }
-        if (evaluacionAdjuntos.getMesesVigencia() == null) {
-            throw new Exception("No se pudo determinar la vigencia del archivo, intente realizar el proceso de nuevo.", UtilLog.TW_VALIDACION);
+        if (evaluacionAdjuntos.getMesesVigencia() == null || evaluacionAdjuntos.getMesesVigencia() == 0) {
+            evaluacionAdjuntos.setMesesVigencia(App.EVALUACION_ADJUNTOS_MESES_VIGENCIA);
         }
         if (evaluacionAdjuntos.getFechaInicioVigencia() == null) {
             throw new Exception("No se pudo determinar la fecha inicio de vigencia del archivo, intente realizar el proceso de nuevo.", UtilLog.TW_VALIDACION);
@@ -77,13 +78,18 @@ public class GestorEvaluacionAdjuntos extends Gestor {
         }
     }
 
-    public EvaluacionAdjuntos calcularVigenciaAdjunto(EvaluacionAdjuntos evaluacionAdjuntos) {
+    public EvaluacionAdjuntos calcularVigenciaAdjunto(EvaluacionAdjuntos evaluacionAdjuntos) throws Exception {
         evaluacionAdjuntos.setFechaFinVigencia(evaluacionAdjuntos.getFechaInicioVigencia());
 
         if (evaluacionAdjuntos.getMesesVigencia() != null && evaluacionAdjuntos.getMesesVigencia() > 0) {
             GregorianCalendar fechaFinVigencia = new GregorianCalendar();
             fechaFinVigencia.setTime(evaluacionAdjuntos.getFechaInicioVigencia());
             fechaFinVigencia.add(Calendar.DAY_OF_MONTH, evaluacionAdjuntos.getMesesVigencia() * 30);
+            evaluacionAdjuntos.setFechaFinVigencia(fechaFinVigencia.getTime());
+        } else {
+            GregorianCalendar fechaFinVigencia = new GregorianCalendar();
+            fechaFinVigencia.setTime(evaluacionAdjuntos.getFechaInicioVigencia());
+            fechaFinVigencia.add(Calendar.DAY_OF_MONTH, App.EVALUACION_ADJUNTOS_MESES_VIGENCIA_CALCULO * 30);
             evaluacionAdjuntos.setFechaFinVigencia(fechaFinVigencia.getTime());
         }
 

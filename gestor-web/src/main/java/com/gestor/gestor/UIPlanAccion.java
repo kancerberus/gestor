@@ -318,7 +318,7 @@ public class UIPlanAccion {
             ep.setEvaluacionPlanAccionDetalle(epd);
             gestorEvaluacionPlanAccion.procesarPlanAccion(ep);
             UtilJSF.setBean("evaluacionPlanAccionDetalle", new EvaluacionPlanAccionDetalle(), UtilJSF.SESSION_SCOPE);
-            UtilMSG.addWarningMsg("Plan Acción Guardado", "Se almaceno el plan de acción satisfactoriamente.");
+            UtilMSG.addSuccessMsg("Plan Acción Guardado", "Se almaceno el plan de acción satisfactoriamente.");
             evaluacionPlanAccionDetalles = new ArrayList<>();
             evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
                     sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodEvaluacion(),

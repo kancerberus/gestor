@@ -6,6 +6,7 @@
 package com.gestor.gestor.dao;
 
 import com.gestor.entity.App;
+import com.gestor.entity.UtilFecha;
 import com.gestor.publico.EvaluacionAdjuntos;
 import com.gestor.publico.EvaluacionAdjuntosPK;
 import conexion.Consulta;
@@ -35,13 +36,19 @@ public class EvaluacionAdjuntosDAO {
                     "INSERT INTO gestor.evaluacion_adjuntos("
                     + " cod_evaluacion, codigo_establecimiento, cod_ciclo, cod_seccion,"
                     + " cod_detalle, cod_item, cod_adjunto, nombre, descripcion, archivo,"
-                    + " extension, fecha, documento_usuario, estado)"
+                    + " extension, fecha, documento_usuario, estado, fecha_inicio_vigencia, fecha_fin_vigencia, meses_vigencia)"
                     + " VALUES (" + ea.getEvaluacionAdjuntosPK().getCodEvaluacion() + ", " + ea.getEvaluacionAdjuntosPK().getCodigoEstablecimiento() + ","
                     + " '" + ea.getEvaluacionAdjuntosPK().getCodCiclo() + "', " + ea.getEvaluacionAdjuntosPK().getCodSeccion()
                     + " , " + ea.getEvaluacionAdjuntosPK().getCodDetalle() + ", " + ea.getEvaluacionAdjuntosPK().getCodItem() + ", " + ea.getEvaluacionAdjuntosPK().getCodAdjunto() + ","
-                    + " '" + ea.getNombre() + "', '" + ea.getDescripcion() + "', '" + ea.getArchivo() + "', '" + ea.getExtension() + "', NOW(), '" + ea.getDocumentoUsuario() + "', '" + ea.getEstado() + "')"
+                    + " '" + ea.getNombre() + "', '" + ea.getDescripcion() + "', '" + ea.getArchivo() + "', '" + ea.getExtension() + "',"
+                    + " NOW(), '" + ea.getDocumentoUsuario() + "', '" + ea.getEstado() + "'"
+                    + " ," + UtilFecha.formatoFecha(ea.getFechaInicioVigencia(), null, UtilFecha.PATRON_FECHA_YYYYMMDD, UtilFecha.CARACTER_COMILLA)
+                    + " ," + UtilFecha.formatoFecha(ea.getFechaFinVigencia(), null, UtilFecha.PATRON_FECHA_YYYYMMDD, UtilFecha.CARACTER_COMILLA)
+                    + " ," + ea.getMesesVigencia() + ")"
                     + " ON CONFLICT (cod_evaluacion, codigo_establecimiento, cod_ciclo, cod_seccion, cod_detalle, cod_item, cod_adjunto)"
-                    + " DO UPDATE SET nombre=excluded.nombre, descripcion=excluded.descripcion, archivo=excluded.archivo, extension=excluded.extension"
+                    + " DO UPDATE SET nombre=excluded.nombre, descripcion=excluded.descripcion, archivo=excluded.archivo,"
+                    + " extension=excluded.extension, fecha_inicio_vigencia=excluded.fecha_inicio_vigencia,"
+                    + " fecha_fin_vigencia=excluded.fecha_fin_vigencia, meses_vigencia=excluded.meses_vigencia"
             );
             consulta.actualizar(sql);
         } finally {
