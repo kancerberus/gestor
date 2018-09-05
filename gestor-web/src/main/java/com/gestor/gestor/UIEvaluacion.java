@@ -19,6 +19,7 @@ import com.gestor.modelo.Sesion;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.EvaluacionAdjuntos;
 import com.gestor.publico.Lista;
+import com.gestor.publico.Usuarios;
 import com.gestor.publico.controlador.GestorLista;
 import java.util.ArrayList;
 import java.util.Date;
@@ -306,9 +307,41 @@ public class UIEvaluacion {
 
     public String guardar() {
         try {
+            Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
             this.resumenEvaluacionList = new ArrayList<>();
+            List<EvaluacionResumen> evaluacionResumens = new ArrayList<>();
             GestorEvaluacion gestorEvaluacion = new GestorEvaluacion();
             Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
+
+            Double calificacionE = 0.0;
+            Double pesoE = 0.0;
+            for (Ciclo c : e.getCiclos()) {
+                Double calificacionC = 0.0;
+                for (Seccion s : c.getSeccionList()) {
+                    Double calificacionS = 0.0;
+                    for (SeccionDetalle sd : s.getSeccionDetalleList()) {
+                        Double calificacionSd = 0.0;
+                        for (SeccionDetalleItems sdi : sd.getSeccionDetalleItemsList()) {
+                            if (sdi.getEvaluacionPuntajes() != null && sdi.getEvaluacionPuntajes().getDescripcion() != null && !sdi.getEvaluacionPuntajes().getDescripcion().equalsIgnoreCase("")) {
+                                sdi.setEvaluacionPuntajes(gestorEvaluacion.cargarEvaluacionPuntajes(e.getEvaluacionPK().getCodigoEstablecimiento(), e.getEvaluacionPK().getCodEvaluacion(), sdi.getEvaluacionPuntajes().getDescripcion()));
+                            }
+                            if (sdi.getEvaluacionPuntajes() != null && sdi.getEvaluacionPuntajes().getCalifica() != null && sdi.getEvaluacionPuntajes().getCalifica()) {
+                                calificacionSd += sdi.getPeso() * 100;
+                            }
+                        }
+                        sd.setCalificacion(calificacionSd);
+                        calificacionS += sd.getCalificacion();
+                    }
+                    s.setCalificacion(calificacionS);
+                    calificacionC += s.getCalificacion();
+                    pesoE += s.getPeso() * 100;
+                }
+                c.setCalificacion(calificacionC);
+                calificacionE += c.getCalificacion();
+            }
+            e.setCalificacion(calificacionE);
+            e.setPeso(pesoE);
+
             for (Ciclo c : e.getCiclos()) {
                 c.setEvaluacion(e);
                 for (Seccion s : c.getSeccionList()) {
@@ -321,18 +354,26 @@ public class UIEvaluacion {
                                 sdi.setEvaluacionPuntajes(gestorEvaluacion.cargarEvaluacionPuntajes(e.getEvaluacionPK().getCodigoEstablecimiento(), e.getEvaluacionPK().getCodEvaluacion(), sdi.getEvaluacionPuntajes().getDescripcion()));
                             }
                             resumenEvaluacionList.add((SeccionDetalleItems) sdi.clone());
+                            EvaluacionResumen er = new EvaluacionResumen(new EvaluacionResumenPK(e.getEvaluacionPK().getCodEvaluacion(), e.getEvaluacionPK().getCodigoEstablecimiento(), 0),
+                                    usuarios.getUsuariosPK().getDocumentoUsuario(), c.getCodCiclo(), c.getNombre(), c.getNumeral(), c.getCalificacion(),
+                                    s.getNombre(), s.getPeso(), s.getOrden(), s.getCalificacion(),
+                                    sd.getNombre(), sd.getPeso(), sd.getCalificacion(), sd.getOrden(),
+                                    sdi.getNombre(), sdi.getDetalle(), sdi.getPeso(), sdi.getOrden(), sdi.getEvaluacionPuntajes().getEvaluacionPuntajesPK().getCodPuntaje(), sdi.getEvaluacionPuntajes().getCalifica(), new Date());
+                            er.setEvaluacion(e);
+                            evaluacionResumens.add(er);
                         }
+
                     }
+
                 }
             }
 
-            if (this.getAvanceEvaluacion() >= 100) {
-                this.finalizarActivo = Boolean.TRUE;
-            } else {
-                UtilMSG.addWarningMsg("La evaluación no se puede finalizar hasta completarla.");
-            }
+            UIEvaluacionResumen uiEvaluacionResumen = new UIEvaluacionResumen();
+            uiEvaluacionResumen.setEvaluacionResumenList(evaluacionResumens);
+            uiEvaluacionResumen.setEvaluacion(e);
 
-            return ("/gestor/evaluacion-guardar.xhtml?faces-redirect=true");
+            UtilJSF.setBean("uiEvaluacionResumen", uiEvaluacionResumen, UtilJSF.SESSION_SCOPE);
+            return ("/seguimiento/evaluacion-resumen.xhtml?faces-redirect=true");
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }

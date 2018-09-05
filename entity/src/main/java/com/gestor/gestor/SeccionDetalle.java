@@ -36,6 +36,7 @@ import javax.persistence.Table;
 
 public class SeccionDetalle implements Serializable {
 
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected SeccionDetallePK seccionDetallePK;
@@ -44,6 +45,7 @@ public class SeccionDetalle implements Serializable {
     private String detalle;
     @Column(name = "orden")
     private Integer orden;
+    private Double calificacion;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "peso")
     private Double peso;
@@ -212,6 +214,20 @@ public class SeccionDetalle implements Serializable {
      */
     public void setNumeral(String numeral) {
         this.numeral = numeral;
+    }
+
+    /**
+     * @return the calificacion
+     */
+    public Double getCalificacion() {
+        return calificacion;
+    }
+
+    /**
+     * @param calificacion the calificacion to set
+     */
+    public void setCalificacion(Double calificacion) {
+        this.calificacion = calificacion;
     }
 
 }

@@ -14,6 +14,7 @@ import com.gestor.gestor.EvaluacionPuntajesPK;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.UsuariosPK;
+import com.google.gson.JsonObject;
 import conexion.Consulta;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -276,6 +277,29 @@ public class EvaluacionDAO {
             if (rs != null) {
                 rs.close();
             }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public void insertarResumenes(String key, JsonObject o) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            System.out.println("json" + o.toString());
+            StringBuilder sql = new StringBuilder(
+                    "UPDATE gestor.evaluacion set resumenes=jsonb_set("
+                    + "resumenes,'{" + key + "}','["
+                    + "{"
+                    + o.toString()
+                    + "}"
+                    + "]', " + Boolean.TRUE.toString()
+                    + ")"
+            );
+            System.out.println("sql=>" + sql);
+            consulta.actualizar(sql);
+        } finally {
             if (consulta != null) {
                 consulta.desconectar();
             }

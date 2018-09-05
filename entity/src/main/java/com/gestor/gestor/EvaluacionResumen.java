@@ -71,6 +71,8 @@ public class EvaluacionResumen implements Serializable {
     @Column(name = "fecha_registro")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaRegistro;
+    
+    private Evaluacion evaluacion;
 
     public EvaluacionResumen() {
     }
@@ -79,9 +81,35 @@ public class EvaluacionResumen implements Serializable {
         this.evaluacionResumenPK = evaluacionResumenPK;
     }
 
-    public EvaluacionResumen(int codEvaluacion, short codigoEstablecimiento, int codResumen) {
+    public EvaluacionResumen(Long codEvaluacion, int codigoEstablecimiento, int codResumen) {
         this.evaluacionResumenPK = new EvaluacionResumenPK(codEvaluacion, codigoEstablecimiento, codResumen);
     }
+
+    public EvaluacionResumen(EvaluacionResumenPK evaluacionResumenPK, String documentoUsuario, String codCiclo, String ciclo, String numeral, Double cicloCalificacion, String seccion, Double seccionPeso, Integer seccionOrden, Double seccionCalificacion, String detalle, Double detallePeso, Double detalleCalificacion, Integer detalleOrden, String items, String itemsDetalle, Double itemsPeso, Integer itemsOrden, String codPuntaje, Boolean califica, Date fechaRegistro) {
+        this.evaluacionResumenPK = evaluacionResumenPK;
+        this.documentoUsuario = documentoUsuario;
+        this.codCiclo = codCiclo;
+        this.ciclo = ciclo;
+        this.numeral = numeral;
+        this.cicloCalificacion = cicloCalificacion;
+        this.seccion = seccion;
+        this.seccionPeso = seccionPeso;
+        this.seccionOrden = seccionOrden;
+        this.seccionCalificacion = seccionCalificacion;
+        this.detalle = detalle;
+        this.detallePeso = detallePeso;
+        this.detalleCalificacion = detalleCalificacion;
+        this.detalleOrden = detalleOrden;
+        this.items = items;
+        this.itemsDetalle = itemsDetalle;
+        this.itemsPeso = itemsPeso;
+        this.itemsOrden = itemsOrden;
+        this.codPuntaje = codPuntaje;
+        this.califica = califica;
+        this.fechaRegistro = fechaRegistro;
+    }
+    
+    
 
     public EvaluacionResumenPK getEvaluacionResumenPK() {
         return evaluacionResumenPK;
@@ -274,6 +302,20 @@ public class EvaluacionResumen implements Serializable {
     @Override
     public String toString() {
         return "com.gestor.gestor.EvaluacionResumen[ evaluacionResumenPK=" + evaluacionResumenPK + " ]";
+    }
+
+    /**
+     * @return the evaluacion
+     */
+    public Evaluacion getEvaluacion() {
+        return evaluacion;
+    }
+
+    /**
+     * @param evaluacion the evaluacion to set
+     */
+    public void setEvaluacion(Evaluacion evaluacion) {
+        this.evaluacion = evaluacion;
     }
     
 }

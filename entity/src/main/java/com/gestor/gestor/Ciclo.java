@@ -43,12 +43,12 @@ public class Ciclo implements Serializable {
     @Column(name = "nombre")
     private String nombre;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ciclo")
-    
-    
+
     private List<Seccion> seccionList;
     private Evaluacion evaluacion;
     
     private String numeral;
+    private Double calificacion;
 
     public Ciclo() {
     }
@@ -142,5 +142,21 @@ public class Ciclo implements Serializable {
     public void setNumeral(String numeral) {
         this.numeral = numeral;
     }
+
+    /**
+     * @return the calificacion
+     */
+    public Double getCalificacion() {
+        return calificacion;
+    }
+
+    /**
+     * @param calificacion the calificacion to set
+     */
+    public void setCalificacion(Double calificacion) {
+        this.calificacion = calificacion;
+    }
+
+
 
 }

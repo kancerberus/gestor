@@ -19,10 +19,10 @@ public class EvaluacionResumenPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "cod_evaluacion")
-    private int codEvaluacion;
+    private Long codEvaluacion;
     @Basic(optional = false)
     @Column(name = "codigo_establecimiento")
-    private short codigoEstablecimiento;
+    private int codigoEstablecimiento;
     @Basic(optional = false)
     @Column(name = "cod_resumen")
     private int codResumen;
@@ -30,25 +30,25 @@ public class EvaluacionResumenPK implements Serializable {
     public EvaluacionResumenPK() {
     }
 
-    public EvaluacionResumenPK(int codEvaluacion, short codigoEstablecimiento, int codResumen) {
+    public EvaluacionResumenPK(Long codEvaluacion, int codigoEstablecimiento, int codResumen) {
         this.codEvaluacion = codEvaluacion;
         this.codigoEstablecimiento = codigoEstablecimiento;
         this.codResumen = codResumen;
     }
 
-    public int getCodEvaluacion() {
+    public Long getCodEvaluacion() {
         return codEvaluacion;
     }
 
-    public void setCodEvaluacion(int codEvaluacion) {
+    public void setCodEvaluacion(Long codEvaluacion) {
         this.codEvaluacion = codEvaluacion;
     }
 
-    public short getCodigoEstablecimiento() {
+    public int getCodigoEstablecimiento() {
         return codigoEstablecimiento;
     }
 
-    public void setCodigoEstablecimiento(short codigoEstablecimiento) {
+    public void setCodigoEstablecimiento(int codigoEstablecimiento) {
         this.codigoEstablecimiento = codigoEstablecimiento;
     }
 
@@ -63,7 +63,7 @@ public class EvaluacionResumenPK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) codEvaluacion;
+        hash += codEvaluacion;
         hash += (int) codigoEstablecimiento;
         hash += (int) codResumen;
         return hash;
@@ -92,5 +92,5 @@ public class EvaluacionResumenPK implements Serializable {
     public String toString() {
         return "com.gestor.gestor.EvaluacionResumenPK[ codEvaluacion=" + codEvaluacion + ", codigoEstablecimiento=" + codigoEstablecimiento + ", codResumen=" + codResumen + " ]";
     }
-    
+
 }

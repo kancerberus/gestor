@@ -53,10 +53,14 @@ public class Evaluacion implements Serializable {
     private String estado;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "evaluacion")
     private List<EvaluacionPuntajes> evaluacionPuntajesList;
-    
+
     private List<Ciclo> ciclos;
     private Usuarios usuarios;
     private Establecimiento establecimiento;
+    
+    
+    private Double calificacion;
+    private Double peso;
 
     public Evaluacion(Date fecha) {
         this.fecha = fecha;
@@ -212,4 +216,31 @@ public class Evaluacion implements Serializable {
         this.establecimiento = establecimiento;
     }
 
+    /**
+     * @return the calificacion
+     */
+    public Double getCalificacion() {
+        return calificacion;
+    }
+
+    /**
+     * @param calificacion the calificacion to set
+     */
+    public void setCalificacion(Double calificacion) {
+        this.calificacion = calificacion;
+    }
+
+    /**
+     * @return the peso
+     */
+    public Double getPeso() {
+        return peso;
+    }
+
+    /**
+     * @param peso the peso to set
+     */
+    public void setPeso(Double peso) {
+        this.peso = peso;
+    }
 }

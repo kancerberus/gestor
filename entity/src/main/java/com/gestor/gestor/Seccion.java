@@ -48,6 +48,7 @@ public class Seccion implements Serializable {
     private String imagen;
     private Integer orden;
     private String numeral;
+    private Double calificacion;
 
     @JoinColumn(name = "cod_ciclo", referencedColumnName = "cod_ciclo", insertable = false, updatable = false)
     @ManyToOne(optional = false)
@@ -194,5 +195,21 @@ public class Seccion implements Serializable {
     public void setNumeral(String numeral) {
         this.numeral = numeral;
     }
+
+    /**
+     * @return the calificacion
+     */
+    public Double getCalificacion() {
+        return calificacion;
+    }
+
+    /**
+     * @param calificacion the calificacion to set
+     */
+    public void setCalificacion(Double calificacion) {
+        this.calificacion = calificacion;
+    }
+
+
 
 }

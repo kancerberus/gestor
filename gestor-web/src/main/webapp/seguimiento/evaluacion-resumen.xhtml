@@ -4,80 +4,91 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui"                
                 xmlns:f="http://java.sun.com/jsf/core"
-                template="/template.xhtml">
+                template="/template.xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
     <ui:define name="content">
-        <h:form enctype="multipart/form-data" id="formGuardarEvaluacion" style="font-size: small;">
-            <h2>RESUMEN EVALUACIÓN</h2>
+        <h:form enctype="multipart/form-data" id="formGuardarEvaluacion" style="font-size: small;" >
+            <p:panel >
+                <f:facet name="header">
+                    <h2>RESUMEN EVALUACIÓN</h2>
+                    <div style="background-color: #ffffff" align="left">
+                        <h:panelGrid columns="2" cellpadding="20" class="Centro">
+                            <h:panelGrid columns="2" >
+                                <h:outputLabel value="Cod Evaluación"/>
+                                <h:outputLabel value="#{uiEvaluacionResumen.evaluacion.evaluacionPK.codEvaluacion}" />
 
-            <br/>
-            <p:dataTable var="varResumenActa" value="#{uiEvaluacion.resumenEvaluacionList}"
-                         widgetVar="resumenActaTable" rowStyleClass="Centro"
-                         emptyMessage="No se pudo cargar el resumen, intentelo de nuevo."
-                         >
-                <p:column headerText="Ciclo" filterBy="#{varResumenActa.seccionDetalle.seccion.ciclo.nombre}">
-                    <h:outputText value="#{varResumenActa.seccionDetalle.seccion.ciclo.nombre}" />
-                </p:column>
-                <p:column headerText="Seccion" filterBy="#{varResumenActa.seccionDetalle.seccion.nombre}">
-                    <h:outputText value="#{varResumenActa.seccionDetalle.seccion.nombre}" />
-                </p:column>
-                <p:column headerText="Detalle" filterBy="#{varResumenActa.seccionDetalle.nombre}">
-                    <h:outputText value="#{varResumenActa.seccionDetalle.nombre}" />
-                </p:column>
-                
-                <p:column headerText="Item" filterBy="#{varResumenActa.nombre}">
-                    <h:outputText value="#{varResumenActa.nombre}" />
-                </p:column>
-                <p:column headerText="Item Detalle" filterBy="#{varResumenActa.detalle}" width="25%;">
-                    <h:outputText value="#{varResumenActa.detalle}" />
-                </p:column>
-                <p:column headerText="Calificación">
-                    <p:selectOneRadio id="sorPuntaje" value="#{varResumenActa.evaluacionPuntajes.descripcion}" layout="responsive" columns="4"
-                                      disabled="true" style="text-align: center; font-size: 10px; margin-top:0;">
-                        <f:selectItems value="#{varResumenActa.evaluacionPuntajesItems}" var="c" 
-                                       itemLabel="#{c eq 'Cumple Totalmente'?'CT':c eq 'No Cumple'?'NC':c eq 'Justifica'?'JU':c eq 'No Justifica'?'NJ':c}" 
-                                       />
-                    </p:selectOneRadio>
-                </p:column>
-                <p:column headerText="Plan Acción" filterBy="#{varResumenActa.evaluacionPuntajes.planAccion}"
-                          filterMatchMode="equals">
-                    <f:facet name="filter">
-                        <p:selectOneButton onchange="PF('resumenActaTable').filter()" style="font-size: 10px;" >
-                            <f:converter converterId="javax.faces.Boolean" />
-                            <f:selectItem itemLabel="SI" itemValue="true" />
-                            <f:selectItem itemLabel="NO" itemValue="false" />
-                        </p:selectOneButton>
-                    </f:facet>
-                    <p:selectBooleanButton value="#{varResumenActa.evaluacionPuntajes.planAccion}" onLabel="SI" offLabel="NO" onIcon="ui-icon-check" offIcon="ui-icon-close" />
-                </p:column>
-                <p:column headerText="Capacitación"
-                          filterBy="#{varResumenActa.evaluacionPuntajes.capacitacion}"
-                          filterMatchMode="equals">
-                    <f:facet name="filter">
-                        <p:selectOneButton onchange="PF('resumenActaTable').filter()"
-                                           style="font-size: 10px;">
-                            <f:converter converterId="javax.faces.Boolean" />
-                            <f:selectItem itemLabel="SI" itemValue="true" />
-                            <f:selectItem itemLabel="NO" itemValue="false" />
-                        </p:selectOneButton>
-                    </f:facet>
-                    <p:selectBooleanButton value="#{varResumenActa.evaluacionPuntajes.capacitacion}" onLabel="SI" offLabel="NO" onIcon="ui-icon-check" offIcon="ui-icon-close" />
-                </p:column>
+                                <h:outputLabel value="Empresa"/>
+                                <h:outputLabel value="#{uiEvaluacionResumen.evaluacion.establecimiento.nombre}" />
+                            </h:panelGrid>
+                            <h:panelGrid>
+                                <h:outputLabel value="Puntaje Obtenido" style="font-size: 20px;"/>
+                                <h:outputLabel value="#{uiEvaluacionResumen.evaluacion.calificacion}" style="font-size: 25px;" />
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </div>
+                    <br/>
+                    <div style="#{uiEvaluacionResumen.styleEstado}}">
+                        #{uiEvaluacionResumen.estadoEvaluacion}
+                        <br/>
+                        <ui:repeat var="texto" value="#{uiEvaluacionResumen.estadoEvaluacionLista}">
+                            <li style="font-size:10px;">#{texto}</li>
+                        </ui:repeat>
+                        
+                    </div>
+                </f:facet>
+                <br/>
+                <p:dataTable var="varResumenActa" value="#{uiEvaluacionResumen.evaluacionResumenList}"
+                             widgetVar="resumenActaTable" rowStyleClass="letra-xx-small-centro" styleClass="letra-xx-small-centro"
+                             emptyMessage="No se pudo cargar el resumen, intentelo de nuevo."
+                             >
+                    <p:column headerText="Ciclo" filterBy="#{varResumenActa.ciclo}">
+                        <h:outputText value="#{varResumenActa.ciclo}" />
+                    </p:column>
+                    <p:column headerText="Calificación" filterBy="#{varResumenActa.cicloCalificacion}">
+                        <h:outputText value="#{varResumenActa.cicloCalificacion}" />
+                    </p:column>
+                    <p:column headerText="Seccion" filterBy="#{varResumenActa.seccion}">
+                        <h:outputText value="#{varResumenActa.seccion}" />
+                    </p:column>
+                    <p:column headerText="Peso" filterBy="#{varResumenActa.seccionPeso}">
+                        <h:outputText value="#{varResumenActa.seccionPeso}" />
+                    </p:column>
+                    <p:column headerText="Calificación" filterBy="#{varResumenActa.seccionCalificacion}">
+                        <h:outputText value="#{varResumenActa.seccionCalificacion}" />
+                    </p:column>
+                    <p:column headerText="Detalle" filterBy="#{varResumenActa.detalle}">
+                        <h:outputText value="#{varResumenActa.detalle}" />
+                    </p:column>
+                    <p:column headerText="Peso" filterBy="#{varResumenActa.detallePeso}">
+                        <h:outputText value="#{varResumenActa.detallePeso}" />
+                    </p:column>
+                    <p:column headerText="Calificación" filterBy="#{varResumenActa.detalleCalificacion}">
+                        <h:outputText value="#{varResumenActa.detalleCalificacion}" />
+                    </p:column>
+                    <p:column headerText="Item" filterBy="#{varResumenActa.items}">
+                        <h:outputText value="#{varResumenActa.items}" />
+                    </p:column>
+                    <p:column headerText="Item Peso" filterBy="#{varResumenActa.itemsPeso}">
+                        <h:outputText value="#{varResumenActa.itemsPeso}" />
+                    </p:column>
+                    <p:column headerText="Item Detalle" filterBy="#{varResumenActa.itemsDetalle}" width="25%;">
+                        <h:outputText value="#{varResumenActa.itemsDetalle}" />
+                    </p:column>
+                    <p:column headerText="Calificación">
+                        <p:selectOneRadio id="sorPuntaje" value="#{varResumenActa.codPuntaje}" layout="responsive" columns="4"
+                                          disabled="true" style="text-align: center; font-size: 10px; margin-top:0;">
+                            <f:selectItems value="#{uiEvaluacionResumen.evaluacionPuntajesItems}"/>
+                        </p:selectOneRadio>
+                    </p:column>
 
-            </p:dataTable>
+                </p:dataTable>
+                <p:separator/>
 
+            </p:panel>
 
-            <p:separator/>
-            <p:spacer height="0" width="50" />
-
-            <p:toolbar style="height: 45px;">
-                <p:toolbarGroup align="center" style="margin: auto auto;">
-                    <h:panelGrid columns="2" cellspacing="10">
-                        <p:commandButton value="Capturar Resumen" icon="ui-icon-person" disabled="#{uiEvaluacion.finalizarActivo}" action="#{uiEvaluacion.finalizarEvaluacion()}" update="@parent"/>
-                        <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" action="#{uiEvaluacion.volverEvaluacion()}"/>
-                    </h:panelGrid>
-                </p:toolbarGroup>
-            </p:toolbar> 
-
+            <ui:include src="/barra.xhtml">
+                <ui:param name="bean" value="#{uiEvaluacionResumen}"/>
+            </ui:include>
         </h:form>
 
     </ui:define>
