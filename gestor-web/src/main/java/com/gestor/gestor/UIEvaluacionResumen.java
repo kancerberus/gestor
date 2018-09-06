@@ -9,6 +9,7 @@ import com.gestor.entity.App;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
+import com.gestor.gestor.controlador.GestorEvaluacion;
 import com.gestor.gestor.controlador.GestorEvaluacionResumen;
 import com.gestor.modelo.Sesion;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class UIEvaluacionResumen {
     private List<String> evaluacionPuntajesItems;
     private Evaluacion evaluacion;
     private String estadoEvaluacion;
+    
 
     public static final String COMPONENTES_REFRESCAR = "";
 
@@ -46,7 +48,10 @@ public class UIEvaluacionResumen {
     public void guardar() {
         try {
             GestorEvaluacionResumen gestorEvaluacionResumen = new GestorEvaluacionResumen();
+            GestorEvaluacion gestorEvaluacion = new GestorEvaluacion();
             gestorEvaluacionResumen.procesarEvaluacionResumen(evaluacion, evaluacionResumenList);
+            evaluacion.setResumenes(gestorEvaluacion.cargarResumenesEvaluacion(evaluacion.getEvaluacionPK()));
+            evaluacion.setResumenesList(gestorEvaluacion.getResumenesFromJson(evaluacion.getResumenes()));
             UtilMSG.addSuccessMsg("Resumen Generado", "Resumen Almacenado Satisfactoriamente");
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {

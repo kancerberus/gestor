@@ -341,6 +341,7 @@ public class UIEvaluacion {
             }
             e.setCalificacion(calificacionE);
             e.setPeso(pesoE);
+            e.setResumenesList(gestorEvaluacion.getResumenesFromJson(e.getResumenes()));
 
             for (Ciclo c : e.getCiclos()) {
                 c.setEvaluacion(e);
@@ -368,6 +369,7 @@ public class UIEvaluacion {
                 }
             }
 
+            
             UIEvaluacionResumen uiEvaluacionResumen = new UIEvaluacionResumen();
             uiEvaluacionResumen.setEvaluacionResumenList(evaluacionResumens);
             uiEvaluacionResumen.setEvaluacion(e);

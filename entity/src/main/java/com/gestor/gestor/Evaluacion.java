@@ -57,8 +57,9 @@ public class Evaluacion implements Serializable {
     private List<Ciclo> ciclos;
     private Usuarios usuarios;
     private Establecimiento establecimiento;
-    
-    
+    private String resumenes;
+    private List<Resumenes> resumenesList;
+
     private Double calificacion;
     private Double peso;
 
@@ -242,5 +243,33 @@ public class Evaluacion implements Serializable {
      */
     public void setPeso(Double peso) {
         this.peso = peso;
+    }
+
+    /**
+     * @return the resumenes
+     */
+    public String getResumenes() {
+        return resumenes;
+    }
+
+    /**
+     * @param resumenes the resumenes to set
+     */
+    public void setResumenes(String resumenes) {
+        this.resumenes = resumenes;
+    }
+
+    /**
+     * @return the resumenesList
+     */
+    public List<Resumenes> getResumenesList() {
+        return resumenesList;
+    }
+
+    /**
+     * @param resumenesList the resumenesList to set
+     */
+    public void setResumenesList(List<Resumenes> resumenesList) {
+        this.resumenesList = resumenesList;
     }
 }

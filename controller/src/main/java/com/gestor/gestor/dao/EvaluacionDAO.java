@@ -62,7 +62,7 @@ public class EvaluacionDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_evaluacion, codigo_establecimiento, documento_usuario, fecha,"
-                    + " fecha_registro, estado,"
+                    + " fecha_registro, estado, resumenes,"
                     + " U.documento_usuario, U.nombre, U.apellido, E.codigo_establecimiento, E.nombre AS nombre_establecimiento"
                     + " FROM gestor.evaluacion"
                     + " JOIN public.usuarios U USING (documento_usuario)"
@@ -75,6 +75,7 @@ public class EvaluacionDAO {
                         rs.getDate("fecha"), rs.getDate("fecha_registro"), rs.getString("estado"));
                 e.setUsuarios(new Usuarios(new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre"), rs.getString("apellido")));
                 e.setEstablecimiento(new Establecimiento(rs.getInt("codigo_establecimiento"), rs.getString("nombre_establecimiento")));
+                e.setResumenes(rs.getString("resumenes"));
                 evaluacions.add(e);
             }
             return evaluacions;
@@ -263,7 +264,6 @@ public class EvaluacionDAO {
     }
 
     public void actualizarEstadoEvaluacion(EvaluacionPK evaluacionPK, String estado) throws SQLException {
-        ResultSet rs = null;
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
@@ -274,32 +274,53 @@ public class EvaluacionDAO {
             );
             consulta.actualizar(sql);
         } finally {
-            if (rs != null) {
-                rs.close();
-            }
             if (consulta != null) {
                 consulta.desconectar();
             }
         }
     }
 
-    public void insertarResumenes(String key, JsonObject o) throws SQLException {
+    public void insertarResumenes(Long codEvaluacion, Integer codigoEstablecimiento, String key, JsonObject o) throws SQLException {
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
             System.out.println("json" + o.toString());
             StringBuilder sql = new StringBuilder(
                     "UPDATE gestor.evaluacion set resumenes=jsonb_set("
-                    + "resumenes,'{" + key + "}','["
-                    + "{"
+                    + "resumenes,'{0," + key + "}','["
                     + o.toString()
-                    + "}"
                     + "]', " + Boolean.TRUE.toString()
                     + ")"
+                    + " WHERE cod_evaluacion=" + codEvaluacion + " AND codigo_establecimiento=" + codigoEstablecimiento
             );
             System.out.println("sql=>" + sql);
             consulta.actualizar(sql);
         } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public String cargarResumenesEvaluacion(EvaluacionPK evaluacionPK) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT resumenes"
+                    + " FROM gestor.evaluacion"
+                    + " WHERE cod_evaluacion=" + evaluacionPK.getCodEvaluacion() + " AND codigo_establecimiento=" + evaluacionPK.getCodigoEstablecimiento()
+            );
+            rs = consulta.ejecutar(sql);
+            if (rs.next()) {
+                return rs.getString("resumenes");
+            }
+            return null;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
             if (consulta != null) {
                 consulta.desconectar();
             }

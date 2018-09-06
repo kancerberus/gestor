@@ -31,18 +31,19 @@ public class GestorEvaluacionResumen extends Gestor {
             EvaluacionResumenDAO evaluacionResumenDAO = new EvaluacionResumenDAO(conexion);
             EvaluacionDAO evaluacionDAO = new EvaluacionDAO(conexion);
             GeneralDAO generalDAO = new GeneralDAO(conexion);
-            
+
             for (EvaluacionResumen er : evaluacionResumenList) {
                 evaluacionResumenDAO.insertarEvaluacionResumen(er);
             }
 
             JsonObject o = new JsonObject();
-            o.addProperty("codigo_establecimiento", String.valueOf(evaluacion.getEvaluacionPK().getCodigoEstablecimiento()));
-            o.addProperty("cod_evaluacion", String.valueOf(evaluacion.getEvaluacionPK().getCodEvaluacion()));
-            o.addProperty("fecha_resumen", UtilFecha.formatoFecha(generalDAO.now(), null, UtilFecha.PATRON_FECHA_YYYYMMDD));
+            o.addProperty("codigoEstablecimiento", String.valueOf(evaluacion.getEvaluacionPK().getCodigoEstablecimiento()));
+            o.addProperty("codEvaluacion", String.valueOf(evaluacion.getEvaluacionPK().getCodEvaluacion()));
+            o.addProperty("fechaResumen", UtilFecha.formatoFecha(generalDAO.now(), null, UtilFecha.PATRON_FECHA_YYYYMMDD));
             o.addProperty("calificacion", evaluacion.getCalificacion());
             o.addProperty("peso", evaluacion.getPeso());
-            evaluacionDAO.insertarResumenes(evaluacion.getEvaluacionPK().getCodigoEstablecimiento() + "-" + evaluacion.getEvaluacionPK().getCodEvaluacion()
+            evaluacionDAO.insertarResumenes(evaluacion.getEvaluacionPK().getCodEvaluacion(), evaluacion.getEvaluacionPK().getCodigoEstablecimiento(),
+                    evaluacion.getEvaluacionPK().getCodigoEstablecimiento() + "-" + evaluacion.getEvaluacionPK().getCodEvaluacion()
                     + "-" + UtilFecha.formatoFecha(generalDAO.now(), null, UtilFecha.PATRON_FECHA_YYYYMMDD),
                     o);
         } finally {
