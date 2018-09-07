@@ -19,11 +19,11 @@ public class GestorPropiedades {
             p.setProperty("urlbd", "jdbc:postgresql://localhost:5432/gestor");
             p.setProperty("controlador", "org.postgresql.Driver");
             p.setProperty("usuario", "postgres");
-            p.setProperty("clave", "postgres");
+//            p.setProperty("clave", "postgres");
             p.setProperty("rutaAdjunto", "c:\\gestor\\archivos");
             p.setProperty("rutaTemporal", "c:\\tmp");
             p.setProperty("rutaEliminado", "c:\\gestor\\eliminados");
-//            p.setProperty("clave", "1234");
+            p.setProperty("clave", "1234");
 
         } catch (Exception e) {
             throw e;
