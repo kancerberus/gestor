@@ -178,6 +178,7 @@ public class UIPlanAccion {
 
     public String cargarPlanAccionGeneral() {
         try {
+            UtilJSF.setBean("dialogo", new Dialogo(), UtilJSF.SESSION_SCOPE);
             Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
             evaluacionPlanAccionDetalles = new ArrayList<>();
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();

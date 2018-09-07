@@ -356,7 +356,7 @@ public class UIEvaluacion {
                             }
                             resumenEvaluacionList.add((SeccionDetalleItems) sdi.clone());
                             EvaluacionResumen er = new EvaluacionResumen(new EvaluacionResumenPK(e.getEvaluacionPK().getCodEvaluacion(), e.getEvaluacionPK().getCodigoEstablecimiento(), 0),
-                                    usuarios.getUsuariosPK().getDocumentoUsuario(), c.getCodCiclo(), c.getNombre(), c.getNumeral(), c.getCalificacion(),
+                                    usuarios.getUsuariosPK().getDocumentoUsuario(), c.getCodCiclo(), c.getNombre(), sdi.getNumeral(), c.getCalificacion(),
                                     s.getNombre(), s.getPeso(), s.getOrden(), s.getCalificacion(),
                                     sd.getNombre(), sd.getPeso(), sd.getCalificacion(), sd.getOrden(),
                                     sdi.getNombre(), sdi.getDetalle(), sdi.getPeso(), sdi.getOrden(), sdi.getEvaluacionPuntajes().getEvaluacionPuntajesPK().getCodPuntaje(), sdi.getEvaluacionPuntajes().getCalifica(), new Date());

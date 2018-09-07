@@ -6,6 +6,7 @@
 package com.gestor.gestor;
 
 import com.gestor.entity.App;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  *
  * @author juliano
  */
-public class Resumenes {
+public class Resumenes implements Serializable {
 
     private String codigoEstablecimiento;
     private Long codEvaluacion;

@@ -182,6 +182,7 @@ public class UIEvaluacionResumen {
             evaluacion.setResumenes(gestorEvaluacion.cargarResumenesEvaluacion(evaluacion.getEvaluacionPK()));
             evaluacion.setResumenesList(gestorEvaluacion.getResumenesFromJson(evaluacion.getResumenes()));
             UtilMSG.addSuccessMsg("Resumen Generado", "Resumen Almacenado Satisfactoriamente");
+            UtilJSF.update("formGuardarEvaluacion");
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getCause().getMessage(), e.getMessage());

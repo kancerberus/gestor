@@ -7,6 +7,7 @@ package com.gestor.entity;
 
 import java.io.IOException;
 import javax.faces.context.FacesContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -54,9 +55,16 @@ public class UtilJSF {
     }
 
     public static void execute(String evento) {
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute(evento);
+//        RequestContext context = RequestContext.getCurrentInstance();
+//        context.execute(evento);
+        PrimeFaces.current().executeScript(evento);
     }
+    
+    public static void update(String campo) {
+        PrimeFaces.current().ajax().update(campo);
+    }
+    
+    
 
 //    public static void hideDialog() {
 //        Sesion sesion = (Sesion) getBean("sesion");

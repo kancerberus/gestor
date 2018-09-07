@@ -72,6 +72,7 @@ public class EvaluacionResumenDAO {
                     + " FROM gestor.evaluacion_resumen"
                     + " WHERE cod_evaluacion=" + codEvaluacion + " AND codigo_establecimiento=" + codigoEstablecimiento
                     + " AND fecha_registro::DATE=" + UtilFecha.formatoFecha(fechaResumen, null, UtilFecha.PATRON_FECHA_YYYYMMDD, UtilFecha.CARACTER_COMILLA)
+                    + " ORDER BY numeral"
             );
             rs = consulta.ejecutar(sql);
             List<EvaluacionResumen> evaluacionResumens = new ArrayList<>();

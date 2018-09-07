@@ -9,13 +9,22 @@
                 >
 
     <ui:define name="content">
-        
-        <h:form enctype="multipart/form-data" id="formEvaluacion" style="font-size: small;">
 
+        <h:form enctype="multipart/form-data" id="formEvaluacion" style="font-size: small;">
+            <div style="#{evaluacion.styleEstado}; padding: 8px; height: 12px; border-style: solid; border-color: #ffffff; border-width: 1px;" >
+                <strong>Fecha:
+                <h:outputText value="#{evaluacion.fechaResumen}">
+                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                </h:outputText>
+                Puntaje:
+                #{evaluacion.calificacion}
+                #{evaluacion.estado eq 'C'?'CRITICA':varResumen.estado eq 'M'?'MODERADA':varResumen.estado eq 'A'?'ACEPTABLE':''}</strong>
+            </div>
             <p:panel>
 
                 <f:facet name="header">
                     <h:outputText value="Código Evaluacion: #{evaluacion.evaluacionPK.codEvaluacion}"/>
+
                     <p:progressBar value="#{uiEvaluacion.avanceEvaluacion}" labelTemplate="Avance Evaluación {value}%" displayOnly="true" interval="10"/>
                     <br/>
                     <p:progressBar value="#{uiEvaluacion.avanceEvaluacionPlanear}" labelTemplate="Planear {value}%" displayOnly="true" interval="10" style="width: 50%;"/>

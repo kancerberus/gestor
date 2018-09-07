@@ -11,26 +11,39 @@
     <ui:define name="content">
         <h:form enctype="multipart/form-data" id="formEvaluaciones" style="font-size: small;">
 
-            <p:panel id="panelEstablecimientos"  header="Auto-evaluación Estandares Mínimos" >
+            <p:panel id="panelEstablecimientos"  header="Evaluación Estandares Mínimos" >
 
                 <p:dataTable  value="#{uiEvaluacion.evaluacionList}" var="varEvaluacion" emptyMessage="No hay evaluaciones generadas."
-                              rowStyleClass="Centro">
+                              widgetVar="varEvaluacionesTable" 
+                              rowStyleClass="letra-xx-small-centro" styleClass="letra-xx-small-centro">
 
                     <p:columnGroup type="header">  
                         <p:row>  
                             <p:column  headerText="Opciones" />
-                            <p:column headerText="Código"/>
-                            <p:column  headerText="Empresa"/>
+                            <p:column headerText="Código" filterBy="#{varEvaluacion.evaluacionPK.codEvaluacion}"/>
+                            <p:column  headerText="Empresa" filterBy="#{varEvaluacion.establecimiento.nombre}"/>
                             <p:column  headerText="Evaluador"/>
-                            <p:column  headerText="Fecha Evaluación"/>
-                            <p:column  headerText="Fecha Creación" />
-                            <p:column  headerText="Estado" />
+                            <p:column  headerText="Fecha Evaluación" filterBy="#{varEvaluacion.fecha}"/>
+                            <p:column  headerText="Fecha Creación" filterBy="#{varEvaluacion.fechaRegistro}"/>
+                            <p:column  headerText="Estado" filterBy="#{varEvaluacion.estado}"
+                                       filterMatchMode="equals">
+                                <f:facet name="filter">
+                                    <p:selectOneButton onchange="PF('varEvaluacionesTable').filter()"
+                                                       style="font-size: 8px;">
+                                        <f:selectItem itemLabel="CRITICA" itemValue="C" />
+                                        <f:selectItem itemLabel="MODERADA" itemValue="M" />
+                                        <f:selectItem itemLabel="ACEPTABLE" itemValue="A" />
+                                    </p:selectOneButton>
+                                </f:facet>
+
+                            </p:column>
+
                         </p:row> 
                     </p:columnGroup>
-                    
+
                     <p:column>
                         <p:commandButton icon="ui-icon-pencil" title="Continuar Evaluación" 
-                                         update="formEvaluaciones" rendered="#{varEvaluacion.estado eq 'A'}"
+                                         update="formEvaluaciones"
                                          action="#{uiEvaluacion.continuarEvaluacion()}"/>
                     </p:column>
 
@@ -50,7 +63,9 @@
                         <h:outputText value="#{varEvaluacion.fechaRegistro}"/>
                     </p:column>
                     <p:column>
-                        <h:outputText value="#{varEvaluacion.estadoCompleto}"/>
+                        <div style="#{varEvaluacion.styleEstado}" >
+                            <strong>#{varEvaluacion.estado eq 'C'?'CRITICA':varEvaluacion.estado eq 'M'?'MODERADA':varEvaluacion.estado eq 'A'?'ACEPTABLE':''}</strong>
+                        </div>
                     </p:column>
 
                 </p:dataTable>

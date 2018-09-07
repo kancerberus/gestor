@@ -178,6 +178,7 @@ public class UICapacitacion {
 
     public String cargarCapacitacionGeneral() {
         try {
+            UtilJSF.setBean("dialogo", new Dialogo(), UtilJSF.SESSION_SCOPE);
             Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
             evaluacionCapacitacionDetalles = new ArrayList<>();
             GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
