@@ -7,12 +7,15 @@ package com.gestor.gestor.controlador;
 
 import com.gestor.controller.Gestor;
 import com.gestor.dao.GeneralDAO;
+import com.gestor.entity.App;
 import com.gestor.entity.UtilFecha;
 import com.gestor.gestor.Evaluacion;
 import com.gestor.gestor.EvaluacionResumen;
 import com.gestor.gestor.dao.EvaluacionDAO;
 import com.gestor.gestor.dao.EvaluacionResumenDAO;
 import com.google.gson.JsonObject;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,12 +45,35 @@ public class GestorEvaluacionResumen extends Gestor {
             o.addProperty("fechaResumen", UtilFecha.formatoFecha(generalDAO.now(), null, UtilFecha.PATRON_FECHA_YYYYMMDD));
             o.addProperty("calificacion", evaluacion.getCalificacion());
             o.addProperty("peso", evaluacion.getPeso());
+            o.addProperty("estado", evaluacion.getEstado());
+
             evaluacionDAO.insertarResumenes(evaluacion.getEvaluacionPK().getCodEvaluacion(), evaluacion.getEvaluacionPK().getCodigoEstablecimiento(),
                     evaluacion.getEvaluacionPK().getCodigoEstablecimiento() + "-" + evaluacion.getEvaluacionPK().getCodEvaluacion()
                     + "-" + UtilFecha.formatoFecha(generalDAO.now(), null, UtilFecha.PATRON_FECHA_YYYYMMDD),
                     o);
         } finally {
             this.cerrarConexion();
+        }
+    }
+
+    public Collection<? extends EvaluacionResumen> cargarEvaluacionResumen(Long codEvaluacion, int codigoEstablecimiento, Date fechaResumen) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionResumenDAO evaluacionResumenDAO = new EvaluacionResumenDAO(conexion);
+            return evaluacionResumenDAO.cargarEvaluacionResumen(codEvaluacion, codigoEstablecimiento, fechaResumen);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+
+    public String calcularEstadoEvaluacion(Double calificacion, Double peso) {
+        Double c = calificacion / peso;
+        if (c <= 60) {
+            return App.EVALUACION_ESTADO_CRITICA;
+        } else if (c > 85) {
+            return App.EVALUACION_ESTADO_ACEPTABLE;
+        } else {
+            return App.EVALUACION_ESTADO_MODERADA_ACEPTABLE;
         }
     }
 }

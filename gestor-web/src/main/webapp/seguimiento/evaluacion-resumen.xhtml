@@ -76,7 +76,7 @@
                 <br/>
                 <p:dataTable var="varResumenActa" value="#{uiEvaluacionResumen.evaluacionResumenList}"
                              widgetVar="resumenActaTable" rowStyleClass="letra-xx-small-centro" styleClass="letra-xx-small-centro"
-                             emptyMessage="No se pudo cargar el resumen, intentelo de nuevo.">
+                             emptyMessage="La evaluación no tiene resumenes almacenados.">
                     <p:column headerText="Ciclo" filterBy="#{varResumenActa.ciclo}">
                         <h:outputText value="#{varResumenActa.ciclo}" />
                     </p:column>

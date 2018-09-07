@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml">
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formEvaluacionResumenConsultar" style="font-size: small;">
+            <h:panelGroup>
+                <p:separator style="height: 3px"/>
+
+                <p:panelGrid columns="3" styleClass="letra-xx-small-centro" style="font-size: xx-small">
+                    <f:facet name="header">
+                        Filtros de Búsqueda
+                    </f:facet>
+
+                    <h:panelGrid>
+                        <h:outputLabel value="Evaluador"/>
+                        <p:selectOneMenu value="#{uiEvaluacionResumen.usuariosSeleccionado}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccione Evaluador" noSelectionOption="true"/>
+                            <f:selectItems value="#{uiEvaluacionResumen.usuariosList}" var="varUsuarios" itemLabel="#{varUsuarios.nombreApellido}" itemValue="#{varUsuarios}"/>
+                        </p:selectOneMenu>
+
+                        <h:outputLabel value="Empresas"/>
+                        <p:selectManyMenu value="#{uiEvaluacionResumen.establecimientoListSeleccionado}" converter="establecimientoConverter"    
+                                          var="t" filter="true" filterMatchMode="contains" showCheckbox="true" styleClass="Centro" >
+                            <f:selectItems value="#{uiEvaluacionResumen.establecimientoList}" var="varEmpresa" itemLabel="#{varEmpresa.nombre}" itemValue="#{varEmpresa}" />
+                            <p:column>
+                                <p:graphicImage url="/resources/imagenes/establecimientos/#{t.nombre.toLowerCase()}.png" width="70%"/> 
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{t.nombre}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText styleClass="ui-icon ui-icon-grip-dotted-horizontal" style="margin:0 auto;" />
+                            </p:column>
+                        </p:selectManyMenu>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="Cod Evaluación"/>
+                        <p:inputText placeholder="Cod Evaluación" value="#{uiEvaluacionResumen.codEvaluacion}"/>
+                        
+                        <h:outputText value="Estado Evaluación" />
+                        <p:selectManyButton value="#{uiEvaluacionResumen.evaluacionEstadoSeleccionado}" >
+                            <f:selectItems value="#{uiEvaluacionResumen.evaluacionEstado}"/>
+                        </p:selectManyButton>
+
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2">
+
+                        <h:outputText value="Fecha Inicio" />
+                        <p:calendar value="#{uiEvaluacionResumen.fechaEvaluacionInicio}" pattern="dd/MM/yyyy" placeholder="Fecha Evaluación"/>
+
+                        <h:outputText value="Fecha Fin" />
+                        <p:calendar value="#{uiEvaluacionResumen.fechaEvaluacionFin}" pattern="dd/MM/yyyy" placeholder="Fecha Evaluación"/>
+
+                    </h:panelGrid>
+                </p:panelGrid>
+
+                <p:commandButton value="Consultar" style="margin: auto auto;width: 210px;height: 30px; border-radius: 10px;"
+                                 action="#{uiEvaluacionResumen.consultarEvaluaciones()}" update="formEvaluacionResumenConsultar"/>
+                <p:separator style="height: 3px"/>
+
+                <p:dataTable var="varEvaluacionResumen" value="#{uiEvaluacionResumen.evaluacionList}"
+                             widgetVar="evaluacionResumenConsultaTable" rowStyleClass="letra-xx-small-centro" style="font-size: 10px;"
+                             emptyMessage="Consulte las con las opciones deseadas."
+                             >
+                    <p:column headerText="Opciones">
+                        <p:panelGrid>
+                            <p:commandButton icon="ui-icon-search" title="Ver resumen" action="#{uiEvaluacionResumen.consultarResumenEvaluacion()}"/>
+                        </p:panelGrid>
+                    </p:column>
+                    <p:column headerText="Código" filterBy="#{varEvaluacionResumen.evaluacionPK.codEvaluacion}">
+                        <h:outputText value="#{varEvaluacionResumen.evaluacionPK.codEvaluacion}" />
+                    </p:column>
+                    <p:column headerText="Empresa" filterBy="#{varEvaluacionResumen.establecimiento.nombre}">
+                        <h:outputText value="#{varEvaluacionResumen.establecimiento.nombre}" />
+                    </p:column>
+
+                    <p:column headerText="Fecha" filterBy="#{varEvaluacionResumen.fecha}">
+                        <h:outputText value="#{varEvaluacionResumen.fecha}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Evaluador" filterBy="#{varEvaluacionResumen.usuarios.nombreApellido}">
+                        <h:outputText value="#{varEvaluacionResumen.usuarios.nombreApellido}" />
+                    </p:column>
+
+                    <p:column headerText="Calificación" filterBy="#{varEvaluacionResumen.calificacion}">
+                        <h:outputText value="#{varEvaluacionResumen.calificacion}" />
+                    </p:column>
+
+                    <p:column headerText="Estado"
+                              filterBy="#{varEvaluacionResumen.estado}"
+                              filterMatchMode="equals">
+                        <f:facet name="filter">
+                            <p:selectOneButton onchange="PF('evaluacionResumenConsultaTable').filter()"
+                                               style="font-size: 8px;">
+                                <f:selectItem itemLabel="CRITICA" itemValue="C" />
+                                <f:selectItem itemLabel="MODERADA" itemValue="M" />
+                                <f:selectItem itemLabel="ACEPTABLE" itemValue="A" />
+                            </p:selectOneButton>
+                        </f:facet>
+                        <div style="#{varEvaluacionResumen.styleEstado}" >
+                            <strong>#{varEvaluacionResumen.estado eq 'C'?'CRITICA':varEvaluacionResumen.estado eq 'M'?'MODERADA':varEvaluacionResumen.estado eq 'A'?'ACEPTABLE':''}</strong>
+                        </div>
+                    </p:column>
+
+                </p:dataTable>
+            </h:panelGroup>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

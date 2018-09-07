@@ -9,7 +9,6 @@ import com.gestor.controller.Gestor;
 import com.gestor.entity.App;
 import com.gestor.entity.ArrayAdapterFactory;
 import com.gestor.entity.UtilLog;
-import com.gestor.entity.UtilRest;
 import com.gestor.gestor.Evaluacion;
 import com.gestor.gestor.EvaluacionPK;
 import com.gestor.gestor.EvaluacionPuntajes;
@@ -21,14 +20,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -150,7 +148,7 @@ public class GestorEvaluacion extends Gestor {
             this.abrirConexion();
             this.inicioTransaccion();
             EvaluacionDAO evaluacionDAO = new EvaluacionDAO(conexion);
-            evaluacion.setEstado(App.EVALUACION_ESTADO_CERRADO);
+            evaluacion.setEstado(App.EVALUACION_ESTADO_ACEPTABLE);
             evaluacionDAO.actualizarEstadoEvaluacion(evaluacion.getEvaluacionPK(), evaluacion.getEstado());
             this.finTransaccion();
         } finally {
@@ -160,34 +158,39 @@ public class GestorEvaluacion extends Gestor {
 
     public List<Resumenes> getResumenesFromJson(String resumenes) throws ParseException {
         List<Resumenes> resumenesList = new ArrayList<>();
-        JsonArray array = (JsonArray) new JsonParser().parse(resumenes);
-        for (JsonElement je : array) {
-            je.getAsJsonObject().keySet().forEach((t) -> {
-                List<Resumenes> r2;
-                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                r2 = gson.fromJson(je.getAsJsonObject().get(t), new TypeToken<List<Resumenes>>() {
-                }.getType());
-                if (r2 != null) {
-                    r2.forEach((r) -> {
-                        if (r.getFechaResumen() != null) {
-                            resumenesList.add(r);
-                        }
-                    });
-                }
+        if (resumenes != null && !resumenes.equalsIgnoreCase("")) {
+            JsonArray array = (JsonArray) new JsonParser().parse(resumenes);
+            for (JsonElement je : array) {
+                je.getAsJsonObject().keySet().forEach((t) -> {
+                    List<Resumenes> r2;
+                    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                    r2 = gson.fromJson(je.getAsJsonObject().get(t), new TypeToken<List<Resumenes>>() {
+                    }.getType());
+                    if (r2 != null) {
+                        r2.forEach((r) -> {
+                            if (r.getFechaResumen() != null) {
+                                resumenesList.add(r);
+                            }
+                        });
+                    }
 
-            });
+                });
+            }
 
-        }
-
-        Collections.sort(resumenesList, new Comparator<Resumenes>() {
-            @Override
-            public int compare(final Resumenes object1, final Resumenes object2) {
+//            Collections.sort(resumenesList, new Comparator<Resumenes>() {
+//                @Override
+//                public int compare(final Resumenes object1, final Resumenes object2) {
+//                    System.out.println("o1,02" + object1.getFechaResumen().compareTo(object2.getFechaResumen()));
+//                    System.out.println("o2,01" + object2.getFechaResumen().compareTo(object1.getFechaResumen()));
+//                    return object2.getFechaResumen().compareTo(object1.getFechaResumen());
+//                }
+//            });
+            Collections.sort(resumenesList, (final Resumenes object1, final Resumenes object2) -> {
                 System.out.println("o1,02" + object1.getFechaResumen().compareTo(object2.getFechaResumen()));
                 System.out.println("o2,01" + object2.getFechaResumen().compareTo(object1.getFechaResumen()));
                 return object2.getFechaResumen().compareTo(object1.getFechaResumen());
-            }
-        });
-//        Collections.sort(resumenesList, (final Resumenes object1, final Resumenes object2) -> object1.getFechaResumen().compareTo(object2.getFechaResumen()));
+            });
+        }
 
         return resumenesList;
     }
@@ -201,4 +204,15 @@ public class GestorEvaluacion extends Gestor {
             this.cerrarConexion();
         }
     }
+
+    public Collection<? extends Evaluacion> cargarListaEvaluacion(String condicion) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionDAO evaluacionDAO = new EvaluacionDAO(conexion);
+            return evaluacionDAO.cargarListaEvaluacion(condicion);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+
 }

@@ -5,6 +5,7 @@
  */
 package com.gestor.gestor;
 
+import com.gestor.entity.App;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Usuarios;
 import java.io.Serializable;
@@ -37,6 +38,14 @@ import javax.persistence.TemporalType;
 public class Evaluacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    public static String EVALUACION_CONDICION_DOCUMENTO_USUARIO = "E.DOCUMENTO_USUARIO IN (?)";
+    public static String EVALUACION_CONDICION_ESTADO = "E.ESTADO IN (?)";
+    public static String EVALUACION_CONDICION_COD_ESTABLECIMIENTO = "E.codigo_establecimiento IN (?)";
+    public static String EVALUACION_CONDICION_COD_EVALUACION = "E.cod_evaluacion IN (?)";
+    public static String EVALUACION_CONDICION_FECHA_REGISTRO_GTE = "E.fecha::DATE >= ?";
+    public static String EVALUACION_CONDICION_FECHA_REGISTRO_LTE = "E.fecha::DATE <= ?";
+
     @EmbeddedId
     protected EvaluacionPK evaluacionPK;
     @Column(name = "documento_usuario")
@@ -62,6 +71,7 @@ public class Evaluacion implements Serializable {
 
     private Double calificacion;
     private Double peso;
+    private Date fechaResumen;
 
     public Evaluacion(Date fecha) {
         this.fecha = fecha;
@@ -132,6 +142,26 @@ public class Evaluacion implements Serializable {
                 return "CERRADO";
         }
         return estado;
+    }
+
+    public String getStyleEstado() {
+        String style = "padding: 10px;"
+                + "opacity: 0.83;"
+                + "transition: opacity 0.6s;"
+                + "color: white;";
+        switch (estado) {
+            case App.EVALUACION_ESTADO_CRITICA:
+                style += "background-color: #f44336;";
+                break;
+            case App.EVALUACION_ESTADO_ACEPTABLE:
+                style += "background-color: #4CAF50;";
+                break;
+            case App.EVALUACION_ESTADO_MODERADA_ACEPTABLE:
+                style += "background-color: #ff9800;";
+                //#2196F3;
+                break;
+        }
+        return style;
     }
 
     public String getEstado() {
@@ -271,5 +301,19 @@ public class Evaluacion implements Serializable {
      */
     public void setResumenesList(List<Resumenes> resumenesList) {
         this.resumenesList = resumenesList;
+    }
+
+    /**
+     * @return the fechaResumen
+     */
+    public Date getFechaResumen() {
+        return fechaResumen;
+    }
+
+    /**
+     * @param fechaResumen the fechaResumen to set
+     */
+    public void setFechaResumen(Date fechaResumen) {
+        this.fechaResumen = fechaResumen;
     }
 }

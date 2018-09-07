@@ -13,8 +13,10 @@ public class App {
 
     public static final String USUARIOS_FILTRO_USUARIO = "USUARIO";
     public static final String USUARIOS_FILTRO_DOCUMENTO = "DOCUMENTO";
-    public static final String EVALUACION_ESTADO_ABIERTO = "A";
-    public static final String EVALUACION_ESTADO_CERRADO = "C";
+    
+//    public static final String EVALUACION_ESTADO_ABIERTO = "A";
+//    public static final String EVALUACION_ESTADO_CERRADO = "C";
+    
     public static final String EVALUACION_ESTADO_ELIMINADO = "E";
     public static final String EVALUACION_PLAN_ACCION_ESTADO_ABIERTO = "A";
 
@@ -49,8 +51,13 @@ public class App {
     public static final String CONDICION_AND = "AND";
     public static final Integer EVALUACION_ADJUNTOS_MESES_VIGENCIA = -1;
     public static final Integer EVALUACION_ADJUNTOS_MESES_VIGENCIA_CALCULO = 6;
-    public static final String EVALUACION_ESTADO_CRITICA = "CRITICA";
-    public static final String EVALUACION_ESTADO_ACEPTABLE = "ACEPTABLE";
-    public static final String EVALUACION_ESTADO_MODERADA_ACEPTABLE = "MODERADAMENTE ACEPTABLE";
+    
+    public static final String EVALUACION_ESTADO_CRITICA = "C";
+    public static final String EVALUACION_ESTADO_CRITICA_TEXTO = "CRITICA";
+    public static final String EVALUACION_ESTADO_ACEPTABLE = "A";
+    public static final String EVALUACION_ESTADO_ACEPTABLE_TEXTO = "ACEPTABLE";
+    public static final String EVALUACION_ESTADO_MODERADA_ACEPTABLE = "M";
+    public static final String EVALUACION_ESTADO_MODERADA_ACEPTABLE_TEXTO = "MODERADAMENTE ACEPTABLE";
+
 
 }

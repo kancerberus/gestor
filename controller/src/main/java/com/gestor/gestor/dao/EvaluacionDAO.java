@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -62,7 +63,7 @@ public class EvaluacionDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_evaluacion, codigo_establecimiento, documento_usuario, fecha,"
-                    + " fecha_registro, estado, resumenes,"
+                    + " fecha_registro, estado, resumenes, calificacion, peso, fecha_resumen,"
                     + " U.documento_usuario, U.nombre, U.apellido, E.codigo_establecimiento, E.nombre AS nombre_establecimiento"
                     + " FROM gestor.evaluacion"
                     + " JOIN public.usuarios U USING (documento_usuario)"
@@ -76,6 +77,9 @@ public class EvaluacionDAO {
                 e.setUsuarios(new Usuarios(new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre"), rs.getString("apellido")));
                 e.setEstablecimiento(new Establecimiento(rs.getInt("codigo_establecimiento"), rs.getString("nombre_establecimiento")));
                 e.setResumenes(rs.getString("resumenes"));
+                e.setCalificacion(rs.getDouble("calificacion"));
+                e.setPeso(rs.getDouble("peso"));
+                e.setFechaResumen(rs.getDate("fecha_resumen"));
                 evaluacions.add(e);
             }
             return evaluacions;
@@ -96,7 +100,7 @@ public class EvaluacionDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_evaluacion, codigo_establecimiento, documento_usuario, fecha,"
-                    + " fecha_registro, estado,"
+                    + " fecha_registro, estado, resumenes, calificacion, peso, fecha_resumen,"
                     + " U.documento_usuario, U.nombre, U.apellido, E.codigo_establecimiento, E.nombre AS nombre_establecimiento"
                     + " FROM gestor.evaluacion"
                     + " JOIN public.usuarios U USING (documento_usuario)"
@@ -110,6 +114,10 @@ public class EvaluacionDAO {
                         rs.getDate("fecha"), rs.getDate("fecha_registro"), rs.getString("estado"));
                 e.setUsuarios(new Usuarios(new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre"), rs.getString("apellido")));
                 e.setEstablecimiento(new Establecimiento(rs.getInt("codigo_establecimiento"), rs.getString("nombre_establecimiento")));
+                e.setResumenes(rs.getString("resumenes"));
+                e.setCalificacion(rs.getDouble("calificacion"));
+                e.setPeso(rs.getDouble("peso"));
+                e.setFechaResumen(rs.getDate("fecha_resumen"));
                 evaluacions.add(e);
             }
             return evaluacions;
@@ -284,16 +292,17 @@ public class EvaluacionDAO {
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
-            System.out.println("json" + o.toString());
+//            System.out.println("json" + o.toString());
             StringBuilder sql = new StringBuilder(
-                    "UPDATE gestor.evaluacion set resumenes=jsonb_set("
+                    "UPDATE gestor.evaluacion set estado='" + o.get("estado").getAsString() + "', calificacion=" + o.get("calificacion").getAsDouble() + ", peso=" + o.get("peso").getAsDouble()
+                    + " ,fecha_resumen='" + o.get("fechaResumen").getAsString() + "', resumenes=jsonb_set("
                     + "resumenes,'{0," + key + "}','["
                     + o.toString()
                     + "]', " + Boolean.TRUE.toString()
                     + ")"
                     + " WHERE cod_evaluacion=" + codEvaluacion + " AND codigo_establecimiento=" + codigoEstablecimiento
             );
-            System.out.println("sql=>" + sql);
+//            System.out.println("sql=>" + sql);
             consulta.actualizar(sql);
         } finally {
             if (consulta != null) {
@@ -317,6 +326,45 @@ public class EvaluacionDAO {
                 return rs.getString("resumenes");
             }
             return null;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public Collection<? extends Evaluacion> cargarListaEvaluacion(String condicion) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT cod_evaluacion, codigo_establecimiento, documento_usuario, fecha,"
+                    + " fecha_registro, estado, resumenes, calificacion, peso, fecha_resumen,"
+                    + " U.documento_usuario, U.nombre, U.apellido, ES.codigo_establecimiento, ES.nombre AS nombre_establecimiento"
+                    + " FROM gestor.evaluacion E"
+                    + " JOIN public.usuarios U USING (documento_usuario)"
+                    + " JOIN public.establecimiento ES USING (codigo_establecimiento)"
+                    + condicion
+            );
+            rs = consulta.ejecutar(sql);
+            List<Evaluacion> evaluacions = new ArrayList<>();
+            while (rs.next()) {
+                Evaluacion e = new Evaluacion(new EvaluacionPK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento")), rs.getString("documento_usuario"),
+                        rs.getDate("fecha"), rs.getDate("fecha_registro"), rs.getString("estado"));
+                e.setUsuarios(new Usuarios(new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre"), rs.getString("apellido")));
+                e.setEstablecimiento(new Establecimiento(rs.getInt("codigo_establecimiento"), rs.getString("nombre_establecimiento")));
+                e.setResumenes(rs.getString("resumenes"));
+                e.setCalificacion(rs.getDouble("calificacion"));
+                e.setPeso(rs.getDouble("peso"));
+                e.setFechaResumen(rs.getDate("fecha_resumen"));
+                evaluacions.add(e);
+            }
+            return evaluacions;
+
         } finally {
             if (rs != null) {
                 rs.close();

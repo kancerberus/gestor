@@ -233,7 +233,7 @@ public class UIEvaluacion {
                 evaluacion.setFecha(new Date());
             }
             Evaluacion e = new Evaluacion(new EvaluacionPK(gestorGeneral.nextval(GestorGeneral.GESTOR_EVALUACION_COD_EVALUACION_SEQ), sesion.getEstablecimiento().getCodigoEstablecimiento()),
-                    sesion.getUsuarios().getUsuariosPK().getDocumentoUsuario(), new Date(), new Date(), App.EVALUACION_ESTADO_ABIERTO);
+                    sesion.getUsuarios().getUsuariosPK().getDocumentoUsuario(), new Date(), new Date(), App.EVALUACION_ESTADO_CRITICA);
 
             e.setFecha(evaluacion.getFecha());
             e.setEvaluacionPuntajesList(gestorEvaluacion.generarEvaluacionPuntajes(sesion.getEstablecimiento().getCodigoEstablecimiento(), e.getEvaluacionPK().getCodEvaluacion(), sesion.getPuntajesList()));

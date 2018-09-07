@@ -22,7 +22,7 @@ public class Resumenes {
     private Double calificacion;
     private Double peso;
 
-    private String styleEstado;
+    private String estado;
 
     /**
      * @return the codigoEstablecimiento
@@ -138,7 +138,7 @@ public class Resumenes {
                 + "opacity: 0.83;"
                 + "transition: opacity 0.6s;"
                 + "color: white;";
-        switch (getEstadoEvaluacion()) {
+        switch (estado) {
             case App.EVALUACION_ESTADO_CRITICA:
                 style += "background-color: #f44336;";
                 break;
@@ -154,9 +154,16 @@ public class Resumenes {
     }
 
     /**
-     * @param styleEstado the styleEstado to set
+     * @return the estado
      */
-    public void setStyleEstado(String styleEstado) {
-        this.styleEstado = styleEstado;
+    public String getEstado() {
+        return estado;
+    }
+
+    /**
+     * @param estado the estado to set
+     */
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }
