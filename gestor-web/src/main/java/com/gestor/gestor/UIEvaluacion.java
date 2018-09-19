@@ -13,6 +13,7 @@ import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
 import com.gestor.gestor.controlador.GestorCiclo;
 import com.gestor.gestor.controlador.GestorEvaluacion;
+import com.gestor.gestor.controlador.GestorPuntajes;
 import com.gestor.gestor.controlador.GestorSeccionDetalleItems;
 import com.gestor.gestor.controlador.GestorSeccionDetalleItemsAyuda;
 import com.gestor.modelo.Sesion;
@@ -78,9 +79,14 @@ public class UIEvaluacion {
 
     public void seleccionarEstablecimiento() {
         try {
+            Sesion s = (Sesion) UtilJSF.getBean("sesion");
+            GestorPuntajes gestorPuntajes = new GestorPuntajes();
             Establecimiento e = (Establecimiento) UtilJSF.getBean("varEstablecimiento");
             this.establecimiento = (Establecimiento) e.clone();
-        } catch (CloneNotSupportedException ex) {
+            s.setEstablecimiento(establecimiento);
+            s.setPuntajesList(gestorPuntajes.cargarPuntajes(this.establecimiento.getCodigoEstablecimiento()));
+            UtilJSF.setBean("sesion", s, UtilJSF.SESSION_SCOPE);
+        } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
     }
@@ -226,7 +232,7 @@ public class UIEvaluacion {
             Sesion sesion = (Sesion) UtilJSF.getBean("sesion");
             GestorEvaluacion gestorEvaluacion = new GestorEvaluacion();
             GestorGeneral gestorGeneral = new GestorGeneral();
-            GestorCiclo gestorCiclos = new GestorCiclo();
+//            GestorCiclo gestorCiclos = new GestorCiclo();
 
             Evaluacion evaluacion = (Evaluacion) UtilJSF.getBean("evaluacion");
             if (evaluacion.getFecha() == null) {
@@ -272,6 +278,7 @@ public class UIEvaluacion {
             return ("/gestor/evaluacion.xhtml?faces-redirect=true");
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getCause().getMessage(), e.getMessage());
             } else {
                 UtilLog.generarLog(this.getClass(), e);
             }
@@ -369,7 +376,6 @@ public class UIEvaluacion {
                 }
             }
 
-            
             UIEvaluacionResumen uiEvaluacionResumen = new UIEvaluacionResumen();
             uiEvaluacionResumen.setEvaluacionResumenList(evaluacionResumens);
             uiEvaluacionResumen.setEvaluacion(e);

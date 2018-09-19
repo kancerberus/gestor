@@ -330,8 +330,10 @@ public class UsuarioDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
+                    //                    "DELETE FROM roles_usuarios"
+                    //                    + " WHERE codigo_establecimiento=" + establecimiento.getCodigoEstablecimiento() + " AND documento_usuario='" + usuario.getUsuariosPK().getDocumentoUsuario() + "'"
                     "DELETE FROM roles_usuarios"
-                    + " WHERE codigo_establecimiento=" + establecimiento.getCodigoEstablecimiento() + " AND documento_usuario='" + usuario.getUsuariosPK().getDocumentoUsuario() + "'"
+                    + " WHERE documento_usuario='" + usuario.getUsuariosPK().getDocumentoUsuario() + "'"
             );
             consulta.actualizar(sql);
         } finally {
@@ -346,9 +348,11 @@ public class UsuarioDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "INSERT INTO roles_usuarios("
-                    + " codigo_establecimiento, documento_usuario, codigo_rol)"
-                    + " VALUES (" + establecimiento.getCodigoEstablecimiento() + ", '" + usuario.getUsuariosPK().getDocumentoUsuario() + "', " + usuario.getRoles().getCodigoRol() + ")"
+                    //                    "INSERT INTO roles_usuarios("
+                    //                    + " codigo_establecimiento, documento_usuario, codigo_rol)"
+                    //                    + " VALUES (" + establecimiento.getCodigoEstablecimiento() + ", '" + usuario.getUsuariosPK().getDocumentoUsuario() + "', " + usuario.getRoles().getCodigoRol() + ")"
+                    "INSERT INTO roles_usuarios (codigo_establecimiento, documento_usuario, codigo_rol)"
+                    + " SELECT codigo_establecimiento, '" + usuario.getUsuariosPK().getDocumentoUsuario() + "', '" + usuario.getRoles().getCodigoRol() + "' FROM establecimiento ORDER BY 1"
             );
             consulta.actualizar(sql);
         } finally {
@@ -392,7 +396,7 @@ public class UsuarioDAO {
             }
         }
     }
-    
+
     public boolean existeUsuario(Usuarios usuario) throws SQLException {
         ResultSet rs = null;
         Consulta consulta = null;

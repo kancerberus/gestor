@@ -52,6 +52,9 @@ public class GestorEvaluacion extends Gestor {
         if (e.getDocumentoUsuario() == null || e.getDocumentoUsuario().equalsIgnoreCase("")) {
             throw new Exception("Error en la sesión, por favor cierre sesión e ingresa de nuevo.", UtilLog.TW_VALIDACION);
         }
+        if (e.getEvaluacionPuntajesList() == null || e.getEvaluacionPuntajesList().isEmpty()) {
+            throw new Exception("Solicite configurar los posibles puntajes de la empresa.", UtilLog.TW_VALIDACION);
+        }
         return e;
     }
 

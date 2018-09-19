@@ -23,7 +23,7 @@
             </p:panel>
 
             <p:outputPanel id="panelDatosUsuario" rendered="#{not empty usuarios.usuariosPK.documentoUsuario}" style="font-size: small; ">
-                <h:outputText value="#{uiUsuario.usuarioBuscar != null?'Configuración actual para':''} #{uiUsuario.usuarioBuscar}"/>
+                <h:outputText value="#{uiUsuario.usuarioBuscar != null?'Usuario Seleccionado:':''} #{uiUsuario.usuarioBuscar}"/>
 
                 <p:tabView orientation="left" activeIndex="0" rendered="#{not empty usuarios.usuariosPK.documentoUsuario}" 
                            style="font-size: small;">
@@ -67,6 +67,21 @@
                             <p:inputSwitch value="#{usuarios.activo}" onLabel="ACTIVO" offLabel="INACTIVO"/>
 
                         </h:panelGrid>
+                    </p:tab>
+                    
+                    <p:tab title="Empresas" > 
+                        <div class="contenedor" style="font-size: small">
+                            <p:pickList id="pickListEmpresas" value="#{uiUsuario.itemsDualEstablecimientos}"
+                                        var="dualEstablecimiento"  
+                                        itemLabel="#{dualEstablecimiento}"  
+                                        itemValue="#{dualEstablecimiento}"
+                                        addLabel="Agregar" addAllLabel="Agregar todos"
+                                        removeLabel="Remover" removeAllLabel="Remover Todos"
+                                        > 
+                                <f:facet name="sourceCaption">Empresas disponibles</f:facet>  
+                                <f:facet name="targetCaption">Empresas asignados</f:facet> 
+                            </p:pickList> 
+                        </div>
                     </p:tab>
                 </p:tabView>
 
