@@ -87,6 +87,10 @@ public class UIPlanAccion {
         }
     }
     
+    public void procesarPlanAccionDetalleNota(){
+        
+    }
+    
     public void mostrarNotaSeguimiento() {
         try {
             evaluacionPlanAccionDetalle = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("varPlanAccionDetalle");
@@ -260,6 +264,7 @@ public class UIPlanAccion {
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             epd = gestorEvaluacionPlanAccion.validarEvaluacionPlanAccionDetalle(epd);
             gestorEvaluacionPlanAccion.actualizarEvaluacionPlanAccionDetalle(epd);
+            this.modificarActivo = Boolean.FALSE;
 
             evaluacionPlanAccionDetalles = new ArrayList<>();
             evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
@@ -315,6 +320,15 @@ public class UIPlanAccion {
             epd.setCodDetalle(sdiSeleccionado.getSeccionDetalleItemsPK().getCodDetalle());
             epd.setCodItem(sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem());
             epd.setDocumentoUsuario(documentoUsuario);
+            
+            epd.getEvaluacionPlanAccionDetallePK().setCodPlanDetalle(codPlan);
+            epd.getEvaluacionPlanAccionDetallePK().setCodPlanDetalle(gestorGeneral.nextval(GestorGeneral.GESTOR_EVALUACION_PLAN_ACCION_DETALLE_COD_PLAN_DETALLE_SEQ));
+            
+            EvaluacionPlanAccionDetalleNotas epadn = new EvaluacionPlanAccionDetalleNotas(
+                    new EvaluacionPlanAccionDetalleNotasPK(ep.getEvaluacionPlanAccionPK().getCodEvaluacion(), ep.getEvaluacionPlanAccionPK().getCodigoEstablecimiento(), 
+                            codPlan, epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()),
+                    documentoUsuario, epd.getEstado(), "REGISTRO INICIAL", "Inicia registro de plan acción, responsable: " + UtilTexto.capitalizarCadena(responsable));
+            epd.setEvaluacionPlanAccionDetalleNotas(epadn);
 
             ep.setEvaluacionPlanAccionDetalle(epd);
             gestorEvaluacionPlanAccion.procesarPlanAccion(ep);

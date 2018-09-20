@@ -5,6 +5,7 @@
  */
 package com.gestor.gestor;
 
+import com.gestor.publico.Usuarios;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -18,7 +19,7 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * @author juliano
+ * @author Julian D Osorio G
  */
 @Entity
 @Table(name = "evaluacion_plan_accion_detalle_notas")
@@ -40,6 +41,7 @@ public class EvaluacionPlanAccionDetalleNotas implements Serializable {
     @Column(name = "fecha_registro")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaRegistro;
+    private Usuarios usuarios;
 
     public EvaluacionPlanAccionDetalleNotas() {
     }
@@ -48,8 +50,8 @@ public class EvaluacionPlanAccionDetalleNotas implements Serializable {
         this.evaluacionPlanAccionDetalleNotasPK = evaluacionPlanAccionDetalleNotasPK;
     }
 
-    public EvaluacionPlanAccionDetalleNotas(int codEvaluacion, short codigoEstablecimiento, int codCapacitacion, int codCapacitacionDetalle, int codNota) {
-        this.evaluacionPlanAccionDetalleNotasPK = new EvaluacionPlanAccionDetalleNotasPK(codEvaluacion, codigoEstablecimiento, codCapacitacion, codCapacitacionDetalle, codNota);
+    public EvaluacionPlanAccionDetalleNotas(Long codEvaluacion, int codigoEstablecimiento, Long codPlan, Long codPlanDetalle) {
+        this.evaluacionPlanAccionDetalleNotasPK = new EvaluacionPlanAccionDetalleNotasPK(codEvaluacion, codigoEstablecimiento, codPlan, codPlanDetalle);
     }
 
     public EvaluacionPlanAccionDetalleNotasPK getEvaluacionPlanAccionDetalleNotasPK() {
@@ -59,6 +61,16 @@ public class EvaluacionPlanAccionDetalleNotas implements Serializable {
     public void setEvaluacionPlanAccionDetalleNotasPK(EvaluacionPlanAccionDetalleNotasPK evaluacionPlanAccionDetalleNotasPK) {
         this.evaluacionPlanAccionDetalleNotasPK = evaluacionPlanAccionDetalleNotasPK;
     }
+
+    public EvaluacionPlanAccionDetalleNotas(EvaluacionPlanAccionDetalleNotasPK evaluacionPlanAccionDetalleNotasPK, String documentoUsuario, String estado, String nombre, String descripcion) {
+        this.evaluacionPlanAccionDetalleNotasPK = evaluacionPlanAccionDetalleNotasPK;
+        this.documentoUsuario = documentoUsuario;
+        this.estado = estado;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+    }
+    
+    
 
     public String getDocumentoUsuario() {
         return documentoUsuario;
@@ -124,5 +136,19 @@ public class EvaluacionPlanAccionDetalleNotas implements Serializable {
     public String toString() {
         return "com.gestor.gestor.EvaluacionPlanAccionDetalleNotas[ evaluacionPlanAccionDetalleNotasPK=" + evaluacionPlanAccionDetalleNotasPK + " ]";
     }
-    
+
+    /**
+     * @return the usuarios
+     */
+    public Usuarios getUsuarios() {
+        return usuarios;
+    }
+
+    /**
+     * @param usuarios the usuarios to set
+     */
+    public void setUsuarios(Usuarios usuarios) {
+        this.usuarios = usuarios;
+    }
+
 }

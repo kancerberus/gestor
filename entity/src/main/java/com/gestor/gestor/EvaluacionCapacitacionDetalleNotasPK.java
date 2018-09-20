@@ -12,23 +12,23 @@ import javax.persistence.Embeddable;
 
 /**
  *
- * @author juliano
+ * @author Julian D Osorio G
  */
 @Embeddable
 public class EvaluacionCapacitacionDetalleNotasPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "cod_evaluacion")
-    private int codEvaluacion;
+    private Long codEvaluacion;
     @Basic(optional = false)
     @Column(name = "codigo_establecimiento")
-    private short codigoEstablecimiento;
+    private int codigoEstablecimiento;
     @Basic(optional = false)
-    @Column(name = "cod_plan")
-    private int codPlan;
+    @Column(name = "cod_capacitacion")
+    private Long codCapacitacion;
     @Basic(optional = false)
-    @Column(name = "cod_plan_detalle")
-    private int codPlanDetalle;
+    @Column(name = "cod_capacitacion_detalle")
+    private Long codCapacitacionDetalle;
     @Basic(optional = false)
     @Column(name = "cod_nota")
     private int codNota;
@@ -36,44 +36,51 @@ public class EvaluacionCapacitacionDetalleNotasPK implements Serializable {
     public EvaluacionCapacitacionDetalleNotasPK() {
     }
 
-    public EvaluacionCapacitacionDetalleNotasPK(int codEvaluacion, short codigoEstablecimiento, int codPlan, int codPlanDetalle, int codNota) {
+    public EvaluacionCapacitacionDetalleNotasPK(Long codEvaluacion, int codigoEstablecimiento, Long codCapacitacion, Long codCapacitacionDetalle) {
         this.codEvaluacion = codEvaluacion;
         this.codigoEstablecimiento = codigoEstablecimiento;
-        this.codPlan = codPlan;
-        this.codPlanDetalle = codPlanDetalle;
+        this.codCapacitacion = codCapacitacion;
+        this.codCapacitacionDetalle = codCapacitacionDetalle;
+    }
+
+    public EvaluacionCapacitacionDetalleNotasPK(Long codEvaluacion, int codigoEstablecimiento, Long codCapacitacion, Long codCapacitacionDetalle, int codNota) {
+        this.codEvaluacion = codEvaluacion;
+        this.codigoEstablecimiento = codigoEstablecimiento;
+        this.codCapacitacion = codCapacitacion;
+        this.codCapacitacionDetalle = codCapacitacionDetalle;
         this.codNota = codNota;
     }
 
-    public int getCodEvaluacion() {
+    public Long getCodEvaluacion() {
         return codEvaluacion;
     }
 
-    public void setCodEvaluacion(int codEvaluacion) {
+    public void setCodEvaluacion(Long codEvaluacion) {
         this.codEvaluacion = codEvaluacion;
     }
 
-    public short getCodigoEstablecimiento() {
+    public int getCodigoEstablecimiento() {
         return codigoEstablecimiento;
     }
 
-    public void setCodigoEstablecimiento(short codigoEstablecimiento) {
+    public void setCodigoEstablecimiento(int codigoEstablecimiento) {
         this.codigoEstablecimiento = codigoEstablecimiento;
     }
 
-    public int getCodPlan() {
-        return codPlan;
+    public Long getCodCapacitacion() {
+        return codCapacitacion;
     }
 
-    public void setCodPlan(int codPlan) {
-        this.codPlan = codPlan;
+    public void setCodCapacitacion(Long codCapacitacion) {
+        this.codCapacitacion = codCapacitacion;
     }
 
-    public int getCodPlanDetalle() {
-        return codPlanDetalle;
+    public Long getCodCapacitacionDetalle() {
+        return codCapacitacionDetalle;
     }
 
-    public void setCodPlanDetalle(int codPlanDetalle) {
-        this.codPlanDetalle = codPlanDetalle;
+    public void setCodCapacitacionDetalle(Long codCapacitacionDetalle) {
+        this.codCapacitacionDetalle = codCapacitacionDetalle;
     }
 
     public int getCodNota() {
@@ -87,10 +94,10 @@ public class EvaluacionCapacitacionDetalleNotasPK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) codEvaluacion;
+        hash += codEvaluacion;
         hash += (int) codigoEstablecimiento;
-        hash += (int) codPlan;
-        hash += (int) codPlanDetalle;
+        hash += codCapacitacion;
+        hash += codCapacitacionDetalle;
         hash += (int) codNota;
         return hash;
     }
@@ -108,10 +115,10 @@ public class EvaluacionCapacitacionDetalleNotasPK implements Serializable {
         if (this.codigoEstablecimiento != other.codigoEstablecimiento) {
             return false;
         }
-        if (this.codPlan != other.codPlan) {
+        if (this.codCapacitacion != other.codCapacitacion) {
             return false;
         }
-        if (this.codPlanDetalle != other.codPlanDetalle) {
+        if (this.codCapacitacionDetalle != other.codCapacitacionDetalle) {
             return false;
         }
         if (this.codNota != other.codNota) {
@@ -122,7 +129,7 @@ public class EvaluacionCapacitacionDetalleNotasPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.gestor.gestor.EvaluacionCapacitacionDetalleNotasPK[ codEvaluacion=" + codEvaluacion + ", codigoEstablecimiento=" + codigoEstablecimiento + ", codPlan=" + codPlan + ", codPlanDetalle=" + codPlanDetalle + ", codNota=" + codNota + " ]";
+        return "com.gestor.gestor.EvaluacionCapacitacionDetalleNotasPK[ codEvaluacion=" + codEvaluacion + ", codigoEstablecimiento=" + codigoEstablecimiento + ", codCapacitacion=" + codCapacitacion + ", codCapacitacionDetalle=" + codCapacitacionDetalle + ", codNota=" + codNota + " ]";
     }
-    
+
 }

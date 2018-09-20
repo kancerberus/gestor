@@ -85,11 +85,11 @@
                 <h:panelGrid columns="3" cellspacing="10" style="align-content: center; display: inline-block;">
                     <p:commandButton value="Generar Capacitación" icon="ui-icon-disk" action="#{uiCapacitacion.procesarCapacitacion()}" process="@parent pgCapacitacion" update="pgCapacitacion dtCapacitacionDetalle"
                                      rendered="#{not uiCapacitacion.modificarActivo}"/>
-                    <p:commandButton value="Modificar Capacitación" icon="ui-icon-disk" action="#{uiCapacitacion.procesarCapacitacionModificar()}" process="@parent pgCapacitacion" update="pgCapacitacion dtCapacitacionDetalle"
+                    <p:commandButton value="Modificar Capacitación" icon="ui-icon-disk" action="#{uiCapacitacion.procesarCapacitacionModificar()}" process="@parent pgCapacitacion opcionesMenuCapacitacion" update="pgCapacitacion dtCapacitacionDetalle"
                                      rendered="#{uiCapacitacion.modificarActivo}"/>
                     
                     <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" oncomplete="PF('dialog').hide();"/>
-                    <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiCapacitacion.limpiar()}" update="opCapacitacion" process="@this"/>
+                    <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiCapacitacion.limpiar()}" update="opCapacitacion opcionesMenuCapacitacion" process="@this"/>
                 </h:panelGrid>
             </p:toolbarGroup>
         </p:toolbar> 

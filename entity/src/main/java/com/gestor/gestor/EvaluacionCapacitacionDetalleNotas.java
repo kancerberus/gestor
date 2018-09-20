@@ -5,6 +5,7 @@
  */
 package com.gestor.gestor;
 
+import com.gestor.publico.Usuarios;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -18,7 +19,7 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * @author juliano
+ * @author Julian D Osorio G
  */
 @Entity
 @Table(name = "evaluacion_capacitacion_detalle_notas")
@@ -40,6 +41,7 @@ public class EvaluacionCapacitacionDetalleNotas implements Serializable {
     @Column(name = "fecha_registro")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaRegistro;
+    private Usuarios usuarios;
 
     public EvaluacionCapacitacionDetalleNotas() {
     }
@@ -48,9 +50,19 @@ public class EvaluacionCapacitacionDetalleNotas implements Serializable {
         this.evaluacionCapacitacionDetalleNotasPK = evaluacionCapacitacionDetalleNotasPK;
     }
 
-    public EvaluacionCapacitacionDetalleNotas(int codEvaluacion, short codigoEstablecimiento, int codPlan, int codPlanDetalle, int codNota) {
-        this.evaluacionCapacitacionDetalleNotasPK = new EvaluacionCapacitacionDetalleNotasPK(codEvaluacion, codigoEstablecimiento, codPlan, codPlanDetalle, codNota);
+    public EvaluacionCapacitacionDetalleNotas(Long codEvaluacion, int codigoEstablecimiento, Long codCapacitacion, Long codCapacitacionDetalle, int codNota) {
+        this.evaluacionCapacitacionDetalleNotasPK = new EvaluacionCapacitacionDetalleNotasPK(codEvaluacion, codigoEstablecimiento, codCapacitacion, codCapacitacionDetalle, codNota);
     }
+
+    public EvaluacionCapacitacionDetalleNotas(EvaluacionCapacitacionDetalleNotasPK evaluacionCapacitacionDetalleNotasPK, String documentoUsuario, String estado, String nombre, String descripcion) {
+        this.evaluacionCapacitacionDetalleNotasPK = evaluacionCapacitacionDetalleNotasPK;
+        this.documentoUsuario = documentoUsuario;
+        this.estado = estado;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+    }
+    
+    
 
     public EvaluacionCapacitacionDetalleNotasPK getEvaluacionCapacitacionDetalleNotasPK() {
         return evaluacionCapacitacionDetalleNotasPK;
@@ -123,6 +135,20 @@ public class EvaluacionCapacitacionDetalleNotas implements Serializable {
     @Override
     public String toString() {
         return "com.gestor.gestor.EvaluacionCapacitacionDetalleNotas[ evaluacionCapacitacionDetalleNotasPK=" + evaluacionCapacitacionDetalleNotasPK + " ]";
+    }
+
+    /**
+     * @return the usuarios
+     */
+    public Usuarios getUsuarios() {
+        return usuarios;
+    }
+
+    /**
+     * @param usuarios the usuarios to set
+     */
+    public void setUsuarios(Usuarios usuarios) {
+        this.usuarios = usuarios;
     }
     
 }

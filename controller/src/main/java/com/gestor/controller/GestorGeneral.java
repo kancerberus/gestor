@@ -29,9 +29,12 @@ public class GestorGeneral extends Gestor implements Serializable {
     public static String GESTOR_EVALUACION_PLAN_ACCION_COD_PLAN_SEQ = "gestor.evaluacion_cod_evaluacion_seq";
     public static String GESTOR_EVALUACION_ADJUNTOS_COD_ADJUNTO_SEQ = "gestor.evaluacion_adjuntos_cod_adjunto_seq";
     public static String GESTOR_EVALUACION_CAPACITACION_COD_CAPACITACION_SEQ = "gestor.evaluacion_capacitacion_cod_capacitacion_seq";
+    public static String GESTOR_EVALUACION_CAPACITACION_DETALLE_COD_CAPACITACION_DETALLE_SEQ = "gestor.evaluacion_capacitacion_detalle_cod_capacitacion_detalle_seq";
+    public static String GESTOR_EVALUACION_PLAN_ACCION_DETALLE_COD_PLAN_DETALLE_SEQ = "gestor.evaluacion_plan_accion_detalle_cod_plan_detalle_seq";
 
     public static boolean VALIDA_PK = true;
     public static boolean NO_VALIDA_PK = false;
+    
 
     public GestorGeneral() throws Exception {
         super();

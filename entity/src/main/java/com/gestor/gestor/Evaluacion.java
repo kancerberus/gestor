@@ -35,7 +35,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Evaluacion.findAll", query = "SELECT e FROM Evaluacion e")})
 @ManagedBean
 @SessionScoped
-public class Evaluacion implements Serializable {
+public class Evaluacion implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
@@ -316,4 +316,11 @@ public class Evaluacion implements Serializable {
     public void setFechaResumen(Date fechaResumen) {
         this.fechaResumen = fechaResumen;
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
 }

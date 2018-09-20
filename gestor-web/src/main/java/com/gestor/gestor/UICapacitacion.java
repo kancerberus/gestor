@@ -87,10 +87,14 @@ public class UICapacitacion {
         }
     }
 
+    public void procesarCapacitacionDetalleNota() {
+
+    }
+
     public void mostrarNotaSeguimiento() {
         try {
             evaluacionCapacitacionDetalle = (EvaluacionCapacitacionDetalle) UtilJSF.getBean("varCapacitacionDetalle");
-            
+
             Dialogo dialogo = new Dialogo("dialogos/capacitacion-notas.xhtml", "Seguimiento Capacitación", "clip", Dialogo.WIDTH_80);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
             UtilJSF.execute("PF('dialog').show();");
@@ -216,6 +220,7 @@ public class UICapacitacion {
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem()
             ));
         } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
         }
 
     }
@@ -258,6 +263,7 @@ public class UICapacitacion {
             GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
             ecd = gestorEvaluacionCapacitacion.validarEvaluacionCapacitacionDetalle(ecd);
             gestorEvaluacionCapacitacion.actualizarEvaluacionCapacitacionDetalle(ecd);
+            this.modificarActivo = Boolean.FALSE;
 
             evaluacionCapacitacionDetalles = new ArrayList<>();
             evaluacionCapacitacionDetalles.addAll(gestorEvaluacionCapacitacion.cargarListaEvaluacionCapacitacionDetalle(
@@ -302,7 +308,7 @@ public class UICapacitacion {
             ), documentoUsuario, App.EVALUACION_CAPACITACION_ESTADO_ABIERTO);
 
             ecd.setEvaluacionCapacitacionDetallePK(new EvaluacionCapacitacionDetallePK(ec.getEvaluacionCapacitacionPK().getCodEvaluacion(),
-                    ec.getEvaluacionCapacitacionPK().getCodigoEstablecimiento(), ec.getEvaluacionCapacitacionPK().getCodCapacitacion(), 0));
+                    ec.getEvaluacionCapacitacionPK().getCodigoEstablecimiento(), ec.getEvaluacionCapacitacionPK().getCodCapacitacion()));
             ecd.setEstado(App.EVALUACION_CAPACITACION_DETALLE_ESTADO_ABIERTO);
 
             ecd.setCodCiclo(sdiSeleccionado.getSeccionDetalleItemsPK().getCodCiclo());
@@ -310,6 +316,19 @@ public class UICapacitacion {
             ecd.setCodDetalle(sdiSeleccionado.getSeccionDetalleItemsPK().getCodDetalle());
             ecd.setCodItem(sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem());
             ecd.setDocumentoUsuario(documentoUsuario);
+            ecd.getEvaluacionCapacitacionDetallePK().setCodCapacitacionDetalle(gestorGeneral.nextval(GestorGeneral.GESTOR_EVALUACION_CAPACITACION_DETALLE_COD_CAPACITACION_DETALLE_SEQ));
+
+            //EvaluacionCapacitacionDetalleNotasPK(Long codEvaluacion, int codigoEstablecimiento, Long codCapacitacion, int codCapacitacionDetalle, int codNota
+            //EvaluacionCapacitacionDetalleNotasPK evaluacionCapacitacionDetalleNotasPK, 
+            //String documentoUsuario, String estado, String nombre, String descripcion
+            EvaluacionCapacitacionDetalleNotas ecdn = new EvaluacionCapacitacionDetalleNotas(
+                    new EvaluacionCapacitacionDetalleNotasPK(
+                            ec.getEvaluacionCapacitacionPK().getCodEvaluacion(),
+                            ec.getEvaluacionCapacitacionPK().getCodigoEstablecimiento(),
+                            codCapacitacion, ecd.getEvaluacionCapacitacionDetallePK().getCodCapacitacionDetalle()
+                    ),
+                    documentoUsuario, ecd.getEstado(), "REGISTRO INICIAL", "Inicia registro de capacitación, responsable: " + UtilTexto.capitalizarCadena(responsable));
+            ecd.setEvaluacionCapacitacionDetalleNotas(ecdn);
 
             ec.setEvaluacionCapacitacionDetalle(ecd);
 
@@ -598,7 +617,8 @@ public class UICapacitacion {
     }
 
     /**
-     * @param evaluacionCapacitacionDetalle the evaluacionCapacitacionDetalle to set
+     * @param evaluacionCapacitacionDetalle the evaluacionCapacitacionDetalle to
+     * set
      */
     public void setEvaluacionCapacitacionDetalle(EvaluacionCapacitacionDetalle evaluacionCapacitacionDetalle) {
         this.evaluacionCapacitacionDetalle = evaluacionCapacitacionDetalle;

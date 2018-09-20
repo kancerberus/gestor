@@ -36,10 +36,19 @@ public class Dialogo implements Serializable {
         this.width = width;
     }
 
+    public Dialogo(String src, String header, String effect, String width, String style) {
+        this.src = src;
+        this.header = header;
+        this.effect = effect;
+        this.width = width;
+        this.style = style;
+    }
+
     private String src;
     private String header;
     private String effect;
     private String width;
+    private String style;
 
     /**
      * @return the src
@@ -95,5 +104,19 @@ public class Dialogo implements Serializable {
      */
     public void setWidth(String width) {
         this.width = width;
+    }
+
+    /**
+     * @return the style
+     */
+    public String getStyle() {
+        return style;
+    }
+
+    /**
+     * @param style the style to set
+     */
+    public void setStyle(String style) {
+        this.style = style;
     }
 }

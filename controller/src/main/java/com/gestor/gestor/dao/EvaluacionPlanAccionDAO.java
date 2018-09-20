@@ -11,6 +11,8 @@ import com.gestor.gestor.Evaluacion;
 import com.gestor.gestor.EvaluacionPK;
 import com.gestor.gestor.EvaluacionPlanAccion;
 import com.gestor.gestor.EvaluacionPlanAccionDetalle;
+import com.gestor.gestor.EvaluacionPlanAccionDetalleNotas;
+import com.gestor.gestor.EvaluacionPlanAccionDetalleNotasPK;
 import com.gestor.gestor.EvaluacionPlanAccionDetallePK;
 import com.gestor.gestor.Seccion;
 import com.gestor.gestor.SeccionDetalle;
@@ -72,8 +74,8 @@ public class EvaluacionPlanAccionDAO {
                     + " cod_ciclo, cod_seccion, cod_detalle, cod_item, nombre, descripcion,"
                     + " estado, documento_usuario, responsable)"
                     + " VALUES (" + epd.getEvaluacionPlanAccionDetallePK().getCodEvaluacion() + ", " + epd.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento()
-                    + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlan() + ","
-                    + " DEFAULT, '" + epd.getCodCiclo() + "', " + epd.getCodSeccion() + ", " + epd.getCodDetalle()
+                    + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlan()
+                    + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle() + ", '" + epd.getCodCiclo() + "', " + epd.getCodSeccion() + ", " + epd.getCodDetalle()
                     + " ," + epd.getCodItem() + ", '" + epd.getNombre() + "', '" + epd.getDescripcion() + "', '" + epd.getEstado() + "','" + epd.getDocumentoUsuario() + "','" + epd.getResponsable() + "');"
             );
             consulta.actualizar(sql);
@@ -103,7 +105,7 @@ public class EvaluacionPlanAccionDAO {
             rs = consulta.ejecutar(sql);
             Collection<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles = new ArrayList<EvaluacionPlanAccionDetalle>();
             while (rs.next()) {
-                EvaluacionPlanAccionDetalle epad = new EvaluacionPlanAccionDetalle(new EvaluacionPlanAccionDetallePK(codEvaluacion, codigoEstablecimiento, rs.getLong("cod_plan"), rs.getInt("cod_plan_detalle")),
+                EvaluacionPlanAccionDetalle epad = new EvaluacionPlanAccionDetalle(new EvaluacionPlanAccionDetallePK(codEvaluacion, codigoEstablecimiento, rs.getLong("cod_plan"), rs.getLong("cod_plan_detalle")),
                         rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("nombre"), rs.getString("descripcion"), rs.getString("estado"),
                         new Usuarios(
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
@@ -223,7 +225,7 @@ public class EvaluacionPlanAccionDAO {
             rs = consulta.ejecutar(sql);
             Collection<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles = new ArrayList<EvaluacionPlanAccionDetalle>();
             while (rs.next()) {
-                EvaluacionPlanAccionDetalle epad = new EvaluacionPlanAccionDetalle(new EvaluacionPlanAccionDetallePK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento"), rs.getLong("cod_plan"), rs.getInt("cod_plan_detalle")),
+                EvaluacionPlanAccionDetalle epad = new EvaluacionPlanAccionDetalle(new EvaluacionPlanAccionDetallePK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento"), rs.getLong("cod_plan"), rs.getLong("cod_plan_detalle")),
                         rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("epad_nombre"), rs.getString("descripcion"), rs.getString("estado"),
                         new Usuarios(
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
@@ -270,6 +272,26 @@ public class EvaluacionPlanAccionDAO {
             if (rs != null) {
                 rs.close();
             }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public void insertaEvaluacionPlanAccionDetalleNotas(EvaluacionPlanAccionDetalleNotas epadn) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            EvaluacionPlanAccionDetalleNotasPK pk = epadn.getEvaluacionPlanAccionDetalleNotasPK();
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO gestor.evaluacion_plan_accion_detalle_notas("
+                    + " cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle, "
+                    + " cod_nota, documento_usuario, estado, nombre, descripcion, fecha_registro)"
+                    + " VALUES (" + pk.getCodEvaluacion() + ", " + pk.getCodigoEstablecimiento() + ", " + pk.getCodPlan() + ", " + pk.getCodPlanDetalle()
+                    + " , DEFAULT, '" + epadn.getDocumentoUsuario() + "', '" + epadn.getEstado() + "', '" + epadn.getNombre() + "', '" + epadn.getDescripcion() + "', NOW());"
+            );
+            consulta.actualizar(sql);
+        } finally {
             if (consulta != null) {
                 consulta.desconectar();
             }

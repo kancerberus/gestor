@@ -28,12 +28,18 @@ public class EvaluacionCapacitacionDetallePK implements Serializable {
     private Long codCapacitacion;
     @Basic(optional = false)
     @Column(name = "cod_capacitacion_detalle")
-    private int codCapacitacionDetalle;
+    private Long codCapacitacionDetalle;
 
     public EvaluacionCapacitacionDetallePK() {
     }
 
-    public EvaluacionCapacitacionDetallePK(Long codEvaluacion, int codigoEstablecimiento, Long codCapacitacion, int codCapacitacionDetalle) {
+    public EvaluacionCapacitacionDetallePK(Long codEvaluacion, int codigoEstablecimiento, Long codCapacitacion) {
+        this.codEvaluacion = codEvaluacion;
+        this.codigoEstablecimiento = codigoEstablecimiento;
+        this.codCapacitacion = codCapacitacion;
+    }
+    
+    public EvaluacionCapacitacionDetallePK(Long codEvaluacion, int codigoEstablecimiento, Long codCapacitacion, Long codCapacitacionDetalle) {
         this.codEvaluacion = codEvaluacion;
         this.codigoEstablecimiento = codigoEstablecimiento;
         this.codCapacitacion = codCapacitacion;
@@ -64,11 +70,11 @@ public class EvaluacionCapacitacionDetallePK implements Serializable {
         this.codCapacitacion = codCapacitacion;
     }
 
-    public int getCodCapacitacionDetalle() {
+    public Long getCodCapacitacionDetalle() {
         return codCapacitacionDetalle;
     }
 
-    public void setCodCapacitacionDetalle(int codCapacitacionDetalle) {
+    public void setCodCapacitacionDetalle(Long codCapacitacionDetalle) {
         this.codCapacitacionDetalle = codCapacitacionDetalle;
     }
 
@@ -78,7 +84,7 @@ public class EvaluacionCapacitacionDetallePK implements Serializable {
         hash += codEvaluacion;
         hash += (int) codigoEstablecimiento;
         hash += codCapacitacion;
-        hash += (int) codCapacitacionDetalle;
+        hash += codCapacitacionDetalle;
         return hash;
     }
 

@@ -68,7 +68,7 @@ public class GestorEvaluacionResumen extends Gestor {
 
     public String calcularEstadoEvaluacion(Double calificacion, Double peso) {
         Double c = (calificacion / peso) * 100;
-        if (c <= 60) {
+        if (c.isNaN() || c <= 60) {
             return App.EVALUACION_ESTADO_CRITICA;
         } else if (c > 85) {
             return App.EVALUACION_ESTADO_ACEPTABLE;

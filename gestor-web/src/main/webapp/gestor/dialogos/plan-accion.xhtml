@@ -86,11 +86,12 @@
                 <h:panelGrid columns="3" cellspacing="10" style="align-content: center; display: inline-block;">
                     <p:commandButton value="Generar Plan Acción" icon="ui-icon-disk" action="#{uiPlanAccion.procesarPlanAccion()}" process="@parent pgPlanAccion" update="pgPlanAccion dtPlanAccionDetalle"
                                      rendered="#{not uiPlanAccion.modificarActivo}"/>
-                    <p:commandButton value="Modificar Plan Acción" icon="ui-icon-disk" action="#{uiPlanAccion.procesarPlanAccionModificar()}" process="@parent pgPlanAccion" update="pgPlanAccion dtPlanAccionDetalle"
+                    <p:commandButton value="Modificar Plan Acción" icon="ui-icon-disk" action="#{uiPlanAccion.procesarPlanAccionModificar()}" 
+                                     process="@parent pgPlanAccion" update="pgPlanAccion dtPlanAccionDetalle opcionesMenuPlanAccion"
                                      rendered="#{uiPlanAccion.modificarActivo}"/>
 
                     <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" oncomplete="PF('dialog').hide();"/>
-                    <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiPlanAccion.limpiar()}" update="opPlanAccion" process="@this"/>
+                    <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiPlanAccion.limpiar()}" update="opPlanAccion opcionesMenuPlanAccion" process="@this"/>
                 </h:panelGrid>
             </p:toolbarGroup>
         </p:toolbar> 

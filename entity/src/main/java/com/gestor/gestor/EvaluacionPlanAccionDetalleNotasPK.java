@@ -6,29 +6,30 @@
 package com.gestor.gestor;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
  *
- * @author juliano
+ * @author Julian D Osorio G
  */
 @Embeddable
 public class EvaluacionPlanAccionDetalleNotasPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "cod_evaluacion")
-    private int codEvaluacion;
+    private Long codEvaluacion;
     @Basic(optional = false)
     @Column(name = "codigo_establecimiento")
-    private short codigoEstablecimiento;
+    private int codigoEstablecimiento;
     @Basic(optional = false)
-    @Column(name = "cod_capacitacion")
-    private int codCapacitacion;
+    @Column(name = "cod_plan")
+    private Long codPlan;
     @Basic(optional = false)
-    @Column(name = "cod_capacitacion_detalle")
-    private int codCapacitacionDetalle;
+    @Column(name = "cod_plan_detalle")
+    private Long codPlanDetalle;
     @Basic(optional = false)
     @Column(name = "cod_nota")
     private int codNota;
@@ -36,44 +37,43 @@ public class EvaluacionPlanAccionDetalleNotasPK implements Serializable {
     public EvaluacionPlanAccionDetalleNotasPK() {
     }
 
-    public EvaluacionPlanAccionDetalleNotasPK(int codEvaluacion, short codigoEstablecimiento, int codCapacitacion, int codCapacitacionDetalle, int codNota) {
+    public EvaluacionPlanAccionDetalleNotasPK(Long codEvaluacion, int codigoEstablecimiento, Long codPlan, Long codPlanDetalle) {
         this.codEvaluacion = codEvaluacion;
         this.codigoEstablecimiento = codigoEstablecimiento;
-        this.codCapacitacion = codCapacitacion;
-        this.codCapacitacionDetalle = codCapacitacionDetalle;
-        this.codNota = codNota;
+        this.codPlan = codPlan;
+        this.codPlanDetalle = codPlanDetalle;
     }
 
-    public int getCodEvaluacion() {
+    public Long getCodEvaluacion() {
         return codEvaluacion;
     }
 
-    public void setCodEvaluacion(int codEvaluacion) {
+    public void setCodEvaluacion(Long codEvaluacion) {
         this.codEvaluacion = codEvaluacion;
     }
 
-    public short getCodigoEstablecimiento() {
+    public int getCodigoEstablecimiento() {
         return codigoEstablecimiento;
     }
 
-    public void setCodigoEstablecimiento(short codigoEstablecimiento) {
+    public void setCodigoEstablecimiento(int codigoEstablecimiento) {
         this.codigoEstablecimiento = codigoEstablecimiento;
     }
 
-    public int getCodCapacitacion() {
-        return codCapacitacion;
+    public Long getCodPlan() {
+        return codPlan;
     }
 
-    public void setCodCapacitacion(int codCapacitacion) {
-        this.codCapacitacion = codCapacitacion;
+    public void setCodPlan(Long codPlan) {
+        this.codPlan = codPlan;
     }
 
-    public int getCodCapacitacionDetalle() {
-        return codCapacitacionDetalle;
+    public Long getCodPlanDetalle() {
+        return codPlanDetalle;
     }
 
-    public void setCodCapacitacionDetalle(int codCapacitacionDetalle) {
-        this.codCapacitacionDetalle = codCapacitacionDetalle;
+    public void setCodPlanDetalle(Long codPlanDetalle) {
+        this.codPlanDetalle = codPlanDetalle;
     }
 
     public int getCodNota() {
@@ -87,10 +87,10 @@ public class EvaluacionPlanAccionDetalleNotasPK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) codEvaluacion;
+        hash += codEvaluacion;
         hash += (int) codigoEstablecimiento;
-        hash += (int) codCapacitacion;
-        hash += (int) codCapacitacionDetalle;
+        hash += codPlan;
+        hash += codPlanDetalle;
         hash += (int) codNota;
         return hash;
     }
@@ -102,27 +102,24 @@ public class EvaluacionPlanAccionDetalleNotasPK implements Serializable {
             return false;
         }
         EvaluacionPlanAccionDetalleNotasPK other = (EvaluacionPlanAccionDetalleNotasPK) object;
-        if (this.codEvaluacion != other.codEvaluacion) {
+        if (!Objects.equals(this.codEvaluacion, other.codEvaluacion)) {
             return false;
         }
         if (this.codigoEstablecimiento != other.codigoEstablecimiento) {
             return false;
         }
-        if (this.codCapacitacion != other.codCapacitacion) {
+        if (!Objects.equals(this.codPlan, other.codPlan)) {
             return false;
         }
-        if (this.codCapacitacionDetalle != other.codCapacitacionDetalle) {
+        if (!Objects.equals(this.codPlanDetalle, other.codPlanDetalle)) {
             return false;
         }
-        if (this.codNota != other.codNota) {
-            return false;
-        }
-        return true;
+        return this.codNota == other.codNota;
     }
 
     @Override
     public String toString() {
-        return "com.gestor.gestor.EvaluacionPlanAccionDetalleNotasPK[ codEvaluacion=" + codEvaluacion + ", codigoEstablecimiento=" + codigoEstablecimiento + ", codCapacitacion=" + codCapacitacion + ", codCapacitacionDetalle=" + codCapacitacionDetalle + ", codNota=" + codNota + " ]";
+        return "com.gestor.gestor.EvaluacionPlanAccionDetalleNotasPK[ codEvaluacion=" + codEvaluacion + ", codigoEstablecimiento=" + codigoEstablecimiento + ", codPlan=" + codPlan + ", codPlanDetalle=" + codPlanDetalle + ", codNota=" + codNota + " ]";
     }
-    
+
 }

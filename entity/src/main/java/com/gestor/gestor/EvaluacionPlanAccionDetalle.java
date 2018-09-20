@@ -9,6 +9,7 @@ import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Usuarios;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.persistence.Basic;
@@ -71,6 +72,8 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private SeccionDetalleItems seccionDetalleItems;
     private Evaluacion evaluacion;
     private Establecimiento establecimiento;
+    private List<EvaluacionPlanAccionDetalleNotas> evaluacionPlanAccionDetalleNotasList;
+    private EvaluacionPlanAccionDetalleNotas evaluacionPlanAccionDetalleNotas;
 
     public EvaluacionPlanAccionDetalle() {
     }
@@ -84,7 +87,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.estado = estado;
     }
 
-    public EvaluacionPlanAccionDetalle(Long codEvaluacion, int codigoEstablecimiento, Long codPlan, int codPlanDetalle) {
+    public EvaluacionPlanAccionDetalle(Long codEvaluacion, int codigoEstablecimiento, Long codPlan, Long codPlanDetalle) {
         this.evaluacionPlanAccionDetallePK = new EvaluacionPlanAccionDetallePK(codEvaluacion, codigoEstablecimiento, codPlan, codPlanDetalle);
     }
 
@@ -287,6 +290,34 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
      */
     public void setResponsable(String responsable) {
         this.responsable = responsable;
+    }
+
+    /**
+     * @return the evaluacionPlanAccionDetalleNotasList
+     */
+    public List<EvaluacionPlanAccionDetalleNotas> getEvaluacionPlanAccionDetalleNotasList() {
+        return evaluacionPlanAccionDetalleNotasList;
+    }
+
+    /**
+     * @param evaluacionPlanAccionDetalleNotasList the evaluacionPlanAccionDetalleNotasList to set
+     */
+    public void setEvaluacionPlanAccionDetalleNotasList(List<EvaluacionPlanAccionDetalleNotas> evaluacionPlanAccionDetalleNotasList) {
+        this.evaluacionPlanAccionDetalleNotasList = evaluacionPlanAccionDetalleNotasList;
+    }
+
+    /**
+     * @return the evaluacionPlanAccionDetalleNotas
+     */
+    public EvaluacionPlanAccionDetalleNotas getEvaluacionPlanAccionDetalleNotas() {
+        return evaluacionPlanAccionDetalleNotas;
+    }
+
+    /**
+     * @param evaluacionPlanAccionDetalleNotas the evaluacionPlanAccionDetalleNotas to set
+     */
+    public void setEvaluacionPlanAccionDetalleNotas(EvaluacionPlanAccionDetalleNotas evaluacionPlanAccionDetalleNotas) {
+        this.evaluacionPlanAccionDetalleNotas = evaluacionPlanAccionDetalleNotas;
     }
 
 }

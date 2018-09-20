@@ -47,6 +47,8 @@ public class GestorEvaluacionPlanAccion extends Gestor {
             EvaluacionPlanAccionDAO evaluacionPlanAccionDAO = new EvaluacionPlanAccionDAO(conexion);
             evaluacionPlanAccionDAO.upsertEvaluacionPlanAccion(ep);
             evaluacionPlanAccionDAO.insertaEvaluacionPlanAccionDetalle(ep.getEvaluacionPlanAccionDetalle());
+            evaluacionPlanAccionDAO.insertaEvaluacionPlanAccionDetalleNotas(ep.getEvaluacionPlanAccionDetalle().getEvaluacionPlanAccionDetalleNotas());
+            
 
             this.finTransaccion();
         } finally {

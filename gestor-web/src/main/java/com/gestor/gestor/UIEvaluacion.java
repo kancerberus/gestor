@@ -77,6 +77,14 @@ public class UIEvaluacion {
         }
     }
 
+    public String evaluacionActiva() {
+        Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
+        if (e != null && e.getEvaluacionPK() != null && e.getEvaluacionPK().getCodEvaluacion() != null && e.getEvaluacionPK().getCodEvaluacion() != 0) {
+            return ("/gestor/evaluacion.xhtml?faces-redirect=true");
+        }
+        return null;
+    }
+
     public void seleccionarEstablecimiento() {
         try {
             Sesion s = (Sesion) UtilJSF.getBean("sesion");
@@ -93,8 +101,9 @@ public class UIEvaluacion {
 
     public String nuevo() {
         try {
-            Dialogo dialogo = new Dialogo("dialogos/nuevo.xhtml", "Nueva Evaluación", "clip", "80%");
+            Dialogo dialogo = new Dialogo("dialogos/nuevo.xhtml", "Nueva Evaluación", "clip", "80%", "top: 0px;");
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
+            UtilJSF.update("formEvaluaciones:dialog");
             UtilJSF.execute("PF('dialog').show();");
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
@@ -318,8 +327,8 @@ public class UIEvaluacion {
             this.resumenEvaluacionList = new ArrayList<>();
             List<EvaluacionResumen> evaluacionResumens = new ArrayList<>();
             GestorEvaluacion gestorEvaluacion = new GestorEvaluacion();
-            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
-
+            Evaluacion evaluacion = (Evaluacion) UtilJSF.getBean("evaluacion");
+            Evaluacion e = (Evaluacion) evaluacion.clone();
             Double calificacionE = 0.0;
             Double pesoE = 0.0;
             for (Ciclo c : e.getCiclos()) {

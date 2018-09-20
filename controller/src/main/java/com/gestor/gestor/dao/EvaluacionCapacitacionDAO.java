@@ -9,6 +9,7 @@ import com.gestor.gestor.Ciclo;
 import com.gestor.gestor.Evaluacion;
 import com.gestor.gestor.EvaluacionCapacitacion;
 import com.gestor.gestor.EvaluacionCapacitacionDetalle;
+import com.gestor.gestor.EvaluacionCapacitacionDetalleNotas;
 import com.gestor.gestor.EvaluacionCapacitacionDetallePK;
 import com.gestor.gestor.EvaluacionPK;
 import com.gestor.gestor.Seccion;
@@ -59,7 +60,7 @@ public class EvaluacionCapacitacionDAO {
             Collection<EvaluacionCapacitacionDetalle> evaluacionCapacitacionDetalles = new ArrayList<>();
             while (rs.next()) {
 
-                EvaluacionCapacitacionDetalle ecd = new EvaluacionCapacitacionDetalle(new EvaluacionCapacitacionDetallePK(codEvaluacion, codigoEstablecimiento, rs.getLong("cod_capacitacion"), rs.getInt("cod_capacitacion_detalle")),
+                EvaluacionCapacitacionDetalle ecd = new EvaluacionCapacitacionDetalle(new EvaluacionCapacitacionDetallePK(codEvaluacion, codigoEstablecimiento, rs.getLong("cod_capacitacion"), rs.getLong("cod_capacitacion_detalle")),
                         rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("nombre"), rs.getString("descripcion"), rs.getString("estado"),
                         new Usuarios(
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
@@ -138,7 +139,7 @@ public class EvaluacionCapacitacionDAO {
                     + " cod_ciclo, cod_seccion, cod_detalle, cod_item, nombre, descripcion,"
                     + " estado, documento_usuario, responsable)"
                     + " VALUES (" + ecd.getEvaluacionCapacitacionDetallePK().getCodEvaluacion() + ", " + ecd.getEvaluacionCapacitacionDetallePK().getCodigoEstablecimiento()
-                    + " , " + ecd.getEvaluacionCapacitacionDetallePK().getCodCapacitacion() + " , DEFAULT,"
+                    + " , " + ecd.getEvaluacionCapacitacionDetallePK().getCodCapacitacion() + " , " + ecd.getEvaluacionCapacitacionDetallePK().getCodCapacitacionDetalle() + ","
                     + " '" + ecd.getCodCiclo() + "', " + ecd.getCodSeccion() + ", " + ecd.getCodDetalle() + ", " + ecd.getCodItem() + ", '" + ecd.getNombre() + "', '" + ecd.getDescripcion() + "'"
                     + " , '" + ecd.getEstado() + "','" + ecd.getDocumentoUsuario() + "','" + ecd.getResponsable() + "');"
             );
@@ -227,7 +228,7 @@ public class EvaluacionCapacitacionDAO {
             Collection<EvaluacionCapacitacionDetalle> evaluacionCapacitacionDetalles = new ArrayList<>();
             while (rs.next()) {
 
-                EvaluacionCapacitacionDetalle ecd = new EvaluacionCapacitacionDetalle(new EvaluacionCapacitacionDetallePK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento"), rs.getLong("cod_capacitacion"), rs.getInt("cod_capacitacion_detalle")),
+                EvaluacionCapacitacionDetalle ecd = new EvaluacionCapacitacionDetalle(new EvaluacionCapacitacionDetallePK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento"), rs.getLong("cod_capacitacion"), rs.getLong("cod_capacitacion_detalle")),
                         rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("ecd_nombre"), rs.getString("descripcion"), rs.getString("estado"),
                         new Usuarios(
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
@@ -259,16 +260,41 @@ public class EvaluacionCapacitacionDAO {
 
                 Ciclo c = new Ciclo(rs.getString("c_cod_ciclo"), rs.getString("c_nombre"));
                 c.setNumeral(rs.getString("c_numeral"));
-                
+
                 c.setEvaluacion(e);
                 s.setCiclo(c);
                 sd.setSeccion(s);
                 sdi.setSeccionDetalle(sd);
                 ecd.setSeccionDetalleItems(sdi);
-                
+
                 evaluacionCapacitacionDetalles.add(ecd);
             }
             return evaluacionCapacitacionDetalles;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public void insertaEvaluacionCapacitacionDetalleNotas(EvaluacionCapacitacionDetalleNotas ecdn) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO gestor.evaluacion_capacitacion_detalle_notas("
+                    + " cod_evaluacion, codigo_establecimiento,"
+                    + " cod_capacitacion, cod_capacitacion_detalle, "
+                    + " cod_nota, documento_usuario, estado, nombre, descripcion, fecha_registro)"
+                    + " VALUES (" + ecdn.getEvaluacionCapacitacionDetalleNotasPK().getCodEvaluacion() + ", " + ecdn.getEvaluacionCapacitacionDetalleNotasPK().getCodigoEstablecimiento()
+                    + " , " + ecdn.getEvaluacionCapacitacionDetalleNotasPK().getCodCapacitacion() + ", " + ecdn.getEvaluacionCapacitacionDetalleNotasPK().getCodCapacitacionDetalle()
+                    + " , DEFAULT, '" + ecdn.getDocumentoUsuario() + "', '" + ecdn.getEstado() + "', '" + ecdn.getNombre() + "', '" + ecdn.getDescripcion() + "', NOW());"
+            );
+            consulta.actualizar(sql);
         } finally {
             if (rs != null) {
                 rs.close();

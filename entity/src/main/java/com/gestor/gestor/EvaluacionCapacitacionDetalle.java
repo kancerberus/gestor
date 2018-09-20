@@ -9,6 +9,7 @@ import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Usuarios;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.persistence.Basic;
@@ -83,6 +84,8 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
     private SeccionDetalleItems seccionDetalleItems;
     private Evaluacion evaluacion;
     private Establecimiento establecimiento;
+    private List<EvaluacionCapacitacionDetalleNotas> evaluacionCapacitacionDetalleNotasList;
+    private EvaluacionCapacitacionDetalleNotas evaluacionCapacitacionDetalleNotas;
 
     public EvaluacionCapacitacionDetalle() {
     }
@@ -96,7 +99,7 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
         this.estado = estado;
     }
 
-    public EvaluacionCapacitacionDetalle(Long codEvaluacion, int codigoEstablecimiento, Long codCapacitacion, int codCapacitacionDetalle) {
+    public EvaluacionCapacitacionDetalle(Long codEvaluacion, int codigoEstablecimiento, Long codCapacitacion, Long codCapacitacionDetalle) {
         this.evaluacionCapacitacionDetallePK = new EvaluacionCapacitacionDetallePK(codEvaluacion, codigoEstablecimiento, codCapacitacion, codCapacitacionDetalle);
     }
 
@@ -331,6 +334,34 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
      */
     public void setEstablecimiento(Establecimiento establecimiento) {
         this.establecimiento = establecimiento;
+    }
+
+    /**
+     * @return the evaluacionCapacitacionDetalleNotasList
+     */
+    public List<EvaluacionCapacitacionDetalleNotas> getEvaluacionCapacitacionDetalleNotasList() {
+        return evaluacionCapacitacionDetalleNotasList;
+    }
+
+    /**
+     * @param evaluacionCapacitacionDetalleNotasList the evaluacionCapacitacionDetalleNotasList to set
+     */
+    public void setEvaluacionCapacitacionDetalleNotasList(List<EvaluacionCapacitacionDetalleNotas> evaluacionCapacitacionDetalleNotasList) {
+        this.evaluacionCapacitacionDetalleNotasList = evaluacionCapacitacionDetalleNotasList;
+    }
+
+    /**
+     * @return the evaluacionCapacitacionDetalleNotas
+     */
+    public EvaluacionCapacitacionDetalleNotas getEvaluacionCapacitacionDetalleNotas() {
+        return evaluacionCapacitacionDetalleNotas;
+    }
+
+    /**
+     * @param evaluacionCapacitacionDetalleNotas the evaluacionCapacitacionDetalleNotas to set
+     */
+    public void setEvaluacionCapacitacionDetalleNotas(EvaluacionCapacitacionDetalleNotas evaluacionCapacitacionDetalleNotas) {
+        this.evaluacionCapacitacionDetalleNotas = evaluacionCapacitacionDetalleNotas;
     }
 
 }

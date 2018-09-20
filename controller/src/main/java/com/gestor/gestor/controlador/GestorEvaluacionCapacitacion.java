@@ -68,6 +68,7 @@ public class GestorEvaluacionCapacitacion extends Gestor {
             EvaluacionCapacitacionDAO evaluacionCapacitacionDAO = new EvaluacionCapacitacionDAO(conexion);
             evaluacionCapacitacionDAO.upsertEvaluacionCapacitacion(ec);
             evaluacionCapacitacionDAO.insertaEvaluacionCapacitacionDetalle(ec.getEvaluacionCapacitacionDetalle());
+            evaluacionCapacitacionDAO.insertaEvaluacionCapacitacionDetalleNotas(ec.getEvaluacionCapacitacionDetalle().getEvaluacionCapacitacionDetalleNotas());
 
             this.finTransaccion();
         } finally {
