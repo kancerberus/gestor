@@ -9,9 +9,13 @@ import com.gestor.controller.Gestor;
 import com.gestor.entity.UtilLog;
 import com.gestor.gestor.EvaluacionCapacitacion;
 import com.gestor.gestor.EvaluacionCapacitacionDetalle;
+import com.gestor.gestor.EvaluacionCapacitacionDetalleNotas;
+import com.gestor.gestor.EvaluacionCapacitacionDetalleNotasPK;
 import com.gestor.gestor.dao.EvaluacionCapacitacionDAO;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
+import javax.faces.application.ViewExpiredException;
 
 /**
  *
@@ -101,6 +105,40 @@ public class GestorEvaluacionCapacitacion extends Gestor {
             this.abrirConexion();
             EvaluacionCapacitacionDAO evaluacionCapacitacionDAO = new EvaluacionCapacitacionDAO(conexion);
             return evaluacionCapacitacionDAO.cargarListaEvaluacionCapacitacionDetalle(condicion);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+
+    public List<EvaluacionCapacitacionDetalleNotas> cargarCapacitacionDetalleNotasList(EvaluacionCapacitacionDetalleNotasPK evaluacionCapacitacionDetalleNotasPK) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionCapacitacionDAO evaluacionCapacitacionDAO = new EvaluacionCapacitacionDAO(conexion);
+            return evaluacionCapacitacionDAO.cargarListaEvaluacionCapacitacionDetalle(evaluacionCapacitacionDetalleNotasPK);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+
+    public EvaluacionCapacitacionDetalleNotas validarEvaluacionCapacitacionDetalleNotas(EvaluacionCapacitacionDetalleNotas ecdn) throws Exception {
+        if (ecdn == null || ecdn.getDescripcion() == null || ecdn.getDescripcion().equalsIgnoreCase("")) {
+            throw new Exception("Ingrese la descripción del seguimiento", UtilLog.TW_VALIDACION);
+        }
+        if (ecdn.getNombre() == null || ecdn.getNombre().equalsIgnoreCase("")) {
+            ecdn.setNombre("SEGUIMIENTO");
+        }
+        if(ecdn.getDocumentoUsuario() == null || ecdn.getDocumentoUsuario().equalsIgnoreCase("")){
+            throw new ViewExpiredException();
+        }
+        ecdn.setDescripcion(ecdn.getDescripcion().trim());
+        return ecdn;
+    }
+
+    public void procesarCapacitacionDetalleNotas(EvaluacionCapacitacionDetalleNotas ecdn) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionCapacitacionDAO evaluacionCapacitacionDAO = new EvaluacionCapacitacionDAO(conexion);
+            evaluacionCapacitacionDAO.upsertEvaluacionCapacitacionDetalleNotas(ecdn);
         } finally {
             this.cerrarConexion();
         }

@@ -32,7 +32,7 @@ public class EvaluacionPlanAccionDetalleNotasPK implements Serializable {
     private Long codPlanDetalle;
     @Basic(optional = false)
     @Column(name = "cod_nota")
-    private int codNota;
+    private Long codNota;
 
     public EvaluacionPlanAccionDetalleNotasPK() {
     }
@@ -42,6 +42,14 @@ public class EvaluacionPlanAccionDetalleNotasPK implements Serializable {
         this.codigoEstablecimiento = codigoEstablecimiento;
         this.codPlan = codPlan;
         this.codPlanDetalle = codPlanDetalle;
+    }
+
+    public EvaluacionPlanAccionDetalleNotasPK(Long codEvaluacion, int codigoEstablecimiento, Long codPlan, Long codPlanDetalle, Long codNota) {
+        this.codEvaluacion = codEvaluacion;
+        this.codigoEstablecimiento = codigoEstablecimiento;
+        this.codPlan = codPlan;
+        this.codPlanDetalle = codPlanDetalle;
+        this.codNota = codNota;
     }
 
     public Long getCodEvaluacion() {
@@ -76,11 +84,11 @@ public class EvaluacionPlanAccionDetalleNotasPK implements Serializable {
         this.codPlanDetalle = codPlanDetalle;
     }
 
-    public int getCodNota() {
+    public Long getCodNota() {
         return codNota;
     }
 
-    public void setCodNota(int codNota) {
+    public void setCodNota(Long codNota) {
         this.codNota = codNota;
     }
 
@@ -91,7 +99,7 @@ public class EvaluacionPlanAccionDetalleNotasPK implements Serializable {
         hash += (int) codigoEstablecimiento;
         hash += codPlan;
         hash += codPlanDetalle;
-        hash += (int) codNota;
+        hash += codNota;
         return hash;
     }
 

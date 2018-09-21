@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.PostConstruct;
+import javax.faces.application.ViewExpiredException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -87,17 +89,74 @@ public class UICapacitacion {
         }
     }
 
-    public void procesarCapacitacionDetalleNota() {
+    public void modificarNotaSeguimiento() {
+        EvaluacionCapacitacionDetalleNotas ecdn = (EvaluacionCapacitacionDetalleNotas) UtilJSF.getBean("varCapacitacionNota");
+        evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetalleNotasList().remove(ecdn);
+        UtilJSF.setBean("evaluacionCapacitacionDetalleNotas", ecdn, UtilJSF.SESSION_SCOPE);
+    }
 
+    public void procesarCapacitacionDetalleNota() {
+        try {
+            Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
+            GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
+            GestorGeneral gestorGeneral = new GestorGeneral();
+            EvaluacionCapacitacionDetalleNotas ecdn = (EvaluacionCapacitacionDetalleNotas) UtilJSF.getBean("evaluacionCapacitacionDetalleNotas");
+            ecdn.setDocumentoUsuario(usuarios.getUsuariosPK().getDocumentoUsuario());
+            ecdn.setEstado(evaluacionCapacitacionDetalle.getEstado());
+
+            if (ecdn.getEvaluacionCapacitacionDetalleNotasPK() == null || ecdn.getEvaluacionCapacitacionDetalleNotasPK().getCodNota() == null
+                    || ecdn.getEvaluacionCapacitacionDetalleNotasPK().getCodNota() == 0) {
+                EvaluacionCapacitacionDetallePK pk = evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetallePK();
+                ecdn.setEvaluacionCapacitacionDetalleNotasPK(new EvaluacionCapacitacionDetalleNotasPK(
+                        pk.getCodEvaluacion(),
+                        pk.getCodigoEstablecimiento(),
+                        pk.getCodCapacitacion(),
+                        pk.getCodCapacitacionDetalle(),
+                        gestorGeneral.nextval(GestorGeneral.GESTOR_EVALUACION_CAPACITACION_DETALLE_NOTAS_COD_NOTA_SEQ)
+                ));
+            }
+
+            ecdn = gestorEvaluacionCapacitacion.validarEvaluacionCapacitacionDetalleNotas(ecdn);
+            gestorEvaluacionCapacitacion.procesarCapacitacionDetalleNotas(ecdn);
+            UtilMSG.addSuccessMsg("Seguimiento Guardado", "Se almaceno el seguimiento a la capacitación satisfactoriamente.");
+            UtilJSF.setBean("evaluacionCapacitacionDetalleNotas", new EvaluacionCapacitacionDetalleNotas(), UtilJSF.SESSION_SCOPE);
+            
+            EvaluacionCapacitacionDetalleNotasPK pk = new EvaluacionCapacitacionDetalleNotasPK(
+                    evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetallePK().getCodEvaluacion(),
+                    evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetallePK().getCodigoEstablecimiento(),
+                    evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetallePK().getCodCapacitacion(),
+                    evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetallePK().getCodCapacitacionDetalle()
+            );
+            evaluacionCapacitacionDetalle.setEvaluacionCapacitacionDetalleNotasList(gestorEvaluacionCapacitacion.cargarCapacitacionDetalleNotasList(pk));
+            
+
+        } catch (Exception e) {
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getCause().getMessage(), e.getMessage());
+            } else {
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }
+        }
     }
 
     public void mostrarNotaSeguimiento() {
         try {
+            GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
             evaluacionCapacitacionDetalle = (EvaluacionCapacitacionDetalle) UtilJSF.getBean("varCapacitacionDetalle");
+
+            EvaluacionCapacitacionDetalleNotasPK pk = new EvaluacionCapacitacionDetalleNotasPK(
+                    evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetallePK().getCodEvaluacion(),
+                    evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetallePK().getCodigoEstablecimiento(),
+                    evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetallePK().getCodCapacitacion(),
+                    evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetallePK().getCodCapacitacionDetalle()
+            );
+            evaluacionCapacitacionDetalle.setEvaluacionCapacitacionDetalleNotasList(gestorEvaluacionCapacitacion.cargarCapacitacionDetalleNotasList(pk));
 
             Dialogo dialogo = new Dialogo("dialogos/capacitacion-notas.xhtml", "Seguimiento Capacitación", "clip", Dialogo.WIDTH_80);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
             UtilJSF.execute("PF('dialog').show();");
+            UtilJSF.setBean("evaluacionCapacitacionDetalleNotas", new EvaluacionCapacitacionDetalleNotas(), UtilJSF.SESSION_SCOPE);
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }

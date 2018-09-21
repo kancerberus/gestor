@@ -86,18 +86,75 @@ public class UIPlanAccion {
             UtilLog.generarLog(this.getClass(), e);
         }
     }
-    
-    public void procesarPlanAccionDetalleNota(){
-        
+
+    public void modificarNotaSeguimiento() {
+        EvaluacionPlanAccionDetalleNotas epadn = (EvaluacionPlanAccionDetalleNotas) UtilJSF.getBean("varPlanAccionNota");
+        evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetalleNotasList().remove(epadn);
+        UtilJSF.setBean("evaluacionCapacitacionDetalleNotas", epadn, UtilJSF.SESSION_SCOPE);
     }
-    
+
+    public void procesarPlanAccionDetalleNota() {
+        try {
+            Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
+            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
+            GestorGeneral gestorGeneral = new GestorGeneral();
+            EvaluacionPlanAccionDetalleNotas epadn = (EvaluacionPlanAccionDetalleNotas) UtilJSF.getBean("evaluacionPlanAccionDetalleNotas");
+            epadn.setDocumentoUsuario(usuarios.getUsuariosPK().getDocumentoUsuario());
+            epadn.setEstado(evaluacionPlanAccionDetalle.getEstado());
+
+            if (epadn.getEvaluacionPlanAccionDetalleNotasPK() == null || epadn.getEvaluacionPlanAccionDetalleNotasPK().getCodNota() == null
+                    || epadn.getEvaluacionPlanAccionDetalleNotasPK().getCodNota() == 0) {
+                EvaluacionPlanAccionDetallePK pk = evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK();
+                epadn.setEvaluacionPlanAccionDetalleNotasPK(new EvaluacionPlanAccionDetalleNotasPK(
+                        pk.getCodEvaluacion(),
+                        pk.getCodigoEstablecimiento(),
+                        pk.getCodPlan(),
+                        pk.getCodPlanDetalle(),
+                        gestorGeneral.nextval(GestorGeneral.GESTOR_EVALUACION_PLAN_ACCION_DETALLE_NOTAS_COD_NOTA_SEQ)
+                ));
+            }
+
+            epadn = gestorEvaluacionPlanAccion.validarEvaluacionPlanAccionDetalleNotas(epadn);
+            gestorEvaluacionPlanAccion.procesarPlanAccionDetalleNotas(epadn);
+            UtilMSG.addSuccessMsg("Seguimiento Guardado", "Se almaceno el seguimiento al plan de acción satisfactoriamente.");
+            UtilJSF.setBean("evaluacionPlanAccionDetalleNotas", new EvaluacionCapacitacionDetalleNotas(), UtilJSF.SESSION_SCOPE);
+            
+            EvaluacionPlanAccionDetalleNotasPK pk = new EvaluacionPlanAccionDetalleNotasPK(
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodEvaluacion(),
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento(),
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlan(),
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()
+            );
+            evaluacionPlanAccionDetalle.setEvaluacionPlanAccionDetalleNotasList(gestorEvaluacionPlanAccion.cargarEvaluacionPlanAccionDetalleNotasList(pk));
+            
+            
+        } catch (Exception e) {
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getCause().getMessage(), e.getMessage());
+            } else {
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }
+        }
+    }
+
     public void mostrarNotaSeguimiento() {
         try {
+            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             evaluacionPlanAccionDetalle = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("varPlanAccionDetalle");
-            
+
+            EvaluacionPlanAccionDetalleNotasPK pk = new EvaluacionPlanAccionDetalleNotasPK(
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodEvaluacion(),
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento(),
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlan(),
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()
+            );
+            evaluacionPlanAccionDetalle.setEvaluacionPlanAccionDetalleNotasList(gestorEvaluacionPlanAccion.cargarEvaluacionPlanAccionDetalleNotasList(pk));
+
             Dialogo dialogo = new Dialogo("dialogos/plan-accion-notas.xhtml", "Seguimiento Plan Acción", "clip", Dialogo.WIDTH_80);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
             UtilJSF.execute("PF('dialog').show();");
+            UtilJSF.setBean("evaluacionPlanAccionDetalleNotas", new EvaluacionPlanAccionDetalleNotas(), UtilJSF.SESSION_SCOPE);
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }
@@ -320,12 +377,12 @@ public class UIPlanAccion {
             epd.setCodDetalle(sdiSeleccionado.getSeccionDetalleItemsPK().getCodDetalle());
             epd.setCodItem(sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem());
             epd.setDocumentoUsuario(documentoUsuario);
-            
+
             epd.getEvaluacionPlanAccionDetallePK().setCodPlanDetalle(codPlan);
             epd.getEvaluacionPlanAccionDetallePK().setCodPlanDetalle(gestorGeneral.nextval(GestorGeneral.GESTOR_EVALUACION_PLAN_ACCION_DETALLE_COD_PLAN_DETALLE_SEQ));
-            
+
             EvaluacionPlanAccionDetalleNotas epadn = new EvaluacionPlanAccionDetalleNotas(
-                    new EvaluacionPlanAccionDetalleNotasPK(ep.getEvaluacionPlanAccionPK().getCodEvaluacion(), ep.getEvaluacionPlanAccionPK().getCodigoEstablecimiento(), 
+                    new EvaluacionPlanAccionDetalleNotasPK(ep.getEvaluacionPlanAccionPK().getCodEvaluacion(), ep.getEvaluacionPlanAccionPK().getCodigoEstablecimiento(),
                             codPlan, epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()),
                     documentoUsuario, epd.getEstado(), "REGISTRO INICIAL", "Inicia registro de plan acción, responsable: " + UtilTexto.capitalizarCadena(responsable));
             epd.setEvaluacionPlanAccionDetalleNotas(epadn);

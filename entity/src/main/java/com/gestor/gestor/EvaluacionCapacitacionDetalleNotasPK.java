@@ -31,7 +31,7 @@ public class EvaluacionCapacitacionDetalleNotasPK implements Serializable {
     private Long codCapacitacionDetalle;
     @Basic(optional = false)
     @Column(name = "cod_nota")
-    private int codNota;
+    private Long codNota;
 
     public EvaluacionCapacitacionDetalleNotasPK() {
     }
@@ -43,7 +43,7 @@ public class EvaluacionCapacitacionDetalleNotasPK implements Serializable {
         this.codCapacitacionDetalle = codCapacitacionDetalle;
     }
 
-    public EvaluacionCapacitacionDetalleNotasPK(Long codEvaluacion, int codigoEstablecimiento, Long codCapacitacion, Long codCapacitacionDetalle, int codNota) {
+    public EvaluacionCapacitacionDetalleNotasPK(Long codEvaluacion, int codigoEstablecimiento, Long codCapacitacion, Long codCapacitacionDetalle, Long codNota) {
         this.codEvaluacion = codEvaluacion;
         this.codigoEstablecimiento = codigoEstablecimiento;
         this.codCapacitacion = codCapacitacion;
@@ -83,11 +83,11 @@ public class EvaluacionCapacitacionDetalleNotasPK implements Serializable {
         this.codCapacitacionDetalle = codCapacitacionDetalle;
     }
 
-    public int getCodNota() {
+    public Long getCodNota() {
         return codNota;
     }
 
-    public void setCodNota(int codNota) {
+    public void setCodNota(Long codNota) {
         this.codNota = codNota;
     }
 
@@ -98,7 +98,7 @@ public class EvaluacionCapacitacionDetalleNotasPK implements Serializable {
         hash += (int) codigoEstablecimiento;
         hash += codCapacitacion;
         hash += codCapacitacionDetalle;
-        hash += (int) codNota;
+        hash += codNota;
         return hash;
     }
 

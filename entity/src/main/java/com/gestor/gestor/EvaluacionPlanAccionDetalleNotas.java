@@ -8,6 +8,9 @@ package com.gestor.gestor;
 import com.gestor.publico.Usuarios;
 import java.io.Serializable;
 import java.util.Date;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -25,6 +28,8 @@ import javax.persistence.TemporalType;
 @Table(name = "evaluacion_plan_accion_detalle_notas")
 @NamedQueries({
     @NamedQuery(name = "EvaluacionPlanAccionDetalleNotas.findAll", query = "SELECT e FROM EvaluacionPlanAccionDetalleNotas e")})
+@ManagedBean
+@SessionScoped
 public class EvaluacionPlanAccionDetalleNotas implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -69,8 +74,6 @@ public class EvaluacionPlanAccionDetalleNotas implements Serializable {
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
-    
-    
 
     public String getDocumentoUsuario() {
         return documentoUsuario;

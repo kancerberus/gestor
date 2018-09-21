@@ -29,6 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -289,6 +290,60 @@ public class EvaluacionPlanAccionDAO {
                     + " cod_nota, documento_usuario, estado, nombre, descripcion, fecha_registro)"
                     + " VALUES (" + pk.getCodEvaluacion() + ", " + pk.getCodigoEstablecimiento() + ", " + pk.getCodPlan() + ", " + pk.getCodPlanDetalle()
                     + " , DEFAULT, '" + epadn.getDocumentoUsuario() + "', '" + epadn.getEstado() + "', '" + epadn.getNombre() + "', '" + epadn.getDescripcion() + "', NOW());"
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public List<EvaluacionPlanAccionDetalleNotas> cargarEvaluacionPlanAccionDetalleNotasList(EvaluacionPlanAccionDetalleNotasPK pk) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle,"
+                    + " cod_nota, documento_usuario, estado, nombre, descripcion, fecha_registro"
+                    + " FROM gestor.evaluacion_plan_accion_detalle_notas"
+                    + " WHERE cod_evaluacion=" + pk.getCodEvaluacion() + " AND codigo_establecimiento=" + pk.getCodigoEstablecimiento()
+                    + " AND cod_plan=" + pk.getCodPlan() + " AND cod_plan_detalle=" + pk.getCodPlanDetalle()
+            );
+            rs = consulta.ejecutar(sql);
+            List<EvaluacionPlanAccionDetalleNotas> evaluacionPlanAccionDetalleNotasList = new ArrayList<>();
+            while (rs.next()) {
+                pk.setCodNota(rs.getLong("cod_nota"));
+                EvaluacionPlanAccionDetalleNotas epadn = new EvaluacionPlanAccionDetalleNotas(pk,
+                        rs.getString("documento_usuario"), rs.getString("estado"), rs.getString("nombre"), rs.getString("descripcion"));
+                epadn.setFechaRegistro(rs.getDate("fecha_registro"));
+                evaluacionPlanAccionDetalleNotasList.add(epadn);
+            }
+            return evaluacionPlanAccionDetalleNotasList;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public void upsertEvaluacionPlanAccionDetalleNotas(EvaluacionPlanAccionDetalleNotas epadn) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            EvaluacionPlanAccionDetalleNotasPK pk = epadn.getEvaluacionPlanAccionDetalleNotasPK();
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO gestor.evaluacion_plan_accion_detalle_notas("
+                    + " cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle, "
+                    + " cod_nota, documento_usuario, estado, nombre, descripcion, fecha_registro)"
+                    + " VALUES (" + pk.getCodEvaluacion() + ", " + pk.getCodigoEstablecimiento() + ", " + pk.getCodPlan() + ", " + pk.getCodPlanDetalle()
+                    + " , DEFAULT, '" + epadn.getDocumentoUsuario() + "', '" + epadn.getEstado() + "', '" + epadn.getNombre() + "', '" + epadn.getDescripcion() + "', NOW())"
+                    + " ON CONFLICT (cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle, cod_nota)"
+                    + " DO UPDATE SET documento_usuario=excluded.documento_usuario, descripcion=excluded.descripcion"
             );
             consulta.actualizar(sql);
         } finally {

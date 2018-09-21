@@ -18,7 +18,7 @@
                 <h:panelGrid id="pgCapacitacionNota" columns="2" cellspacing="10">
 
                     <h:outputLabel value="Descripción: " style="font-weight: bold;"/>
-                    <p:inputTextarea value="#{evaluacionCapacitacionDetalle.descripcion}" placeholder="Registra la descripción del seguimiento"/>
+                    <p:inputTextarea value="#{evaluacionCapacitacionDetalleNotas.descripcion}" placeholder="Registra la descripción del seguimiento"/>
 
                 </h:panelGrid>
 
@@ -41,11 +41,13 @@
 
                     <p:column>
                         <p:panelGrid columns="3">
-                            <p:commandButton icon="ui-icon-pencil" title="Modificar Capacitación" action="#{uiCapacitacion.modificarCapacitacion()}" 
-                                             update="formCapacitaciones:opCapacitacionNota"/>
-                            <p:commandButton icon="ui-icon-trash" title="Eliminar Capacitación" action="#{uiCapacitacion.eliminarCapacitacion()}" 
-                                             update="formCapacitaciones:opCapacitacionNota">
-                                <p:confirm header="Eliminar Capacitación" message="Desea eliminar la capacitación ?" icon="ui-icon-alert" />
+                            <p:commandButton icon="ui-icon-pencil" title="Modificar Seguimiento Capacitación" 
+                                             action="#{uiCapacitacion.modificarNotaSeguimiento()}" 
+                                             update="formCapacitaciones:opCapacitacionNota" 
+                                             disabled="#{varCapacitacionNota.nombre eq 'REGISTRO INICIAL'}"/>
+                            <p:commandButton icon="ui-icon-trash" title="Eliminar Seguimiento Capacitación" 
+                                             update="formCapacitaciones:opCapacitacionNota" disabled="true">
+                                <p:confirm header="Eliminar Seguimiento Capacitación" message="Desea eliminar la capacitación ?" icon="ui-icon-alert" />
                             </p:commandButton>
                         </p:panelGrid>
                     </p:column>
@@ -80,7 +82,8 @@
         <p:toolbar style="height: 45px;">
             <p:toolbarGroup align="center" style="margin: auto auto;  align-content: center">
                 <h:panelGrid columns="3" cellspacing="10" style="align-content: center; display: inline-block;">
-                    <p:commandButton value="Guardar Nota" icon="ui-icon-disk" action="#{uiCapacitacion.procesarCapacitacionDetalleNota()}" process="@parent pgCapacitacionNota" update="pgCapacitacionNota dtCapacitacionNota"/>
+                    <p:commandButton value="Guardar Nota" icon="ui-icon-disk" action="#{uiCapacitacion.procesarCapacitacionDetalleNota()}" 
+                                     process="@parent pgCapacitacionNota" update="pgCapacitacionNota dtCapacitacionNota"/>
                     <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" oncomplete="PF('dialog').hide();"/>
                     <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiCapacitacion.limpiar()}" update="opCapacitacionNota" process="@this"/>
                 </h:panelGrid>

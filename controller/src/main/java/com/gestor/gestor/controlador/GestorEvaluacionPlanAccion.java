@@ -9,10 +9,14 @@ import com.gestor.controller.Gestor;
 import com.gestor.entity.UtilLog;
 import com.gestor.gestor.EvaluacionPlanAccion;
 import com.gestor.gestor.EvaluacionPlanAccionDetalle;
+import com.gestor.gestor.EvaluacionPlanAccionDetalleNotas;
+import com.gestor.gestor.EvaluacionPlanAccionDetalleNotasPK;
 import com.gestor.gestor.dao.EvaluacionPlanAccionDAO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import javax.faces.application.ViewExpiredException;
 
 /**
  *
@@ -101,6 +105,40 @@ public class GestorEvaluacionPlanAccion extends Gestor {
             this.abrirConexion();
             EvaluacionPlanAccionDAO evaluacionPlanAccionDAO = new EvaluacionPlanAccionDAO(conexion);
             return evaluacionPlanAccionDAO.cargarListaEvaluacionPlanAccion(condicion);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+
+    public List<EvaluacionPlanAccionDetalleNotas> cargarEvaluacionPlanAccionDetalleNotasList(EvaluacionPlanAccionDetalleNotasPK evaluacionPlanAccionDetalleNotasPK) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionPlanAccionDAO evaluacionPlanAccionDAO = new EvaluacionPlanAccionDAO(conexion);
+            return evaluacionPlanAccionDAO.cargarEvaluacionPlanAccionDetalleNotasList(evaluacionPlanAccionDetalleNotasPK);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+
+    public EvaluacionPlanAccionDetalleNotas validarEvaluacionPlanAccionDetalleNotas(EvaluacionPlanAccionDetalleNotas epadn) throws Exception {
+         if (epadn == null || epadn.getDescripcion() == null || epadn.getDescripcion().equalsIgnoreCase("")) {
+            throw new Exception("Ingrese la descripción del seguimiento", UtilLog.TW_VALIDACION);
+        }
+        if (epadn.getNombre() == null || epadn.getNombre().equalsIgnoreCase("")) {
+            epadn.setNombre("SEGUIMIENTO");
+        }
+        if(epadn.getDocumentoUsuario() == null || epadn.getDocumentoUsuario().equalsIgnoreCase("")){
+            throw new ViewExpiredException();
+        }
+        epadn.setDescripcion(epadn.getDescripcion().trim());
+        return epadn;
+    }
+
+    public void procesarPlanAccionDetalleNotas(EvaluacionPlanAccionDetalleNotas epadn) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionPlanAccionDAO evaluacionPlanAccionDAO = new EvaluacionPlanAccionDAO(conexion);
+            evaluacionPlanAccionDAO.upsertEvaluacionPlanAccionDetalleNotas(epadn);
         } finally {
             this.cerrarConexion();
         }

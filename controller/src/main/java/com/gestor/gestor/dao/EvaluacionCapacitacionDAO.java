@@ -10,6 +10,7 @@ import com.gestor.gestor.Evaluacion;
 import com.gestor.gestor.EvaluacionCapacitacion;
 import com.gestor.gestor.EvaluacionCapacitacionDetalle;
 import com.gestor.gestor.EvaluacionCapacitacionDetalleNotas;
+import com.gestor.gestor.EvaluacionCapacitacionDetalleNotasPK;
 import com.gestor.gestor.EvaluacionCapacitacionDetallePK;
 import com.gestor.gestor.EvaluacionPK;
 import com.gestor.gestor.Seccion;
@@ -27,6 +28,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -293,6 +295,65 @@ public class EvaluacionCapacitacionDAO {
                     + " VALUES (" + ecdn.getEvaluacionCapacitacionDetalleNotasPK().getCodEvaluacion() + ", " + ecdn.getEvaluacionCapacitacionDetalleNotasPK().getCodigoEstablecimiento()
                     + " , " + ecdn.getEvaluacionCapacitacionDetalleNotasPK().getCodCapacitacion() + ", " + ecdn.getEvaluacionCapacitacionDetalleNotasPK().getCodCapacitacionDetalle()
                     + " , DEFAULT, '" + ecdn.getDocumentoUsuario() + "', '" + ecdn.getEstado() + "', '" + ecdn.getNombre() + "', '" + ecdn.getDescripcion() + "', NOW());"
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public List<EvaluacionCapacitacionDetalleNotas> cargarListaEvaluacionCapacitacionDetalle(EvaluacionCapacitacionDetalleNotasPK pk) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT cod_evaluacion, codigo_establecimiento, cod_capacitacion, cod_capacitacion_detalle,"
+                    + " cod_nota, documento_usuario, estado, nombre, descripcion, fecha_registro"
+                    + " FROM gestor.evaluacion_capacitacion_detalle_notas"
+                    + " WHERE cod_evaluacion=" + pk.getCodEvaluacion() + " AND codigo_establecimiento=" + pk.getCodigoEstablecimiento()
+                    + " AND cod_capacitacion=" + pk.getCodCapacitacion() + " AND cod_capacitacion_detalle=" + pk.getCodCapacitacionDetalle()
+            );
+            rs = consulta.ejecutar(sql);
+            List<EvaluacionCapacitacionDetalleNotas> evaluacionCapacitacionDetalleNotasList = new ArrayList<>();
+            while (rs.next()) {
+                pk.setCodNota(rs.getLong("cod_nota"));
+                EvaluacionCapacitacionDetalleNotas ecdn = new EvaluacionCapacitacionDetalleNotas(pk,
+                        rs.getString("documento_usuario"), rs.getString("estado"), rs.getString("nombre"), rs.getString("descripcion"));
+                ecdn.setFechaRegistro(rs.getDate("fecha_registro"));
+                evaluacionCapacitacionDetalleNotasList.add(ecdn);
+            }
+            return evaluacionCapacitacionDetalleNotasList;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public void upsertEvaluacionCapacitacionDetalleNotas(EvaluacionCapacitacionDetalleNotas ecdn) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO gestor.evaluacion_capacitacion_detalle_notas("
+                    + " cod_evaluacion, codigo_establecimiento,"
+                    + " cod_capacitacion, cod_capacitacion_detalle, "
+                    + " cod_nota, documento_usuario, estado, nombre, descripcion, fecha_registro)"
+                    + " VALUES (" + ecdn.getEvaluacionCapacitacionDetalleNotasPK().getCodEvaluacion() + ", " + ecdn.getEvaluacionCapacitacionDetalleNotasPK().getCodigoEstablecimiento()
+                    + " , " + ecdn.getEvaluacionCapacitacionDetalleNotasPK().getCodCapacitacion() + ", " + ecdn.getEvaluacionCapacitacionDetalleNotasPK().getCodCapacitacionDetalle()
+                    + " , " + ecdn.getEvaluacionCapacitacionDetalleNotasPK().getCodNota() + ", '" + ecdn.getDocumentoUsuario() + "', '" + ecdn.getEstado() + "', '" + ecdn.getNombre() + "', '" + ecdn.getDescripcion() + "', NOW())"
+                    + " ON CONFLICT (cod_evaluacion, codigo_establecimiento, cod_capacitacion, cod_capacitacion_detalle, cod_nota)"
+                    + " DO UPDATE SET documento_usuario=excluded.documento_usuario, descripcion=excluded.descripcion"
             );
             consulta.actualizar(sql);
         } finally {

@@ -8,6 +8,9 @@ package com.gestor.gestor;
 import com.gestor.publico.Usuarios;
 import java.io.Serializable;
 import java.util.Date;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -25,6 +28,8 @@ import javax.persistence.TemporalType;
 @Table(name = "evaluacion_capacitacion_detalle_notas")
 @NamedQueries({
     @NamedQuery(name = "EvaluacionCapacitacionDetalleNotas.findAll", query = "SELECT e FROM EvaluacionCapacitacionDetalleNotas e")})
+@ManagedBean
+@SessionScoped
 public class EvaluacionCapacitacionDetalleNotas implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,7 +55,7 @@ public class EvaluacionCapacitacionDetalleNotas implements Serializable {
         this.evaluacionCapacitacionDetalleNotasPK = evaluacionCapacitacionDetalleNotasPK;
     }
 
-    public EvaluacionCapacitacionDetalleNotas(Long codEvaluacion, int codigoEstablecimiento, Long codCapacitacion, Long codCapacitacionDetalle, int codNota) {
+    public EvaluacionCapacitacionDetalleNotas(Long codEvaluacion, int codigoEstablecimiento, Long codCapacitacion, Long codCapacitacionDetalle, Long codNota) {
         this.evaluacionCapacitacionDetalleNotasPK = new EvaluacionCapacitacionDetalleNotasPK(codEvaluacion, codigoEstablecimiento, codCapacitacion, codCapacitacionDetalle, codNota);
     }
 
@@ -61,8 +66,6 @@ public class EvaluacionCapacitacionDetalleNotas implements Serializable {
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
-    
-    
 
     public EvaluacionCapacitacionDetalleNotasPK getEvaluacionCapacitacionDetalleNotasPK() {
         return evaluacionCapacitacionDetalleNotasPK;
@@ -150,5 +153,5 @@ public class EvaluacionCapacitacionDetalleNotas implements Serializable {
     public void setUsuarios(Usuarios usuarios) {
         this.usuarios = usuarios;
     }
-    
+
 }
