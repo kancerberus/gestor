@@ -19,6 +19,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+
 /**
  *
  * @author juliano
@@ -33,6 +34,7 @@ public class SeccionDetalleItems implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected SeccionDetalleItemsPK seccionDetalleItemsPK;
+    protected Ciclo ciclo;
 
     private String nombre;
 
@@ -63,6 +65,10 @@ public class SeccionDetalleItems implements Serializable, Cloneable {
 
     public SeccionDetalleItems(SeccionDetalleItemsPK seccionDetalleItemsPK) {
         this.seccionDetalleItemsPK = seccionDetalleItemsPK;
+    }
+    
+    public SeccionDetalleItems(Ciclo ciclo, String codCiclo, int codSeccion, int codDetalle, int codItem){        
+        this.ciclo= new Ciclo(codCiclo, nombre);
     }
 
     public SeccionDetalleItems(String codCiclo, int codSeccion, int codDetalle, int codItem) {
@@ -131,7 +137,7 @@ public class SeccionDetalleItems implements Serializable, Cloneable {
         return true;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "com.gestor.gestor.SeccionDetalleItems[ seccionDetalleItemsPK=" + seccionDetalleItemsPK + " ]";
     }

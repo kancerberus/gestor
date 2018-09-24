@@ -127,9 +127,9 @@ public class SeccionDetalleItemsAyudaPK implements Serializable {
         return true;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "com.gestor.gestor.SeccionDetalleItemsAyudaPK[ codCiclo=" + codCiclo + ", codSeccion=" + codSeccion + ", codDetalle=" + codDetalle + ", codItem=" + codItem + ", codAyuda=" + codAyuda + " ]";
-    }
+    }*/
     
 }

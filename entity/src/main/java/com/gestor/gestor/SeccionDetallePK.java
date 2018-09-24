@@ -88,9 +88,9 @@ public class SeccionDetallePK implements Serializable {
         return true;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "com.gestor.gestor.SeccionDetallePK[ codCiclo=" + codCiclo + ", codSeccion=" + codSeccion + ", codDetalle=" + codDetalle + " ]";
-    }
+    }*/
     
 }

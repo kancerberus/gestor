@@ -38,7 +38,8 @@ public class SeccionDetalleItemsPK implements Serializable {
         this.codSeccion = codSeccion;
         this.codDetalle = codDetalle;
         this.codItem = codItem;
-    }
+    }    
+    
 
     public String getCodCiclo() {
         return codCiclo;
@@ -104,9 +105,9 @@ public class SeccionDetalleItemsPK implements Serializable {
         return true;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "com.gestor.gestor.SeccionDetalleItemsPK[ codCiclo=" + codCiclo + ", codSeccion=" + codSeccion + ", codDetalle=" + codDetalle + ", codItem=" + codItem + " ]";
-    }
+    }*/
     
 }

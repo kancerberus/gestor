@@ -71,10 +71,10 @@ public class SeccionPK implements Serializable {
         }
         return true;
     }
-
-    @Override
+    
+    /*@Override
     public String toString() {
-        return "com.gestor.gestor.SeccionPK[ codCiclo=" + codCiclo + ", codSeccion=" + codSeccion + " ]";
-    }
+        return "com.gestor.gestor.Ciclo[ codCiclo=" + codSeccion + " ]";        
+    }*/
     
 }

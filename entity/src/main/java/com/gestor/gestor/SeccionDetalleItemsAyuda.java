@@ -5,6 +5,7 @@
  */
 package com.gestor.gestor;
 
+import com.gestor.entity.App;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -21,7 +22,7 @@ import javax.persistence.Table;
 @Table(name = "seccion_detalle_items_ayuda")
 @NamedQueries({
     @NamedQuery(name = "SeccionDetalleItemsAyuda.findAll", query = "SELECT s FROM SeccionDetalleItemsAyuda s")})
-public class SeccionDetalleItemsAyuda implements Serializable {
+public class SeccionDetalleItemsAyuda implements Serializable,Cloneable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -30,6 +31,11 @@ public class SeccionDetalleItemsAyuda implements Serializable {
     private String nombre;
     @Column(name = "definicion")
     private String definicion;
+    @Column(name = "numeral")
+    private String numeral;
+    
+    
+    protected Ciclo ciclo;    
 
     public SeccionDetalleItemsAyuda() {
     }
@@ -47,6 +53,19 @@ public class SeccionDetalleItemsAyuda implements Serializable {
         this.nombre = nombre;
         this.definicion = definicion;
     }
+
+    public SeccionDetalleItemsAyuda(SeccionDetalleItemsAyudaPK seccionDetalleItemsAyudaPK, String nombre, String definicion, String numeral) {
+        this.seccionDetalleItemsAyudaPK = seccionDetalleItemsAyudaPK;
+        this.nombre = nombre;
+        this.definicion = definicion;
+        this.numeral= numeral;
+        
+    }
+    
+    public SeccionDetalleItemsAyuda(Ciclo ciclo, String codCiclo, int codSeccion, int codDetalle, int codItem){        
+        this.ciclo= new Ciclo(codCiclo, nombre);
+    }
+ 
 
     public SeccionDetalleItemsAyudaPK getSeccionDetalleItemsAyudaPK() {
         return seccionDetalleItemsAyudaPK;
@@ -66,6 +85,24 @@ public class SeccionDetalleItemsAyuda implements Serializable {
 
     public String getDefinicion() {
         return definicion;
+    }
+    
+    public String getNumeralNombre() {
+        return numeral + App.NUMERAL_SEPARADOR + nombre;
+    }
+    
+        /**
+     * @return the numeral
+     */
+    public String getNumeral() {
+        return numeral;
+    }
+
+    /**
+     * @param numeral the numeral to set
+     */
+    public void setNumeral(String numeral) {
+        this.numeral = numeral;
     }
 
     public void setDefinicion(String definicion) {
@@ -92,9 +129,9 @@ public class SeccionDetalleItemsAyuda implements Serializable {
         return true;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "com.gestor.gestor.SeccionDetalleItemsAyuda[ seccionDetalleItemsAyudaPK=" + seccionDetalleItemsAyudaPK + " ]";
-    }
+    }*/
 
 }

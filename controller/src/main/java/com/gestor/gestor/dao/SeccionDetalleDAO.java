@@ -56,5 +56,34 @@ public class SeccionDetalleDAO {
             }
         }
     }
+    
+    public List<SeccionDetalle> cargarListaSecciondetallenombre(String numeral) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT cod_detalle, nombre, numeral"
+                    + " FROM gestor.seccion_detalle "
+                    + " where numeral = '"+numeral+"' "
+                            
+            );
+
+            rs = consulta.ejecutar(sql);
+            List<SeccionDetalle> secciondetalle = new ArrayList<>();
+            while (rs.next()) {
+                SeccionDetalle sd = new SeccionDetalle(new SeccionDetallePK(null, 0, 0), rs.getString("nombre"), null, Integer.SIZE, Double.NaN, null, Boolean.TRUE) ;
+                secciondetalle.add(sd);
+            }
+            return secciondetalle;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 
 }

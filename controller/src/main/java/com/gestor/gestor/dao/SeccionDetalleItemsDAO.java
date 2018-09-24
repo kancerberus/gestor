@@ -7,6 +7,8 @@ package com.gestor.gestor.dao;
 
 import com.gestor.gestor.EvaluacionPuntajeSeccionDetalleCombos;
 import com.gestor.gestor.EvaluacionPuntajeSeccionDetalleCombosPK;
+import com.gestor.gestor.Seccion;
+import com.gestor.gestor.Ciclo;
 import com.gestor.gestor.SeccionDetalleItems;
 import com.gestor.gestor.SeccionDetalleItemsPK;
 import conexion.Consulta;
@@ -107,6 +109,77 @@ public class SeccionDetalleItemsDAO {
                 consulta.desconectar();
             }
         }
+    }   
+    
+    public List<SeccionDetalleItems> cargarListaSeccionDetalleItems() throws SQLException {
+        
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT cod_ciclo, cod_seccion, cod_detalle, cod_item, numeral"
+                    + " FROM gestor.seccion_detalle_items"                    
+                    + " ORDER BY numeral"
+            );
+
+            rs = consulta.ejecutar(sql);
+            List<SeccionDetalleItems> seccionDetalleItemses = new ArrayList<>();
+            while (rs.next()) {
+                SeccionDetalleItems sdi = new SeccionDetalleItems(rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"));
+                sdi.setNumeral(rs.getString("numeral"));
+                seccionDetalleItemses.add(sdi);
+            }
+            return seccionDetalleItemses;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+        
+                
     }
+    
+    public List<SeccionDetalleItems> cargarListaSecciondetalleitemsnombre(String numeral) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT cod_item, nombre, numeral"
+                    + " FROM gestor.seccion_detalle_items "
+                    + " where numeral = '"+numeral+"' "
+                            
+            );
+
+            rs = consulta.ejecutar(sql);
+            List<SeccionDetalleItems> secciondetalleitemsnombre = new ArrayList<>();
+            while (rs.next()) {
+                SeccionDetalleItems sdi = new SeccionDetalleItems(new SeccionDetalleItemsPK(), rs.getString("nombre"), null, 0.0, Boolean.TRUE, null, 0);
+                secciondetalleitemsnombre.add(sdi);
+            }
+            return secciondetalleitemsnombre;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+
+
+    
+    
+    
+        
+    
+    
+    
 
 }
