@@ -313,9 +313,12 @@ public class EvaluacionPlanAccionDAO {
             );
             rs = consulta.ejecutar(sql);
             List<EvaluacionPlanAccionDetalleNotas> evaluacionPlanAccionDetalleNotasList = new ArrayList<>();
+            
             while (rs.next()) {
                 pk.setCodNota(rs.getLong("cod_nota"));
-                EvaluacionPlanAccionDetalleNotas epadn = new EvaluacionPlanAccionDetalleNotas(pk,
+                EvaluacionPlanAccionDetalleNotas epadn = new EvaluacionPlanAccionDetalleNotas(
+                        new EvaluacionPlanAccionDetalleNotasPK(pk.getCodEvaluacion(), pk.getCodigoEstablecimiento(), pk.getCodPlan(), pk.getCodPlanDetalle(), rs.getLong("cod_nota"))
+                                ,
                         rs.getString("documento_usuario"), rs.getString("estado"), rs.getString("nombre"), rs.getString("descripcion"));
                 epadn.setFechaRegistro(rs.getDate("fecha_registro"));
                 evaluacionPlanAccionDetalleNotasList.add(epadn);

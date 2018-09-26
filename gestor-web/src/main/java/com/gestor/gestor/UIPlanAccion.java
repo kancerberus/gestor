@@ -87,10 +87,28 @@ public class UIPlanAccion {
         }
     }
 
+    public void limpiarNota() {
+        try {
+            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
+
+            EvaluacionPlanAccionDetalleNotasPK pk = new EvaluacionPlanAccionDetalleNotasPK(
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodEvaluacion(),
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento(),
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlan(),
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()
+            );
+            evaluacionPlanAccionDetalle.setEvaluacionPlanAccionDetalleNotasList(gestorEvaluacionPlanAccion.cargarEvaluacionPlanAccionDetalleNotasList(pk));
+
+            UtilJSF.setBean("evaluacionPlanAccionDetalleNotas", new EvaluacionPlanAccionDetalleNotas(), UtilJSF.SESSION_SCOPE);
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+    }
+
     public void modificarNotaSeguimiento() {
         EvaluacionPlanAccionDetalleNotas epadn = (EvaluacionPlanAccionDetalleNotas) UtilJSF.getBean("varPlanAccionNota");
         evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetalleNotasList().remove(epadn);
-        UtilJSF.setBean("evaluacionCapacitacionDetalleNotas", epadn, UtilJSF.SESSION_SCOPE);
+        UtilJSF.setBean("evaluacionPlanAccionDetalleNotas", epadn, UtilJSF.SESSION_SCOPE);
     }
 
     public void procesarPlanAccionDetalleNota() {
@@ -118,7 +136,7 @@ public class UIPlanAccion {
             gestorEvaluacionPlanAccion.procesarPlanAccionDetalleNotas(epadn);
             UtilMSG.addSuccessMsg("Seguimiento Guardado", "Se almaceno el seguimiento al plan de acción satisfactoriamente.");
             UtilJSF.setBean("evaluacionPlanAccionDetalleNotas", new EvaluacionCapacitacionDetalleNotas(), UtilJSF.SESSION_SCOPE);
-            
+
             EvaluacionPlanAccionDetalleNotasPK pk = new EvaluacionPlanAccionDetalleNotasPK(
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodEvaluacion(),
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento(),
@@ -126,8 +144,7 @@ public class UIPlanAccion {
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()
             );
             evaluacionPlanAccionDetalle.setEvaluacionPlanAccionDetalleNotasList(gestorEvaluacionPlanAccion.cargarEvaluacionPlanAccionDetalleNotasList(pk));
-            
-            
+
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getCause().getMessage(), e.getMessage());

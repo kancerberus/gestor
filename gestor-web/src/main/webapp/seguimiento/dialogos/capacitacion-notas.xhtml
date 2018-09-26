@@ -85,7 +85,8 @@
                     <p:commandButton value="Guardar Nota" icon="ui-icon-disk" action="#{uiCapacitacion.procesarCapacitacionDetalleNota()}" 
                                      process="@parent pgCapacitacionNota" update="pgCapacitacionNota dtCapacitacionNota"/>
                     <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" oncomplete="PF('dialog').hide();"/>
-                    <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiCapacitacion.limpiar()}" update="opCapacitacionNota" process="@this"/>
+                    <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiCapacitacion.limpiarNota()}" update="pgCapacitacionNota dtCapacitacionNota"
+                                     process="@this"/>
                 </h:panelGrid>
             </p:toolbarGroup>
         </p:toolbar> 

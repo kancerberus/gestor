@@ -88,6 +88,22 @@ public class UICapacitacion {
             UtilLog.generarLog(this.getClass(), e);
         }
     }
+    
+    public void limpiarNota(){
+        try {
+            GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
+            EvaluacionCapacitacionDetalleNotasPK pk = new EvaluacionCapacitacionDetalleNotasPK(
+                    evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetallePK().getCodEvaluacion(),
+                    evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetallePK().getCodigoEstablecimiento(),
+                    evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetallePK().getCodCapacitacion(),
+                    evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetallePK().getCodCapacitacionDetalle()
+            );
+            evaluacionCapacitacionDetalle.setEvaluacionCapacitacionDetalleNotasList(gestorEvaluacionCapacitacion.cargarCapacitacionDetalleNotasList(pk));
+            UtilJSF.setBean("evaluacionCapacitacionDetalleNotas", new EvaluacionCapacitacionDetalleNotas(), UtilJSF.SESSION_SCOPE);
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+    }
 
     public void modificarNotaSeguimiento() {
         EvaluacionCapacitacionDetalleNotas ecdn = (EvaluacionCapacitacionDetalleNotas) UtilJSF.getBean("varCapacitacionNota");

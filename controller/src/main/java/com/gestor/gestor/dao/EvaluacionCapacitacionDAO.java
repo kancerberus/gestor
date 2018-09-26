@@ -322,9 +322,10 @@ public class EvaluacionCapacitacionDAO {
             rs = consulta.ejecutar(sql);
             List<EvaluacionCapacitacionDetalleNotas> evaluacionCapacitacionDetalleNotasList = new ArrayList<>();
             while (rs.next()) {
-                pk.setCodNota(rs.getLong("cod_nota"));
-                EvaluacionCapacitacionDetalleNotas ecdn = new EvaluacionCapacitacionDetalleNotas(pk,
-                        rs.getString("documento_usuario"), rs.getString("estado"), rs.getString("nombre"), rs.getString("descripcion"));
+                EvaluacionCapacitacionDetalleNotas ecdn = new EvaluacionCapacitacionDetalleNotas(
+                        new EvaluacionCapacitacionDetalleNotasPK(pk.getCodEvaluacion(), pk.getCodigoEstablecimiento(), pk.getCodCapacitacion(),
+                                pk.getCodCapacitacionDetalle(), rs.getLong("cod_nota")),
+                         rs.getString("documento_usuario"), rs.getString("estado"), rs.getString("nombre"), rs.getString("descripcion"));
                 ecdn.setFechaRegistro(rs.getDate("fecha_registro"));
                 evaluacionCapacitacionDetalleNotasList.add(ecdn);
             }

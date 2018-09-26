@@ -87,7 +87,8 @@
                                      process="@parent pgPlanAccionNota" 
                                      update="pgPlanAccionNota dtPlanAccionNota"/>
                     <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" oncomplete="PF('dialog').hide();"/>
-                    <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiPlanAccion.limpiar()}" update="pgPlanAccionNota" process="@this"/>
+                    <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiPlanAccion.limpiarNota()}" 
+                                     update="pgPlanAccionNota dtPlanAccionNota" process="@this"/>
                 </h:panelGrid>
             </p:toolbarGroup>
         </p:toolbar> 
