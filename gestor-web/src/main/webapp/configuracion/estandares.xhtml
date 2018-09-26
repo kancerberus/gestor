@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml"
+                >
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formEstandares" style="font-size: small;">
+            <p:panel id="panelestandares"  header="Gestionar Definicion de Estandares"  >
+                <h:panelGrid columns="5" >
+                    <h:outputText value="Actualizar Item"/>                   
+                    <p:selectOneMenu id="somItemsSecciondetalleitems" value="#{uiEstandar.secciondetalleitems}" converter="convertidorGenerico"
+                        style="text-align: center;width: 180px;">
+                        <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
+                        <f:selectItems value="#{uiEstandar.secciondetalleitemsList}" var="secdi" itemLabel="#{secdi.numeral}"/>
+                        <p:ajax  listener="#{uiEstandar.cargarCicloList()}" /> 
+                        <p:ajax  listener="#{uiEstandar.cargarSeccionList()}" /> 
+                        <p:ajax  listener="#{uiEstandar.cargarSecciondetalleList()}" /> 
+                        <p:ajax update="itemsnombres" listener="#{uiEstandar.cargarSecciondetalleitemnombreList()}" />                         
+                        <p:ajax update="itemsSecdetalleitemayuda" listener="#{uiEstandar.cargarSecciondetalleitemayudaList()}" />                         
+                        
+                    </p:selectOneMenu>
+                </h:panelGrid>
+                <br></br>
+                
+                <table cellpadding="2">                    
+                    <tr>
+                        <td align="center">                            
+                            <p:panelGrid id="itemsnombres" columns="5" style="width:100%; font-size: 90%; font-weight:bolder ">  
+                                <h:outputText  value="#{uiEstandar.nomc}"/>
+                                <h:outputText  value="#{uiEstandar.nomsec}"/>     
+                                <h:outputText  value="#{uiEstandar.nomsdetalle}"/>     
+                                <h:outputText  value="#{uiEstandar.nomsditem}"/>
+                            </p:panelGrid>
+                        </td>
+                    </tr>
+                </table>
+                <br></br>
+                <table cellpadding="2">                    
+                    <tr >
+                        <td align="center" >                            
+                            <p:panelGrid id="itemsSecdetalleitemayuda" columns="3" style="size: letter; text-align:center; font-weight:bolder   " > 
+                                <p:outputLabel value="CRITERIO">
+                                    <p:inputTextarea cols="40" style="width: 90%; height: 120px;"   value="#{uiEstandar.criterio}"/>
+                                </p:outputLabel>
+                                <p:outputLabel style="align-self: center" value="MODO DE VERIFICACION">
+                                    <p:inputTextarea cols="40" style="width: 90%; height: 120px;"  value="#{uiEstandar.mdeverif}"/>
+                                </p:outputLabel> 
+                                <p:outputLabel value="MARCO LEGAL">
+                                    <p:inputTextarea cols="40" style="width: 90%; height: 120px; " value="#{uiEstandar.mlegal}" />
+                                </p:outputLabel>
+                            </p:panelGrid>
+                        </td>
+                    </tr>
+                </table>
+               
+                <br></br>  
+                
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Crear / Modificar" action="#{uiEstandar.guardarEstandar()}"
+                                     icon="ui-icon-disk"
+                                     update="formEstandares"/>  
+                    <p:commandButton value="Limpiar" action="#{uiEstandar.limpiar()}"
+                                     icon="ui-icon-cancel"
+                                     update="formEstandares"/>
+                </h:panelGrid>
+
+            </p:panel>
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}" update="dialog" />
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
