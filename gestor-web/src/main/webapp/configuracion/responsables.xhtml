@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml"
+                >
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formResponsables" style="font-size: small;">
+            <p:panel id="panelResponsables"  header="Administrar Responsables" >
+                <h:panelGrid columns="7" >
+                    <h:outputText value="Cedula"/>
+                    <h:outputText value="Nombres"/>
+                    <h:outputText value="Apellidos"/>
+                    <h:outputText value="Correo"/>
+                    <h:outputText value="Telefono"/>
+                    <h:outputText value="Establecimiento"/>
+                    <h:outputText value="Estado"/>
+                    
+
+                    <p:inputText value="#{uiResponsable.responsable.cedula}" placeholder="Cedula"/>
+                    <p:inputText value="#{uiResponsable.responsable.nombres}" placeholder="Nombres"/>
+                    <p:inputText value="#{uiResponsable.responsable.apellidos}" placeholder="Apellidos"/>                    
+                    <p:inputText value="#{uiResponsable.responsable.correo}" placeholder="Correo"/>
+                    <p:inputText value="#{uiResponsable.responsable.telefono}" placeholder="Telefono"/>
+                    <p:selectOneMenu id="somItemsEstablecimientos" value="#{uiResponsable.responsable.establecimiento}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;">  
+                        <f:selectItems value="#{uiEstablecimiento.establecimientoList}" var="estab" itemLabel="#{estab.nombre}" itemValue="#{estab}"/>
+                    </p:selectOneMenu>
+                    <p:inputSwitch value="#{uiResponsable.responsable.estado}"  onLabel="ACTIVO" offLabel="INACTIVO"/>
+                    
+                    
+
+                </h:panelGrid>
+
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Crear / Modificar" action="#{uiResponsable.guardarResponsable()}"
+                                     icon="ui-icon-disk"
+                                     update="formResponsables"/>
+                    <p:commandButton value="Limpiar" action="#{uiResponsable.limpiar()}"
+                                     icon="ui-icon-cancel"
+                                     update="formResponsables"/>
+                </h:panelGrid>
+                <p:dataTable  value="#{uiResponsable.responsableList}" var="varResponsable" emptyMessage="No hay Responsables"
+                              rowStyleClass="Centro">
+
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column   headerText="Opciones" />
+                            <p:column headerText="Cedula"/>
+                            <p:column  headerText="Nombres"/>
+                            <p:column  headerText="Apellidos"/>
+                            <p:column  headerText="Telefono" />
+                            <p:column  headerText="Correo" />
+                            <p:column  headerText="Establecimiento"/>
+                            <p:column  headerText="Estado"/>                            
+                        </p:row> 
+                    </p:columnGroup>
+
+                    <p:column>
+                        <p:commandButton icon="ui-icon-pencil" title="Modificar Responsable" update="formResponsables"
+                                         action="#{uiResponsable.subirItemResponsable()}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varResponsable.cedula}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varResponsable.nombres}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varResponsable.apellidos}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varResponsable.telefono}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varResponsable.correo}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varResponsable.establecimiento.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputSwitch value="#{varResponsable.estado}" disabled="true" onLabel="ACTIVO" offLabel="INACTIVO"/>
+                    </p:column>
+                </p:dataTable>
+
+            </p:panel>
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}" update="dialog" />
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
