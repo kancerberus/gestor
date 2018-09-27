@@ -63,7 +63,7 @@ public class ResponsableDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT cedula, codigo_establecimiento, R.nombres, R.apellidos, R.correo, R.telefono, R.estado, "                    
+                    "SELECT R.cedula, E.codigo_establecimiento, R.nombres, R.apellidos, R.correo, R.telefono, R.estado, "                    
                     + "E.nombre as nomestablecimiento "
                     + "FROM responsable R"
                     + " INNER JOIN establecimiento E ON (E.codigo_establecimiento=R.codigo_establecimiento)"
