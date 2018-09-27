@@ -64,8 +64,7 @@ public class SeccionDetalleItems implements Serializable, Cloneable {
 
     public SeccionDetalleItems(SeccionDetalleItemsPK seccionDetalleItemsPK) {
         this.seccionDetalleItemsPK = seccionDetalleItemsPK;
-    }
-    
+    }    
    
     public SeccionDetalleItems(String codCiclo, int codSeccion, int codDetalle, int codItem) {
         this.seccionDetalleItemsPK = new SeccionDetalleItemsPK(codCiclo, codSeccion, codDetalle, codItem);
