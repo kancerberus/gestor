@@ -54,38 +54,6 @@ public class SeccionDetalleItemsAyudaDAO {
             }
         }
     }
-      
-
-    public List<SeccionDetalleItemsAyuda> cargarListaSeccionDetalleItemsAyuda(String numeral) throws SQLException {
-        ResultSet rs = null;
-        Consulta consulta = null;
-        try {
-            consulta = new Consulta(this.conexion);
-            StringBuilder sql = new StringBuilder(
-                    "SELECT ay.cod_ciclo, ay.cod_seccion, ay.cod_detalle, ay.cod_item, ay.cod_ayuda, ay.nombre, ay.definicion, ay.numeral "                    
-                    + " FROM gestor.seccion_detalle_items_ayuda ay "
-                    + " INNER JOIN gestor.seccion_detalle_items items on (items.cod_item=ay.cod_item) "
-                    + " WHERE items.numeral='"+numeral+"'" 
-                    
-            );                    
-
-            rs = consulta.ejecutar(sql);
-            List<SeccionDetalleItemsAyuda> seccionDetalleItemsAyudases = new ArrayList<>();
-            while (rs.next()) {
-                SeccionDetalleItemsAyuda sdiay = new SeccionDetalleItemsAyuda(new SeccionDetalleItemsAyudaPK(rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"),rs.getInt("cod_ayuda")),rs.getString("nombre") ,rs.getString("definicion"),rs.getString("numeral") );
-                        sdiay.setNumeral(rs.getString("numeral"));
-                seccionDetalleItemsAyudases.add(sdiay);
-            }
-            return seccionDetalleItemsAyudases;
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (consulta != null) {
-                consulta.desconectar();
-            }
-        }
-    }    
     
     public List<SeccionDetalleItemsAyuda> cargarListaSeccionDetalleItemsayuda(String nomc,String nomsec,String nomsdetalle,String nomsditem) throws SQLException {
         ResultSet rs = null;

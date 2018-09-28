@@ -89,10 +89,6 @@ public class GestorEstandar extends Gestor {
             this.cerrarConexion();
         }
     }  
-    
-    
-
-    
 
     public List<?> cargarCicloList(String numeral) throws Exception {   
         
