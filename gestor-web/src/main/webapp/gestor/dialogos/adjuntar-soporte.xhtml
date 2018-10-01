@@ -10,7 +10,7 @@
         <p:outputPanel id="opAdjunto">
             <h2>                
                 <h:outputText value="Adjuntar Soportes"/>
-                Item Asociado #{uiEvaluacionAdjuntos.sdiSeleccionado.detalle}
+                <p class="letraBackgroundWhite">Item Asociado #{uiEvaluacionAdjuntos.sdiSeleccionado.detalle}</p>
             </h2>
 
             <br/>
@@ -18,24 +18,35 @@
 
                 <h:panelGrid id="pgAdjunto" columns="2" cellspacing="10">
                     <h:outputLabel value="Item Asociado: " style="font-weight: bold;"/>
-                    <h:outputLabel value="#{uiEvaluacionAdjuntos.sdiSeleccionado.detalle}" />
+                    <h:outputLabel value="#{uiEvaluacionAdjuntos.sdiSeleccionado.detalle}" styleClass="letraBackgroundWhite"/>
 
-                    <h:outputLabel value="Nombre: " style="font-weight: bold;"/>
-                    <p:inputText value="#{evaluacionAdjuntos.nombre}" placeholder="Registra un nombre para identificar el adjunto">
-                        <p:ajax event="blur" process="@this" update="pgSoporteAdjunto"/>
-                    </p:inputText>
+                    <h:outputLabel value="Categoria: " style="font-weight: bold;"/>
+                    <p:selectOneMenu value="#{evaluacionAdjuntos.adjuntosCategoria}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;">  
+                        <f:selectItem itemLabel="Seleccionar categoria" itemValue="" /> 
+                        <f:selectItems value="#{uiEvaluacionAdjuntos.adjuntosCategorias}" var="ea" itemLabel="#{ea.nombre}" itemValue="#{ea}"/>
+                        <p:ajax event="change" process="@this" listener="#{uiEvaluacionAdjuntos.cargarAdjuntosCategoriaTipo()}" update="@parent"/>
+                    </p:selectOneMenu>
+
+                    <h:outputLabel value="Tipo Categoria: " style="font-weight: bold;"/>
+                    <p:selectOneMenu value="#{evaluacionAdjuntos.adjuntosCategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;" disabled="#{empty evaluacionAdjuntos.adjuntosCategoria or empty evaluacionAdjuntos.adjuntosCategoria.adjuntosCategoriaTipoList}">  
+                        <f:selectItem itemLabel="Seleccionar tipo" itemValue="" /> 
+                        <f:selectItems value="#{evaluacionAdjuntos.adjuntosCategoria.adjuntosCategoriaTipoList}" var="act" itemLabel="#{act.nombre}" 
+                                       itemValue="#{act}"/>
+                    </p:selectOneMenu>
 
 
                     <h:outputLabel value="Descripcion: " style="font-weight: bold;"/>
-                    <p:inputTextarea value="#{evaluacionAdjuntos.descripcion}" placeholder="Registra la descripcion del adjunto">
-                        <p:ajax event="blur" process="@this" update="pgSoporteAdjunto"/>
-                    </p:inputTextarea>
-
+                    <p:inputTextarea value="#{evaluacionAdjuntos.descripcion}" placeholder="Registra la descripcion del adjunto"
+                                     />
+                        
                     <h:outputLabel value="Vigencia Archivo: " style="font-weight: bold;"/>
-                    <p:selectOneMenu value="#{evaluacionAdjuntos.mesesVigencia}" style="width:125px">
+                    <p:selectOneMenu value="#{evaluacionAdjuntos.mesesVigencia}" style="width:125px; background: #FFFFFF" disabled="true" >
                         <f:selectItem itemLabel="No aplica vigencia" itemValue="0"/>
-                        <f:selectItems value="#{uiEvaluacionAdjuntos.itemsVigenciaArchivos}" />
+                        <f:selectItems value="#{uiEvaluacionAdjuntos.itemsVigenciaArchivos}"/>
                     </p:selectOneMenu>
+
 
                     <h:outputLabel value="Archivo: " style="font-weight: bold;" />
                     <h:panelGrid columns="2" style="border: none">
@@ -59,10 +70,14 @@
                     <p:columnGroup type="header">  
                         <p:row>  
                             <p:column  headerText="Opciones"  />
-                            <p:column headerText="Nombre" filterBy="#{varEvaluacionAdjunto.nombre}" sortBy="#{varEvaluacionAdjunto.nombre}"/>
+                            <p:column headerText="Categoria" filterBy="#{varEvaluacionAdjunto.adjuntosCategoria.nombre}" sortBy="#{varEvaluacionAdjunto.adjuntosCategoria.nombre}"/>
+                            <p:column headerText="Tipo" filterBy="#{varEvaluacionAdjunto.adjuntosCategoria.adjuntosCategoriaTipo.nombre}" sortBy="#{varEvaluacionAdjunto.adjuntosCategoria.adjuntosCategoriaTipo.nombre}"/>
                             <p:column  headerText="Descripción"/>
                             <p:column  headerText="Fecha" sortBy="#{varEvaluacionAdjunto.fecha}"/>
                             <p:column  headerText="Archivo" filterBy="#{varEvaluacionAdjunto.archivo}"/>
+                            <p:column  headerText="Versión" filterBy="#{varEvaluacionAdjunto.version}"/>
+                            <p:column  headerText="Vigencia" filterBy="#{varEvaluacionAdjunto.mesesVigencia}"/>
+                            <p:column  headerText="Fecha Fin Vigencia" filterBy="#{varEvaluacionAdjunto.fechaFinVigencia}"/>
                         </p:row> 
                     </p:columnGroup>
 
@@ -77,8 +92,11 @@
                             </p:commandButton>
                         </p:panelGrid>
                     </p:column>
-                    <p:column >
-                        <h:outputText value="#{varEvaluacionAdjunto.nombre}"/>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacionAdjunto.adjuntosCategoria.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacionAdjunto.adjuntosCategoria.adjuntosCategoriaTipo.nombre}"/>
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varEvaluacionAdjunto.descripcion}"/>
@@ -94,13 +112,24 @@
                             <h:outputText value="#{varEvaluacionAdjunto.archivoSimple}"/>
                         </p:panelGrid>
                     </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacionAdjunto.version}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacionAdjunto.mesesVigencia} #{varEvaluacionAdjunto.mesesVigencia eq 1?' Mes':' Meses'}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacionAdjunto.fechaFinVigencia}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
 
                 </p:dataTable>
             </h:panelGrid>
             <br/>
             <h:panelGrid id="pgSoporteAdjunto">
                 <p:fileUpload value="#{uiEvaluacionAdjuntos.file}" mode="advanced" skinSimple="true" label="Seleccionar" fileUploadListener="#{uiEvaluacionAdjuntos.cargarAdjunto}"
-                              auto="true"  update="pgAdjunto" immediate="true" process="@this"/>
+                              auto="true"  update="pgAdjunto" process="@this pgAdjunto"/>
             </h:panelGrid>
 
             <br/>
@@ -114,7 +143,7 @@
             <p:toolbarGroup align="center" style="margin: auto auto;  align-content: center">
                 <h:panelGrid columns="3" cellspacing="10" style="align-content: center; display: inline-block;">
                     <p:commandButton value="Guardar Soporte" icon="ui-icon-disk" action="#{uiEvaluacionAdjuntos.guardarAdjunto()}" 
-                                     process="@parent" update="opAdjunto"/>
+                                     process="@parent pgAdjunto" update="opAdjunto"/>
                     <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" oncomplete="PF('dialog').hide();"/>
                     <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiEvaluacionAdjuntos.limpiar()}" update="opAdjunto" process="@this"/>
                 </h:panelGrid>

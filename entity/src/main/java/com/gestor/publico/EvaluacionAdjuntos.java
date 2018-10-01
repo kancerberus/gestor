@@ -5,6 +5,7 @@
  */
 package com.gestor.publico;
 
+import com.gestor.gestor.AdjuntosCategoria;
 import java.io.Serializable;
 import java.util.Date;
 import javax.faces.bean.ManagedBean;
@@ -52,13 +53,17 @@ public class EvaluacionAdjuntos implements Serializable {
     private String documentoUsuario;
     @Column(name = "estado")
     private String estado;
+    
+    private AdjuntosCategoria adjuntosCategoria = new AdjuntosCategoria();
 
     private Date fechaActualiza;
     private Date fechaInicioVigencia;
     private Date fechaFinVigencia;
     private Integer mesesVigencia;
+    private Integer version;
 
     public EvaluacionAdjuntos() {
+        adjuntosCategoria = new AdjuntosCategoria();
     }
 
     public EvaluacionAdjuntos(EvaluacionAdjuntosPK evaluacionAdjuntosPK) {
@@ -229,6 +234,34 @@ public class EvaluacionAdjuntos implements Serializable {
      */
     public void setMesesVigencia(Integer mesesVigencia) {
         this.mesesVigencia = mesesVigencia;
+    }
+
+    /**
+     * @return the adjuntosCategoria
+     */
+    public AdjuntosCategoria getAdjuntosCategoria() {
+        return adjuntosCategoria;
+    }
+
+    /**
+     * @param adjuntosCategoria the adjuntosCategoria to set
+     */
+    public void setAdjuntosCategoria(AdjuntosCategoria adjuntosCategoria) {
+        this.adjuntosCategoria = adjuntosCategoria;
+    }
+
+    /**
+     * @return the version
+     */
+    public Integer getVersion() {
+        return version;
+    }
+
+    /**
+     * @param version the version to set
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
 }

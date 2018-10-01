@@ -8,12 +8,16 @@ package com.gestor.gestor.controlador;
 import com.gestor.controller.Gestor;
 import com.gestor.entity.App;
 import com.gestor.entity.UtilLog;
+import com.gestor.gestor.AdjuntosCategoria;
+import com.gestor.gestor.AdjuntosCategoriaTipo;
+import com.gestor.gestor.dao.AdjuntosCategoriaDAO;
 import com.gestor.gestor.dao.EvaluacionAdjuntosDAO;
 import com.gestor.publico.EvaluacionAdjuntos;
 import com.gestor.publico.EvaluacionAdjuntosPK;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  *
@@ -29,8 +33,15 @@ public class GestorEvaluacionAdjuntos extends Gestor {
         if (evaluacionAdjuntos.getEvaluacionAdjuntosPK() == null) {
             throw new Exception("No se pudo cargar la información de la evaluación.", UtilLog.TW_VALIDACION);
         }
-        if (evaluacionAdjuntos.getNombre() == null || evaluacionAdjuntos.getNombre().equalsIgnoreCase("")) {
-            throw new Exception("Ingresa el nombre del adjunto.", UtilLog.TW_VALIDACION);
+        if (evaluacionAdjuntos.getAdjuntosCategoria() == null || evaluacionAdjuntos.getAdjuntosCategoria().getCodCategoria() == null
+                || evaluacionAdjuntos.getAdjuntosCategoria().getCodCategoria() == 0) {
+            throw new Exception("Selecciona la categoria del adjunto.", UtilLog.TW_VALIDACION);
+        }
+        if (evaluacionAdjuntos.getAdjuntosCategoria().getAdjuntosCategoriaTipo() == null
+                || evaluacionAdjuntos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK() == null
+                || evaluacionAdjuntos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo() == null
+                || evaluacionAdjuntos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo() == 0) {
+            throw new Exception("Selecciona el tipo del adjunto.", UtilLog.TW_VALIDACION);
         }
         if (evaluacionAdjuntos.getDescripcion() == null || evaluacionAdjuntos.getDescripcion().equalsIgnoreCase("")) {
             throw new Exception("Ingresa la descripción del adjunto.", UtilLog.TW_VALIDACION);
@@ -41,7 +52,7 @@ public class GestorEvaluacionAdjuntos extends Gestor {
         if (evaluacionAdjuntos.getFechaInicioVigencia() == null) {
             throw new Exception("No se pudo determinar la fecha inicio de vigencia del archivo, intente realizar el proceso de nuevo.", UtilLog.TW_VALIDACION);
         }
-        evaluacionAdjuntos.setNombre(evaluacionAdjuntos.getNombre().toUpperCase().trim());
+
         evaluacionAdjuntos.setDescripcion(evaluacionAdjuntos.getDescripcion().trim());
 
         return evaluacionAdjuntos;
@@ -62,7 +73,12 @@ public class GestorEvaluacionAdjuntos extends Gestor {
         try {
             this.abrirConexion();
             EvaluacionAdjuntosDAO evaluacionAdjuntosDAO = new EvaluacionAdjuntosDAO(conexion);
-            return evaluacionAdjuntosDAO.cargarEvaluacionAdjuntos(evaluacionAdjuntosPK);
+            AdjuntosCategoriaDAO adjuntosCategoriaDAO = new AdjuntosCategoriaDAO(conexion);
+            Collection<? extends EvaluacionAdjuntos> evaluacionAdjuntosList = evaluacionAdjuntosDAO.cargarEvaluacionAdjuntos(evaluacionAdjuntosPK);
+            for (EvaluacionAdjuntos ea : evaluacionAdjuntosList) {
+                ea.getAdjuntosCategoria().setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) adjuntosCategoriaDAO.cargarListaAdjuntosCategoriaTipo(ea.getAdjuntosCategoria().getCodCategoria()));
+            }
+            return evaluacionAdjuntosList;
         } finally {
             this.cerrarConexion();
         }
@@ -94,5 +110,15 @@ public class GestorEvaluacionAdjuntos extends Gestor {
         }
 
         return evaluacionAdjuntos;
+    }
+
+    public Integer siguienteVersionCategoriaTipo(EvaluacionAdjuntosPK evaluacionAdjuntosPK) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionAdjuntosDAO evaluacionAdjuntosDAO = new EvaluacionAdjuntosDAO(conexion);
+            return evaluacionAdjuntosDAO.siguienteVersionCategoriaTipo(evaluacionAdjuntosPK);
+        } finally {
+            this.cerrarConexion();
+        }
     }
 }

@@ -13,6 +13,7 @@ import com.gestor.entity.UtilArchivo;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
+import com.gestor.gestor.controlador.GestorAdjuntosCategoria;
 import com.gestor.gestor.controlador.GestorEvaluacionAdjuntos;
 import com.gestor.modelo.Sesion;
 import com.gestor.publico.EvaluacionAdjuntos;
@@ -47,16 +48,18 @@ import org.primefaces.model.StreamedContent;
 @ManagedBean(name = "uiEvaluacionAdjuntos")
 @SessionScoped
 public class UIEvaluacionAdjuntos {
-
+    
     private UploadedFile file;
     private SeccionDetalleItems sdiSeleccionado;
     private List<EvaluacionAdjuntos> evaluacionAdjuntosList = new ArrayList<>();
     private String archivoEliminar;
     private StreamedContent fileDownload;
     private Map<String, Integer> itemsVigenciaArchivos = new HashMap<String, Integer>();
-
+    private List<AdjuntosCategoria> adjuntosCategorias = new ArrayList<>();
+    
     public UIEvaluacionAdjuntos() {
         try {
+            
             Lista listaVigenciaArchivos = ((Sesion) UtilJSF.getBean("sesion")).getListaVigenciaArchivos();
             if (listaVigenciaArchivos != null) {
                 for (ListaDetalle ld : listaVigenciaArchivos.getListaDetalleList()) {
@@ -65,24 +68,58 @@ public class UIEvaluacionAdjuntos {
                         JsonObject itemsJson = je.getAsJsonObject();
                         itemsVigenciaArchivos.put(itemsJson.get("nombre").getAsString(), itemsJson.get("valor").getAsInt());
                     }
-
+                    
                 }
             } else {
                 UtilMSG.addWarningMsg("Lista Vigencia Adjuntos", "No se pudo cargar la lista de vigencia de adjuntos, contacte a soporte para asitirle.");
+            }
+            
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+            UtilMSG.addSupportMsg();
+        }
+        
+    }
+    
+    public void cargarAdjuntosCategoriaTipo() {
+        try {
+            GestorAdjuntosCategoria gestorAdjuntosCategoria = new GestorAdjuntosCategoria();
+            EvaluacionAdjuntos ea = (EvaluacionAdjuntos) UtilJSF.getBean("evaluacionAdjuntos");
+            if (ea.getAdjuntosCategoria() != null) {
+                ea.getAdjuntosCategoria().setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(ea.getAdjuntosCategoria().getCodCategoria()));
+                ea.setMesesVigencia(ea.getAdjuntosCategoria().getMesesVigencia());
+                UtilJSF.setBean("evaluacionAdjuntos", ea, UtilJSF.SESSION_SCOPE);
+            } else {
+                ea.setMesesVigencia(0);
             }
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
             UtilMSG.addSupportMsg();
         }
-
+        
     }
-
+    
     public void limpiar() {
-        UtilJSF.setBean("evaluacionAdjuntos", new EvaluacionAdjuntos(), UtilJSF.SESSION_SCOPE);
-        archivoEliminar = null;
-        file = null;
+        try {
+            evaluacionAdjuntosList = new ArrayList<>();
+            GestorEvaluacionAdjuntos gestorEvaluacionAdjuntos = new GestorEvaluacionAdjuntos();
+            evaluacionAdjuntosList.addAll(gestorEvaluacionAdjuntos.cargarEvaluacionAdjuntos(new EvaluacionAdjuntosPK(
+                    sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodEvaluacion(),
+                    sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodigoEstablecimiento(),
+                    sdiSeleccionado.getSeccionDetalleItemsPK().getCodCiclo(),
+                    sdiSeleccionado.getSeccionDetalleItemsPK().getCodSeccion(),
+                    sdiSeleccionado.getSeccionDetalleItemsPK().getCodDetalle(),
+                    sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem()
+            )));
+            UtilJSF.setBean("evaluacionAdjuntos", new EvaluacionAdjuntos(), UtilJSF.SESSION_SCOPE);
+            archivoEliminar = null;
+            file = null;
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+        
     }
-
+    
     public void eliminarAdjunto() {
         try {
             EvaluacionAdjuntos ea = (EvaluacionAdjuntos) UtilJSF.getBean("varEvaluacionAdjunto");
@@ -102,7 +139,7 @@ public class UIEvaluacionAdjuntos {
             gestorEvaluacionAdjuntos.actualizarEstadoEvaluacionAdjuntos(ea);
             UtilArchivo.borrar(origen);
             UtilMSG.addSuccessMsg("Adjunto Eliminado", "Adjunto borrado satisfactoriamente.");
-
+            
         } catch (IOException ex) {
             UtilMSG.addSupportMsg();
             UtilLog.generarLog(this.getClass(), ex);
@@ -110,9 +147,9 @@ public class UIEvaluacionAdjuntos {
             UtilMSG.addSupportMsg();
             UtilLog.generarLog(this.getClass(), ex);
         }
-
+        
     }
-
+    
     public void modificarAdjunto() {
         EvaluacionAdjuntos ea = (EvaluacionAdjuntos) UtilJSF.getBean("varEvaluacionAdjunto");
         evaluacionAdjuntosList.remove(ea);
@@ -120,9 +157,10 @@ public class UIEvaluacionAdjuntos {
         this.file = null;
         UtilJSF.setBean("evaluacionAdjuntos", ea, UtilJSF.SESSION_SCOPE);
     }
-
+    
     public void adjuntarSoporte() {
         try {
+            GestorAdjuntosCategoria gestorAdjuntosCategoria = new GestorAdjuntosCategoria();
             this.sdiSeleccionado = (SeccionDetalleItems) UtilJSF.getBean("varSeccionDetalleItems");
             evaluacionAdjuntosList = new ArrayList<>();
             GestorEvaluacionAdjuntos gestorEvaluacionAdjuntos = new GestorEvaluacionAdjuntos();
@@ -134,6 +172,10 @@ public class UIEvaluacionAdjuntos {
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodDetalle(),
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem()
             )));
+            
+            adjuntosCategorias = new ArrayList<>();
+            adjuntosCategorias.addAll(gestorAdjuntosCategoria.cargarListaAdjuntosCategoria(sdiSeleccionado.getSeccionDetalleItemsPK()));
+            
             Dialogo dialogo = new Dialogo("dialogos/adjuntar-soporte.xhtml", "Adjuntar Soportes", "clip", Dialogo.WIDTH_AUTO);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
             UtilJSF.execute("PF('dialog').show();");
@@ -141,7 +183,7 @@ public class UIEvaluacionAdjuntos {
             UtilLog.generarLog(this.getClass(), ex);
         }
     }
-
+    
     public void cargarAdjunto(FileUploadEvent event) {
         try {
             String ruta = Propiedades.getInstancia().getPropiedades().getProperty("rutaTemporal");
@@ -149,21 +191,21 @@ public class UIEvaluacionAdjuntos {
             if (!carpeta.exists()) {
                 carpeta.mkdirs();
             }
-
+            
             UtilArchivo.guardarStream(ruta + File.separator + event.getFile().getFileName(), event.getFile().getInputstream());
             this.file = event.getFile();
         } catch (IOException ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
-
+        
     }
-
+    
     public void guardarAdjunto() {
         try {
             Sesion sesion = (Sesion) UtilJSF.getBean("sesion");
             EvaluacionAdjuntos evaluacionAdjuntos = (EvaluacionAdjuntos) UtilJSF.getBean("evaluacionAdjuntos");
             GestorGeneral gestorGeneral = new GestorGeneral();
-
+            
             Long codAdjunto;
             if (evaluacionAdjuntos == null || evaluacionAdjuntos.getEvaluacionAdjuntosPK() == null
                     || evaluacionAdjuntos.getEvaluacionAdjuntosPK().getCodAdjunto() == null || evaluacionAdjuntos.getEvaluacionAdjuntosPK().getCodAdjunto() == 0) {
@@ -182,10 +224,13 @@ public class UIEvaluacionAdjuntos {
                 return;
             }
 
-            if (archivoEliminar != null && !archivoEliminar.equalsIgnoreCase("")) {
+//            if (archivoEliminar != null && !archivoEliminar.equalsIgnoreCase("")) {
+//                procesarAdjunto = Boolean.FALSE;
+//            }
+            if (file == null || file.getFileName() == null || file.getFileName().equalsIgnoreCase("")) {
                 procesarAdjunto = Boolean.FALSE;
             }
-
+            
             GestorEvaluacionAdjuntos gestorEvaluacionAdjuntos = new GestorEvaluacionAdjuntos();
             evaluacionAdjuntos.setDocumentoUsuario(sesion.getUsuarios().getUsuariosPK().getDocumentoUsuario());
             evaluacionAdjuntos.setEstado(App.EVALUACION_ADJUNTOS_ESTADO_ACTIVO);
@@ -193,22 +238,26 @@ public class UIEvaluacionAdjuntos {
             evaluacionAdjuntos.setFechaInicioVigencia(gestorGeneral.now());
             evaluacionAdjuntos = gestorEvaluacionAdjuntos.validarEvaluacionAdjuntos(evaluacionAdjuntos);
             evaluacionAdjuntos = gestorEvaluacionAdjuntos.calcularVigenciaAdjunto(evaluacionAdjuntos);
+            
+            if (evaluacionAdjuntos.getVersion() == null || evaluacionAdjuntos.getVersion() == 0) {
+                evaluacionAdjuntos.setVersion(gestorEvaluacionAdjuntos.siguienteVersionCategoriaTipo(evaluacionAdjuntos.getEvaluacionAdjuntosPK()));
+            }
             String rutaTemporal = null;
-
+            
             if (procesarAdjunto) {
                 String fileName = codAdjunto + "-" + file.getFileName();
                 rutaTemporal = p.getProperty("rutaTemporal") + File.separator + file.getFileName();
                 evaluacionAdjuntos.setArchivo(fileName);
                 evaluacionAdjuntos.setExtension(FilenameUtils.getExtension(file.getFileName()));
-
+                
                 String ruta = p.getProperty("rutaAdjunto");
                 String rutaDestino = ruta + File.separator + App.ADJUNTO_PREFIJO + sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodEvaluacion();
-
+                
                 File carpeta = new File(rutaDestino);
                 if (!carpeta.exists()) {
                     carpeta.mkdirs();
                 }
-
+                
                 if (archivoEliminar != null && !archivoEliminar.equals("")) {
                     String rutaEliminado = p.getProperty("rutaEliminado") + File.separator + App.ADJUNTO_PREFIJO + sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodEvaluacion();
                     File carpetaEliminado = new File(rutaEliminado);
@@ -219,22 +268,23 @@ public class UIEvaluacionAdjuntos {
                     UtilArchivo.copiar(origen, rutaEliminado + File.separator + archivoEliminar);
                     UtilArchivo.borrar(origen);
                 }
-
+                
                 rutaDestino += File.separator + fileName;
                 UtilArchivo.copiar(rutaTemporal, rutaDestino);
+                evaluacionAdjuntos.setNombre(rutaDestino);
             }
-
+            
             gestorEvaluacionAdjuntos.procesarEvaluacionAdjuntos(evaluacionAdjuntos);
             if (procesarAdjunto) {
                 UtilArchivo.borrar(rutaTemporal);
             }
-
+            
             if (procesarAdjunto) {
                 UtilMSG.addSuccessMsg("Soporte Almacenado", "Adjunto almacenado correctamente.");
             } else {
                 UtilMSG.addSuccessMsg("Soporte Actualizado", "Registro actualizado correctamente, sin modificar archivo.");
             }
-
+            
             UtilJSF.setBean("evaluacionAdjuntos", new EvaluacionAdjuntos(), UtilJSF.SESSION_SCOPE);
             this.file = null;
             this.archivoEliminar = null;
@@ -247,7 +297,7 @@ public class UIEvaluacionAdjuntos {
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodDetalle(),
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem()
             )));
-
+            
         } catch (IOException ex) {
             UtilLog.generarLog(this.getClass(), ex);
             UtilMSG.addSupportMsg();
@@ -259,7 +309,7 @@ public class UIEvaluacionAdjuntos {
                 UtilMSG.addSupportMsg();
             }
         }
-
+        
     }
 
     /**
@@ -351,4 +401,18 @@ public class UIEvaluacionAdjuntos {
         this.itemsVigenciaArchivos = itemsVigenciaArchivos;
     }
 
+    /**
+     * @return the adjuntosCategorias
+     */
+    public List<AdjuntosCategoria> getAdjuntosCategorias() {
+        return adjuntosCategorias;
+    }
+
+    /**
+     * @param adjuntosCategorias the adjuntosCategorias to set
+     */
+    public void setAdjuntosCategorias(List<AdjuntosCategoria> adjuntosCategorias) {
+        this.adjuntosCategorias = adjuntosCategorias;
+    }
+    
 }
