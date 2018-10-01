@@ -10,13 +10,14 @@ import com.gestor.controller.Gestor;
 import com.gestor.entity.UtilLog;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.dao.EstablecimientoDAO;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author Julian
  */
-public class GestorEstablecimiento extends Gestor {
+public class GestorEstablecimiento extends Gestor implements Serializable{
 
     public GestorEstablecimiento() throws Exception {
         super();

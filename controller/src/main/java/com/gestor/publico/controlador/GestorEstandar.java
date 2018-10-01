@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author franj
  */
-public class GestorEstandar extends Gestor implements Serializable{    
+public class GestorEstandar extends Gestor {    
     
     public GestorEstandar() throws Exception {
         super();

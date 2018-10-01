@@ -33,8 +33,7 @@ public class SeccionDetalleItems implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    protected SeccionDetalleItemsPK seccionDetalleItemsPK;
-    protected Ciclo ciclo;
+    protected SeccionDetalleItemsPK seccionDetalleItemsPK;    
 
     private String nombre;
 
@@ -65,12 +64,8 @@ public class SeccionDetalleItems implements Serializable, Cloneable {
 
     public SeccionDetalleItems(SeccionDetalleItemsPK seccionDetalleItemsPK) {
         this.seccionDetalleItemsPK = seccionDetalleItemsPK;
-    }
-    
-    public SeccionDetalleItems(Ciclo ciclo, String codCiclo, int codSeccion, int codDetalle, int codItem){        
-        this.ciclo= new Ciclo(codCiclo, nombre);
-    }
-
+    }    
+   
     public SeccionDetalleItems(String codCiclo, int codSeccion, int codDetalle, int codItem) {
         this.seccionDetalleItemsPK = new SeccionDetalleItemsPK(codCiclo, codSeccion, codDetalle, codItem);
     }
