@@ -98,6 +98,16 @@ public class Evaluacion implements Serializable, Cloneable {
         this.estado = estado;
     }
 
+    public Evaluacion(EvaluacionPK evaluacionPK, String documentoUsuario, Date fecha, Date fechaRegistro, String estado, Double calificacion, Double peso) {
+        this.evaluacionPK = evaluacionPK;
+        this.documentoUsuario = documentoUsuario;
+        this.fecha = fecha;
+        this.fechaRegistro = fechaRegistro;
+        this.estado = estado;
+        this.calificacion = calificacion;
+        this.peso = peso;
+    }
+
     public Evaluacion(Long codEvaluacion, int codigoEstablecimiento) {
         this.evaluacionPK = new EvaluacionPK(codEvaluacion, codigoEstablecimiento);
     }
@@ -321,6 +331,5 @@ public class Evaluacion implements Serializable, Cloneable {
     public Object clone() throws CloneNotSupportedException {
         return super.clone(); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
+
 }

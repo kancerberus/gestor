@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml">
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formPlanMaestroNuevo" style="font-size: small;">
+            <center>
+                <p:outputPanel id="opEstablecimientoPm">
+                    <h:panelGrid columns="2" >
+                        <p:dataGrid var="varEstablecimientoPm" value="#{sesion.establecimientoList}" columns="1" layout="grid"
+                                    rows="4" paginator="true" id="dtEstablecimientos"
+                                    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                    rendered="#{empty uiPlanMaestro.establecimiento.codigoEstablecimiento}"
+                                    >
+                            <f:facet name="header">
+                                Seleccionar Empresa
+                            </f:facet>
+
+                            <h:panelGrid columns="1" style="width:100%; border: none; width: auto"  cellpadding="20">
+                                <p:commandLink action="#{uiPlanMaestro.seleccionarEstablecimiento()}" title="Seleccionar Empresa"
+                                               update="formPlanMaestroNuevo">
+                                    <p:graphicImage url="/resources/imagenes/establecimientos/#{varEstablecimientoPm.nombre.toLowerCase()}.png"/> 
+                                    <h:outputText styleClass="ui-icon ui-icon-newwin" style="margin:0 auto;" />
+                                </p:commandLink>
+                            </h:panelGrid>
+                        </p:dataGrid>
+
+
+                    </h:panelGrid>
+
+                    <h:panelGroup rendered="#{not empty uiPlanMaestro.establecimiento.codigoEstablecimiento}">
+                        <center>
+                            <h:panelGrid columns="2" cellspacing="10" >
+
+                                <p:panelGrid  columns="2" rendered="#{not empty uiPlanMaestro.establecimiento.codigoEstablecimiento}" style="width: 30%"
+                                              >
+                                    <f:facet name="header">
+                                        <p:graphicImage url="/resources/imagenes/establecimientos/#{uiPlanMaestro.establecimiento.nombre.toLowerCase()}.png"/> 
+                                    </f:facet>
+
+                                    <h:outputText value="Codigo:" />
+                                    <h:outputText value="#{uiPlanMaestro.establecimiento.codigoEstablecimiento}" />
+
+                                    <h:outputText value="Nombre:" />
+                                    <h:outputText value="#{uiPlanMaestro.establecimiento.nombre}" />
+
+                                    <h:outputText value="Dirección:" />
+                                    <h:outputText value="#{uiPlanMaestro.establecimiento.direccion}" />
+
+                                    <h:outputText value="Telefono:" />
+                                    <h:outputText value="#{uiPlanMaestro.establecimiento.telefono}" />
+                                </p:panelGrid>
+
+                                <h:panelGrid cellspacing="10" >
+
+                                    <p:selectOneMenu value="#{uiPlanMaestro.evaluacion}" converter="convertidorGenerico" 
+                                                     effect="fade" var="t" style="width:220px" filter="true" filterMatchMode="startsWith">
+                                        <f:selectItems value="#{uiPlanMaestro.evaluacionList}" var="varEvaluacion"
+                                                       itemLabel="Evaluacion: #{varEvaluacion.evaluacionPK.codEvaluacion} - Fecha: #{varEvaluacion.fecha}" itemValue="#{varEvaluacion}" />
+
+
+                                        <p:column>
+                                            <div style="#{t.styleEstado}" >
+                                                <strong>#{t.evaluacionPK.codEvaluacion} - #{t.estado eq 'C'?'CRITICA':t.estado eq 'M'?'MODERADA':t.estado eq 'A'?'ACEPTABLE':''}</strong>
+                                            </div>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputText value="#{t.fecha}" >
+                                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                            </h:outputText>
+                                        </p:column>
+
+
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+
+                            </h:panelGrid>
+                        </center>
+
+
+
+
+                        <p:commandButton value="SI" action="#{uiPlanMaestro.procesarPlanMaestro()}" 
+                                         process="@parent" icon="ui-icon-check" />
+
+                        <p:commandButton value="NO" oncomplete="PF('dialog').hide();" icon="ui-icon-closethick"
+                                         action="#{uiPlanMaestro.cancelarProcesarPlanMaestro()}"/>
+
+                    </h:panelGroup>
+                </p:outputPanel>
+            </center>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

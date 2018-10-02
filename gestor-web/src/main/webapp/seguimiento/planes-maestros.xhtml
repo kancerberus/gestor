@@ -1,0 +1,165 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml">
+    <ui:define name="content">
+
+
+        <h:form enctype="multipart/form-data" id="formPlanesMaestros" style="font-size: small;">
+            <h2>PLANES MAESTROS</h2>
+            <h:panelGrid columns="2">
+                <h:outputText value="Filtro Busqueda: " />
+                <p:inputSwitch label="Filtro" onLabel="SI" offLabel="NO" value="#{uiPlanMaestro.filtroActivo}" styleClass="letra-xx-small-centro">
+                    <p:ajax update="formPlanesMaestros"  />
+                </p:inputSwitch>
+            </h:panelGrid>
+
+            <h:panelGroup rendered="#{uiPlanMaestro.filtroActivo}">
+                <p:separator style="height: 3px"/>
+                <p:panelGrid columns="3" styleClass="letra-xx-small-centro" style="font-size: xx-small">
+                    <f:facet name="header">
+                        Filtros de Búsqueda
+                    </f:facet>
+
+                    <h:panelGrid>
+
+                        <h:outputLabel value="Empresas"/>
+                        <p:selectManyMenu value="#{uiPlanMaestro.establecimientoListSeleccionado}" converter="establecimientoConverter"    
+                                          var="t" filter="true" filterMatchMode="contains" showCheckbox="true" styleClass="Centro" >
+                            <f:selectItems value="#{uiPlanMaestro.establecimientoList}" var="varEmpresa" itemLabel="#{varEmpresa.nombre}" itemValue="#{varEmpresa}" />
+                            <p:column>
+                                <p:graphicImage url="/resources/imagenes/establecimientos/#{t.nombre.toLowerCase()}.png" width="70%"/> 
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{t.nombre}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText styleClass="ui-icon ui-icon-grip-dotted-horizontal" style="margin:0 auto;" />
+                            </p:column>
+                        </p:selectManyMenu>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2">
+
+                        <h:outputText value="Fecha Inicio" />
+                        <p:calendar value="#{uiPlanMaestro.fechaActualizaInicio}" pattern="dd/MM/yyyy" placeholder="Fecha Actualización"/>
+
+                        <h:outputText value="Fecha Fin" />
+                        <p:calendar value="#{uiPlanMaestro.fechaActualizaFin}" pattern="dd/MM/yyyy" placeholder="Fecha Actualización"/>
+
+                    </h:panelGrid>
+                </p:panelGrid>
+                <p:commandButton value="Consultar" style="margin: auto auto;width: 210px;height: 30px; border-radius: 10px;"
+                                 action="#{uiPlanMaestro.consultarPlanMaestroLista()}" update="formPlanesMaestros"/>
+                <p:separator style="height: 3px"/>
+            </h:panelGroup>
+            <br/>
+            <br/>
+            <p:dataTable var="varPlanMaestro" value="#{uiPlanMaestro.planMaestroList}"
+                         widgetVar="planMaestroTable" rowStyleClass="letra-xx-small-centro" style="font-size: 10px;"
+                         emptyMessage="No tiene capacitaciones abiertas."
+                         >
+                <p:column headerText="Opciones">
+                    <p:panelGrid>
+                        <p:commandButton icon="ui-icon-search" title="Ver Plan Maestro" action="#{uiPlanMaestro.consultarPlanMaestro()}}" />
+                    </p:panelGrid>
+                </p:column>
+
+                <p:column headerText="Cod Plan Maestro" filterBy="#{varPlanMaestro.planMaestroPK.codMaestro}">
+                    <h:outputText value="#{varPlanMaestro.planMaestroPK.codMaestro}" />
+                </p:column>
+
+                <p:column headerText="Empresa" filterBy="#{varPlanMaestro.establecimiento.nombre}">
+                    <h:outputText value="#{varPlanMaestro.establecimiento.nombre}" />
+                </p:column>
+
+                <p:column headerText="Fecha Creación" filterBy="#{varPlanMaestro.fechaRegistro}">
+                    <h:outputText value="#{varPlanMaestro.fechaRegistro}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Fecha Actualización" filterBy="#{varPlanMaestro.fechaActualiza}">
+                    <h:outputText value="#{varPlanMaestro.fechaActualiza}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Estado"
+                          filterBy="#{varPlanMaestro.evaluacion.estado}"
+                          filterMatchMode="equals">
+                    <f:facet name="filter">
+                        <p:selectOneButton onchange="PF('planMaestroTable').filter()"
+                                           style="font-size: 8px;">
+                            <f:selectItem itemLabel="CRITICA" itemValue="C" />
+                            <f:selectItem itemLabel="MODERADA" itemValue="M" />
+                            <f:selectItem itemLabel="ACEPTABLE" itemValue="A" />
+                        </p:selectOneButton>
+                    </f:facet>
+                    <div style="#{varPlanMaestro.evaluacion.styleEstado}" >
+                        <strong>Evaluacion: #{varPlanMaestro.evaluacion.evaluacionPK.codEvaluacion} - #{varPlanMaestro.evaluacion.estado eq 'C'?'CRITICA':varPlanMaestro.evaluacion.estado eq 'M'?'MODERADA':varPlanMaestro.evaluacion.estado eq 'A'?'ACEPTABLE':''}</strong>
+                    </div>
+                </p:column>
+
+
+            </p:dataTable>
+
+
+            <p:separator/>
+
+            <style type="text/css">
+                .white-button.ui-button.ui-state-default {
+                    background-color: #ffffff;
+                    color: #222222;
+                    border-color: #d6d6d6;
+                }
+
+                .white-button.ui-button.ui-state-default:enabled:hover, 
+                .white-button.ui-button.ui-state-default:focus {
+                    background-color: #f2f2f2;
+                    border-color: #ccc;
+                    color: #373a3c;
+                }
+
+                .green-button.ui-button.ui-state-default {
+                    background-color: #5cb85c;
+                    border-color: #5cb85c;
+                    color: #fff;
+                }
+
+                .green-button.ui-button.ui-state-default:enabled:hover, 
+                .green-button.ui-button.ui-state-default:focus {
+                    background-color: #4cae4c;
+                    border-color: #5cb85c;
+                }
+
+                .red-button.ui-button.ui-state-default {
+                    background-color: #d9534f;
+                    border-color: #d9534f;
+                    color: #fff;
+                }
+
+                .red-button.ui-button.ui-state-default:enabled:hover, 
+                .red-button.ui-button.ui-state-default:focus {
+                    background-color: #d43f3a;
+                    border-color: #d9534f;
+                }
+
+            </style>
+
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}" width="#{dialogo.width}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}"  update="dialog" />
+            <ui:include src="/barra.xhtml">
+                <ui:param name="bean" value="#{uiPlanMaestro}"/>
+            </ui:include>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

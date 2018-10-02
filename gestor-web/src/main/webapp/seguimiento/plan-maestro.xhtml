@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml">
+    <ui:define name="content">
+
+
+        <h:form enctype="multipart/form-data" id="formPlanMaestro" style="font-size: small;">
+            <h2>PLAN MAESTRO</h2>
+
+            <p:tabView value="#{planMaestro.planTituloList}" var="varPlanTitulo">
+                <p:tab title="#{varPlanTitulo.numeral}. #{varPlanTitulo.nombre}">
+                    <ui:repeat var="varPlanTituloTexto" value="#{varPlanTitulo.planTituloTextoList}">
+                        <p>
+                            #{varPlanTituloTexto.texto}
+                        </p>
+                    </ui:repeat>
+                    <p:dataTable  value="#{varPlanTitulo.planTituloAdiuntosList}" var="varPlanTituloAdjuntos" 
+                                  rendered="#{not empty varPlanTitulo.planTituloAdiuntosList}"
+                                  rowStyleClass="letra-xx-small-centro">
+                        <p:column>
+                            <h:outputText value="#{varPlanTituloAdjuntos.descripcion}"/>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton icon="ui-icon-arrowthick-1-s" title="Ver Adjunto" ajax="false">
+                                <p:fileDownload value="#{uiEvaluacionAdjuntos.fileDownload}" />
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable>
+                </p:tab>
+            </p:tabView>
+
+
+
+
+            <p:separator/>
+
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}" width="#{dialogo.width}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}"  update="dialog" />
+
+            <ui:include src="/barra.xhtml">
+                <ui:param name="bean" value="#{uiPlanMaestro}"/>
+            </ui:include>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

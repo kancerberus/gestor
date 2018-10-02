@@ -36,6 +36,7 @@ public class GestorGeneral extends Gestor implements Serializable {
     public static boolean NO_VALIDA_PK = false;
     public static String GESTOR_EVALUACION_CAPACITACION_DETALLE_NOTAS_COD_NOTA_SEQ = "gestor.evaluacion_capacitacion_detalle_notas_cod_nota_seq";
     public static String GESTOR_EVALUACION_PLAN_ACCION_DETALLE_NOTAS_COD_NOTA_SEQ = "gestor.evaluacion_plan_accion_detalle_notas_cod_nota_seq";
+    public static String SEGUIMIENTO_PLAN_MAESTRO_COD_MAESTRO_SEQ = "seguimiento.plan_maestro_cod_maestro_seq";
 
     public GestorGeneral() throws Exception {
         super();
