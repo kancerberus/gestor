@@ -11,26 +11,48 @@
         <h:form enctype="multipart/form-data" id="formPlanMaestro" style="font-size: small;">
             <h2>PLAN MAESTRO</h2>
 
-            <p:tabView value="#{planMaestro.planTituloList}" var="varPlanTitulo">
+            <p:tabView value="#{planMaestro.planTituloList}" var="varPlanTitulo" >
                 <p:tab title="#{varPlanTitulo.numeral}. #{varPlanTitulo.nombre}">
                     <ui:repeat var="varPlanTituloTexto" value="#{varPlanTitulo.planTituloTextoList}">
-                        <p>
+                        <p class="letraBackgroundWhite" align="justify" style="font-weight: normal">
+                            <br/>
                             #{varPlanTituloTexto.texto}
                         </p>
                     </ui:repeat>
+
+                    <h:panelGroup rendered="#{not empty varPlanTitulo.tituloAdjuntos}">
+                        <div>
+                            <h3>#{varPlanTitulo.tituloAdjuntos}</h3>
+                            <p align="left">
+
+                                <p class="letraBackgroundWhite" style="font-weight: normal;">
+                                    <br/>
+                                    #{varPlanTitulo.descripcionAdjuntos}
+                                </p>
+                            </p>
+                        </div>
+                    </h:panelGroup>
                     <p:dataTable  value="#{varPlanTitulo.planTituloAdiuntosList}" var="varPlanTituloAdjuntos" 
                                   rendered="#{not empty varPlanTitulo.planTituloAdiuntosList}"
-                                  rowStyleClass="letra-xx-small-centro">
-                        <p:column>
-                            <h:outputText value="#{varPlanTituloAdjuntos.descripcion}"/>
+                                  rowStyleClass="letra-xx-small-centro"
+                                  rowHover="true">
+
+                        <p:column headerText="Documento">
+                            <h:outputText value="#{varPlanTituloAdjuntos.documento}"/>
                         </p:column>
-                        <p:column>
-                            <p:commandButton icon="ui-icon-arrowthick-1-s" title="Ver Adjunto" ajax="false">
-                                <p:fileDownload value="#{uiEvaluacionAdjuntos.fileDownload}" />
-                            </p:commandButton>
+                        <p:column headerText="Ver Documento" width="30%">
+                            <div>
+                                <p:commandButton icon="ui-icon-document" title="Ver Adjunto" ajax="false">    
+                                    <p:fileDownload value="#{uiPlanMaestro.fileDownload}" />
+                                </p:commandButton>
+                                <h:outputText value="  "/>
+                                <h:outputText value="#{varPlanTituloAdjuntos.evaluacionAdjuntos.archivoSimple}"/>
+                            </div>
                         </p:column>
 
                     </p:dataTable>
+                    
+                    
                 </p:tab>
             </p:tabView>
 

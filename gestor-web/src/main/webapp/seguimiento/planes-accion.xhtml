@@ -91,6 +91,7 @@
             <p:dataTable var="varPlanAccionDetalle" value="#{uiPlanAccion.evaluacionPlanAccionDetalles}"
                          widgetVar="planAccionDetalleTable" rowStyleClass="letra-xx-small-centro" style="font-size: 10px;" 
                          emptyMessage="No tiene planes de acción abiertos."
+                         rowHover="true"
                          >
                 <p:column headerText="Opciones" filterBy="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codEvaluacion}">
                     <p:panelGrid>

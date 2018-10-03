@@ -6,6 +6,7 @@
 package com.gestor.seguimiento;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -30,6 +31,8 @@ public class PlanSeccionMatriz implements Serializable {
     private String titulo;
     @Column(name = "descripcion")
     private String descripcion;
+    
+    private List<PlanSeccionMatrizDetalle> planSeccionMatrizDetalleList;
 
     public PlanSeccionMatriz() {
     }
@@ -38,13 +41,21 @@ public class PlanSeccionMatriz implements Serializable {
         this.planSeccionMatrizPK = planSeccionMatrizPK;
     }
 
-    public PlanSeccionMatriz(short codigoEstablecimiento, int codTitulo, int codSeccion, int codSeccionMatriz) {
+    public PlanSeccionMatriz(int codigoEstablecimiento, int codTitulo, int codSeccion, Long codSeccionMatriz) {
         this.planSeccionMatrizPK = new PlanSeccionMatrizPK(codigoEstablecimiento, codTitulo, codSeccion, codSeccionMatriz);
     }
 
     public PlanSeccionMatrizPK getPlanSeccionMatrizPK() {
         return planSeccionMatrizPK;
     }
+
+    public PlanSeccionMatriz(PlanSeccionMatrizPK planSeccionMatrizPK, String titulo, String descripcion) {
+        this.planSeccionMatrizPK = planSeccionMatrizPK;
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+    }
+    
+    
 
     public void setPlanSeccionMatrizPK(PlanSeccionMatrizPK planSeccionMatrizPK) {
         this.planSeccionMatrizPK = planSeccionMatrizPK;
@@ -89,6 +100,20 @@ public class PlanSeccionMatriz implements Serializable {
     @Override
     public String toString() {
         return "com.gestor.seguimiento.PlanSeccionMatriz[ planSeccionMatrizPK=" + planSeccionMatrizPK + " ]";
+    }
+
+    /**
+     * @return the planSeccionMatrizDetalleList
+     */
+    public List<PlanSeccionMatrizDetalle> getPlanSeccionMatrizDetalleList() {
+        return planSeccionMatrizDetalleList;
+    }
+
+    /**
+     * @param planSeccionMatrizDetalleList the planSeccionMatrizDetalleList to set
+     */
+    public void setPlanSeccionMatrizDetalleList(List<PlanSeccionMatrizDetalle> planSeccionMatrizDetalleList) {
+        this.planSeccionMatrizDetalleList = planSeccionMatrizDetalleList;
     }
     
 }

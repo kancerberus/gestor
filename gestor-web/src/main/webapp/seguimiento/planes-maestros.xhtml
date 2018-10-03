@@ -61,10 +61,11 @@
             <p:dataTable var="varPlanMaestro" value="#{uiPlanMaestro.planMaestroList}"
                          widgetVar="planMaestroTable" rowStyleClass="letra-xx-small-centro" style="font-size: 10px;"
                          emptyMessage="No tiene capacitaciones abiertas."
+                         rowHover="true" 
                          >
                 <p:column headerText="Opciones">
                     <p:panelGrid>
-                        <p:commandButton icon="ui-icon-search" title="Ver Plan Maestro" action="#{uiPlanMaestro.consultarPlanMaestro()}}" />
+                        <p:commandButton icon="ui-icon-search" title="Ver Plan Maestro" action="#{uiPlanMaestro.consultarPlanMaestro()}" />
                     </p:panelGrid>
                 </p:column>
 

@@ -46,13 +46,25 @@ public class PlanSeccionMatrizDetalle implements Serializable {
         this.planSeccionMatrizDetallePK = planSeccionMatrizDetallePK;
     }
 
-    public PlanSeccionMatrizDetalle(short codigoEstablecimiento, int codTitulo, int codSeccion, int codSeccionMatriz, int codSeccionMatrizDetalle) {
+    public PlanSeccionMatrizDetalle(short codigoEstablecimiento, int codTitulo, int codSeccion, Long codSeccionMatriz, int codSeccionMatrizDetalle) {
         this.planSeccionMatrizDetallePK = new PlanSeccionMatrizDetallePK(codigoEstablecimiento, codTitulo, codSeccion, codSeccionMatriz, codSeccionMatrizDetalle);
     }
 
     public PlanSeccionMatrizDetallePK getPlanSeccionMatrizDetallePK() {
         return planSeccionMatrizDetallePK;
     }
+
+    public PlanSeccionMatrizDetalle(PlanSeccionMatrizDetallePK planSeccionMatrizDetallePK, String directriz, String objetivos, String metas, String indicadores, String modalidad, String horarios) {
+        this.planSeccionMatrizDetallePK = planSeccionMatrizDetallePK;
+        this.directriz = directriz;
+        this.objetivos = objetivos;
+        this.metas = metas;
+        this.indicadores = indicadores;
+        this.modalidad = modalidad;
+        this.horarios = horarios;
+    }
+    
+    
 
     public void setPlanSeccionMatrizDetallePK(PlanSeccionMatrizDetallePK planSeccionMatrizDetallePK) {
         this.planSeccionMatrizDetallePK = planSeccionMatrizDetallePK;

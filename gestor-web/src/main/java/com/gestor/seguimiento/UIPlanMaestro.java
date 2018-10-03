@@ -6,11 +6,13 @@
 package com.gestor.seguimiento;
 
 import com.gestor.controller.GestorGeneral;
+import com.gestor.controller.Propiedades;
 import com.gestor.entity.App;
 import com.gestor.entity.Dialogo;
 import com.gestor.entity.UtilFecha;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
+import com.gestor.entity.UtilMSG;
 import com.gestor.entity.UtilTexto;
 import com.gestor.gestor.Evaluacion;
 import com.gestor.gestor.EvaluacionCapacitacionDetalle;
@@ -19,10 +21,15 @@ import com.gestor.gestor.controlador.GestorEvaluacion;
 import com.gestor.gestor.controlador.GestorEvaluacionPlanAccion;
 import com.gestor.modelo.Sesion;
 import com.gestor.publico.Establecimiento;
+import com.gestor.publico.EvaluacionAdjuntos;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.controlador.GestorUsuario;
 import com.gestor.seguimiento.controlador.GestorPlanMaestro;
 import com.gestor.seguimiento.controlador.GestorPlanTitulo;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,9 +37,12 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -57,6 +67,8 @@ public class UIPlanMaestro {
     private Evaluacion evaluacion = new Evaluacion();
 
     private Boolean filtroActivo = Boolean.TRUE;
+
+    private StreamedContent fileDownload;
 
     //filtros
     private List<Establecimiento> establecimientoList = new ArrayList<>();
@@ -91,7 +103,7 @@ public class UIPlanMaestro {
         try {
             GestorPlanTitulo gestorPlanTitulo = new GestorPlanTitulo();
             PlanMaestro pm = (PlanMaestro) UtilJSF.getBean("varPlanMaestro");
-            pm.getPlanTituloList().addAll(gestorPlanTitulo.cargarPlanTituloList( pm.getPlanMaestroPK().getCodigoEstablecimiento(), pm.getPlanMaestroPK().getCodEvaluacion()));
+            pm.setPlanTituloList((List<PlanTitulo>) gestorPlanTitulo.cargarPlanTituloList(pm.getPlanMaestroPK().getCodigoEstablecimiento(), pm.getPlanMaestroPK().getCodEvaluacion()));
             UtilJSF.setBean("planMaestro", pm, UtilJSF.SESSION_SCOPE);
             return ("/seguimiento/plan-maestro.xhtml?faces-redirect=true");
         } catch (Exception e) {
@@ -105,7 +117,7 @@ public class UIPlanMaestro {
         evaluacionList = new ArrayList<>();
     }
 
-    public void procesarPlanMaestro() {
+    public String procesarPlanMaestro() {
         try {
             GestorPlanMaestro gestorPlanMaestro = new GestorPlanMaestro();
             GestorGeneral gestorGeneral = new GestorGeneral();
@@ -113,16 +125,27 @@ public class UIPlanMaestro {
             PlanMaestro pm = new PlanMaestro(new PlanMaestroPK(
                     evaluacion.getEvaluacionPK().getCodEvaluacion(),
                     evaluacion.getEvaluacionPK().getCodigoEstablecimiento(),
-                    gestorGeneral.nextval(GestorGeneral.SEGUIMIENTO_PLAN_MAESTRO_COD_MAESTRO_SEQ)
+                    null
             ), gestorGeneral.now(), gestorGeneral.now());
 
-//            List<PlanTitulo> pt = new ArrayList<>();
-//            pt.addAll(gestorPlanTitulo.cargarPlanTituloList(establecimiento));
+            pm.getPlanMaestroPK().setCodMaestro(gestorPlanMaestro.consultarCodMaestroPlanMaestro(pm.getPlanMaestroPK().getCodigoEstablecimiento(), pm.getPlanMaestroPK().getCodEvaluacion()));
+            if (pm.getPlanMaestroPK().getCodMaestro() == null
+                    || pm.getPlanMaestroPK().getCodMaestro() == 0) {
+                pm.getPlanMaestroPK().setCodMaestro(gestorGeneral.nextval(GestorGeneral.SEGUIMIENTO_PLAN_MAESTRO_COD_MAESTRO_SEQ));
+            }
+            
             gestorPlanMaestro.procesarPlanMaestro(pm);
+            
+            pm.setPlanTituloList((List<PlanTitulo>) gestorPlanTitulo.cargarPlanTituloList(pm.getPlanMaestroPK().getCodigoEstablecimiento(), pm.getPlanMaestroPK().getCodEvaluacion()));
+            UtilJSF.setBean("planMaestro", pm, UtilJSF.SESSION_SCOPE);
+            
+            return ("/seguimiento/plan-maestro.xhtml?faces-redirect=true");
 
         } catch (Exception e) {
+            UtilMSG.addSupportMsg();
             UtilLog.generarLog(this.getClass(), e);
         }
+        return null;
     }
 
     public void seleccionarEstablecimiento() {
@@ -428,5 +451,36 @@ public class UIPlanMaestro {
      */
     public void setEvaluacionList(List<Evaluacion> evaluacionList) {
         this.evaluacionList = evaluacionList;
+    }
+
+    /**
+     * @return the fileDownload
+     */
+    public StreamedContent getFileDownload() {
+        String nombreAdjunto = "";
+        try {
+            PlanTituloAdiuntos pta = (PlanTituloAdiuntos) UtilJSF.getBean("varPlanTituloAdjuntos");
+            EvaluacionAdjuntos ea = pta.getEvaluacionAdjuntos();
+            if (ea == null) {
+                UtilMSG.addWarningMsg("Adjunto No Encontrado", "No se encontro el adjunto, intente nuevamente o contáctenos para asistirle.");
+                return null;
+            }
+            Properties p = Propiedades.getInstancia().getPropiedades();
+            String rutaAdjunto = p.getProperty("rutaAdjunto") + File.separator + App.ADJUNTO_PREFIJO + ea.getEvaluacionAdjuntosPK().getCodEvaluacion();
+            nombreAdjunto = ea.getArchivo();
+            InputStream stream = new FileInputStream(rutaAdjunto + File.separator + ea.getArchivo());
+            fileDownload = new DefaultStreamedContent(stream, null, ea.getArchivoSimple());
+        } catch (FileNotFoundException ex) {
+            UtilMSG.addErrorMsg("Archivo No Existe", "El adjunto " + nombreAdjunto + ", no fue encontrado. Si el problema persiste contactenos para asistirle.");
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+        return fileDownload;
+    }
+
+    /**
+     * @param fileDownload the fileDownload to set
+     */
+    public void setFileDownload(StreamedContent fileDownload) {
+        this.fileDownload = fileDownload;
     }
 }

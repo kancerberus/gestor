@@ -6,6 +6,7 @@
 package com.gestor.seguimiento;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -19,7 +20,7 @@ public class PlanSeccionMatrizPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "codigo_establecimiento")
-    private short codigoEstablecimiento;
+    private int codigoEstablecimiento;
     @Basic(optional = false)
     @Column(name = "cod_titulo")
     private int codTitulo;
@@ -28,23 +29,23 @@ public class PlanSeccionMatrizPK implements Serializable {
     private int codSeccion;
     @Basic(optional = false)
     @Column(name = "cod_seccion_matriz")
-    private int codSeccionMatriz;
+    private Long codSeccionMatriz;
 
     public PlanSeccionMatrizPK() {
     }
 
-    public PlanSeccionMatrizPK(short codigoEstablecimiento, int codTitulo, int codSeccion, int codSeccionMatriz) {
+    public PlanSeccionMatrizPK(int codigoEstablecimiento, int codTitulo, int codSeccion, Long codSeccionMatriz) {
         this.codigoEstablecimiento = codigoEstablecimiento;
         this.codTitulo = codTitulo;
         this.codSeccion = codSeccion;
         this.codSeccionMatriz = codSeccionMatriz;
     }
 
-    public short getCodigoEstablecimiento() {
+    public int getCodigoEstablecimiento() {
         return codigoEstablecimiento;
     }
 
-    public void setCodigoEstablecimiento(short codigoEstablecimiento) {
+    public void setCodigoEstablecimiento(int codigoEstablecimiento) {
         this.codigoEstablecimiento = codigoEstablecimiento;
     }
 
@@ -64,11 +65,11 @@ public class PlanSeccionMatrizPK implements Serializable {
         this.codSeccion = codSeccion;
     }
 
-    public int getCodSeccionMatriz() {
+    public Long getCodSeccionMatriz() {
         return codSeccionMatriz;
     }
 
-    public void setCodSeccionMatriz(int codSeccionMatriz) {
+    public void setCodSeccionMatriz(Long codSeccionMatriz) {
         this.codSeccionMatriz = codSeccionMatriz;
     }
 
@@ -78,7 +79,7 @@ public class PlanSeccionMatrizPK implements Serializable {
         hash += (int) codigoEstablecimiento;
         hash += (int) codTitulo;
         hash += (int) codSeccion;
-        hash += (int) codSeccionMatriz;
+        hash +=  codSeccionMatriz;
         return hash;
     }
 
@@ -98,10 +99,7 @@ public class PlanSeccionMatrizPK implements Serializable {
         if (this.codSeccion != other.codSeccion) {
             return false;
         }
-        if (this.codSeccionMatriz != other.codSeccionMatriz) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.codSeccionMatriz, other.codSeccionMatriz);
     }
 
     @Override

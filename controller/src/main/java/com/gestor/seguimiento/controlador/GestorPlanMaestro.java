@@ -38,9 +38,32 @@ public class GestorPlanMaestro extends Gestor {
             this.inicioTransaccion();
             PlanMaestroDAO planMaestroDAO = new PlanMaestroDAO(conexion);
             planMaestroDAO.upsertPlanMaestro(pm);
-            planMaestroDAO.procesarPlanMaestroPlanTituloAdiuntos(pm.getPlanMaestroPK().getCodEvaluacion(), pm.getPlanMaestroPK().getCodigoEstablecimiento(), pm.getPlanMaestroPK().getCodMaestro());
-            planMaestroDAO.procesarPlanTituloAdiuntosEvaluacionAdjuntos(pm.getPlanMaestroPK().getCodEvaluacion(), pm.getPlanMaestroPK().getCodigoEstablecimiento(), pm.getPlanMaestroPK().getCodMaestro());
+
+            Long codEvaluacion = pm.getPlanMaestroPK().getCodEvaluacion();
+            int codigoEstablecimiento = pm.getPlanMaestroPK().getCodigoEstablecimiento();
+            Long codMaestro = pm.getPlanMaestroPK().getCodMaestro();
+            
+            //titulo
+            planMaestroDAO.procesarPlanMaestroPlanTituloAdiuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
+            planMaestroDAO.procesarPlanTituloAdiuntosEvaluacionAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
+            
+            //seccion
+            planMaestroDAO.procesarPlanMaestroPlanSeccionAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
+            planMaestroDAO.procesarPlanSeccionAdjuntosEvaluacionAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
+
             this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+
+    public Long consultarCodMaestroPlanMaestro(int codigoEstablecimiento, Long codEvaluacion) throws Exception {
+        try {
+            this.abrirConexion();
+
+            PlanMaestroDAO planMaestroDAO = new PlanMaestroDAO(conexion);
+            return planMaestroDAO.consultarCodMaestroPlanMaestro(codigoEstablecimiento, codEvaluacion);
+
         } finally {
             this.cerrarConexion();
         }

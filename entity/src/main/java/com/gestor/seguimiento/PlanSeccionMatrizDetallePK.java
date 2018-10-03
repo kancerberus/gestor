@@ -19,7 +19,7 @@ public class PlanSeccionMatrizDetallePK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "codigo_establecimiento")
-    private short codigoEstablecimiento;
+    private int codigoEstablecimiento;
     @Basic(optional = false)
     @Column(name = "cod_titulo")
     private int codTitulo;
@@ -28,7 +28,7 @@ public class PlanSeccionMatrizDetallePK implements Serializable {
     private int codSeccion;
     @Basic(optional = false)
     @Column(name = "cod_seccion_matriz")
-    private int codSeccionMatriz;
+    private Long codSeccionMatriz;
     @Basic(optional = false)
     @Column(name = "cod_seccion_matriz_detalle")
     private int codSeccionMatrizDetalle;
@@ -36,7 +36,7 @@ public class PlanSeccionMatrizDetallePK implements Serializable {
     public PlanSeccionMatrizDetallePK() {
     }
 
-    public PlanSeccionMatrizDetallePK(short codigoEstablecimiento, int codTitulo, int codSeccion, int codSeccionMatriz, int codSeccionMatrizDetalle) {
+    public PlanSeccionMatrizDetallePK(int codigoEstablecimiento, int codTitulo, int codSeccion, Long codSeccionMatriz, int codSeccionMatrizDetalle) {
         this.codigoEstablecimiento = codigoEstablecimiento;
         this.codTitulo = codTitulo;
         this.codSeccion = codSeccion;
@@ -44,11 +44,11 @@ public class PlanSeccionMatrizDetallePK implements Serializable {
         this.codSeccionMatrizDetalle = codSeccionMatrizDetalle;
     }
 
-    public short getCodigoEstablecimiento() {
+    public int getCodigoEstablecimiento() {
         return codigoEstablecimiento;
     }
 
-    public void setCodigoEstablecimiento(short codigoEstablecimiento) {
+    public void setCodigoEstablecimiento(int codigoEstablecimiento) {
         this.codigoEstablecimiento = codigoEstablecimiento;
     }
 
@@ -68,11 +68,11 @@ public class PlanSeccionMatrizDetallePK implements Serializable {
         this.codSeccion = codSeccion;
     }
 
-    public int getCodSeccionMatriz() {
+    public Long getCodSeccionMatriz() {
         return codSeccionMatriz;
     }
 
-    public void setCodSeccionMatriz(int codSeccionMatriz) {
+    public void setCodSeccionMatriz(Long codSeccionMatriz) {
         this.codSeccionMatriz = codSeccionMatriz;
     }
 
@@ -90,7 +90,7 @@ public class PlanSeccionMatrizDetallePK implements Serializable {
         hash += (int) codigoEstablecimiento;
         hash += (int) codTitulo;
         hash += (int) codSeccion;
-        hash += (int) codSeccionMatriz;
+        hash += codSeccionMatriz;
         hash += (int) codSeccionMatrizDetalle;
         return hash;
     }
@@ -124,5 +124,5 @@ public class PlanSeccionMatrizDetallePK implements Serializable {
     public String toString() {
         return "com.gestor.seguimiento.PlanSeccionMatrizDetallePK[ codigoEstablecimiento=" + codigoEstablecimiento + ", codTitulo=" + codTitulo + ", codSeccion=" + codSeccion + ", codSeccionMatriz=" + codSeccionMatriz + ", codSeccionMatrizDetalle=" + codSeccionMatrizDetalle + " ]";
     }
-    
+
 }

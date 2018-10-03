@@ -92,6 +92,13 @@ body {
     font-size:xx-small;
 }
 
+
+.letra-x-small-centro {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size:x-small;
+    text-align: center;
+}
+
 .letra-xx-small-centro {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size:xx-small;

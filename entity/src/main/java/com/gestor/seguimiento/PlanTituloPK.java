@@ -19,7 +19,7 @@ public class PlanTituloPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "codigo_establecimiento")
-    private short codigoEstablecimiento;
+    private int codigoEstablecimiento;
     @Basic(optional = false)
     @Column(name = "cod_titulo")
     private int codTitulo;
@@ -27,16 +27,16 @@ public class PlanTituloPK implements Serializable {
     public PlanTituloPK() {
     }
 
-    public PlanTituloPK(short codigoEstablecimiento, int codTitulo) {
+    public PlanTituloPK(int codigoEstablecimiento, int codTitulo) {
         this.codigoEstablecimiento = codigoEstablecimiento;
         this.codTitulo = codTitulo;
     }
 
-    public short getCodigoEstablecimiento() {
+    public int getCodigoEstablecimiento() {
         return codigoEstablecimiento;
     }
 
-    public void setCodigoEstablecimiento(short codigoEstablecimiento) {
+    public void setCodigoEstablecimiento(int codigoEstablecimiento) {
         this.codigoEstablecimiento = codigoEstablecimiento;
     }
 

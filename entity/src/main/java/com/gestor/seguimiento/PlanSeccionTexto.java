@@ -40,6 +40,13 @@ public class PlanSeccionTexto implements Serializable {
         this.planSeccionTextoPK = new PlanSeccionTextoPK(codigoEstablecimiento, codTitulo, codSeccion, codSeccionTexto);
     }
 
+    public PlanSeccionTexto(PlanSeccionTextoPK planSeccionTextoPK, String texto) {
+        this.planSeccionTextoPK = planSeccionTextoPK;
+        this.texto = texto;
+    }
+    
+    
+
     public PlanSeccionTextoPK getPlanSeccionTextoPK() {
         return planSeccionTextoPK;
     }

@@ -31,9 +31,11 @@ public class PlanTitulo implements Serializable {
     private String nombre;
     @Column(name = "numeral")
     private String numeral;
-    
+
     private List<PlanTituloAdiuntos> planTituloAdiuntosList;
     private List<PlanTituloTexto> planTituloTextoList;
+    
+    private List<PlanSeccion> planSeccionList;
 
     public PlanTitulo() {
     }
@@ -42,8 +44,14 @@ public class PlanTitulo implements Serializable {
         this.planTituloPK = planTituloPK;
     }
 
-    public PlanTitulo(short codigoEstablecimiento, int codTitulo) {
+    public PlanTitulo(int codigoEstablecimiento, int codTitulo) {
         this.planTituloPK = new PlanTituloPK(codigoEstablecimiento, codTitulo);
+    }
+
+    public PlanTitulo(PlanTituloPK planTituloPK, String nombre, String numeral) {
+        this.planTituloPK = planTituloPK;
+        this.nombre = nombre;
+        this.numeral = numeral;
     }
 
     public PlanTituloPK getPlanTituloPK() {
@@ -122,5 +130,45 @@ public class PlanTitulo implements Serializable {
     public void setPlanTituloTextoList(List<PlanTituloTexto> planTituloTextoList) {
         this.planTituloTextoList = planTituloTextoList;
     }
-    
+
+    public String getDescripcionAdjuntos() {
+        String descripcion = null;
+        if (planTituloAdiuntosList != null) {
+            for (PlanTituloAdiuntos pa : planTituloAdiuntosList) {
+                descripcion = pa.getDescripcion();
+                if (descripcion != null && !descripcion.equalsIgnoreCase("")) {
+                    break;
+                }
+            }
+        }
+        return descripcion;
+    }
+
+    public String getTituloAdjuntos() {
+        String titulo = null;
+        if (planTituloAdiuntosList != null) {
+            for (PlanTituloAdiuntos pa : planTituloAdiuntosList) {
+                titulo = pa.getTitulo();
+                if (titulo != null && !titulo.equalsIgnoreCase("")) {
+                    break;
+                }
+            }
+        }
+        return titulo;
+    }
+
+    /**
+     * @return the planSeccionList
+     */
+    public List<PlanSeccion> getPlanSeccionList() {
+        return planSeccionList;
+    }
+
+    /**
+     * @param planSeccionList the planSeccionList to set
+     */
+    public void setPlanSeccionList(List<PlanSeccion> planSeccionList) {
+        this.planSeccionList = planSeccionList;
+    }
+
 }

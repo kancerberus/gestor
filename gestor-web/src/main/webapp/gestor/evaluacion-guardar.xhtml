@@ -13,6 +13,7 @@
             <p:dataTable var="varResumenActa" value="#{uiEvaluacion.resumenEvaluacionList}"
                          widgetVar="resumenActaTable" rowStyleClass="Centro"
                          emptyMessage="No se pudo cargar el resumen, intentelo de nuevo."
+                         rowHover="true"
                          >
                 <p:column headerText="Ciclo" filterBy="#{varResumenActa.seccionDetalle.seccion.ciclo.nombre}">
                     <h:outputText value="#{varResumenActa.seccionDetalle.seccion.ciclo.nombre}" />

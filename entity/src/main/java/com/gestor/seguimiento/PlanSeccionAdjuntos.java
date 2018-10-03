@@ -6,6 +6,7 @@
 
 package com.gestor.seguimiento;
 
+import com.gestor.publico.EvaluacionAdjuntos;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -37,6 +38,8 @@ public class PlanSeccionAdjuntos implements Serializable {
     private String descripcion;
     @Column(name = "documento")
     private String documento;
+    
+    private EvaluacionAdjuntos evaluacionAdjuntos;
 
     public PlanSeccionAdjuntos() {
     }
@@ -52,6 +55,17 @@ public class PlanSeccionAdjuntos implements Serializable {
     public PlanSeccionAdjuntosPK getPlanSeccionAdjuntosPK() {
         return planSeccionAdjuntosPK;
     }
+
+    public PlanSeccionAdjuntos(PlanSeccionAdjuntosPK planSeccionAdjuntosPK, Integer codCategoria, Integer codCategoriaTipo, String titulo, String descripcion, String documento) {
+        this.planSeccionAdjuntosPK = planSeccionAdjuntosPK;
+        this.codCategoria = codCategoria;
+        this.codCategoriaTipo = codCategoriaTipo;
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.documento = documento;
+    }
+    
+    
 
     public void setPlanSeccionAdjuntosPK(PlanSeccionAdjuntosPK planSeccionAdjuntosPK) {
         this.planSeccionAdjuntosPK = planSeccionAdjuntosPK;
@@ -120,6 +134,20 @@ public class PlanSeccionAdjuntos implements Serializable {
     @Override
     public String toString() {
         return "com.gestor.seguimiento.PlanSeccionAdjuntos[ planSeccionAdjuntosPK=" + planSeccionAdjuntosPK + " ]";
+    }
+
+    /**
+     * @return the evaluacionAdjuntos
+     */
+    public EvaluacionAdjuntos getEvaluacionAdjuntos() {
+        return evaluacionAdjuntos;
+    }
+
+    /**
+     * @param evaluacionAdjuntos the evaluacionAdjuntos to set
+     */
+    public void setEvaluacionAdjuntos(EvaluacionAdjuntos evaluacionAdjuntos) {
+        this.evaluacionAdjuntos = evaluacionAdjuntos;
     }
 
 }

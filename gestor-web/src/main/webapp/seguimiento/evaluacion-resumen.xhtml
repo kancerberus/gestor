@@ -76,7 +76,8 @@
                 <br/>
                 <p:dataTable var="varResumenActa" value="#{uiEvaluacionResumen.evaluacionResumenList}"
                              widgetVar="resumenActaTable" rowStyleClass="letra-xx-small-centro" styleClass="letra-xx-small-centro"
-                             emptyMessage="La evaluación no tiene resumenes almacenados.">
+                             emptyMessage="La evaluación no tiene resumenes almacenados."
+                             rowHover="true">
                     <p:column headerText="Numeral" filterBy="#{varResumenActa.numeral}">
                         <h:outputText value="#{varResumenActa.numeral}" />
                     </p:column>

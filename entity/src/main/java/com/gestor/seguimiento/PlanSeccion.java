@@ -6,6 +6,7 @@
 package com.gestor.seguimiento;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -32,6 +33,10 @@ public class PlanSeccion implements Serializable {
     private String numeral;
     @Column(name = "imagen")
     private String imagen;
+    
+    private List<PlanSeccionAdjuntos> planSeccionAdjuntosList;
+    private List<PlanSeccionTexto> planSeccionTextoList;
+    private PlanSeccionMatriz planSeccionMatriz;
 
     public PlanSeccion() {
     }
@@ -99,6 +104,48 @@ public class PlanSeccion implements Serializable {
     @Override
     public String toString() {
         return "com.gestor.seguimiento.PlanSeccion[ planSeccionPK=" + planSeccionPK + " ]";
+    }
+
+    /**
+     * @return the planSeccionAdjuntosList
+     */
+    public List<PlanSeccionAdjuntos> getPlanSeccionAdjuntosList() {
+        return planSeccionAdjuntosList;
+    }
+
+    /**
+     * @param planSeccionAdjuntosList the planSeccionAdjuntosList to set
+     */
+    public void setPlanSeccionAdjuntosList(List<PlanSeccionAdjuntos> planSeccionAdjuntosList) {
+        this.planSeccionAdjuntosList = planSeccionAdjuntosList;
+    }
+
+    /**
+     * @return the planSeccionTextoList
+     */
+    public List<PlanSeccionTexto> getPlanSeccionTextoList() {
+        return planSeccionTextoList;
+    }
+
+    /**
+     * @param planSeccionTextoList the planSeccionTextoList to set
+     */
+    public void setPlanSeccionTextoList(List<PlanSeccionTexto> planSeccionTextoList) {
+        this.planSeccionTextoList = planSeccionTextoList;
+    }
+
+    /**
+     * @return the planSeccionMatriz
+     */
+    public PlanSeccionMatriz getPlanSeccionMatriz() {
+        return planSeccionMatriz;
+    }
+
+    /**
+     * @param planSeccionMatriz the planSeccionMatriz to set
+     */
+    public void setPlanSeccionMatriz(PlanSeccionMatriz planSeccionMatriz) {
+        this.planSeccionMatriz = planSeccionMatriz;
     }
     
 }

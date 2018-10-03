@@ -6,12 +6,27 @@
 package com.gestor.seguimiento.controlador;
 
 import com.gestor.controller.Gestor;
+import com.gestor.entity.UtilLog;
 import com.gestor.publico.Establecimiento;
+import com.gestor.seguimiento.PlanSeccion;
+import com.gestor.seguimiento.PlanSeccionAdjuntos;
+import com.gestor.seguimiento.PlanSeccionMatriz;
+import com.gestor.seguimiento.PlanSeccionMatrizDetalle;
+import com.gestor.seguimiento.PlanSeccionTexto;
 import com.gestor.seguimiento.PlanTitulo;
+import com.gestor.seguimiento.PlanTituloAdiuntos;
+import com.gestor.seguimiento.PlanTituloTexto;
+import com.gestor.seguimiento.dao.PlanSeccionDAO;
 import com.gestor.seguimiento.dao.PlanTituloAdiuntosDAO;
 import com.gestor.seguimiento.dao.PlanTituloDAO;
+import com.gestor.seguimiento.dao.PlanTituloMatrizDAO;
+import com.gestor.seguimiento.dao.PlanTituloTextoDAO;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -42,12 +57,40 @@ public class GestorPlanTitulo extends Gestor {
 
             PlanTituloDAO planTituloDAO = new PlanTituloDAO(conexion);
             PlanTituloAdiuntosDAO planTituloAdiuntosDAO = new PlanTituloAdiuntosDAO(conexion);
+            PlanTituloTextoDAO planTituloTextoDAO = new PlanTituloTextoDAO(conexion);
+            PlanSeccionDAO planSeccionDAO = new PlanSeccionDAO(conexion);
+            PlanTituloMatrizDAO planTituloMatrizDAO = new PlanTituloMatrizDAO(conexion);
+
             Collection<PlanTitulo> planTituloList = new ArrayList<>();
             planTituloList.addAll(planTituloDAO.cargarPlanTituloList(codigoEstablecimiento, codEvaluacion));
+
             planTituloList.forEach((pt) -> {
-                pt.getPlanTituloAdiuntosList().addAll(planTituloAdiuntosDAO.cargarPlanTituloAdiuntosList(pt.getPlanTituloPK()));
-                
+                try {
+                    pt.setPlanTituloAdiuntosList((List<PlanTituloAdiuntos>) planTituloAdiuntosDAO.cargarPlanTituloAdiuntosList(pt.getPlanTituloPK(), codEvaluacion));
+                    pt.setPlanTituloTextoList((List<PlanTituloTexto>) planTituloTextoDAO.cargarPlanTituloTextoList(pt.getPlanTituloPK()));
+                } catch (SQLException ex) {
+                    UtilLog.generarLog(this.getClass(), ex);
+                }
             });
+
+            planTituloList.forEach((pt) -> {
+                try {
+                    pt.setPlanSeccionList(planSeccionDAO.cargarPlanSeccion(pt.getPlanTituloPK()));
+                    for (PlanSeccion ps : pt.getPlanSeccionList()) {
+                        ps.setPlanSeccionAdjuntosList((List<PlanSeccionAdjuntos>) planTituloAdiuntosDAO.cargarPlanSeccionAdjuntos(ps.getPlanSeccionPK(), codEvaluacion));
+                        ps.setPlanSeccionTextoList((List<PlanSeccionTexto>) planTituloTextoDAO.cargarPlanSeccionTexto(ps.getPlanSeccionPK()));
+                        ps.setPlanSeccionMatriz(planTituloMatrizDAO.cargarPlanSeccionMatriz(ps.getPlanSeccionPK()));
+                        if (ps.getPlanSeccionMatriz() != null && ps.getPlanSeccionMatriz().getPlanSeccionMatrizPK() != null
+                                && ps.getPlanSeccionMatriz().getPlanSeccionMatrizPK().getCodSeccionMatriz() != null
+                                && ps.getPlanSeccionMatriz().getPlanSeccionMatrizPK().getCodSeccionMatriz() != 0) {
+                            ps.getPlanSeccionMatriz().setPlanSeccionMatrizDetalleList((List<PlanSeccionMatrizDetalle>) planTituloMatrizDAO.cargarPlanSeccionMatrizDetalle(ps.getPlanSeccionMatriz().getPlanSeccionMatrizPK()));
+                        }
+                    }
+                } catch (SQLException ex) {
+                    UtilLog.generarLog(this.getClass(), ex);
+                }
+            });
+
             return planTituloList;
         } finally {
             this.cerrarConexion();

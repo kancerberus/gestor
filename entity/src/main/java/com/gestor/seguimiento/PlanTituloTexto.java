@@ -32,11 +32,18 @@ public class PlanTituloTexto implements Serializable {
     public PlanTituloTexto() {
     }
 
+    public PlanTituloTexto(PlanTituloTextoPK planTituloTextoPK, String texto) {
+        this.planTituloTextoPK = planTituloTextoPK;
+        this.texto = texto;
+    }
+    
+    
+
     public PlanTituloTexto(PlanTituloTextoPK planTituloTextoPK) {
         this.planTituloTextoPK = planTituloTextoPK;
     }
 
-    public PlanTituloTexto(short codigoEstablecimiento, int codTitulo, int codTituloTexto) {
+    public PlanTituloTexto(int codigoEstablecimiento, int codTitulo, int codTituloTexto) {
         this.planTituloTextoPK = new PlanTituloTextoPK(codigoEstablecimiento, codTitulo, codTituloTexto);
     }
 
@@ -80,5 +87,5 @@ public class PlanTituloTexto implements Serializable {
     public String toString() {
         return "com.gestor.seguimiento.PlanTituloTexto[ planTituloTextoPK=" + planTituloTextoPK + " ]";
     }
-    
+
 }

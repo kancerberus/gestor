@@ -11,14 +11,14 @@
     <ui:define name="content">
         <h:form enctype="multipart/form-data" id="formEstablecimientos" style="font-size: small;">
             <p:panel id="panelEstablecimientos"  header="Administrar Establecimientos" >
-                <h:panelGrid columns="7" >
+                <h:panelGrid columns="6" >
                     <h:outputText value="Nombre"/>
                     <h:outputText value="Municipio"/>
                     <h:outputText value="Nit"/>
                     <h:outputText value="Dirección"/>
                     <h:outputText value="Telefono"/>
                     <h:outputText value="Correo"/>
-                    <h:outputText value="Establecimiento"/>
+                    
 
                     <p:inputText value="#{uiEstablecimiento.establecimiento.nombre}" placeholder="Nombre Establecimiento"/>
                     <p:selectOneMenu id="somItemsMunicipios" value="#{uiEstablecimiento.establecimiento.municipios}" converter="convertidorGenerico"
@@ -41,7 +41,8 @@
                                      update="formEstablecimientos"/>
                 </h:panelGrid>
                 <p:dataTable  value="#{uiEstablecimiento.establecimientoList}" var="varEstablecimiento" emptyMessage="No hay establecimientos"
-                              rowStyleClass="Centro">
+                              rowStyleClass="letra-x-small-centro"
+                              rowHover="true">
 
                     <p:columnGroup type="header">  
                         <p:row>  
