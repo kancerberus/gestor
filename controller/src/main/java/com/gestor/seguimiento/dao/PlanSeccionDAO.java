@@ -6,6 +6,7 @@
 package com.gestor.seguimiento.dao;
 
 import com.gestor.seguimiento.PlanSeccion;
+import com.gestor.seguimiento.PlanSeccionPK;
 import com.gestor.seguimiento.PlanTituloPK;
 import conexion.Consulta;
 import java.sql.Connection;
@@ -31,11 +32,19 @@ public class PlanSeccionDAO {
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
-            StringBuilder sql = new StringBuilder();
+            StringBuilder sql = new StringBuilder(
+                    "SELECT codigo_establecimiento, cod_titulo, cod_seccion, nombre, numeral,"
+                    + " imagen"
+                    + " FROM seguimiento.plan_seccion"
+                    + " WHERE codigo_establecimiento=" + planTituloPK.getCodigoEstablecimiento() + " AND cod_titulo=" + planTituloPK.getCodTitulo()
+            );
             rs = consulta.ejecutar(sql);
             List<PlanSeccion> planSeccionList = new ArrayList<>();
             while (rs.next()) {
-                PlanSeccion ps = new PlanSeccion();
+                PlanSeccion ps = new PlanSeccion(
+                        new PlanSeccionPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo"), rs.getInt("cod_seccion")),
+                        rs.getString("nombre"), rs.getString("numeral"), rs.getString("imagen")
+                );
                 planSeccionList.add(ps);
             }
             return planSeccionList;

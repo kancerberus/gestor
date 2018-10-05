@@ -72,7 +72,7 @@ public class PlanTituloTextoDAO extends Gestor {
                     + " texto"
                     + " FROM seguimiento.plan_seccion_texto"
                     + " WHERE codigo_establecimiento=" + planSeccionPK.getCodigoEstablecimiento()
-                    + " AND cod_titulo=" + planSeccionPK.getCodTitulo() + " AND cod_seccion=" + planSeccionPK.getCodTitulo()
+                    + " AND cod_titulo=" + planSeccionPK.getCodTitulo() + " AND cod_seccion=" + planSeccionPK.getCodSeccion()
             );
 
             rs = consulta.ejecutar(sql);

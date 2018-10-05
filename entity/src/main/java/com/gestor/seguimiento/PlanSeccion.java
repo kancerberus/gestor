@@ -41,6 +41,15 @@ public class PlanSeccion implements Serializable {
     public PlanSeccion() {
     }
 
+    public PlanSeccion(PlanSeccionPK planSeccionPK, String nombre, String numeral, String imagen) {
+        this.planSeccionPK = planSeccionPK;
+        this.nombre = nombre;
+        this.numeral = numeral;
+        this.imagen = imagen;
+    }
+    
+    
+
     public PlanSeccion(PlanSeccionPK planSeccionPK) {
         this.planSeccionPK = planSeccionPK;
     }

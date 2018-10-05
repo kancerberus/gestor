@@ -51,8 +51,64 @@
                         </p:column>
 
                     </p:dataTable>
-                    
-                    
+
+
+                    <h:panelGroup rendered="#{not empty varPlanTitulo.planSeccionList}">
+                        <p:tabView value="#{varPlanTitulo.planSeccionList}" var="varPlanSeccion" style="font-size: x-small">
+                            <p:tab title="#{varPlanSeccion.numeral}. #{varPlanSeccion.nombre}">
+
+                                <ui:repeat var="varPlanSeccionTituloTexto" value="#{varPlanSeccion.planSeccionTextoList}">
+                                    <p class="letraBackgroundWhite" align="justify" style="font-weight: normal">
+                                        <br/>
+                                        #{varPlanSeccionTituloTexto.texto}
+                                    </p>
+                                </ui:repeat>
+
+                                
+                                <h:panelGroup rendered="#{not empty varPlanSeccion.planSeccionMatriz}">
+                                    <div>
+                                        <h3>#{varPlanSeccion.planSeccionMatriz.titulo}</h3>
+                                        <p align="left">
+
+                                            <p class="letraBackgroundWhite" style="font-weight: normal;">
+                                                <br/>
+                                                #{varPlanSeccion.planSeccionMatriz.descripcion}
+                                            </p>
+                                        </p>
+                                    </div>
+                                </h:panelGroup>
+
+                                <p:dataTable var="varPlanMatrizDetalle" value="#{varPlanSeccion.planSeccionMatriz.planSeccionMatrizDetalleList}"
+                                             widgetVar="planPlanMatrizDetalleTable" rowStyleClass="letra-xx-small-centro" style="font-size: 10px;"
+                                             rowHover="true" rendered="#{not empty varPlanSeccion.planSeccionMatriz.planSeccionMatrizDetalleList}"
+                                             >
+                                    <p:column headerText="Directriz">
+                                        <p class="letraBackgroundWhite" align="justify" style="font-weight: normal">
+                                            #{varPlanMatrizDetalle.directriz}
+                                        </p>
+                                    </p:column>
+                                    <p:column headerText="Objetivos">
+                                        <p class="letraBackgroundWhite" align="justify" style="font-weight: normal">
+                                            #{varPlanMatrizDetalle.objetivos}
+                                        </p>
+                                    </p:column>
+                                    <p:column headerText="Metas">
+                                        <p class="letraBackgroundWhite" align="justify" style="font-weight: normal">
+                                            #{varPlanMatrizDetalle.metas}
+                                        </p>
+                                    </p:column>
+                                    <p:column headerText="Indicadores">
+                                        <p class="letraBackgroundWhite" align="justify" style="font-weight: normal">
+                                            #{varPlanMatrizDetalle.indicadores}
+                                        </p>
+                                    </p:column>
+                                </p:dataTable>
+
+                            </p:tab>
+                        </p:tabView>
+                    </h:panelGroup>
+
+
                 </p:tab>
             </p:tabView>
 

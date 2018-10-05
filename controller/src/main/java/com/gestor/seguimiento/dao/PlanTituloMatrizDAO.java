@@ -38,13 +38,16 @@ public class PlanTituloMatrizDAO {
                     "SELECT codigo_establecimiento, cod_titulo, cod_seccion, cod_seccion_matriz,"
                     + " titulo, descripcion"
                     + " FROM seguimiento.plan_seccion_matriz"
-                    + " WHERE codigo_establecimiento=" + planSeccionPK.getCodigoEstablecimiento() + " AND cod_titulo=" + planSeccionPK.getCodTitulo() + " AND cod_seccion" + planSeccionPK.getCodTitulo()
+                    + " WHERE codigo_establecimiento=" + planSeccionPK.getCodigoEstablecimiento() + " AND cod_titulo=" + planSeccionPK.getCodTitulo() + " AND cod_seccion=" + planSeccionPK.getCodSeccion()
             );
             rs = consulta.ejecutar(sql);
-            PlanSeccionMatriz psm = new PlanSeccionMatriz(
-                    new PlanSeccionMatrizPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo"), rs.getInt("cod_seccion"), rs.getLong("cod_seccion_matriz")),
-                    rs.getString("titulo"), rs.getString("descripcion")
-            );
+            PlanSeccionMatriz psm = null;
+            if (rs.next()) {
+                psm = new PlanSeccionMatriz(
+                        new PlanSeccionMatrizPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo"), rs.getInt("cod_seccion"), rs.getLong("cod_seccion_matriz")),
+                        rs.getString("titulo"), rs.getString("descripcion")
+                );
+            }
             return psm;
         } finally {
             if (rs != null) {
