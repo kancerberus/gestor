@@ -34,6 +34,8 @@ public class PlanTitulo implements Serializable {
 
     private List<PlanTituloAdiuntos> planTituloAdiuntosList;
     private List<PlanTituloTexto> planTituloTextoList;
+    private List<PlanSeccionAdjuntos> planSeccionAdjuntosList;
+    
     
     private List<PlanSeccion> planSeccionList;
 
@@ -169,6 +171,20 @@ public class PlanTitulo implements Serializable {
      */
     public void setPlanSeccionList(List<PlanSeccion> planSeccionList) {
         this.planSeccionList = planSeccionList;
+    }
+
+    /**
+     * @return the planSeccionAdjuntosList
+     */
+    public List<PlanSeccionAdjuntos> getPlanSeccionAdjuntosList() {
+        return planSeccionAdjuntosList;
+    }
+
+    /**
+     * @param planSeccionAdjuntosList the planSeccionAdjuntosList to set
+     */
+    public void setPlanSeccionAdjuntosList(List<PlanSeccionAdjuntos> planSeccionAdjuntosList) {
+        this.planSeccionAdjuntosList = planSeccionAdjuntosList;
     }
 
 }

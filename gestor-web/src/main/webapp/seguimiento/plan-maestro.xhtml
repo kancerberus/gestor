@@ -13,25 +13,32 @@
 
             <p:tabView value="#{planMaestro.planTituloList}" var="varPlanTitulo" >
                 <p:tab title="#{varPlanTitulo.numeral}. #{varPlanTitulo.nombre}">
-                    <ui:repeat var="varPlanTituloTexto" value="#{varPlanTitulo.planTituloTextoList}">
-                        <p class="letraBackgroundWhite" align="justify" style="font-weight: normal">
-                            <br/>
-                            #{varPlanTituloTexto.texto}
-                        </p>
-                    </ui:repeat>
 
+                    <!--titulo texto-->
+                    <div class="letraBackgroundWhite">
+                        <ui:repeat var="varPlanTituloTexto" value="#{varPlanTitulo.planTituloTextoList}">
+                            <p align="justify" style="font-weight: normal">
+                                <br/>
+                                #{varPlanTituloTexto.texto}
+                            </p>
+                        </ui:repeat>
+                        <br/>
+                    </div>
+
+                    <!--titulo adjuntos-->
                     <h:panelGroup rendered="#{not empty varPlanTitulo.tituloAdjuntos}">
                         <div>
                             <h3>#{varPlanTitulo.tituloAdjuntos}</h3>
-                            <p align="left">
-
-                                <p class="letraBackgroundWhite" style="font-weight: normal;">
+                            <div class="letraBackgroundWhite">
+                                <p style="font-weight: normal;">
                                     <br/>
                                     #{varPlanTitulo.descripcionAdjuntos}
                                 </p>
-                            </p>
+                                <p:separator/>
+                            </div>
                         </div>
                     </h:panelGroup>
+
                     <p:dataTable  value="#{varPlanTitulo.planTituloAdiuntosList}" var="varPlanTituloAdjuntos" 
                                   rendered="#{not empty varPlanTitulo.planTituloAdiuntosList}"
                                   rowStyleClass="letra-xx-small-centro"
@@ -52,29 +59,33 @@
 
                     </p:dataTable>
 
-
+                    <!--seccion-->
                     <h:panelGroup rendered="#{not empty varPlanTitulo.planSeccionList}">
                         <p:tabView value="#{varPlanTitulo.planSeccionList}" var="varPlanSeccion" style="font-size: x-small">
                             <p:tab title="#{varPlanSeccion.numeral}. #{varPlanSeccion.nombre}">
 
-                                <ui:repeat var="varPlanSeccionTituloTexto" value="#{varPlanSeccion.planSeccionTextoList}">
-                                    <p class="letraBackgroundWhite" align="justify" style="font-weight: normal">
-                                        <br/>
-                                        #{varPlanSeccionTituloTexto.texto}
-                                    </p>
-                                </ui:repeat>
+                                <!--seccion texto-->
+                                <div class="letraBackgroundWhite">
+                                    <ui:repeat var="varPlanSeccionTituloTexto" value="#{varPlanSeccion.planSeccionTextoList}"
+                                               >
+                                        <p align="justify" style="font-weight: normal">
+                                            #{varPlanSeccionTituloTexto.texto}
+                                        </p>
+                                    </ui:repeat>
+                                    <br/>
+                                </div>
 
-                                
+                                <!--seccion matriz-->
                                 <h:panelGroup rendered="#{not empty varPlanSeccion.planSeccionMatriz}">
                                     <div>
                                         <h3>#{varPlanSeccion.planSeccionMatriz.titulo}</h3>
-                                        <p align="left">
-
+                                        <div class="letraBackgroundWhite">
+                                            <p:spacer/>
                                             <p class="letraBackgroundWhite" style="font-weight: normal;">
-                                                <br/>
                                                 #{varPlanSeccion.planSeccionMatriz.descripcion}
                                             </p>
-                                        </p>
+                                            <p:separator/>
+                                        </div>
                                     </div>
                                 </h:panelGroup>
 
@@ -103,6 +114,93 @@
                                         </p>
                                     </p:column>
                                 </p:dataTable>
+
+                                <!--seccion adjuntos-->
+                                <h:panelGroup rendered="#{not empty varPlanSeccion.tituloAdjuntos}">
+                                    <div>
+                                        <h3>#{varPlanSeccion.tituloAdjuntos}</h3>
+                                        <div class="letraBackgroundWhite">
+                                            <p style="font-weight: normal;">
+                                                #{varPlanSeccion.descripcionAdjuntos}
+                                            </p>
+                                            <p:separator/>
+                                        </div>
+                                    </div>
+                                </h:panelGroup>
+                                <p:dataTable  value="#{varPlanSeccion.planSeccionAdjuntosList}" var="varPlanSeccionAdjuntos" 
+                                              rendered="#{not empty varPlanSeccion.planSeccionAdjuntosList}"
+                                              rowStyleClass="letra-xx-small-centro"
+                                              rowHover="true">
+
+                                    <p:column headerText="Documento">
+                                        <h:outputText value="#{varPlanSeccionAdjuntos.documento}"/>
+                                    </p:column>
+                                    <p:column headerText="Ver Documento" width="30%">
+                                        <div>
+                                            <p:commandButton icon="ui-icon-document" title="Ver Adjunto" ajax="false">    
+                                                <p:fileDownload value="#{uiPlanMaestro.fileDownloadSeccion}" />
+                                            </p:commandButton>
+                                            <h:outputText value="  "/>
+                                            <h:outputText value="#{varPlanSeccionAdjuntos.evaluacionAdjuntos.archivoSimple}"/>
+                                        </div>
+                                    </p:column>
+
+                                </p:dataTable>
+
+
+                                <!--seccion detalle-->
+                                <h:panelGroup rendered="#{not empty varPlanSeccion.planSeccionDetalleList}">
+                                    <p:tabView value="#{varPlanSeccion.planSeccionDetalleList}" var="varPlanSeccionDetalle" style="font-size: x-small">
+                                        <p:tab title="#{varPlanSeccionDetalle.numeral}. #{varPlanSeccionDetalle.nombre}">
+
+                                            <!--seccion detalle texto-->
+                                            <div class="letraBackgroundWhite">
+                                                <br/>
+                                                <ui:repeat var="varPlanSeccionDetalleTexto" value="#{varPlanSeccionDetalle.planSeccionDetalleTextoList}"
+                                                           >
+                                                    <p align="justify" style="font-weight: normal">
+                                                        #{varPlanSeccionDetalleTexto.texto}
+                                                    </p>
+                                                </ui:repeat>
+                                                <br/>
+                                            </div>
+
+                                            <!--seccion detalle adjuntos-->
+                                            <h:panelGroup rendered="#{not empty varPlanSeccionDetalle.tituloAdjuntos}">
+                                                <div>
+                                                    <h3>#{varPlanSeccionDetalle.tituloAdjuntos}</h3>
+                                                    <div class="letraBackgroundWhite">
+                                                        <p style="font-weight: normal;">
+                                                            <br/>
+                                                            #{varPlanSeccionDetalle.descripcionAdjuntos}
+                                                        </p>
+                                                        <p:separator/>
+                                                    </div>
+                                                </div>
+                                            </h:panelGroup>
+                                            <p:dataTable  value="#{varPlanSeccionDetalle.planSeccionDetalleAdjuntosList}" var="varPlanSeccionDetalleAdjuntos" 
+                                                          rendered="#{not empty varPlanSeccionDetalle.planSeccionDetalleAdjuntosList}"
+                                                          rowStyleClass="letra-xx-small-centro"
+                                                          rowHover="true">
+
+                                                <p:column headerText="Documento">
+                                                    <h:outputText value="#{varPlanSeccionDetalleAdjuntos.documento}"/>
+                                                </p:column>
+                                                <p:column headerText="Ver Documento" width="30%">
+                                                    <div>
+                                                        <p:commandButton icon="ui-icon-document" title="Ver Adjunto" ajax="false">    
+                                                            <p:fileDownload value="#{uiPlanMaestro.fileDownloadSeccionDetalle}" />
+                                                        </p:commandButton>
+                                                        <h:outputText value="  "/>
+                                                        <h:outputText value="#{varPlanSeccionDetalleAdjuntos.evaluacionAdjuntos.archivoSimple}"/>
+                                                    </div>
+                                                </p:column>
+
+                                            </p:dataTable>
+
+                                        </p:tab>
+                                    </p:tabView>
+                                </h:panelGroup>
 
                             </p:tab>
                         </p:tabView>

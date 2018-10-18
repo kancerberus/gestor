@@ -6,6 +6,9 @@
 package com.gestor.seguimiento.dao;
 
 import com.gestor.controller.Gestor;
+import com.gestor.seguimiento.PlanSeccionDetallePK;
+import com.gestor.seguimiento.PlanSeccionDetalleTexto;
+import com.gestor.seguimiento.PlanSeccionDetalleTextoPK;
 import com.gestor.seguimiento.PlanSeccionPK;
 import com.gestor.seguimiento.PlanSeccionTexto;
 import com.gestor.seguimiento.PlanSeccionTextoPK;
@@ -18,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -88,6 +92,38 @@ public class PlanTituloTextoDAO extends Gestor {
                 planSeccionTextoList.add(pst);
             }
             return planSeccionTextoList;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public Collection<PlanSeccionDetalleTexto> cargarPlanSeccionDetalleTexto(PlanSeccionDetallePK planSeccionDetallePK) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT codigo_establecimiento, cod_titulo, cod_seccion, cod_seccion_detalle,"
+                    + " cod_seccion_detalle_texto, texto"
+                    + " FROM seguimiento.plan_seccion_detalle_texto"
+                    + " WHERE codigo_establecimiento=" + planSeccionDetallePK.getCodigoEstablecimiento()
+                    + " AND cod_titulo=" + planSeccionDetallePK.getCodTitulo() + " AND cod_seccion=" + planSeccionDetallePK.getCodSeccion()
+                    + " AND cod_seccion_detalle=" + planSeccionDetallePK.getCodSeccionDetalle()
+            );
+
+            rs = consulta.ejecutar(sql);
+            Collection<PlanSeccionDetalleTexto> planSeccionDetalleTextoList = new ArrayList<>();
+            while (rs.next()) {
+                PlanSeccionDetalleTexto psdt = new PlanSeccionDetalleTexto(new PlanSeccionDetalleTextoPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo")
+                        , rs.getInt("cod_seccion"), rs.getInt("cod_seccion_detalle"), rs.getInt("cod_seccion_detalle_texto")), rs.getString("texto"));
+                planSeccionDetalleTextoList.add(psdt);
+            }
+            return planSeccionDetalleTextoList;
         } finally {
             if (rs != null) {
                 rs.close();

@@ -50,6 +50,10 @@ public class GestorPlanMaestro extends Gestor {
             //seccion
             planMaestroDAO.procesarPlanMaestroPlanSeccionAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
             planMaestroDAO.procesarPlanSeccionAdjuntosEvaluacionAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
+            
+            //seccion detalle
+            planMaestroDAO.procesarPlanMaestroPlanSeccionDetalleAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
+            planMaestroDAO.procesarPlanSeccionDetalleAdjuntosEvaluacionAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
 
             this.finTransaccion();
         } finally {

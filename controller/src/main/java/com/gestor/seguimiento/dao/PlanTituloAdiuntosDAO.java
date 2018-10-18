@@ -8,6 +8,9 @@ package com.gestor.seguimiento.dao;
 import com.gestor.publico.EvaluacionAdjuntos;
 import com.gestor.seguimiento.PlanSeccionAdjuntos;
 import com.gestor.seguimiento.PlanSeccionAdjuntosPK;
+import com.gestor.seguimiento.PlanSeccionDetalleAdjuntos;
+import com.gestor.seguimiento.PlanSeccionDetalleAdjuntosPK;
+import com.gestor.seguimiento.PlanSeccionDetallePK;
 import com.gestor.seguimiento.PlanSeccionPK;
 import com.gestor.seguimiento.PlanTituloAdiuntos;
 import com.gestor.seguimiento.PlanTituloAdiuntosPK;
@@ -18,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -114,7 +118,7 @@ public class PlanTituloAdiuntosDAO {
 
             Collection<PlanSeccionAdjuntos> planSeccionAdjuntosList = new ArrayList<>();
             while (rs.next()) {
-                
+
                 PlanSeccionAdjuntos psa = new PlanSeccionAdjuntos(
                         new PlanSeccionAdjuntosPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo"), rs.getInt("cod_seccion"), rs.getInt("cod_seccion_adjunto")),
                         rs.getInt("cod_categoria"), rs.getInt("cod_categoria_tipo"), rs.getString("titulo"),
@@ -139,6 +143,70 @@ public class PlanTituloAdiuntosDAO {
                 planSeccionAdjuntosList.add(psa);
             }
             return planSeccionAdjuntosList;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public Collection<PlanSeccionDetalleAdjuntos> cargarPlanSeccionDetalleAdjuntos(PlanSeccionDetallePK planSeccionDetallePK, Long codEvaluacion) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    " SELECT PSDA.codigo_establecimiento, PSDA.cod_titulo, PSDA.cod_seccion, PSDA.cod_seccion_detalle, "
+                    + " PSDA.cod_seccion_detalle_adjuntos, PSDA.cod_categoria, PSDA.cod_categoria_tipo, "
+                    + " PSDA.titulo, PSDA.descripcion, PSDA.documento,"
+                    + " EA.cod_evaluacion, EA.codigo_establecimiento, EA.cod_ciclo, EA.cod_seccion, "
+                    + " EA.cod_detalle, EA.cod_item, EA.cod_adjunto, EA.nombre nombre_ea, EA.descripcion descripcion_ea, EA.archivo, "
+                    + " EA.extension, EA.fecha fecha_ea, EA.documento_usuario, EA.estado estado_ea, EA.fecha_actualiza, "
+                    + " EA.fecha_inicio_vigencia, EA.fecha_fin_vigencia, EA.meses_vigencia, EA.cod_categoria, "
+                    + " EA.cod_categoria_tipo, EA.version"
+                    + " FROM seguimiento.plan_seccion_detalle_adjuntos PSDA"
+                    + " JOIN seguimiento.plan_seccion_detalle_adjuntos_evaluacion_adjuntos PSDAEA USING (cod_titulo, cod_seccion, cod_seccion_detalle, cod_seccion_detalle_adjuntos, codigo_establecimiento)"
+                    + " JOIN gestor.evaluacion_adjuntos EA ON (EA.cod_evaluacion=PSDAEA.cod_evaluacion AND EA.codigo_establecimiento=PSDAEA.codigo_establecimiento AND EA.cod_ciclo=PSDAEA.cod_ciclo "
+                    + " AND EA.cod_detalle=PSDAEA.cod_detalle AND EA.cod_item=PSDAEA.cod_detalle AND EA.cod_adjunto=PSDAEA.cod_adjunto AND EA.cod_seccion=PSDAEA.cod_seccion_ea)"
+                    + " WHERE PSDA.codigo_establecimiento=" + planSeccionDetallePK.getCodigoEstablecimiento() + " AND PSDA.cod_titulo=" + planSeccionDetallePK.getCodTitulo()
+                    + " AND PSDA.cod_seccion=" + planSeccionDetallePK.getCodSeccion() + " AND PSDA.cod_seccion_detalle=" + planSeccionDetallePK.getCodSeccionDetalle()
+                    + " AND EA.cod_evaluacion=" + codEvaluacion
+            );
+            rs = consulta.ejecutar(sql);
+
+            Collection<PlanSeccionDetalleAdjuntos> planSeccionDetalleAdjuntosList = new ArrayList<>();
+            while (rs.next()) {
+
+                //int codigoEstablecimiento, int codTitulo, int codSeccion, int codSeccionDetalle, int codSeccionDetalleAdjuntos
+                //PlanSeccionDetalleAdjuntosPK planSeccionDetalleAdjuntosPK, 
+                //Integer codCategoria, Integer codCategoriaTipo, String titulo, String descripcion, String documento
+                PlanSeccionDetalleAdjuntos psda = new PlanSeccionDetalleAdjuntos(
+                        new PlanSeccionDetalleAdjuntosPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo"), rs.getInt("cod_seccion"), rs.getInt("cod_seccion_detalle"), rs.getInt("cod_seccion_detalle_adjuntos")),
+                        rs.getInt("cod_categoria"), rs.getInt("cod_categoria_tipo"), rs.getString("titulo"), rs.getString("descripcion"), rs.getString("documento")
+                );
+
+                EvaluacionAdjuntos ea = new EvaluacionAdjuntos(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento"),
+                        rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getLong("cod_adjunto")
+                );
+                ea.setNombre(rs.getString("nombre_ea"));
+                ea.setDescripcion(rs.getString("descripcion_ea"));
+                ea.setArchivo(rs.getString("archivo"));
+                ea.setExtension(rs.getString("extension"));
+                ea.setFecha(rs.getDate("fecha_ea"));
+                ea.setDocumentoUsuario(rs.getString("documento_usuario"));
+                ea.setEstado(rs.getString("estado_ea"));
+                ea.setMesesVigencia(rs.getInt("meses_vigencia"));
+                ea.setVersion(rs.getInt("version"));
+                ea.setFechaInicioVigencia(rs.getDate("fecha_inicio_vigencia"));
+                ea.setFechaFinVigencia(rs.getDate("fecha_fin_vigencia"));
+                psda.setEvaluacionAdjuntos(ea);
+                
+                planSeccionDetalleAdjuntosList.add(psda);
+            }
+            return planSeccionDetalleAdjuntosList;
         } finally {
             if (rs != null) {
                 rs.close();

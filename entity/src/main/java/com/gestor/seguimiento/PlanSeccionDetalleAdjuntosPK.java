@@ -19,7 +19,7 @@ public class PlanSeccionDetalleAdjuntosPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "codigo_establecimiento")
-    private short codigoEstablecimiento;
+    private int codigoEstablecimiento;
     @Basic(optional = false)
     @Column(name = "cod_titulo")
     private int codTitulo;
@@ -36,7 +36,7 @@ public class PlanSeccionDetalleAdjuntosPK implements Serializable {
     public PlanSeccionDetalleAdjuntosPK() {
     }
 
-    public PlanSeccionDetalleAdjuntosPK(short codigoEstablecimiento, int codTitulo, int codSeccion, int codSeccionDetalle, int codSeccionDetalleAdjuntos) {
+    public PlanSeccionDetalleAdjuntosPK(int codigoEstablecimiento, int codTitulo, int codSeccion, int codSeccionDetalle, int codSeccionDetalleAdjuntos) {
         this.codigoEstablecimiento = codigoEstablecimiento;
         this.codTitulo = codTitulo;
         this.codSeccion = codSeccion;
@@ -44,11 +44,11 @@ public class PlanSeccionDetalleAdjuntosPK implements Serializable {
         this.codSeccionDetalleAdjuntos = codSeccionDetalleAdjuntos;
     }
 
-    public short getCodigoEstablecimiento() {
+    public int getCodigoEstablecimiento() {
         return codigoEstablecimiento;
     }
 
-    public void setCodigoEstablecimiento(short codigoEstablecimiento) {
+    public void setCodigoEstablecimiento(int codigoEstablecimiento) {
         this.codigoEstablecimiento = codigoEstablecimiento;
     }
 

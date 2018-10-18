@@ -259,4 +259,74 @@ public class PlanMaestroDAO {
             }
         }
     }
+
+    public void procesarPlanMaestroPlanSeccionDetalleAdjuntos(Long codEvaluacion, int codigoEstablecimiento, Long codMaestro) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    " INSERT INTO seguimiento.plan_maestro_plan_seccion_detalle_adjuntos("
+                    + "     cod_evaluacion, codigo_establecimiento, cod_maestro, cod_titulo, "
+                    + "     cod_seccion, cod_seccion_detalle, cod_seccion_detalle_adjuntos)"
+                    + " WITH tmp_ea AS ("
+                    + " 	SELECT cod_evaluacion, codigo_establecimiento, cod_ciclo, cod_seccion, cod_detalle, cod_item, cod_categoria, cod_categoria_tipo, MAX(version) AS version"
+                    + " 	FROM gestor.evaluacion_adjuntos"
+                    + " 	WHERE cod_evaluacion=" + codEvaluacion + " AND codigo_establecimiento=" + codigoEstablecimiento
+                    + " 	GROUP BY 1,2,3,4,5,6,7,8"
+                    + " )"
+                    + " SELECT EA.cod_evaluacion, EA.codigo_establecimiento, cod_maestro, cod_titulo, "
+                    + " PSDA.cod_seccion, PSDA.cod_seccion_detalle, cod_seccion_detalle_adjuntos"
+                    + " FROM gestor.evaluacion_adjuntos EA"
+                    + " JOIN tmp_ea TEA ON (EA.cod_evaluacion=TEA.cod_evaluacion AND EA.codigo_establecimiento=TEA.codigo_establecimiento"
+                    + " AND TEA.cod_ciclo=EA.cod_ciclo AND TEA.cod_seccion=EA.cod_seccion AND TEA.cod_detalle=EA.cod_detalle"
+                    + " AND TEA.cod_item=EA.cod_item AND TEA.cod_categoria=EA.cod_categoria AND TEA.cod_categoria_tipo=EA.cod_categoria_tipo AND TEA.version=EA.version)"
+                    + " JOIN seguimiento.plan_maestro PM ON (PM.cod_evaluacion=EA.cod_evaluacion AND PM.codigo_establecimiento=EA.codigo_establecimiento)"
+                    + " JOIN seguimiento.plan_seccion_detalle_adjuntos PSDA ON (PSDA.codigo_establecimiento=EA.codigo_establecimiento AND PSDA.cod_categoria=EA.cod_categoria "
+                    + " AND PSDA.cod_categoria_tipo=EA.cod_categoria_tipo)"
+                    + " WHERE PM.cod_maestro=" + codMaestro
+                    + " ON CONFLICT DO NOTHING"
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public void procesarPlanSeccionDetalleAdjuntosEvaluacionAdjuntos(Long codEvaluacion, int codigoEstablecimiento, Long codMaestro) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    " INSERT INTO seguimiento.plan_seccion_detalle_adjuntos_evaluacion_adjuntos("
+                    + "             cod_titulo, cod_seccion, cod_seccion_detalle, cod_seccion_detalle_adjuntos, "
+                    + "             cod_evaluacion, codigo_establecimiento, cod_ciclo, cod_seccion_ea, "
+                    + "             cod_detalle, cod_item, cod_adjunto)"
+                    + " WITH tmp_ea AS ("
+                    + " 	SELECT cod_evaluacion, codigo_establecimiento, cod_ciclo, cod_seccion, cod_detalle, cod_item, cod_categoria, cod_categoria_tipo, MAX(version) AS version"
+                    + " 	FROM gestor.evaluacion_adjuntos"
+                    + " 	WHERE cod_evaluacion=" + codEvaluacion + " AND codigo_establecimiento=" + codigoEstablecimiento
+                    + " 	GROUP BY 1,2,3,4,5,6,7,8"
+                    + " )"
+                    + " SELECT PSDA.cod_titulo, PSDA.cod_seccion, PSDA.cod_seccion_detalle, PSDA.cod_seccion_detalle_adjuntos, "
+                    + " EA.cod_evaluacion, EA.codigo_establecimiento, EA.cod_ciclo, EA.cod_seccion, "
+                    + " EA.cod_detalle, EA.cod_item, EA.cod_adjunto"
+                    + " FROM gestor.evaluacion_adjuntos EA"
+                    + " JOIN tmp_ea TEA ON (EA.cod_evaluacion=TEA.cod_evaluacion AND EA.codigo_establecimiento=TEA.codigo_establecimiento"
+                    + " AND TEA.cod_ciclo=EA.cod_ciclo AND TEA.cod_seccion=EA.cod_seccion AND TEA.cod_detalle=EA.cod_detalle"
+                    + " AND TEA.cod_item=EA.cod_item AND TEA.cod_categoria=EA.cod_categoria AND TEA.cod_categoria_tipo=EA.cod_categoria_tipo AND TEA.version=EA.version)"
+                    + " JOIN seguimiento.plan_maestro PM ON (PM.cod_evaluacion=EA.cod_evaluacion AND PM.codigo_establecimiento=EA.codigo_establecimiento)"
+                    + " JOIN seguimiento.plan_seccion_detalle_adjuntos PSDA ON (PSDA.codigo_establecimiento=EA.codigo_establecimiento AND PSDA.cod_categoria=EA.cod_categoria "
+                    + " AND PSDA.cod_categoria_tipo=EA.cod_categoria_tipo)"
+                    + " WHERE PM.cod_maestro=" + codMaestro
+                    + " ON CONFLICT DO NOTHING"
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 }

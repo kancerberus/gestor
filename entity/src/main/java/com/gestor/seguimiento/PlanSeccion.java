@@ -37,6 +37,8 @@ public class PlanSeccion implements Serializable {
     private List<PlanSeccionAdjuntos> planSeccionAdjuntosList;
     private List<PlanSeccionTexto> planSeccionTextoList;
     private PlanSeccionMatriz planSeccionMatriz;
+    
+    private List<PlanSeccionDetalle> planSeccionDetalleList;
 
     public PlanSeccion() {
     }
@@ -155,6 +157,46 @@ public class PlanSeccion implements Serializable {
      */
     public void setPlanSeccionMatriz(PlanSeccionMatriz planSeccionMatriz) {
         this.planSeccionMatriz = planSeccionMatriz;
+    }
+    
+    public String getTituloAdjuntos() {
+        String titulo = null;
+        if (planSeccionAdjuntosList != null) {
+            for (PlanSeccionAdjuntos psa : planSeccionAdjuntosList) {
+                titulo = psa.getTitulo();
+                if (titulo != null && !titulo.equalsIgnoreCase("")) {
+                    break;
+                }
+            }
+        }
+        return titulo;
+    }
+    
+    public String getDescripcionAdjuntos() {
+        String descripcion = null;
+        if (planSeccionAdjuntosList != null) {
+            for (PlanSeccionAdjuntos pa : planSeccionAdjuntosList) {
+                descripcion = pa.getDescripcion();
+                if (descripcion != null && !descripcion.equalsIgnoreCase("")) {
+                    break;
+                }
+            }
+        }
+        return descripcion;
+    }
+
+    /**
+     * @return the planSeccionDetalleList
+     */
+    public List<PlanSeccionDetalle> getPlanSeccionDetalleList() {
+        return planSeccionDetalleList;
+    }
+
+    /**
+     * @param planSeccionDetalleList the planSeccionDetalleList to set
+     */
+    public void setPlanSeccionDetalleList(List<PlanSeccionDetalle> planSeccionDetalleList) {
+        this.planSeccionDetalleList = planSeccionDetalleList;
     }
     
 }
