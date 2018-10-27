@@ -12,6 +12,7 @@ import com.gestor.seguimiento.PlanSeccionDetalleTextoPK;
 import com.gestor.seguimiento.PlanSeccionPK;
 import com.gestor.seguimiento.PlanSeccionTexto;
 import com.gestor.seguimiento.PlanSeccionTextoPK;
+import com.gestor.seguimiento.PlanTitulo;
 import com.gestor.seguimiento.PlanTituloPK;
 import com.gestor.seguimiento.PlanTituloTexto;
 import com.gestor.seguimiento.PlanTituloTextoPK;
@@ -65,6 +66,42 @@ public class PlanTituloTextoDAO extends Gestor {
             }
         }
     }
+    
+    public void insertarPlantituloTexto(PlanTituloTexto plantitulotexto) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO seguimiento.plan_titulo_texto "
+                    + " ( codigo_establecimiento, cod_titulo, cod_titulo_texto, texto )"
+                    + " VALUES ('"+plantitulotexto.getPlanTituloTextoPK().getCodigoEstablecimiento()+"', '"+plantitulotexto.getPlanTituloTextoPK().getCodTitulo()+"', '"+plantitulotexto.getPlanTituloTextoPK().getCodTituloTexto()+"','"+plantitulotexto.getTexto()+"') "                                                            
+                    + " ON CONFLICT (cod_titulo, codigo_establecimiento, cod_titulo_texto) DO UPDATE"
+                    + " SET texto=EXCLUDED.texto "
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    public void modificarplantitulotexto(PlanTituloTexto plantitulotexto) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "UPDATE seguimiento.plan_titulo_texto "
+                    + " SET texto='"+plantitulotexto.getTexto()+"' "
+                    + " WHERE codigo_establecimiento='"+plantitulotexto.getPlanTituloTextoPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+plantitulotexto.getPlanTituloTextoPK().getCodTitulo()+"' AND cod_titulo_texto= '"+plantitulotexto.getPlanTituloTextoPK().getCodTituloTexto()+"' "
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 
     public Collection<? extends PlanSeccionTexto> cargarPlanSeccionTexto(PlanSeccionPK planSeccionPK) throws SQLException {
         ResultSet rs = null;
@@ -92,6 +129,34 @@ public class PlanTituloTextoDAO extends Gestor {
                 planSeccionTextoList.add(pst);
             }
             return planSeccionTextoList;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    public Collection<? extends PlanTituloTexto> cargarPlanTitulotextoList(PlanTitulo plantitulo) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            Collection<PlanTituloTexto> planTitulotextoList = new ArrayList<>();
+            StringBuilder sql = new StringBuilder(
+                    "SELECT codigo_establecimiento, cod_titulo, cod_titulo_texto, texto"
+                    + " FROM seguimiento.plan_titulo_texto"
+                    + " WHERE codigo_establecimiento='"+plantitulo.getPlanTituloPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+plantitulo.getPlanTituloPK().getCodTitulo()+"' "
+                    + " ORDER BY cod_titulo_texto"  
+            );
+            rs = consulta.ejecutar(sql);
+            while (rs.next()) {
+                PlanTituloTexto ptt = new PlanTituloTexto(new PlanTituloTextoPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo"), rs.getInt("cod_titulo_texto")), rs.getString("texto") );
+                planTitulotextoList.add(ptt);
+            }
+            return planTitulotextoList;
         } finally {
             if (rs != null) {
                 rs.close();

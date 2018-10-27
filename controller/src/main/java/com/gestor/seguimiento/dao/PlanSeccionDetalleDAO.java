@@ -57,5 +57,26 @@ public class PlanSeccionDetalleDAO {
             }
         }
     }
+    
+    public void insertarPlansecciondetalle(PlanSeccionDetalle plansecciondetalle) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO seguimiento.plan_seccion "
+                    + " ( codigo_establecimiento, cod_titulo, cod_seccion, nombre, numeral)"
+                    +" VALUES ('"+plansecciondetalle.getPlanSeccionDetallePK().getCodigoEstablecimiento()+"', "
+                            + " '"+plansecciondetalle.getPlanSeccionDetallePK().getCodTitulo()+"', "
+                            + " '"+plansecciondetalle.getPlanSeccionDetallePK().getCodSeccionDetalle()+"',  "
+                            + " '"+plansecciondetalle.getNombre()+"','"+plansecciondetalle.getNumeral()+"') "                                        
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
 
 }

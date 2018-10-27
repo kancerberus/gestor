@@ -7,6 +7,7 @@ package com.gestor.seguimiento.dao;
 
 import com.gestor.publico.Establecimiento;
 import com.gestor.seguimiento.PlanTitulo;
+import com.gestor.seguimiento.PlanTituloTexto;
 import com.gestor.seguimiento.PlanTituloPK;
 import conexion.Consulta;
 import java.sql.Connection;
@@ -45,6 +46,39 @@ public class PlanTituloDAO {
             }
         }
     }
+    
+    public Collection<? extends PlanTitulo> cargarPlanTituloList(Integer codEstablecimiento) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            Collection<PlanTitulo> planTituloList = new ArrayList<>();
+            StringBuilder sql = new StringBuilder(
+                    "SELECT codigo_establecimiento, cod_titulo, nombre, numeral"
+                    + " FROM seguimiento.plan_titulo"
+                    + " WHERE codigo_establecimiento='"+codEstablecimiento+"'"
+                    + " ORDER BY numeral"  
+            );
+            rs = consulta.ejecutar(sql);
+            while (rs.next()) {
+                PlanTitulo pt = new PlanTitulo(new PlanTituloPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo")), rs.getString("nombre"), rs.getString("numeral"));
+                planTituloList.add(pt);
+            }
+            return planTituloList;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    
+    
+    
+    
 
     public Collection<? extends PlanTitulo> cargarPlanTituloList(int codigoEstablecimiento, Long codEvaluacion) throws SQLException {
         ResultSet rs = null;
@@ -72,5 +106,56 @@ public class PlanTituloDAO {
             }
         }
     }
+    
+    public void insertarPlantitulo(PlanTitulo plantitulo) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO seguimiento.plan_titulo "
+                    + " ( codigo_establecimiento, cod_titulo, nombre, numeral )"
+                    + " VALUES ('"+plantitulo.getPlanTituloPK().getCodigoEstablecimiento()+"', '"+plantitulo.getPlanTituloPK().getCodTitulo()+"', '"+plantitulo.getNombre()+"','"+plantitulo.getNumeral()+"') "                                        
+                    + " ON CONFLICT codigo_establecimiento, cod_titulo, cod_titulo_texto DO UPDATE"
+                    + " SET cod_titulo=EXCLUDED.cod_titulo, codigo_establecimiento=EXCLUDED.codigo_establecimiento,  nombre=EXCLUDED.nombre, numeral=EXCLUDED.numeral "
+                    
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    
+    
+    
+    public Collection<? extends PlanTitulo> cargarPlanTituloList() throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            Collection<PlanTitulo> planTituloList = new ArrayList<>();
+            StringBuilder sql = new StringBuilder(
+                    "SELECT codigo_establecimiento, cod_titulo, nombre, numeral"
+                    + " FROM seguimiento.plan_titulo"
+                    + " ORDER BY numeral"  
+            );
+            rs = consulta.ejecutar(sql);
+            while (rs.next()) {
+                PlanTitulo pt = new PlanTitulo(new PlanTituloPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo")), rs.getString("nombre"), rs.getString("numeral"));
+                planTituloList.add(pt);
+            }
+            return planTituloList;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 
 }
+
