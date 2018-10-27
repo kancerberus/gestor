@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml"
+                >
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formPlanmaestro" style="font-size: small;">
+            
+            <p:remoteCommand autoRun="true" action="#{uiEvaluacion.evaluacionActiva()}"/>
+            
+            <p:panel id="panelPlanmaestro"  header="Planes Maestro" >
+
+                <p:dataTable  value="#{uiEvaluacion.evaluacionList}" var="varEvaluacion" emptyMessage="No hay evaluaciones generadas."
+                              widgetVar="varEvaluacionesTable" 
+                              rowStyleClass="letra-xx-small-centro" styleClass="letra-xx-small-centro"
+                              rowHover="true">
+
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column  headerText="Opciones" />
+                            <p:column headerText="Código" filterBy="#{varEvaluacion.evaluacionPK.codEvaluacion}"/>
+                            <p:column  headerText="Empresa" filterBy="#{varEvaluacion.establecimiento.nombre}"/>
+                            <p:column  headerText="Evaluador"/>
+                            <p:column  headerText="Fecha Evaluación" filterBy="#{varEvaluacion.fecha}"/>
+                            <p:column  headerText="Fecha Creación" filterBy="#{varEvaluacion.fechaRegistro}"/>
+                            <p:column  headerText="Estado" filterBy="#{varEvaluacion.estado}"
+                                       filterMatchMode="equals">
+                                <f:facet name="filter">
+                                    <p:selectOneButton onchange="PF('varEvaluacionesTable').filter()"
+                                                       style="font-size: 8px;">
+                                        <f:selectItem itemLabel="CRITICA" itemValue="C" />
+                                        <f:selectItem itemLabel="MODERADA" itemValue="M" />
+                                        <f:selectItem itemLabel="ACEPTABLE" itemValue="A" />
+                                    </p:selectOneButton>
+                                </f:facet>
+
+                            </p:column>
+
+                        </p:row> 
+                    </p:columnGroup>
+
+                    <p:column>
+                        <p:commandButton icon="ui-icon-pencil" title="Crear Plan Maestro" 
+                                         update="formPlanmaestro"
+                                         action="#{uiPlanMaestro.administrar()}"/>
+                    </p:column>
+
+                    <p:column>
+                        <h:outputText value="#{varEvaluacion.evaluacionPK.codEvaluacion}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacion.establecimiento.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacion.usuarios.nombre} #{varEvaluacion.usuarios.apellido}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacion.fecha}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varEvaluacion.fechaRegistro}"/>
+                    </p:column>
+                    <p:column>
+                        <div style="#{varEvaluacion.styleEstado}" >
+                            <strong>#{varEvaluacion.estado eq 'C'?'CRITICA':varEvaluacion.estado eq 'M'?'MODERADA':varEvaluacion.estado eq 'A'?'ACEPTABLE':''}</strong>
+                        </div>
+                    </p:column>
+
+                </p:dataTable>
+
+            </p:panel>
+
+            
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
