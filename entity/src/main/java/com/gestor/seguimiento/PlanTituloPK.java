@@ -40,7 +40,7 @@ public class PlanTituloPK implements Serializable {
         this.codigoEstablecimiento = codigoEstablecimiento;
     }
 
-    public int getCodTitulo() {
+    public int getCodTitulo() {             
         return codTitulo;
     }
 
