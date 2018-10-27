@@ -7,7 +7,10 @@ package com.gestor.seguimiento.controlador;
 
 import com.gestor.controller.Gestor;
 import com.gestor.seguimiento.PlanMaestro;
+import com.gestor.seguimiento.PlanTitulo;
 import com.gestor.seguimiento.dao.PlanMaestroDAO;
+import com.gestor.seguimiento.dao.PlanTituloDAO;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -19,6 +22,8 @@ public class GestorPlanMaestro extends Gestor {
     public GestorPlanMaestro() throws Exception {
         super();
     }
+    
+    
 
     public Collection<? extends PlanMaestro> cargarListaPlanMaestro(String condicion) throws Exception {
         try {

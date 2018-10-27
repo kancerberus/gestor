@@ -12,7 +12,6 @@ import com.gestor.seguimiento.PlanSeccion;
 import com.gestor.seguimiento.PlanSeccionAdjuntos;
 import com.gestor.seguimiento.PlanSeccionDetalleAdjuntos;
 import com.gestor.seguimiento.PlanSeccionDetalleTexto;
-import com.gestor.seguimiento.PlanSeccionMatriz;
 import com.gestor.seguimiento.PlanSeccionMatrizDetalle;
 import com.gestor.seguimiento.PlanSeccionTexto;
 import com.gestor.seguimiento.PlanTitulo;
@@ -24,18 +23,17 @@ import com.gestor.seguimiento.dao.PlanTituloAdiuntosDAO;
 import com.gestor.seguimiento.dao.PlanTituloDAO;
 import com.gestor.seguimiento.dao.PlanTituloMatrizDAO;
 import com.gestor.seguimiento.dao.PlanTituloTextoDAO;
+import com.sun.org.apache.xml.internal.security.encryption.Serializer;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author Julian D Osorio G
  */
-public class GestorPlanTitulo extends Gestor {
+public class GestorPlanTitulo extends Gestor implements Serializable{
 
     public GestorPlanTitulo() throws Exception {
         super();
@@ -49,6 +47,85 @@ public class GestorPlanTitulo extends Gestor {
             Collection<PlanTitulo> planTituloList = new ArrayList<>();
             planTituloList.addAll(planTituloDAO.cargarPlanTituloList(establecimiento));
             return planTituloList;
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends PlanTitulo> cargarPlanTituloList(Integer codEstablecimiento) throws Exception {
+        try {
+            this.abrirConexion();
+
+            PlanTituloDAO planTituloDAO = new PlanTituloDAO(conexion);
+            Collection<PlanTitulo> planTituloList = new ArrayList<>();
+            planTituloList.addAll(planTituloDAO.cargarPlanTituloList(codEstablecimiento));
+            return planTituloList;
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends PlanTituloTexto> cargarPlanTitulotextoList(PlanTitulo plantitulo) throws Exception {
+        try {
+            this.abrirConexion();
+
+            PlanTituloTextoDAO planTitulotextoDAO = new PlanTituloTextoDAO(conexion);
+            Collection<PlanTituloTexto> planTitulotextoList = new ArrayList<>();
+            planTitulotextoList.addAll(planTitulotextoDAO.cargarPlanTitulotextoList(plantitulo));
+            return planTitulotextoList;
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    
+    
+    public void validarPlantitulo(PlanTitulo plantitulo) throws Exception {
+        if(plantitulo.getNombre()==null){
+            throw new Exception("Ingresa el titulo.", UtilLog.TW_VALIDACION);
+        }
+        if (plantitulo.getPlanTituloPK().getCodTitulo()==0 || plantitulo.getNombre().equalsIgnoreCase("")) {
+            throw new Exception("Ingresa el numeral", UtilLog.TW_VALIDACION);
+        }  
+        plantitulo.setNombre(plantitulo.getNombre().trim().toUpperCase());        
+
+    }
+    
+    public void almacenarTitulotexto(PlanTituloTexto plantitulotexto) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            PlanTituloTextoDAO plantitulotextoDAO = new PlanTituloTextoDAO(conexion);
+            plantitulotextoDAO.insertarPlantituloTexto(plantitulotexto);
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }   
+    
+    public void modificarTitulotexto(PlanTituloTexto plantitulotexto) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            PlanTituloTextoDAO plantitulotextoDAO = new PlanTituloTextoDAO(conexion);
+            plantitulotextoDAO.modificarplantitulotexto(plantitulotexto);
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    
+    
+    
+    
+    public void almacenarTitulo(PlanTitulo plantitulo) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            PlanTituloDAO plantituloDAO = new PlanTituloDAO(conexion);
+            plantituloDAO.insertarPlantitulo(plantitulo);
+            this.finTransaccion();
         } finally {
             this.cerrarConexion();
         }
