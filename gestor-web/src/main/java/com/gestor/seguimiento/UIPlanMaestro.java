@@ -494,6 +494,54 @@ public class UIPlanMaestro {
         }
         return fileDownload;
     }
+    
+    /**
+     * @return the fileDownload
+     */
+    public StreamedContent getFileDownloadSeccion() {
+        String nombreAdjunto = "";
+        try {
+            PlanSeccionAdjuntos psa =  (PlanSeccionAdjuntos) UtilJSF.getBean("varPlanSeccionAdjuntos");
+            EvaluacionAdjuntos ea = psa.getEvaluacionAdjuntos();
+            if (ea == null) {
+                UtilMSG.addWarningMsg("Adjunto No Encontrado", "No se encontro el adjunto, intente nuevamente o contáctenos para asistirle.");
+                return null;
+            }
+            Properties p = Propiedades.getInstancia().getPropiedades();
+            String rutaAdjunto = p.getProperty("rutaAdjunto") + File.separator + App.ADJUNTO_PREFIJO + ea.getEvaluacionAdjuntosPK().getCodEvaluacion();
+            nombreAdjunto = ea.getArchivo();
+            InputStream stream = new FileInputStream(rutaAdjunto + File.separator + ea.getArchivo());
+            fileDownload = new DefaultStreamedContent(stream, null, ea.getArchivoSimple());
+        } catch (FileNotFoundException ex) {
+            UtilMSG.addErrorMsg("Archivo No Existe", "El adjunto " + nombreAdjunto + ", no fue encontrado. Si el problema persiste contactenos para asistirle.");
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+        return fileDownload;
+    }
+    
+    /**
+     * @return the fileDownload
+     */
+    public StreamedContent getFileDownloadSeccionDetalle() {
+        String nombreAdjunto = "";
+        try {
+            PlanSeccionDetalleAdjuntos psda =  (PlanSeccionDetalleAdjuntos) UtilJSF.getBean("varPlanSeccionDetalleAdjuntos");
+            EvaluacionAdjuntos ea = psda.getEvaluacionAdjuntos();
+            if (ea == null) {
+                UtilMSG.addWarningMsg("Adjunto No Encontrado", "No se encontro el adjunto, intente nuevamente o contáctenos para asistirle.");
+                return null;
+            }
+            Properties p = Propiedades.getInstancia().getPropiedades();
+            String rutaAdjunto = p.getProperty("rutaAdjunto") + File.separator + App.ADJUNTO_PREFIJO + ea.getEvaluacionAdjuntosPK().getCodEvaluacion();
+            nombreAdjunto = ea.getArchivo();
+            InputStream stream = new FileInputStream(rutaAdjunto + File.separator + ea.getArchivo());
+            fileDownload = new DefaultStreamedContent(stream, null, ea.getArchivoSimple());
+        } catch (FileNotFoundException ex) {
+            UtilMSG.addErrorMsg("Archivo No Existe", "El adjunto " + nombreAdjunto + ", no fue encontrado. Si el problema persiste contactenos para asistirle.");
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+        return fileDownload;
+    }
 
     /**
      * @param fileDownload the fileDownload to set
