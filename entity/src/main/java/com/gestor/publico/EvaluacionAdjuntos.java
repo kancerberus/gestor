@@ -55,12 +55,14 @@ public class EvaluacionAdjuntos implements Serializable {
     private String estado;
     
     private AdjuntosCategoria adjuntosCategoria = new AdjuntosCategoria();
+    private Responsable responsable = new Responsable();
 
     private Date fechaActualiza;
     private Date fechaInicioVigencia;
     private Date fechaFinVigencia;
     private Integer mesesVigencia;
     private Integer version;
+    private String cedula;
 
     public EvaluacionAdjuntos() {
         adjuntosCategoria = new AdjuntosCategoria();
@@ -262,6 +264,34 @@ public class EvaluacionAdjuntos implements Serializable {
      */
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    /**
+     * @return the responsable
+     */
+    public Responsable getResponsable() {
+        return responsable;
+    }
+
+    /**
+     * @param responsable the responsable to set
+     */
+    public void setResponsable(Responsable responsable) {
+        this.responsable = responsable;
+    }
+
+    /**
+     * @return the cedula
+     */
+    public String getCedula() {
+        return cedula;
+    }
+
+    /**
+     * @param cedula the cedula to set
+     */
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
     }
 
 }

@@ -44,6 +44,18 @@ public class GestorResponsable extends Gestor implements Serializable{
             this.cerrarConexion();
         }
     }
+    
+     
+    public List<Responsable> cargarListaResponsable(String condicion) throws Exception {
+        try {
+            this.abrirConexion();
+            ResponsableDAO responsableDAO = new ResponsableDAO(conexion);
+            return responsableDAO.cargarListaResponsable(condicion);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
     public void validarResponsable(Responsable responsable) throws Exception {
         if(responsable.getCedula()==null || responsable.getCedula()== ""){
             throw new Exception("Ingresa la cedula.", UtilLog.TW_VALIDACION);

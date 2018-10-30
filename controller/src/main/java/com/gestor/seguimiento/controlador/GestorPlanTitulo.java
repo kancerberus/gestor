@@ -23,7 +23,6 @@ import com.gestor.seguimiento.dao.PlanTituloAdiuntosDAO;
 import com.gestor.seguimiento.dao.PlanTituloDAO;
 import com.gestor.seguimiento.dao.PlanTituloMatrizDAO;
 import com.gestor.seguimiento.dao.PlanTituloTextoDAO;
-import com.sun.org.apache.xml.internal.security.encryption.Serializer;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;

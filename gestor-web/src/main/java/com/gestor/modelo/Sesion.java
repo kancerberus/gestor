@@ -9,7 +9,9 @@ import com.gestor.gestor.Ciclo;
 import com.gestor.gestor.Puntajes;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Lista;
+import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
@@ -32,6 +34,7 @@ public class Sesion {
     private List<Puntajes> puntajesList;
     private List<Establecimiento> establecimientoList;
     private Lista listaVigenciaArchivos;
+    private List<Responsable> responsables = new ArrayList<>();
     
   
     /**
@@ -158,5 +161,19 @@ public class Sesion {
      */
     public void setListaVigenciaArchivos(Lista listaVigenciaArchivos) {
         this.listaVigenciaArchivos = listaVigenciaArchivos;
+    }
+
+    /**
+     * @return the responsables
+     */
+    public List<Responsable> getResponsables() {
+        return responsables;
+    }
+
+    /**
+     * @param responsables the responsables to set
+     */
+    public void setResponsables(List<Responsable> responsables) {
+        this.responsables = responsables;
     }
 }

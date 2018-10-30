@@ -8,12 +8,16 @@ package com.gestor.gestor.controlador;
 import com.gestor.controller.Gestor;
 import com.gestor.entity.App;
 import com.gestor.entity.UtilLog;
+import com.gestor.entity.UtilTexto;
 import com.gestor.gestor.AdjuntosCategoria;
 import com.gestor.gestor.AdjuntosCategoriaTipo;
 import com.gestor.gestor.dao.AdjuntosCategoriaDAO;
 import com.gestor.gestor.dao.EvaluacionAdjuntosDAO;
 import com.gestor.publico.EvaluacionAdjuntos;
 import com.gestor.publico.EvaluacionAdjuntosPK;
+import com.gestor.publico.Responsable;
+import com.gestor.publico.dao.ResponsableDAO;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -37,6 +41,12 @@ public class GestorEvaluacionAdjuntos extends Gestor {
                 || evaluacionAdjuntos.getAdjuntosCategoria().getCodCategoria() == 0) {
             throw new Exception("Selecciona la categoria del adjunto.", UtilLog.TW_VALIDACION);
         }
+        
+        if (evaluacionAdjuntos.getResponsable() == null || evaluacionAdjuntos.getResponsable().getCedula() == null
+                || evaluacionAdjuntos.getResponsable().getCedula().equalsIgnoreCase("")) {
+            throw new Exception("Selecciona el responsable del adjunto.", UtilLog.TW_VALIDACION);
+        }
+        
         if (evaluacionAdjuntos.getAdjuntosCategoria().getAdjuntosCategoriaTipo() == null
                 || evaluacionAdjuntos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK() == null
                 || evaluacionAdjuntos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo() == null
