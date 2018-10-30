@@ -21,10 +21,19 @@ public class UtilArchivo {
     public static void guardarStream(String destino, InputStream input) throws IOException {
         File f = new File(destino);
         OutputStream out = new FileOutputStream(f);
-        byte[] bytes = new byte[1024];
-        while (input.read(bytes) > -1) {
-            out.write(bytes);
+//        byte[] bytes = new byte[1024];
+//        while (input.read(bytes) > -1) {
+//            out.write(bytes);
+//        }
+
+        byte[] buffer = new byte[1024];
+        int len = input.read(buffer);
+
+        while (len != -1) {
+            out.write(buffer, 0, len);
+            len = input.read(buffer);
         }
+
         input.close();
         out.flush();
         out.close();

@@ -22,8 +22,6 @@ public class GestorPlanMaestro extends Gestor {
     public GestorPlanMaestro() throws Exception {
         super();
     }
-    
-    
 
     public Collection<? extends PlanMaestro> cargarListaPlanMaestro(String condicion) throws Exception {
         try {
@@ -47,16 +45,22 @@ public class GestorPlanMaestro extends Gestor {
             Long codEvaluacion = pm.getPlanMaestroPK().getCodEvaluacion();
             int codigoEstablecimiento = pm.getPlanMaestroPK().getCodigoEstablecimiento();
             Long codMaestro = pm.getPlanMaestroPK().getCodMaestro();
-            
+
             //titulo
+            planMaestroDAO.eliminarPlanMaestroPlanTituloAdiuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
+            planMaestroDAO.eliminarPlanTituloAdiuntosEvaluacionAdjuntos(codEvaluacion, codigoEstablecimiento);
             planMaestroDAO.procesarPlanMaestroPlanTituloAdiuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
             planMaestroDAO.procesarPlanTituloAdiuntosEvaluacionAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
-            
+
             //seccion
+            planMaestroDAO.eliminarPlanMaestroPlanSeccionAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
+            planMaestroDAO.eliminarPlanSeccionAdjuntosEvaluacionAdjuntos(codEvaluacion, codigoEstablecimiento);
             planMaestroDAO.procesarPlanMaestroPlanSeccionAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
             planMaestroDAO.procesarPlanSeccionAdjuntosEvaluacionAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
-            
+
             //seccion detalle
+            planMaestroDAO.eliminarPlanMaestroPlanSeccionDetalleAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
+            planMaestroDAO.eliminarPlanSeccionDetalleAdjuntosEvaluacionAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
             planMaestroDAO.procesarPlanMaestroPlanSeccionDetalleAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
             planMaestroDAO.procesarPlanSeccionDetalleAdjuntosEvaluacionAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
 

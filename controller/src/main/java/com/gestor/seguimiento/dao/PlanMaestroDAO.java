@@ -329,4 +329,100 @@ public class PlanMaestroDAO {
             }
         }
     }
+
+    public void eliminarPlanMaestroPlanTituloAdiuntos(Long codEvaluacion, int codigoEstablecimiento, Long codMaestro) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE FROM seguimiento.plan_maestro_plan_titulo_adiuntos"
+                    + " WHERE cod_evaluacion=" + codEvaluacion + " AND codigo_establecimiento=" + codigoEstablecimiento + " AND cod_maestro=" + codMaestro
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public void eliminarPlanTituloAdiuntosEvaluacionAdjuntos(Long codEvaluacion, int codigoEstablecimiento) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE FROM seguimiento.plan_titulo_adiuntos_evaluacion_adjuntos"
+                    + " WHERE cod_evaluacion=" + codEvaluacion + " AND codigo_establecimiento=" + codigoEstablecimiento
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public void eliminarPlanMaestroPlanSeccionAdjuntos(Long codEvaluacion, int codigoEstablecimiento, Long codMaestro) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE FROM seguimiento.plan_maestro_plan_seccion_adjuntos"
+                    + " WHERE cod_evaluacion=" + codEvaluacion + " AND codigo_establecimiento=" + codigoEstablecimiento + " AND cod_maestro=" + codMaestro
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public void eliminarPlanSeccionAdjuntosEvaluacionAdjuntos(Long codEvaluacion, int codigoEstablecimiento) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE FROM seguimiento.plan_seccion_adjuntos_evaluacion_adjuntos"
+                    + " WHERE cod_evaluacion=" + codEvaluacion + " AND codigo_establecimiento=" + codigoEstablecimiento
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public void eliminarPlanMaestroPlanSeccionDetalleAdjuntos(Long codEvaluacion, int codigoEstablecimiento, Long codMaestro) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE FROM seguimiento.plan_maestro_plan_seccion_detalle_adjuntos"
+                    + " WHERE cod_evaluacion=" + codEvaluacion + " AND codigo_establecimiento=" + codigoEstablecimiento + " AND cod_maestro=" + codMaestro
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public void eliminarPlanSeccionDetalleAdjuntosEvaluacionAdjuntos(Long codEvaluacion, int codigoEstablecimiento, Long codMaestro) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE FROM seguimiento.plan_seccion_detalle_adjuntos_evaluacion_adjuntos"
+                    + " WHERE cod_evaluacion=" + codEvaluacion + " AND codigo_establecimiento=" + codigoEstablecimiento
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 }

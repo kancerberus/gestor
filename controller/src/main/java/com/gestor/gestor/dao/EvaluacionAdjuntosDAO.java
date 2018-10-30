@@ -145,7 +145,7 @@ public class EvaluacionAdjuntosDAO {
         }
     }
 
-    public Integer siguienteVersionCategoriaTipo(EvaluacionAdjuntosPK pk) throws SQLException {
+    public Integer siguienteVersionCategoriaTipo(EvaluacionAdjuntosPK pk, int codCategoria, int codCategoriaTipo) throws SQLException {
         ResultSet rs = null;
         Consulta consulta = null;
         try {
@@ -155,6 +155,7 @@ public class EvaluacionAdjuntosDAO {
                     + " FROM gestor.evaluacion_adjuntos"
                     + " WHERE cod_evaluacion=" + pk.getCodEvaluacion() + " AND codigo_establecimiento=" + pk.getCodigoEstablecimiento()
                     + " AND cod_ciclo='" + pk.getCodCiclo() + "' AND cod_seccion=" + pk.getCodSeccion() + " AND cod_detalle=" + pk.getCodDetalle() + " AND cod_item=" + pk.getCodItem()
+                    + " AND cod_categoria=" + codCategoria + " AND cod_categoria_tipo=" + codCategoriaTipo
             );
             rs = consulta.ejecutar(sql);
             rs.next();

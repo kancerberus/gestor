@@ -21,7 +21,7 @@ public class GestorPropiedades {
             p.setProperty("usuario", "postgres");
 //            p.setProperty("clave", "postgres");
             p.setProperty("rutaAdjunto", "c:\\gestor\\archivos");
-            p.setProperty("rutaTemporal", "c:\\tmp");
+            p.setProperty("rutaTemporal", "c:\\gestor\\tmp");
             p.setProperty("rutaEliminado", "c:\\gestor\\eliminados");
             p.setProperty("clave", "1234");
 

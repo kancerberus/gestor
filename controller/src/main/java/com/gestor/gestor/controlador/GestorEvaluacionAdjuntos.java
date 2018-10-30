@@ -122,11 +122,11 @@ public class GestorEvaluacionAdjuntos extends Gestor {
         return evaluacionAdjuntos;
     }
 
-    public Integer siguienteVersionCategoriaTipo(EvaluacionAdjuntosPK evaluacionAdjuntosPK) throws Exception {
+    public Integer siguienteVersionCategoriaTipo(EvaluacionAdjuntosPK evaluacionAdjuntosPK, int codCategoria, int codCategoriaTipo) throws Exception {
         try {
             this.abrirConexion();
             EvaluacionAdjuntosDAO evaluacionAdjuntosDAO = new EvaluacionAdjuntosDAO(conexion);
-            return evaluacionAdjuntosDAO.siguienteVersionCategoriaTipo(evaluacionAdjuntosPK);
+            return evaluacionAdjuntosDAO.siguienteVersionCategoriaTipo(evaluacionAdjuntosPK,codCategoria, codCategoriaTipo);
         } finally {
             this.cerrarConexion();
         }

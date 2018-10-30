@@ -267,7 +267,10 @@ public class UIEvaluacionAdjuntos {
             evaluacionAdjuntos = gestorEvaluacionAdjuntos.calcularVigenciaAdjunto(evaluacionAdjuntos);
 
             if (evaluacionAdjuntos.getVersion() == null || evaluacionAdjuntos.getVersion() == 0) {
-                evaluacionAdjuntos.setVersion(gestorEvaluacionAdjuntos.siguienteVersionCategoriaTipo(evaluacionAdjuntos.getEvaluacionAdjuntosPK()));
+                evaluacionAdjuntos.setVersion(gestorEvaluacionAdjuntos.siguienteVersionCategoriaTipo(evaluacionAdjuntos.getEvaluacionAdjuntosPK(),
+                        evaluacionAdjuntos.getAdjuntosCategoria().getCodCategoria(),
+                        evaluacionAdjuntos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo())
+                );
             }
             String rutaTemporal = null;
 

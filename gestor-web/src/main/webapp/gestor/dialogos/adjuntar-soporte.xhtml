@@ -74,16 +74,17 @@
                     </f:facet>
                     <p:columnGroup type="header">  
                         <p:row>  
-                            <p:column  headerText="Opciones"  />
+                            <p:column  headerText="Opciones"  width="15%"/>
                             <p:column headerText="Categoria" filterBy="#{varEvaluacionAdjunto.adjuntosCategoria.nombre}" sortBy="#{varEvaluacionAdjunto.adjuntosCategoria.nombre}"/>
-                            <p:column headerText="Tipo" filterBy="#{varEvaluacionAdjunto.adjuntosCategoria.adjuntosCategoriaTipo.nombre}" sortBy="#{varEvaluacionAdjunto.adjuntosCategoria.adjuntosCategoriaTipo.nombre}"/>
+                            <p:column headerText="Tipo" filterBy="#{varEvaluacionAdjunto.adjuntosCategoria.adjuntosCategoriaTipo.nombre}" sortBy="#{varEvaluacionAdjunto.adjuntosCategoria.adjuntosCategoriaTipo.nombre}"
+                                      width="15%"/>
                             <p:column headerText="Responsable" filterBy="#{varEvaluacionAdjunto.responsable.nombresApellidos}" />
                             <p:column  headerText="Descripción"/>
                             <p:column  headerText="Fecha" sortBy="#{varEvaluacionAdjunto.fecha}"/>
-                            <p:column  headerText="Archivo" filterBy="#{varEvaluacionAdjunto.archivo}"/>
-                            <p:column  headerText="Versión" filterBy="#{varEvaluacionAdjunto.version}"/>
-                            <p:column  headerText="Vigencia" filterBy="#{varEvaluacionAdjunto.mesesVigencia}"/>
-                            <p:column  headerText="Fecha Fin Vigencia" filterBy="#{varEvaluacionAdjunto.fechaFinVigencia}"/>
+                            <p:column  headerText="Archivo" sortBy="#{varEvaluacionAdjunto.archivo}" width="7%"/>
+                            <p:column  headerText="Ver" sortBy="#{varEvaluacionAdjunto.version}" width="4%"/>
+                            <p:column  headerText="Vigencia" sortBy="#{varEvaluacionAdjunto.mesesVigencia}" width="7%"/>
+                            <p:column  headerText="Fecha Fin Vigencia" sortBy="#{varEvaluacionAdjunto.fechaFinVigencia}"/>
                         </p:row> 
                     </p:columnGroup>
 
@@ -117,8 +118,8 @@
                     </p:column>
                     <p:column>
                         <p:panelGrid columns="2" style="border: none" rendered="#{not empty varEvaluacionAdjunto.archivo}">
-                            <h:outputLabel class="ui-icon ui-icon-document" />
-                            <h:outputText value="#{varEvaluacionAdjunto.archivoSimple}"/>
+                            <h:outputLabel class="ui-icon ui-icon-document" title="#{varEvaluacionAdjunto.archivoSimple}"/>
+                            <h:outputText value="#{varEvaluacionAdjunto.archivoSimple}" title="#{varEvaluacionAdjunto.archivoSimple}"/>
                         </p:panelGrid>
                     </p:column>
                     <p:column>
