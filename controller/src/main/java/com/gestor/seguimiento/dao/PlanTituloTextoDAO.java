@@ -6,6 +6,9 @@
 package com.gestor.seguimiento.dao;
 
 import com.gestor.controller.Gestor;
+import com.gestor.seguimiento.PlanSeccionDetalleItemPK;
+import com.gestor.seguimiento.PlanSeccionDetalleItemTexto;
+import com.gestor.seguimiento.PlanSeccionDetalleItemTextoPK;
 import com.gestor.seguimiento.PlanSeccionDetallePK;
 import com.gestor.seguimiento.PlanSeccionDetalleTexto;
 import com.gestor.seguimiento.PlanSeccionDetalleTextoPK;
@@ -66,7 +69,7 @@ public class PlanTituloTextoDAO extends Gestor {
             }
         }
     }
-    
+
     public void insertarPlantituloTexto(PlanTituloTexto plantitulotexto) throws SQLException {
         Consulta consulta = null;
         try {
@@ -74,7 +77,7 @@ public class PlanTituloTextoDAO extends Gestor {
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO seguimiento.plan_titulo_texto "
                     + " ( codigo_establecimiento, cod_titulo, cod_titulo_texto, texto )"
-                    + " VALUES ('"+plantitulotexto.getPlanTituloTextoPK().getCodigoEstablecimiento()+"', '"+plantitulotexto.getPlanTituloTextoPK().getCodTitulo()+"', '"+plantitulotexto.getPlanTituloTextoPK().getCodTituloTexto()+"','"+plantitulotexto.getTexto()+"') "                                                            
+                    + " VALUES ('" + plantitulotexto.getPlanTituloTextoPK().getCodigoEstablecimiento() + "', '" + plantitulotexto.getPlanTituloTextoPK().getCodTitulo() + "', '" + plantitulotexto.getPlanTituloTextoPK().getCodTituloTexto() + "','" + plantitulotexto.getTexto() + "') "
                     + " ON CONFLICT (cod_titulo, codigo_establecimiento, cod_titulo_texto) DO UPDATE"
                     + " SET texto=EXCLUDED.texto "
             );
@@ -85,15 +88,15 @@ public class PlanTituloTextoDAO extends Gestor {
             }
         }
     }
-    
+
     public void modificarplantitulotexto(PlanTituloTexto plantitulotexto) throws SQLException {
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "UPDATE seguimiento.plan_titulo_texto "
-                    + " SET texto='"+plantitulotexto.getTexto()+"' "
-                    + " WHERE codigo_establecimiento='"+plantitulotexto.getPlanTituloTextoPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+plantitulotexto.getPlanTituloTextoPK().getCodTitulo()+"' AND cod_titulo_texto= '"+plantitulotexto.getPlanTituloTextoPK().getCodTituloTexto()+"' "
+                    + " SET texto='" + plantitulotexto.getTexto() + "' "
+                    + " WHERE codigo_establecimiento='" + plantitulotexto.getPlanTituloTextoPK().getCodigoEstablecimiento() + "' AND cod_titulo='" + plantitulotexto.getPlanTituloTextoPK().getCodTitulo() + "' AND cod_titulo_texto= '" + plantitulotexto.getPlanTituloTextoPK().getCodTituloTexto() + "' "
             );
             consulta.actualizar(sql);
         } finally {
@@ -138,7 +141,7 @@ public class PlanTituloTextoDAO extends Gestor {
             }
         }
     }
-    
+
     public Collection<? extends PlanTituloTexto> cargarPlanTitulotextoList(PlanTitulo plantitulo) throws SQLException {
         ResultSet rs = null;
         Consulta consulta = null;
@@ -148,12 +151,12 @@ public class PlanTituloTextoDAO extends Gestor {
             StringBuilder sql = new StringBuilder(
                     "SELECT codigo_establecimiento, cod_titulo, cod_titulo_texto, texto"
                     + " FROM seguimiento.plan_titulo_texto"
-                    + " WHERE codigo_establecimiento='"+plantitulo.getPlanTituloPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+plantitulo.getPlanTituloPK().getCodTitulo()+"' "
-                    + " ORDER BY cod_titulo_texto"  
+                    + " WHERE codigo_establecimiento='" + plantitulo.getPlanTituloPK().getCodigoEstablecimiento() + "' AND cod_titulo='" + plantitulo.getPlanTituloPK().getCodTitulo() + "' "
+                    + " ORDER BY cod_titulo_texto"
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
-                PlanTituloTexto ptt = new PlanTituloTexto(new PlanTituloTextoPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo"), rs.getInt("cod_titulo_texto")), rs.getString("texto") );
+                PlanTituloTexto ptt = new PlanTituloTexto(new PlanTituloTextoPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo"), rs.getInt("cod_titulo_texto")), rs.getString("texto"));
                 planTitulotextoList.add(ptt);
             }
             return planTitulotextoList;
@@ -184,11 +187,45 @@ public class PlanTituloTextoDAO extends Gestor {
             rs = consulta.ejecutar(sql);
             Collection<PlanSeccionDetalleTexto> planSeccionDetalleTextoList = new ArrayList<>();
             while (rs.next()) {
-                PlanSeccionDetalleTexto psdt = new PlanSeccionDetalleTexto(new PlanSeccionDetalleTextoPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo")
-                        , rs.getInt("cod_seccion"), rs.getInt("cod_seccion_detalle"), rs.getInt("cod_seccion_detalle_texto")), rs.getString("texto"));
+                PlanSeccionDetalleTexto psdt = new PlanSeccionDetalleTexto(new PlanSeccionDetalleTextoPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo"),
+                        rs.getInt("cod_seccion"), rs.getInt("cod_seccion_detalle"), rs.getInt("cod_seccion_detalle_texto")), rs.getString("texto"));
                 planSeccionDetalleTextoList.add(psdt);
             }
             return planSeccionDetalleTextoList;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
+    public List<PlanSeccionDetalleItemTexto> cargarPlanSeccionDetalleItemTexto(PlanSeccionDetalleItemPK planSeccionDetalleItemPK) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT PSDIT.codigo_establecimiento, PSDIT.cod_titulo, PSDIT.cod_seccion, PSDIT.cod_seccion_detalle,"
+                    + " PSDIT.cod_seccion_detalle_item, PSDIT.cod_seccion_detalle_item_texto, PSDIT.texto"
+                    + " FROM seguimiento.plan_seccion_detalle_item_texto PSDIT"
+                    + " WHERE PSDIT.codigo_establecimiento=" + planSeccionDetalleItemPK.getCodigoEstablecimiento() + " AND  PSDIT.cod_titulo= " + planSeccionDetalleItemPK.getCodTitulo()
+                    + " AND cod_seccion=" + planSeccionDetalleItemPK.getCodSeccion() + " AND PSDIT.cod_seccion_detalle=" + planSeccionDetalleItemPK.getCodSeccionDetalle()
+                    + " AND PSDIT.cod_seccion_detalle_item=" + planSeccionDetalleItemPK.getCodSeccionDetalleItem()
+            );
+
+            rs = consulta.ejecutar(sql);
+            List<PlanSeccionDetalleItemTexto> planSeccionDetalleItemTextoList = new ArrayList<>();
+            while (rs.next()) {
+                PlanSeccionDetalleItemTexto psdit = new PlanSeccionDetalleItemTexto(
+                        new PlanSeccionDetalleItemTextoPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo"),
+                                rs.getInt("cod_seccion"), rs.getInt("cod_seccion_detalle"), rs.getInt("cod_seccion_detalle_item"), rs.getInt("cod_seccion_detalle_item_texto")
+                        ), rs.getString("texto"));
+                planSeccionDetalleItemTextoList.add(psdit);
+            }
+            return planSeccionDetalleItemTextoList;
         } finally {
             if (rs != null) {
                 rs.close();

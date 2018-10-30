@@ -19,6 +19,7 @@ import com.gestor.seguimiento.PlanTituloAdiuntos;
 import com.gestor.seguimiento.PlanTituloTexto;
 import com.gestor.seguimiento.dao.PlanSeccionDAO;
 import com.gestor.seguimiento.dao.PlanSeccionDetalleDAO;
+import com.gestor.seguimiento.dao.PlanSeccionDetalleItemDAO;
 import com.gestor.seguimiento.dao.PlanTituloAdiuntosDAO;
 import com.gestor.seguimiento.dao.PlanTituloDAO;
 import com.gestor.seguimiento.dao.PlanTituloMatrizDAO;
@@ -28,11 +29,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 /**
  *
  * @author Julian D Osorio G
  */
-public class GestorPlanTitulo extends Gestor implements Serializable{
+public class GestorPlanTitulo extends Gestor implements Serializable {
 
     public GestorPlanTitulo() throws Exception {
         super();
@@ -50,7 +52,7 @@ public class GestorPlanTitulo extends Gestor implements Serializable{
             this.cerrarConexion();
         }
     }
-    
+
     public Collection<? extends PlanTitulo> cargarPlanTituloList(Integer codEstablecimiento) throws Exception {
         try {
             this.abrirConexion();
@@ -63,7 +65,7 @@ public class GestorPlanTitulo extends Gestor implements Serializable{
             this.cerrarConexion();
         }
     }
-    
+
     public Collection<? extends PlanTituloTexto> cargarPlanTitulotextoList(PlanTitulo plantitulo) throws Exception {
         try {
             this.abrirConexion();
@@ -76,20 +78,18 @@ public class GestorPlanTitulo extends Gestor implements Serializable{
             this.cerrarConexion();
         }
     }
-    
-    
-    
+
     public void validarPlantitulo(PlanTitulo plantitulo) throws Exception {
-        if(plantitulo.getNombre()==null){
+        if (plantitulo.getNombre() == null) {
             throw new Exception("Ingresa el titulo.", UtilLog.TW_VALIDACION);
         }
-        if (plantitulo.getPlanTituloPK().getCodTitulo()==0 || plantitulo.getNombre().equalsIgnoreCase("")) {
+        if (plantitulo.getPlanTituloPK().getCodTitulo() == 0 || plantitulo.getNombre().equalsIgnoreCase("")) {
             throw new Exception("Ingresa el numeral", UtilLog.TW_VALIDACION);
-        }  
-        plantitulo.setNombre(plantitulo.getNombre().trim().toUpperCase());        
+        }
+        plantitulo.setNombre(plantitulo.getNombre().trim().toUpperCase());
 
     }
-    
+
     public void almacenarTitulotexto(PlanTituloTexto plantitulotexto) throws Exception {
         try {
             this.abrirConexion();
@@ -100,8 +100,8 @@ public class GestorPlanTitulo extends Gestor implements Serializable{
         } finally {
             this.cerrarConexion();
         }
-    }   
-    
+    }
+
     public void modificarTitulotexto(PlanTituloTexto plantitulotexto) throws Exception {
         try {
             this.abrirConexion();
@@ -113,11 +113,7 @@ public class GestorPlanTitulo extends Gestor implements Serializable{
             this.cerrarConexion();
         }
     }
-    
-    
-    
-    
-    
+
     public void almacenarTitulo(PlanTitulo plantitulo) throws Exception {
         try {
             this.abrirConexion();
@@ -139,6 +135,7 @@ public class GestorPlanTitulo extends Gestor implements Serializable{
             PlanTituloTextoDAO planTituloTextoDAO = new PlanTituloTextoDAO(conexion);
             PlanSeccionDAO planSeccionDAO = new PlanSeccionDAO(conexion);
             PlanSeccionDetalleDAO planSeccionDetalleDAO = new PlanSeccionDetalleDAO(conexion);
+            PlanSeccionDetalleItemDAO planSeccionDetalleItemDAO = new PlanSeccionDetalleItemDAO(conexion);
             PlanTituloMatrizDAO planTituloMatrizDAO = new PlanTituloMatrizDAO(conexion);
 
             Collection<PlanTitulo> planTituloList = new ArrayList<>();
@@ -180,9 +177,26 @@ public class GestorPlanTitulo extends Gestor implements Serializable{
                         try {
                             psd.setPlanSeccionDetalleTextoList((List<PlanSeccionDetalleTexto>) planTituloTextoDAO.cargarPlanSeccionDetalleTexto(psd.getPlanSeccionDetallePK()));
                             psd.setPlanSeccionDetalleAdjuntosList((List<PlanSeccionDetalleAdjuntos>) planTituloAdiuntosDAO.cargarPlanSeccionDetalleAdjuntos(psd.getPlanSeccionDetallePK(), codEvaluacion));
+                            psd.setPlanSeccionDetalleItemList(planSeccionDetalleItemDAO.cargarPlanSeccionDetalleItem(psd.getPlanSeccionDetallePK()));
                         } catch (SQLException ex) {
                             UtilLog.generarLog(this.getClass(), ex);
                         }
+                    });
+                });
+            });
+
+            //seccion detalle item
+            planTituloList.forEach((pt) -> {
+                pt.getPlanSeccionList().forEach((ps) -> {
+                    ps.getPlanSeccionDetalleList().forEach((psd) -> {
+                        psd.getPlanSeccionDetalleItemList().forEach((psdi) -> {
+                            try {
+                                psdi.setPlanSeccionDetalleItemTextoList(planTituloTextoDAO.cargarPlanSeccionDetalleItemTexto(psdi.getPlanSeccionDetalleItemPK()));
+                                psdi.setPlanSeccionDetalleItemAdjuntosList(planTituloAdiuntosDAO.cargarPlanSeccionDetalleItemAdjuntos(psdi.getPlanSeccionDetalleItemPK(), codEvaluacion));
+                            } catch (SQLException ex) {
+                                UtilLog.generarLog(this.getClass(), ex);
+                            }
+                        });
                     });
                 });
             });

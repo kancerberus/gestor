@@ -30,10 +30,10 @@ import javax.persistence.TemporalType;
 @NamedQueries({
     @NamedQuery(name = "PlanMaestro.findAll", query = "SELECT p FROM PlanMaestro p")
 })
-@ManagedBean
+@ManagedBean (name="planMaestro")
 @SessionScoped
 
-public class PlanMaestro implements Serializable {
+public class PlanMaestro implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
@@ -176,5 +176,12 @@ public class PlanMaestro implements Serializable {
     public void setPlanTituloList(List<PlanTitulo> planTituloList) {
         this.planTituloList = planTituloList;
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
 
 }

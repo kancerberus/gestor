@@ -63,6 +63,12 @@ public class GestorPlanMaestro extends Gestor {
             planMaestroDAO.eliminarPlanSeccionDetalleAdjuntosEvaluacionAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
             planMaestroDAO.procesarPlanMaestroPlanSeccionDetalleAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
             planMaestroDAO.procesarPlanSeccionDetalleAdjuntosEvaluacionAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
+            
+            //seccion detalle item
+            planMaestroDAO.eliminarPlanMaestroPlanSeccionDetalleItemAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
+            planMaestroDAO.eliminarPlanSeccionDetalleItemAdjuntosEvaluacionAdjuntos(codEvaluacion, codigoEstablecimiento);
+            planMaestroDAO.procesarPlanMaestroPlanSeccionDetalleItemAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
+            planMaestroDAO.procesarPlanSeccionDetalleItemAdjuntosEvaluacionAdjuntos(codEvaluacion, codigoEstablecimiento, codMaestro);
 
             this.finTransaccion();
         } finally {

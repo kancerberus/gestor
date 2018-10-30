@@ -34,6 +34,8 @@ public class PlanSeccionDetalle implements Serializable {
     
     private List<PlanSeccionDetalleTexto> planSeccionDetalleTextoList;
     private List<PlanSeccionDetalleAdjuntos> planSeccionDetalleAdjuntosList;
+    
+    private List<PlanSeccionDetalleItem> planSeccionDetalleItemList;
 
     public PlanSeccionDetalle() {
     }
@@ -155,6 +157,20 @@ public class PlanSeccionDetalle implements Serializable {
      */
     public void setPlanSeccionDetalleAdjuntosList(List<PlanSeccionDetalleAdjuntos> planSeccionDetalleAdjuntosList) {
         this.planSeccionDetalleAdjuntosList = planSeccionDetalleAdjuntosList;
+    }
+
+    /**
+     * @return the planSeccionDetalleItemList
+     */
+    public List<PlanSeccionDetalleItem> getPlanSeccionDetalleItemList() {
+        return planSeccionDetalleItemList;
+    }
+
+    /**
+     * @param planSeccionDetalleItemList the planSeccionDetalleItemList to set
+     */
+    public void setPlanSeccionDetalleItemList(List<PlanSeccionDetalleItem> planSeccionDetalleItemList) {
+        this.planSeccionDetalleItemList = planSeccionDetalleItemList;
     }
     
 }

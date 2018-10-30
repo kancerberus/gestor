@@ -6,6 +6,7 @@
 package com.gestor.seguimiento;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -30,15 +31,26 @@ public class PlanSeccionDetalleItem implements Serializable {
     private String numeral;
     @Column(name = "nombre")
     private String nombre;
+    
+    private List<PlanSeccionDetalleItemTexto> planSeccionDetalleItemTextoList;
+    private List<PlanSeccionDetalleItemAdjuntos> planSeccionDetalleItemAdjuntosList;
 
     public PlanSeccionDetalleItem() {
     }
+
+    public PlanSeccionDetalleItem(PlanSeccionDetalleItemPK planSeccionDetalleItemPK, String numeral, String nombre) {
+        this.planSeccionDetalleItemPK = planSeccionDetalleItemPK;
+        this.numeral = numeral;
+        this.nombre = nombre;
+    }
+    
+    
 
     public PlanSeccionDetalleItem(PlanSeccionDetalleItemPK planSeccionDetalleItemPK) {
         this.planSeccionDetalleItemPK = planSeccionDetalleItemPK;
     }
 
-    public PlanSeccionDetalleItem(int codTitulo, short codigoEstablecimiento, int codSeccion, int codSeccionDetalle, int codSeccionDetalleItem) {
+    public PlanSeccionDetalleItem(int codTitulo, int codigoEstablecimiento, int codSeccion, int codSeccionDetalle, int codSeccionDetalleItem) {
         this.planSeccionDetalleItemPK = new PlanSeccionDetalleItemPK(codTitulo, codigoEstablecimiento, codSeccion, codSeccionDetalle, codSeccionDetalleItem);
     }
 
@@ -90,5 +102,61 @@ public class PlanSeccionDetalleItem implements Serializable {
     public String toString() {
         return "com.gestor.seguimiento.PlanSeccionDetalleItem[ planSeccionDetalleItemPK=" + planSeccionDetalleItemPK + " ]";
     }
+
+    /**
+     * @return the planSeccionDetalleItemTextoList
+     */
+    public List<PlanSeccionDetalleItemTexto> getPlanSeccionDetalleItemTextoList() {
+        return planSeccionDetalleItemTextoList;
+    }
+
+    /**
+     * @param planSeccionDetalleItemTextoList the planSeccionDetalleItemTextoList to set
+     */
+    public void setPlanSeccionDetalleItemTextoList(List<PlanSeccionDetalleItemTexto> planSeccionDetalleItemTextoList) {
+        this.planSeccionDetalleItemTextoList = planSeccionDetalleItemTextoList;
+    }
+
+    /**
+     * @return the planSeccionDetalleItemAdjuntosList
+     */
+    public List<PlanSeccionDetalleItemAdjuntos> getPlanSeccionDetalleItemAdjuntosList() {
+        return planSeccionDetalleItemAdjuntosList;
+    }
+
+    /**
+     * @param planSeccionDetalleItemAdjuntosList the planSeccionDetalleItemAdjuntosList to set
+     */
+    public void setPlanSeccionDetalleItemAdjuntosList(List<PlanSeccionDetalleItemAdjuntos> planSeccionDetalleItemAdjuntosList) {
+        this.planSeccionDetalleItemAdjuntosList = planSeccionDetalleItemAdjuntosList;
+    }
+    
+    public String getDescripcionAdjuntos() {
+        String descripcion = null;
+        if (planSeccionDetalleItemAdjuntosList != null) {
+            for (PlanSeccionDetalleItemAdjuntos psdia : planSeccionDetalleItemAdjuntosList) {
+                descripcion = psdia.getDescripcion();
+                if (descripcion != null && !descripcion.equalsIgnoreCase("")) {
+                    break;
+                }
+            }
+        }
+        return descripcion;
+    }
+
+    public String getTituloAdjuntos() {
+        String titulo = null;
+        if (planSeccionDetalleItemAdjuntosList != null) {
+            for (PlanSeccionDetalleItemAdjuntos psdia : planSeccionDetalleItemAdjuntosList) {
+                titulo = psdia.getTitulo();
+                if (titulo != null && !titulo.equalsIgnoreCase("")) {
+                    break;
+                }
+            }
+        }
+        return titulo;
+    }
+
+   
     
 }

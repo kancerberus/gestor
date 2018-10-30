@@ -5,6 +5,7 @@
  */
 package com.gestor.seguimiento;
 
+import com.gestor.publico.EvaluacionAdjuntos;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -36,6 +37,19 @@ public class PlanSeccionDetalleItemAdjuntos implements Serializable {
     private String descripcionGeneral;
     @Column(name = "documento")
     private String documento;
+    
+    private EvaluacionAdjuntos evaluacionAdjuntos;
+
+    public PlanSeccionDetalleItemAdjuntos(PlanSeccionDetalleItemAdjuntosPK planSeccionDetalleItemAdjuntosPK, String titulo, String descripcion, String actividad, String descripcionGeneral, String documento) {
+        this.planSeccionDetalleItemAdjuntosPK = planSeccionDetalleItemAdjuntosPK;
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.actividad = actividad;
+        this.descripcionGeneral = descripcionGeneral;
+        this.documento = documento;
+    }
+    
+    
 
     public PlanSeccionDetalleItemAdjuntos() {
     }
@@ -119,6 +133,20 @@ public class PlanSeccionDetalleItemAdjuntos implements Serializable {
     @Override
     public String toString() {
         return "com.gestor.seguimiento.PlanSeccionDetalleItemAdjuntos[ planSeccionDetalleItemAdjuntosPK=" + planSeccionDetalleItemAdjuntosPK + " ]";
+    }
+
+    /**
+     * @return the evaluacionAdjuntos
+     */
+    public EvaluacionAdjuntos getEvaluacionAdjuntos() {
+        return evaluacionAdjuntos;
+    }
+
+    /**
+     * @param evaluacionAdjuntos the evaluacionAdjuntos to set
+     */
+    public void setEvaluacionAdjuntos(EvaluacionAdjuntos evaluacionAdjuntos) {
+        this.evaluacionAdjuntos = evaluacionAdjuntos;
     }
     
 }

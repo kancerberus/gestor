@@ -122,11 +122,11 @@ public class UIPlanMaestro {
             GestorPlanMaestro gestorPlanMaestro = new GestorPlanMaestro();
             GestorGeneral gestorGeneral = new GestorGeneral();
             GestorPlanTitulo gestorPlanTitulo = new GestorPlanTitulo();
-            PlanMaestro pm = new PlanMaestro(new PlanMaestroPK(
+            PlanMaestro pm = (PlanMaestro) new PlanMaestro(new PlanMaestroPK(
                     evaluacion.getEvaluacionPK().getCodEvaluacion(),
                     evaluacion.getEvaluacionPK().getCodigoEstablecimiento(),
                     null
-            ), gestorGeneral.now(), gestorGeneral.now());
+            ), gestorGeneral.now(), gestorGeneral.now()).clone();
 
             pm.getPlanMaestroPK().setCodMaestro(gestorPlanMaestro.consultarCodMaestroPlanMaestro(pm.getPlanMaestroPK().getCodigoEstablecimiento(), pm.getPlanMaestroPK().getCodEvaluacion()));
             if (pm.getPlanMaestroPK().getCodMaestro() == null
@@ -138,6 +138,7 @@ public class UIPlanMaestro {
             
             pm.setPlanTituloList((List<PlanTitulo>) gestorPlanTitulo.cargarPlanTituloList(pm.getPlanMaestroPK().getCodigoEstablecimiento(), pm.getPlanMaestroPK().getCodEvaluacion()));
             UtilJSF.setBean("planMaestro", pm, UtilJSF.SESSION_SCOPE);
+            
             
             return ("/seguimiento/plan-maestro.xhtml?faces-redirect=true");
 
@@ -527,6 +528,30 @@ public class UIPlanMaestro {
         try {
             PlanSeccionDetalleAdjuntos psda =  (PlanSeccionDetalleAdjuntos) UtilJSF.getBean("varPlanSeccionDetalleAdjuntos");
             EvaluacionAdjuntos ea = psda.getEvaluacionAdjuntos();
+            if (ea == null) {
+                UtilMSG.addWarningMsg("Adjunto No Encontrado", "No se encontro el adjunto, intente nuevamente o contáctenos para asistirle.");
+                return null;
+            }
+            Properties p = Propiedades.getInstancia().getPropiedades();
+            String rutaAdjunto = p.getProperty("rutaAdjunto") + File.separator + App.ADJUNTO_PREFIJO + ea.getEvaluacionAdjuntosPK().getCodEvaluacion();
+            nombreAdjunto = ea.getArchivo();
+            InputStream stream = new FileInputStream(rutaAdjunto + File.separator + ea.getArchivo());
+            fileDownload = new DefaultStreamedContent(stream, null, ea.getArchivoSimple());
+        } catch (FileNotFoundException ex) {
+            UtilMSG.addErrorMsg("Archivo No Existe", "El adjunto " + nombreAdjunto + ", no fue encontrado. Si el problema persiste contactenos para asistirle.");
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+        return fileDownload;
+    }
+    
+    /**
+     * @return the fileDownload
+     */
+    public StreamedContent getFileDownloadSeccionDetalleItem() {
+        String nombreAdjunto = "";
+        try {
+            PlanSeccionDetalleItemAdjuntos psdia =   (PlanSeccionDetalleItemAdjuntos) UtilJSF.getBean("varPlanSeccionDetalleItemAdjuntos");
+            EvaluacionAdjuntos ea = psdia.getEvaluacionAdjuntos();
             if (ea == null) {
                 UtilMSG.addWarningMsg("Adjunto No Encontrado", "No se encontro el adjunto, intente nuevamente o contáctenos para asistirle.");
                 return null;
