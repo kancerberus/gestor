@@ -169,6 +169,39 @@
                                                 </div>
                                             </h:panelGroup>
 
+                                            <!--seccion detalle adjuntos-->
+                                            <h:panelGroup rendered="#{not empty varPlanSeccionDetalle.tituloAdjuntos}">
+                                                <div>
+                                                    <h3>#{varPlanSeccionDetalle.tituloAdjuntos}</h3>
+                                                    <div class="letraBackgroundWhite">
+                                                        <p style="font-weight: normal;">
+                                                            <br/>
+                                                            #{varPlanSeccionDetalle.descripcionAdjuntos}
+                                                        </p>
+                                                        <p:separator/>
+                                                    </div>
+                                                </div>
+                                            </h:panelGroup>
+                                            <p:dataTable  value="#{varPlanSeccionDetalle.planSeccionDetalleAdjuntosList}" var="varPlanSeccionDetalleAdjuntos" 
+                                                          rendered="#{not empty varPlanSeccionDetalle.planSeccionDetalleAdjuntosList}"
+                                                          rowStyleClass="letra-xx-small-centro"
+                                                          rowHover="true">
+
+                                                <p:column headerText="Documento">
+                                                    <h:outputText value="#{varPlanSeccionDetalleAdjuntos.documento}"/>
+                                                </p:column>
+                                                <p:column headerText="Ver Documento" width="30%">
+                                                    <div>
+                                                        <p:commandButton icon="ui-icon-document" title="Ver Adjunto" ajax="false">    
+                                                            <p:fileDownload value="#{uiPlanMaestro.fileDownloadSeccionDetalle}" />
+                                                        </p:commandButton>
+                                                        <h:outputText value="  "/>
+                                                        <h:outputText value="#{varPlanSeccionDetalleAdjuntos.evaluacionAdjuntos.archivoSimple}"/>
+                                                    </div>
+                                                </p:column>
+
+                                            </p:dataTable>
+
                                             <!--seccion detalle item-->
                                             <h:panelGroup rendered="#{not empty varPlanSeccionDetalle.planSeccionDetalleItemList}">
                                                 <p:tabView value="#{varPlanSeccionDetalle.planSeccionDetalleItemList}" var="varPlanSeccionDetalleItem" style="font-size: x-small">
@@ -229,45 +262,12 @@
                                                         </p:dataTable>
 
 
-
-
                                                     </p:tab>
                                                 </p:tabView>
                                             </h:panelGroup>
 
 
-                                            <!--seccion detalle adjuntos-->
-                                            <h:panelGroup rendered="#{not empty varPlanSeccionDetalle.tituloAdjuntos}">
-                                                <div>
-                                                    <h3>#{varPlanSeccionDetalle.tituloAdjuntos}</h3>
-                                                    <div class="letraBackgroundWhite">
-                                                        <p style="font-weight: normal;">
-                                                            <br/>
-                                                            #{varPlanSeccionDetalle.descripcionAdjuntos}
-                                                        </p>
-                                                        <p:separator/>
-                                                    </div>
-                                                </div>
-                                            </h:panelGroup>
-                                            <p:dataTable  value="#{varPlanSeccionDetalle.planSeccionDetalleAdjuntosList}" var="varPlanSeccionDetalleAdjuntos" 
-                                                          rendered="#{not empty varPlanSeccionDetalle.planSeccionDetalleAdjuntosList}"
-                                                          rowStyleClass="letra-xx-small-centro"
-                                                          rowHover="true">
 
-                                                <p:column headerText="Documento">
-                                                    <h:outputText value="#{varPlanSeccionDetalleAdjuntos.documento}"/>
-                                                </p:column>
-                                                <p:column headerText="Ver Documento" width="30%">
-                                                    <div>
-                                                        <p:commandButton icon="ui-icon-document" title="Ver Adjunto" ajax="false">    
-                                                            <p:fileDownload value="#{uiPlanMaestro.fileDownloadSeccionDetalle}" />
-                                                        </p:commandButton>
-                                                        <h:outputText value="  "/>
-                                                        <h:outputText value="#{varPlanSeccionDetalleAdjuntos.evaluacionAdjuntos.archivoSimple}"/>
-                                                    </div>
-                                                </p:column>
-
-                                            </p:dataTable>
 
                                         </p:tab>
                                     </p:tabView>
