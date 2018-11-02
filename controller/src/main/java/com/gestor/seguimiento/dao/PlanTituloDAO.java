@@ -47,6 +47,8 @@ public class PlanTituloDAO {
         }
     }
     
+    
+    
     public Collection<? extends PlanTitulo> cargarPlanTituloList(Integer codEstablecimiento) throws SQLException {
         ResultSet rs = null;
         Consulta consulta = null;

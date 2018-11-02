@@ -18,6 +18,7 @@ import com.gestor.seguimiento.PlanSeccionPK;
 import com.gestor.seguimiento.PlanTituloAdiuntos;
 import com.gestor.seguimiento.PlanTituloAdiuntosPK;
 import com.gestor.seguimiento.PlanTituloPK;
+import com.gestor.seguimiento.PlanTitulo;
 import conexion.Consulta;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -37,7 +38,60 @@ public class PlanTituloAdiuntosDAO {
     public PlanTituloAdiuntosDAO(Connection conexion) {
         this.conexion = conexion;
     }
-
+    
+    
+    public Collection<? extends PlanTituloAdiuntos> cargarPlanTituloadjuntosList(PlanTitulo plantitulo) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            Collection<PlanTituloAdiuntos> planTituloadjuntosList = new ArrayList<>();
+            StringBuilder sql = new StringBuilder(
+                    "SELECT codigo_establecimiento, cod_titulo, cod_titulo_adjunto, cod_categoria, cod_categoria_tipo, titulo, descripcion, documento"
+                    + " FROM seguimiento.plan_titulo_adiuntos"
+                    + " WHERE codigo_establecimiento='"+plantitulo.getPlanTituloPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+plantitulo.getPlanTituloPK().getCodTitulo()+"' "
+                    + " ORDER BY cod_titulo_adjunto"  
+            );
+            rs = consulta.ejecutar(sql);
+            while (rs.next()) {
+                PlanTituloAdiuntos pta = new PlanTituloAdiuntos(new PlanTituloAdiuntosPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo_adjunto"),
+                        rs.getInt("cod_titulo")), rs.getInt("cod_categoria"), rs.getInt("cod_categoria_tipo"), rs.getString("titulo"), rs.getString("descripcion"), rs.getString("documento")
+                );
+                planTituloadjuntosList.add(pta);
+            }
+            return planTituloadjuntosList;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    public void insertarPlantituloadjunto(PlanTituloAdiuntos plantituloadjuntos) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO seguimiento.plan_titulo_adiuntos "
+                    + " ( codigo_establecimiento, cod_titulo_adjunto, cod_titulo, cod_categoria, cod_categoria_tipo, titulo, descripcion, documento )"
+                    + " VALUES ('"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodigoEstablecimiento()+"', '"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodTituloAdjunto()+"', "
+                    + " '"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodTitulo()+"', '"+plantituloadjuntos.getCodCategoria()+"', "
+                    + " '"+plantituloadjuntos.getCodCategoriaTipo()+"', '"+plantituloadjuntos.getTitulo()+"', '"+plantituloadjuntos.getDescripcion()+"', '"+plantituloadjuntos.getDocumento()+"') "
+                    + " ON CONFLICT ( codigo_establecimiento, cod_titulo_adjunto, cod_titulo ) DO UPDATE "
+                    + " SET titulo=EXCLUDED.titulo, descripcion=EXCLUDED.descripcion, documento=EXCLUDED.documento "
+                    
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+        
     public Collection<? extends PlanTituloAdiuntos> cargarPlanTituloAdiuntosList(PlanTituloPK planTituloPK, Long codEvaluacion) throws SQLException {
         ResultSet rs = null;
         Consulta consulta = null;

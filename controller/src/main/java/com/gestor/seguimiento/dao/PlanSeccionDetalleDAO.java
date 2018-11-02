@@ -78,5 +78,35 @@ public class PlanSeccionDetalleDAO {
         }
     }
     
+    public List<PlanSeccionDetalle> cargarPlanSecciondetalleList(PlanSeccion ps) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT codigo_establecimiento, cod_titulo, cod_seccion, cod_seccion_detalle,  nombre, numeral"                    
+                    + " FROM seguimiento.plan_seccion_detalle"
+                    + " WHERE codigo_establecimiento= '"+ ps.getPlanSeccionPK().getCodigoEstablecimiento() +"' AND cod_titulo='" + ps.getPlanSeccionPK().getCodTitulo()+"' "
+                    + " AND cod_seccion= '"+ps.getPlanSeccionPK().getCodSeccion()+"'"
+                    + " ORDER BY cod_seccion_detalle"
+            );
+            rs = consulta.ejecutar(sql);
+            List<PlanSeccionDetalle> planSecciondetalleList = new ArrayList<>();
+            while (rs.next()) {
+                PlanSeccionDetalle psd = new PlanSeccionDetalle(new PlanSeccionDetallePK(rs.getInt("codigo_establecimiento")
+                        , rs.getInt("cod_titulo"), rs.getInt("cod_seccion"), rs.getInt("cod_seccion_detalle") ), rs.getString("numeral"), rs.getString("nombre")
+                );
+                planSecciondetalleList.add(psd);
+            }
+            return planSecciondetalleList;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 
 }

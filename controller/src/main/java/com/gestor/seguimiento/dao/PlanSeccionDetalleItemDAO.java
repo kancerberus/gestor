@@ -62,5 +62,60 @@ public class PlanSeccionDetalleItemDAO {
             }
         }
     }
+    
+        public void insertarPlansecciondetalleitem(PlanSeccionDetalleItem plansecciondetalleitem) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO seguimiento.plan_seccion_detalle_item "
+                    + " ( codigo_establecimiento, cod_titulo, cod_seccion, cod_seccion_detalle, cod_seccion_detalle_item, nombre, numeral)"
+                    +" VALUES ('"+plansecciondetalleitem.getPlanSeccionDetalleItemPK().getCodigoEstablecimiento()+"', "
+                            + " '"+plansecciondetalleitem.getPlanSeccionDetalleItemPK().getCodTitulo()+"', "
+                            + " '"+plansecciondetalleitem.getPlanSeccionDetalleItemPK().getCodSeccion()+"', "
+                            + " '"+plansecciondetalleitem.getPlanSeccionDetalleItemPK().getCodSeccionDetalle()+"',  "
+                            + " '"+plansecciondetalleitem.getPlanSeccionDetalleItemPK().getCodSeccionDetalleItem() +"', "
+                            + " '"+plansecciondetalleitem.getNombre()+"','"+plansecciondetalleitem.getNumeral()+"') "
+                            + " ON CONFLICT (cod_titulo, codigo_establecimiento, cod_seccion, cod_seccion_detalle, cod_seccion_detalle_item) DO UPDATE"
+                            + " SET nombre=EXCLUDED.nombre, numeral=EXCLUDED.numeral "
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    public List<PlanSeccionDetalleItem> cargarPlanSecciondetalleitemList(PlanSeccionDetalle psd) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT codigo_establecimiento, cod_titulo, cod_seccion, cod_seccion_detalle, cod_seccion_detalle_item,  nombre, numeral"                    
+                    + " FROM seguimiento.plan_seccion_detalle_item"
+                    + " WHERE codigo_establecimiento= '"+ psd.getPlanSeccionDetallePK().getCodigoEstablecimiento() +"' AND cod_titulo='" + psd.getPlanSeccionDetallePK().getCodTitulo()+"' "
+                    + " AND cod_seccion= '"+psd.getPlanSeccionDetallePK().getCodSeccion()+"' AND cod_seccion_detalle='"+psd.getPlanSeccionDetallePK().getCodSeccionDetalle()+"' "
+                    + " ORDER BY cod_seccion_detalle_item"
+            );
+            rs = consulta.ejecutar(sql);
+            List<PlanSeccionDetalleItem> planSecciondetalleitemList = new ArrayList<>();
+            while (rs.next()) {
+                PlanSeccionDetalleItem psdi = new PlanSeccionDetalleItem(new PlanSeccionDetalleItemPK(rs.getInt("codigo_establecimiento")
+                , rs.getInt("cod_titulo"), rs.getInt("cod_seccion"), rs.getInt("cod_seccion_detalle"), rs.getInt("cod_seccion_detalle_item") ), rs.getString("numeral"), rs.getString("nombre")
+                );
+                planSecciondetalleitemList.add(psdi);
+            }
+            return planSecciondetalleitemList;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 
 }

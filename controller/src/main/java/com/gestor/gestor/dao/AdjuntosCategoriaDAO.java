@@ -56,6 +56,32 @@ public class AdjuntosCategoriaDAO {
             }
         }
     }
+    
+    public Collection<? extends AdjuntosCategoria> cargarListaAdjuntosCategoriapm() throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT cod_categoria, nombre, descripcion, meses_vigencia "
+                    + " FROM gestor.adjuntos_categoria "
+            );
+            rs = consulta.ejecutar(sql);
+            Collection<AdjuntosCategoria> adjuntosCategorias = new ArrayList<>();
+            while (rs.next()) {
+                AdjuntosCategoria ac = new AdjuntosCategoria(rs.getInt("cod_categoria"), rs.getString("nombre"), rs.getString("descripcion"), rs.getInt("meses_vigencia"));
+                adjuntosCategorias.add(ac);
+            }
+            return adjuntosCategorias;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 
     public Collection<? extends AdjuntosCategoriaTipo> cargarListaAdjuntosCategoriaTipo(Integer codCategoria) throws SQLException {
         ResultSet rs = null;

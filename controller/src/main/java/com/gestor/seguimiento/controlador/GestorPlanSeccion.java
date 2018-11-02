@@ -8,9 +8,19 @@ package com.gestor.seguimiento.controlador;
 import com.gestor.controller.Gestor;
 import com.gestor.entity.UtilLog;
 import com.gestor.seguimiento.PlanSeccion;
+import com.gestor.seguimiento.PlanSeccionAdjuntos;
+import com.gestor.seguimiento.PlanSeccionDetalle;
+import com.gestor.seguimiento.PlanSeccionDetalleItem;
+import com.gestor.seguimiento.PlanSeccionDetalleTexto;
+import com.gestor.seguimiento.PlanSeccionDetalleItemTexto;
+import com.gestor.seguimiento.dao.PlanSeccionDetalleTextoDAO;
+import com.gestor.seguimiento.dao.PlanSeccionDetalleItemTextoDAO;
 import com.gestor.seguimiento.PlanSeccionTexto;
 import com.gestor.seguimiento.dao.PlanSeccionTextoDAO;
 import com.gestor.seguimiento.dao.PlanSeccionDAO;
+import com.gestor.seguimiento.dao.PlanSeccionAdjuntosDAO;
+import com.gestor.seguimiento.dao.PlanSeccionDetalleDAO;
+import com.gestor.seguimiento.dao.PlanSeccionDetalleItemDAO;
 import com.gestor.seguimiento.PlanTitulo;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,7 +39,7 @@ public class GestorPlanSeccion extends Gestor implements Serializable{
         if(planseccion.getNombre()==null){
             throw new Exception("Ingresa el titulo de la seccion.", UtilLog.TW_VALIDACION);
         }
-        if (planseccion.getPlanSeccionPK().getCodTitulo()==0 || planseccion.getNombre().equalsIgnoreCase("")) {
+        if (planseccion.getPlanSeccionPK().getCodTitulo()==0 ) {
             throw new Exception("Ingresa el numeral", UtilLog.TW_VALIDACION);
         }  
         planseccion.setNombre(planseccion.getNombre().trim().toUpperCase());        
@@ -60,13 +70,73 @@ public class GestorPlanSeccion extends Gestor implements Serializable{
         }
     }
     
+    public void almacenarSeccionadjunto(PlanSeccionAdjuntos planseccionadjunto) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            PlanSeccionAdjuntosDAO planseccionadjuntoDAO = new PlanSeccionAdjuntosDAO(conexion);
+            planseccionadjuntoDAO.insertarPlanseccionadjunto(planseccionadjunto);
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public void almacenarSecciondetalletexto(PlanSeccionDetalleTexto plansecciondetalletexto) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            PlanSeccionDetalleTextoDAO plansecciondetalletextoDAO = new PlanSeccionDetalleTextoDAO(conexion);
+            plansecciondetalletextoDAO.insertarPlanseccionDetalleTexto(plansecciondetalletexto);
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public void almacenarSecciondetalleitemtexto(PlanSeccionDetalleItemTexto plansecciondetalleitemtexto) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            PlanSeccionDetalleItemTextoDAO plansecciondetalleitemtextoDAO = new PlanSeccionDetalleItemTextoDAO(conexion);
+            plansecciondetalleitemtextoDAO.insertarPlanseccionDetalleItemTexto(plansecciondetalleitemtexto);
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
     public Collection<? extends PlanSeccion> cargarListaSeccion(PlanTitulo pt) throws Exception {
         try {
             this.abrirConexion();
             PlanSeccionDAO planSeccionDAO = new PlanSeccionDAO(conexion);
             Collection<PlanSeccion> planseccionList = new ArrayList<>();
-            planseccionList.addAll(planSeccionDAO.cargarPlanSeccionList(pt));
+            planseccionList.addAll(planSeccionDAO.cargarPlanSeccionList(pt));            
             return planseccionList;
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends PlanSeccionDetalle> cargarListaSecciondetalle(PlanSeccion ps) throws Exception {
+        try {
+            this.abrirConexion();
+            PlanSeccionDetalleDAO planSecciondetalleDAO = new PlanSeccionDetalleDAO(conexion);
+            Collection<PlanSeccionDetalle> plansecciondetalleList = new ArrayList<>();
+            plansecciondetalleList.addAll(planSecciondetalleDAO.cargarPlanSecciondetalleList(ps));
+            return plansecciondetalleList;
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends PlanSeccionDetalleItem> cargarListaSecciondetalleitem(PlanSeccionDetalle psd) throws Exception {
+        try {
+            this.abrirConexion();
+            PlanSeccionDetalleItemDAO planSecciondetalleitemDAO = new PlanSeccionDetalleItemDAO(conexion);
+            Collection<PlanSeccionDetalleItem> plansecciondetalleitemList = new ArrayList<>();
+            plansecciondetalleitemList.addAll(planSecciondetalleitemDAO.cargarPlanSecciondetalleitemList(psd));
+            return plansecciondetalleitemList;
         } finally {
             this.cerrarConexion();
         }
@@ -84,12 +154,72 @@ public class GestorPlanSeccion extends Gestor implements Serializable{
             this.cerrarConexion();
         }
     }
-    public void modificarSeccion(PlanSeccion planseccion) throws Exception {
+    
+    public Collection<? extends PlanSeccionDetalleTexto> cargarPlanSecciondetalletextoList(PlanSeccionDetalle plansecciondetalle) throws Exception {
+        try {
+            this.abrirConexion();
+            PlanSeccionDetalleTextoDAO planSecciondetalletextoDAO = new PlanSeccionDetalleTextoDAO(conexion);
+            Collection<PlanSeccionDetalleTexto> plansecciondetalletextoList = new ArrayList<>();
+            plansecciondetalletextoList.addAll(planSecciondetalletextoDAO.cargarPlanSecciondetalletextoList(plansecciondetalle));
+            return plansecciondetalletextoList;
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends PlanSeccionDetalleItemTexto> cargarPlanSecciondetalletextoitemList(PlanSeccionDetalleItem plansecciondetalleitem) throws Exception {
+        try {
+            this.abrirConexion();
+            PlanSeccionDetalleItemTextoDAO planSecciondetalleitemtextoDAO = new PlanSeccionDetalleItemTextoDAO(conexion);
+            Collection<PlanSeccionDetalleItemTexto> plansecciondetalleitemtextoList = new ArrayList<>();
+            plansecciondetalleitemtextoList.addAll(planSecciondetalleitemtextoDAO.cargarPlanSecciondetalleitemtextoList(plansecciondetalleitem));
+            return plansecciondetalleitemtextoList;
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+  
+    public void validarPlansecciondetalle(PlanSeccionDetalle plansecciondetalle) throws Exception {
+        if(plansecciondetalle.getNombre()==null){
+            throw new Exception("Ingresa el subtitulo.", UtilLog.TW_VALIDACION);
+        }
+        if (plansecciondetalle.getPlanSeccionDetallePK().getCodTitulo()==0 || plansecciondetalle.getNombre().equalsIgnoreCase("")) {
+            throw new Exception("Ingresa el numeral", UtilLog.TW_VALIDACION);
+        }  
+        plansecciondetalle.setNombre(plansecciondetalle.getNombre().trim().toUpperCase());        
+
+    }
+    
+    public void validarPlansecciondetalleitem(PlanSeccionDetalleItem plansecciondetalleitem) throws Exception {
+        if(plansecciondetalleitem.getNombre()==null){
+            throw new Exception("Ingresa el subtitulo.", UtilLog.TW_VALIDACION);
+        }
+        if (plansecciondetalleitem.getPlanSeccionDetalleItemPK().getCodSeccionDetalleItem()==0) {
+            throw new Exception("Ingresa el numeral", UtilLog.TW_VALIDACION);
+        }  
+        plansecciondetalleitem.setNombre(plansecciondetalleitem.getNombre().trim().toUpperCase());        
+
+    }
+    
+    public void almacenarSecciondetalleitem(PlanSeccionDetalleItem plansecciondetalleitem) throws Exception {
         try {
             this.abrirConexion();
             this.inicioTransaccion();
-            PlanSeccionDAO planseccionDAO = new PlanSeccionDAO(conexion);
-            planseccionDAO.modificarplanseccion(planseccion);
+            PlanSeccionDetalleItemDAO plansecciondetalleitemDAO = new PlanSeccionDetalleItemDAO(conexion);
+            plansecciondetalleitemDAO.insertarPlansecciondetalleitem(plansecciondetalleitem);
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public void almacenarSecciondetalle(PlanSeccionDetalle plansecciondetalle) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            PlanSeccionDetalleDAO plansecciondetalleDAO = new PlanSeccionDetalleDAO(conexion);
+            plansecciondetalleDAO.insertarPlansecciondetalle(plansecciondetalle);
             this.finTransaccion();
         } finally {
             this.cerrarConexion();

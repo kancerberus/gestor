@@ -32,6 +32,16 @@ public class GestorAdjuntosCategoria extends Gestor {
             this.cerrarConexion();
         }
     }
+    
+    public Collection<? extends AdjuntosCategoria> cargarListaAdjuntosCategoriapm() throws Exception {
+        try {
+            this.abrirConexion();
+            AdjuntosCategoriaDAO adjuntosCategoriaDAO = new AdjuntosCategoriaDAO(conexion);
+            return adjuntosCategoriaDAO.cargarListaAdjuntosCategoriapm();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
 
     public Collection<? extends AdjuntosCategoriaTipo> cargarListaAdjuntosCategoriaTipo(Integer codCategoria) throws Exception {
         try {
