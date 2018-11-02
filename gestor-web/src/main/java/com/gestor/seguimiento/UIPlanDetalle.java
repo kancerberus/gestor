@@ -8,6 +8,9 @@ package com.gestor.seguimiento;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
+import com.gestor.gestor.AdjuntosCategoria;
+import com.gestor.gestor.AdjuntosCategoriaTipo;
+import com.gestor.gestor.controlador.GestorAdjuntosCategoria;
 import com.gestor.seguimiento.controlador.GestorPlanSeccion;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,12 +29,16 @@ import javax.faces.context.FacesContext;
 @SessionScoped
 public class UIPlanDetalle implements Serializable{
     private GestorPlanSeccion gestorPlanSeccion;
+    private GestorAdjuntosCategoria gestorAdjuntosCategoria;   
     private PlanSeccionDetalle plansecciondetalle = new PlanSeccionDetalle();    
     private PlanSeccionDetalleTexto plansecciondetalletexto = new PlanSeccionDetalleTexto();
     private PlanSeccionDetalleTextoPK plansecciondetalletextopk = new PlanSeccionDetalleTextoPK();
     private PlanSeccionDetallePK plansecciondetallepk = new PlanSeccionDetallePK();
     private List<PlanSeccionDetalle> plansecciondetalleList = new ArrayList<>();    
     private List<PlanSeccionDetalleTexto> plansecciondetalletextoList = new ArrayList<>();    
+    private List<PlanSeccionAdjuntos> planseccionadjuntosList = new ArrayList<>();   
+    private List<AdjuntosCategoria> adjuntosCategoriaitems = new ArrayList<>();
+    private AdjuntosCategoria adjuntoscategoria = new AdjuntosCategoria();    
     
     
     public UIPlanDetalle(){  
@@ -62,6 +69,17 @@ public class UIPlanDetalle implements Serializable{
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
+    }
+    
+    public void cargarAdjuntosCategoriaTipo() {
+        try {                                   
+            if(getAdjuntoscategoria() != null){                
+                adjuntoscategoria.setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(adjuntoscategoria.getCodCategoria()));                                
+            }            
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+            UtilMSG.addSupportMsg();
+        }        
     }
     
     public void cargarPlansecciondetalletexto() {        
@@ -133,8 +151,22 @@ public class UIPlanDetalle implements Serializable{
         }
         
     }
-    
-    
+
+    public List<AdjuntosCategoria> getAdjuntosCategoriaitems() {
+        return adjuntosCategoriaitems;
+    }
+
+    public void setAdjuntosCategoriaitems(List<AdjuntosCategoria> adjuntosCategoriaitems) {
+        this.adjuntosCategoriaitems = adjuntosCategoriaitems;
+    }
+
+    public AdjuntosCategoria getAdjuntoscategoria() {
+        return adjuntoscategoria;
+    }
+
+    public void setAdjuntoscategoria(AdjuntosCategoria adjuntoscategoria) {
+        this.adjuntoscategoria = adjuntoscategoria;
+    }
 
     public PlanSeccionDetalle getPlansecciondetalle() {
         return plansecciondetalle;

@@ -8,6 +8,9 @@ package com.gestor.seguimiento;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
+import com.gestor.gestor.AdjuntosCategoria;
+import com.gestor.gestor.AdjuntosCategoriaTipo;
+import com.gestor.gestor.controlador.GestorAdjuntosCategoria;
 import com.gestor.seguimiento.controlador.GestorPlanSeccion;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,6 +35,10 @@ public class UIPlanItem implements Serializable{
     private PlanSeccionDetalleItemPK plansecciondetalleitempk = new PlanSeccionDetalleItemPK();
     private List<PlanSeccionDetalleItem> plansecciondetalleitemList = new ArrayList<>();    
     private List<PlanSeccionDetalleItemTexto> plansecciondetalleitemtextoList = new ArrayList<>(); 
+    private GestorAdjuntosCategoria gestorAdjuntosCategoria;   
+    private AdjuntosCategoria adjuntoscategoria = new AdjuntosCategoria();    
+    private List<AdjuntosCategoria> adjuntosCategoriaitems = new ArrayList<>();
+    
     
     public UIPlanItem(){
     
@@ -50,6 +57,17 @@ public class UIPlanItem implements Serializable{
         plansecciondetalleitem = (PlanSeccionDetalleItem) UtilJSF.getBean("varPlanitem");
         UtilJSF.setBean("planItem", plansecciondetalleitem, UtilJSF.SESSION_SCOPE);      
         this.cargarPlansecciondetalleitemtexto();           
+    }
+    
+    public void cargarAdjuntosCategoriaTipo() {
+        try {                                   
+            if(getAdjuntoscategoria() != null){                
+                adjuntoscategoria.setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(adjuntoscategoria.getCodCategoria()));                                
+            }            
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+            UtilMSG.addSupportMsg();
+        }        
     }
     
     public void cargarPlansecciondetalleitem() {        
@@ -131,6 +149,22 @@ public class UIPlanItem implements Serializable{
             }
         }
         
+    }
+
+    public AdjuntosCategoria getAdjuntoscategoria() {
+        return adjuntoscategoria;
+    }
+
+    public void setAdjuntoscategoria(AdjuntosCategoria adjuntoscategoria) {
+        this.adjuntoscategoria = adjuntoscategoria;
+    }
+
+    public List<AdjuntosCategoria> getAdjuntosCategoriaitems() {
+        return adjuntosCategoriaitems;
+    }
+
+    public void setAdjuntosCategoriaitems(List<AdjuntosCategoria> adjuntosCategoriaitems) {
+        this.adjuntosCategoriaitems = adjuntosCategoriaitems;
     }
 
     public PlanSeccionDetalleItem getPlansecciondetalleitem() {

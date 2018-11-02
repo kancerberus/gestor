@@ -112,17 +112,17 @@
                     <p:inputText  placeholder="Descripcion" value="#{uiPlantitulo.plantituloadjunto.descripcion}"/>  
                         
                         
-                    <p:selectOneMenu value="#{uiPlantitulo.adjuntoscategoria}" converter="convertidorGenerico"
+                    <p:selectOneMenu value="#{uiPlanitem.adjuntoscategoria}" converter="convertidorGenerico"
                                      style="text-align: center;width: 180px;">  
                     <f:selectItem itemLabel="Seleccionar categoria" itemValue="" /> 
-                    <f:selectItems value="#{uiPlantitulo.adjuntosCategoriaitems}" var="pta" itemLabel="#{pta.nombre}" itemValue="#{pta}"/>
-                    <p:ajax update="formItem" listener="#{uiPlantitulo.cargarAdjuntosCategoriaTipo()}" />
+                    <f:selectItems value="#{uiPlanitem.adjuntosCategoriaitems}" var="pta" itemLabel="#{pta.nombre}" itemValue="#{pta}"/>
+                    <p:ajax update="formItem" listener="#{uiPlanitem.cargarAdjuntosCategoriaTipo()}" />
                     </p:selectOneMenu>
                     
-                    <p:selectOneMenu value="#{uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
-                                     style="text-align: center;width: 180px;" disabled="#{empty evaluacionAdjuntos.adjuntosCategoria }">  
+                    <p:selectOneMenu value="#{uiPlanitem.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlanitem.adjuntoscategoria }">  
                         <f:selectItem itemLabel="Seleccionar tipo" itemValue="" /> 
-                        <f:selectItems value="#{uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipoList}" var="pta" itemLabel="#{pta.nombre}" 
+                        <f:selectItems value="#{uiPlanitem.adjuntoscategoria.adjuntosCategoriaTipoList}" var="pta" itemLabel="#{pta.nombre}" 
                                        itemValue="#{pta}"/>
                     </p:selectOneMenu>
                                       

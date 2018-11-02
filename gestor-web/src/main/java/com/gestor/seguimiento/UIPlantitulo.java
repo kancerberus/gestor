@@ -43,8 +43,7 @@ public class UIPlantitulo implements Serializable{
     private List<PlanTituloTexto> plantitulotextoList = new ArrayList<>();
     private List<PlanTituloAdiuntos> plantituloadjuntoList = new ArrayList<>();   
     private AdjuntosCategoria adjuntoscategoria = new AdjuntosCategoria();    
-    private List<AdjuntosCategoria> adjuntosCategoriaitems = new ArrayList<>();
-    
+    private List<AdjuntosCategoria> adjuntosCategoriaitems = new ArrayList<>();    
     
     Sesion s = (Sesion) UtilJSF.getBean("sesion"); 
     

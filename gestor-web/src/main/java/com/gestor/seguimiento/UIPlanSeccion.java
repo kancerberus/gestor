@@ -8,6 +8,8 @@ import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
 import com.gestor.gestor.AdjuntosCategoria;
+import com.gestor.gestor.AdjuntosCategoriaTipo;
+import com.gestor.gestor.controlador.GestorAdjuntosCategoria;
 import com.gestor.modelo.Sesion;
 import com.gestor.seguimiento.controlador.GestorPlanSeccion;
 import java.io.Serializable;
@@ -27,6 +29,7 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class UIPlanSeccion implements Serializable{    
     private GestorPlanSeccion gestorPlanSeccion;
+    private GestorAdjuntosCategoria gestorAdjuntosCategoria;   
     private PlanSeccion planseccion = new PlanSeccion();
     private PlanSeccionTexto plansecciontexto = new PlanSeccionTexto();
     private PlanSeccionPK planseccionpk = new PlanSeccionPK();
@@ -37,6 +40,7 @@ public class UIPlanSeccion implements Serializable{
     private List<PlanSeccion> planseccionList = new ArrayList<>();    
     private List<PlanSeccionTexto> plansecciontextoList = new ArrayList<>();    
     private List<PlanSeccionAdjuntos> planseccionadjuntosList = new ArrayList<>();   
+    private List<AdjuntosCategoria> adjuntosCategoriaitems = new ArrayList<>();
     
     Sesion s = (Sesion) UtilJSF.getBean("sesion");    
 
@@ -84,6 +88,17 @@ public class UIPlanSeccion implements Serializable{
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
+    }
+    
+    public void cargarAdjuntosCategoriaTipo() {
+        try {                                   
+            if(getAdjuntoscategoria() != null){                
+                adjuntoscategoria.setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(adjuntoscategoria.getCodCategoria()));                                
+            }            
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+            UtilMSG.addSupportMsg();
+        }        
     }
 
 
@@ -168,6 +183,14 @@ public class UIPlanSeccion implements Serializable{
                 UtilLog.generarLog(this.getClass(), e);
             }
         }        
+    }
+
+    public List<AdjuntosCategoria> getAdjuntosCategoriaitems() {
+        return adjuntosCategoriaitems;
+    }
+
+    public void setAdjuntosCategoriaitems(List<AdjuntosCategoria> adjuntosCategoriaitems) {
+        this.adjuntosCategoriaitems = adjuntosCategoriaitems;
     }
 
     public PlanSeccionAdjuntos getPlanseccionadjuntos() {

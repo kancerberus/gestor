@@ -52,7 +52,7 @@
                     </p:selectOneMenu>
                     
                     <p:selectOneMenu value="#{uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
-                                     style="text-align: center;width: 180px;" disabled="#{empty evaluacionAdjuntos.adjuntosCategoria }">  
+                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlantitulo.adjuntoscategoria}">  
                         <f:selectItem itemLabel="Seleccionar tipo" itemValue="" /> 
                         <f:selectItems value="#{uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipoList}" var="pta" itemLabel="#{pta.nombre}" 
                                        itemValue="#{pta}"/>

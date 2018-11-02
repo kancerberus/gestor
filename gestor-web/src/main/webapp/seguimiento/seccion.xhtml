@@ -82,14 +82,14 @@
                     <p:selectOneMenu value="#{uiPlanseccion.adjuntoscategoria}" converter="convertidorGenerico"
                                      style="text-align: center;width: 180px;">  
                     <f:selectItem itemLabel="Seleccionar categoria" itemValue="" /> 
-                    <f:selectItems value="#{uiPlantitulo.adjuntosCategoriaitems}" var="psa" itemLabel="#{psa.nombre}" itemValue="#{psa}"/>
-                    <p:ajax update="formSeccion" listener="#{uiPlantitulo.cargarAdjuntosCategoriaTipo()}" />
+                    <f:selectItems value="#{uiPlanseccion.adjuntosCategoriaitems}" var="psa" itemLabel="#{psa.nombre}" itemValue="#{psa}"/>
+                    <p:ajax update="formSeccion" listener="#{uiPlanseccion.cargarAdjuntosCategoriaTipo()}" />
                     </p:selectOneMenu>
                     
                     <p:selectOneMenu value="#{uiPlanseccion.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
-                                     style="text-align: center;width: 180px;" disabled="#{empty evaluacionAdjuntos.adjuntosCategoria }">  
+                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlanseccion.adjuntoscategoria }">  
                         <f:selectItem itemLabel="Seleccionar tipo" itemValue="" /> 
-                        <f:selectItems value="#{uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipoList}" var="psa" itemLabel="#{psa.nombre}" 
+                        <f:selectItems value="#{uiPlanseccion.adjuntoscategoria.adjuntosCategoriaTipoList}" var="psa" itemLabel="#{psa.nombre}" 
                                        itemValue="#{psa}"/>
                     </p:selectOneMenu>
                                       
