@@ -24,9 +24,9 @@
                     <p:column>
                         
                         <p:commandButton icon="ui-icon-check" title="Seleccionar Titulo" update="formPlanmaestro" 
-                                         action="#{uiPlantitulo.subirItemPlantitulo()}" >  
-                            <f:actionListener binding="#{uiPlantitulo.cargarPlantitulotexto()}"/>                            
+                                         action="#{uiPlantitulo.subirItemPlantitulo()}" >                             
                             <f:actionListener binding="#{uiPlanseccion.cargarPlanseccion()}"/>
+                            
                         </p:commandButton>
                         
                     </p:column>
@@ -38,34 +38,26 @@
                     </p:column>
                 </p:dataTable>
                 <br></br>
-                <h:panelGrid columns="4">
+                <h:panelGrid columns="2">
                     <p:inputText  value="#{uiPlantitulo.plantitulo.numeral}" placeholder="Numeral"/>                    
                     <p:inputText  value="#{uiPlantitulo.plantitulo.nombre}" placeholder="Nombre"/>                    
+                </h:panelGrid>
+                <h:panelGrid columns="1">
                     <p:commandButton value="Crear / Modificar" action="#{uiPlantitulo.guardarTitulo()}"
                                      icon="ui-icon-disk"
-                                     update="formPlanmaestro"/>
-                    <p:commandButton value="Limpiar" action="#{uiPlantitulo.limpiar()}"
-                                     icon="ui-icon-cancel"
-                                     update="formPlanmaestro"/>
+                                     update="formPlanmaestro"/>    
                 </h:panelGrid>
-                <br></br>
-            
-            
-            
-                <p:commandButton id="tit" action="#{uiPlanMaestro.crearTitulo()}" value="TITULO"
-                             icon="ui-icon-newwin" /> 
-                <p:commandButton id="sec" action="#{uiPlanMaestro.crearSeccion()}" value="SECCION"
-                                 icon="ui-icon-newwin"  >                    
-                </p:commandButton>
-                <p:commandButton id="det" action="#{uiPlanMaestro.crearDetalle()}" value="DETALLE"
-                             icon="ui-icon-newwin"  /> 
-                <p:commandButton id="it" action="#{uiPlanMaestro.crearItem()}" value="ITEM"
-                             icon="ui-icon-newwin"  />                 
+                <br/>
+                <h:panelGrid columns="2">
+                    <p:commandButton action="#{uiPlanMaestro.crearTitulo()}" value="ADMIN TITULO"
+                                    icon="ui-icon-newwin" />
+                    <p:commandButton value="Limpiar" action="#{uiPlantitulo.limpiar()}"
+                                    icon="ui-icon-cancel"
+                                    update="formPlanmaestro"/>
+                    
+                </h:panelGrid>
+               
             </p:panel>
-
-            
         </h:form>
-
     </ui:define>
-
 </ui:composition>

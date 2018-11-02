@@ -8,14 +8,15 @@ package com.gestor.seguimiento;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
-import com.gestor.modelo.Sesion;
-import com.gestor.seguimiento.controlador.GestorPlanSeccionDetalle;
+import com.gestor.seguimiento.controlador.GestorPlanSeccion;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -24,38 +25,77 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "uiPlandetalle")
 @SessionScoped
 public class UIPlanDetalle implements Serializable{
-    private GestorPlanSeccionDetalle gestorPlanSeccionDetalle;
+    private GestorPlanSeccion gestorPlanSeccion;
     private PlanSeccionDetalle plansecciondetalle = new PlanSeccionDetalle();    
     private PlanSeccionDetalleTexto plansecciondetalletexto = new PlanSeccionDetalleTexto();
     private PlanSeccionDetalleTextoPK plansecciondetalletextopk = new PlanSeccionDetalleTextoPK();
     private PlanSeccionDetallePK plansecciondetallepk = new PlanSeccionDetallePK();
     private List<PlanSeccionDetalle> plansecciondetalleList = new ArrayList<>();    
+    private List<PlanSeccionDetalleTexto> plansecciondetalletextoList = new ArrayList<>();    
     
     
     public UIPlanDetalle(){  
         
     }   
     
+    @PostConstruct
+    public void init() {         
+        this.cargarPlansecciondetalle();
+        this.cargarPlansecciondetalletexto();
+    }
+    
+    public void subirItemPlansecciondetalle() {    
+        plansecciondetalle = (PlanSeccionDetalle) UtilJSF.getBean("varPlandetalle");                     
+        Integer coddetalle=Integer.parseInt(plansecciondetalle.getNumeral().substring(4, 5));
+        plansecciondetallepk.setCodSeccionDetalle(coddetalle);   
+        plansecciondetalle = (PlanSeccionDetalle) UtilJSF.getBean("varPlandetalle");
+        UtilJSF.setBean("planDetalle", plansecciondetalle, UtilJSF.SESSION_SCOPE);      
+        this.cargarPlansecciondetalletexto();           
+    }
+    
+    public void cargarPlansecciondetalle() {
+        try {
+            PlanSeccion ps=(PlanSeccion) UtilJSF.getBean("varPlanseccion");
+            this.plansecciondetalleList=new ArrayList<>();
+            gestorPlanSeccion = new GestorPlanSeccion();            
+            this.plansecciondetalleList.addAll((Collection<? extends PlanSeccionDetalle>) gestorPlanSeccion.cargarListaSecciondetalle(ps));                                                
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void cargarPlansecciondetalletexto() {        
+        try {
+            plansecciondetalletexto.setTexto("");
+            this.plansecciondetalletextoList = new ArrayList<>();
+            gestorPlanSeccion = new GestorPlanSeccion();
+            this.plansecciondetalletextoList.addAll((Collection<? extends PlanSeccionDetalleTexto>) gestorPlanSeccion.cargarPlanSecciondetalletextoList(plansecciondetalle));                                 
+            plansecciondetalletexto.setTexto(plansecciondetalletextoList.get(0).getTexto());
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
     public void guardarSeccionDetalle(){              
         try {              
-            GestorPlanSeccionDetalle gestorPlansecciondetalle= new GestorPlanSeccionDetalle();           
-            PlanSeccion ps=(PlanSeccion) UtilJSF.getBean("Planseccion");            
+            GestorPlanSeccion gestorPlanseccion= new GestorPlanSeccion();           
+            PlanSeccion ps=(PlanSeccion) UtilJSF.getBean("planSeccion");            
             
             if(plansecciondetallepk.getCodSeccionDetalle()==0){
                 plansecciondetallepk.setCodSeccion(1);
             }
-            plansecciondetallepk.setCodSeccionDetalle(Integer.parseInt(plansecciondetalle.getNumeral()));
+            
+            plansecciondetalle.setNumeral(ps.getNumeral()+"."+Integer.toString(plansecciondetallepk.getCodSeccionDetalle()));
             
             PlanSeccionDetalle plsecciondetalle = new PlanSeccionDetalle(new PlanSeccionDetallePK(ps.getPlanSeccionPK().getCodigoEstablecimiento(), ps.getPlanSeccionPK().getCodTitulo()
                     , ps.getPlanSeccionPK().getCodSeccion() , plansecciondetallepk.getCodSeccionDetalle()) , plansecciondetalle.getNumeral(), plansecciondetalle.getNombre()
             );            
             
-            gestorPlansecciondetalle.validarPlansecciondetalle(plsecciondetalle);
-            gestorPlansecciondetalle.almacenarSecciondetalle(plsecciondetalle); 
+            gestorPlanseccion.validarPlansecciondetalle(plsecciondetalle);
+            gestorPlanseccion.almacenarSecciondetalle(plsecciondetalle);                    
             
-            this.plansecciondetalleList.add(plansecciondetalleList.size(), plsecciondetalle);            
-                        
-            UtilMSG.addSuccessMsg("Seccion almacenado correctamente.");                                                
+            UtilMSG.addSuccessMsg("Titulo Detalle almacenado correctamente.");                                 
+            UtilJSF.setBean("planDetalle", new PlanSeccionDetalle(), UtilJSF.SESSION_SCOPE);                        
             
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
@@ -66,14 +106,35 @@ public class UIPlanDetalle implements Serializable{
             }
         }
     }
-
-    public GestorPlanSeccionDetalle getGestorPlanSeccionDetalle() {
-        return gestorPlanSeccionDetalle;
+    
+    public void guardarSecciondetalletexto(){                
+         
+        try {                        
+            GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();                                    
+            plansecciondetalletextopk.setCodSeccionDetalleTexto(1);    
+            
+            PlanSeccionDetalleTexto plsecciondetalletexto = new PlanSeccionDetalleTexto(new PlanSeccionDetalleTextoPK(plansecciondetalle.getPlanSeccionDetallePK().getCodigoEstablecimiento(),
+            plansecciondetalle.getPlanSeccionDetallePK().getCodTitulo(), plansecciondetalle.getPlanSeccionDetallePK().getCodSeccion(), plansecciondetalle.getPlanSeccionDetallePK().getCodSeccionDetalle(),
+            plansecciondetalletextopk.getCodSeccionDetalleTexto()), plansecciondetalletexto.getTexto()
+            );
+            gestorPlanseccion.almacenarSecciondetalletexto(plsecciondetalletexto);            
+            
+            UtilMSG.addSuccessMsg("Texto almacenado correctamente.");
+            UtilJSF.setBean("planDetalle", new PlanSeccionDetalle(), UtilJSF.SESSION_SCOPE); 
+            this.cargarPlansecciondetalletexto();
+            
+        } catch (Exception e) {
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getMessage());
+            } else {    
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }
+        }
+        
     }
-
-    public void setGestorPlanSeccionDetalle(GestorPlanSeccionDetalle gestorPlanSeccionDetalle) {
-        this.gestorPlanSeccionDetalle = gestorPlanSeccionDetalle;
-    }
+    
+    
 
     public PlanSeccionDetalle getPlansecciondetalle() {
         return plansecciondetalle;

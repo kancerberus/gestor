@@ -8,15 +8,20 @@ package com.gestor.seguimiento;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
+import com.gestor.gestor.AdjuntosCategoria;
+import com.gestor.gestor.controlador.GestorAdjuntosCategoria;
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import com.gestor.seguimiento.controlador.GestorPlanTitulo;
 import com.gestor.modelo.Sesion;
+import com.gestor.gestor.AdjuntosCategoriaTipo;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.SessionScoped;
+
 
 /**
  *
@@ -27,6 +32,7 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class UIPlantitulo implements Serializable{     
     private GestorPlanTitulo gestorPlanTitulo;   
+    private GestorAdjuntosCategoria gestorAdjuntosCategoria;   
     private PlanTitulo plantitulo = new PlanTitulo();       
     private PlanTituloPK plantitulopk = new PlanTituloPK();    
     private PlanTituloTexto plantitulotexto= new PlanTituloTexto(); 
@@ -35,30 +41,67 @@ public class UIPlantitulo implements Serializable{
     private PlanTituloAdiuntosPK plantituloadjuntopk= new PlanTituloAdiuntosPK();     
     private List<PlanTitulo> plantituloList = new ArrayList<>();
     private List<PlanTituloTexto> plantitulotextoList = new ArrayList<>();
-    private List<PlanTituloAdiuntos> plantituloadjuntoList = new ArrayList<>();            
+    private List<PlanTituloAdiuntos> plantituloadjuntoList = new ArrayList<>();   
+    private AdjuntosCategoria adjuntoscategoria = new AdjuntosCategoria();    
+    private List<AdjuntosCategoria> adjuntosCategoriaitems = new ArrayList<>();
+    
+    
     Sesion s = (Sesion) UtilJSF.getBean("sesion"); 
     
     
     public UIPlantitulo(){        
-    }    
+    }        
     
     @PostConstruct
-    public void init() {       
+    public void init() {      
+        this.cargarCategoriaitems();
+        this.cargarAdjuntosCategoriaTipo();        
         this.cargarPlantitulo();
-        this.cargarPlantitulotexto();        
+        this.cargarPlantitulotexto();     
+        this.cargarPlantituloadjunto();
+    }
+    
+    public void cargarCategoriaitems() {
+        try {
+            this.adjuntosCategoriaitems = new ArrayList<>();
+            gestorAdjuntosCategoria = new GestorAdjuntosCategoria();
+            this.adjuntosCategoriaitems.addAll((Collection<? extends AdjuntosCategoria>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriapm());                        
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+        
+    public void cargarAdjuntosCategoriaTipo() {
+        try {                                   
+            if(getAdjuntoscategoria() != null){                
+                adjuntoscategoria.setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(adjuntoscategoria.getCodCategoria()));                                
+            }            
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+            UtilMSG.addSupportMsg();
+        }        
     }
      
-    public void subirItemPlantitulo() {
-        plantitulo = (PlanTitulo) UtilJSF.getBean("varPlantitulo");        
-        UtilJSF.setBean("Plantitulo", plantitulo, UtilJSF.SESSION_SCOPE);                
+    public void subirItemPlantitulo() {                     
+        plantitulo = (PlanTitulo) UtilJSF.getBean("varPlantitulo");
+        UtilJSF.setBean("planTitulo", plantitulo, UtilJSF.SESSION_SCOPE);          
         this.cargarPlantitulotexto();
+        this.cargarPlantituloadjunto();
     }     
-      
+    
+    public void subirItemPlantituloadjunto() {                     
+        plantituloadjunto = (PlanTituloAdiuntos) UtilJSF.getBean("varPlantituloadjunto");
+        UtilJSF.setBean("planTituloadjunto", plantituloadjunto, UtilJSF.SESSION_SCOPE);          
+        this.cargarPlantitulotexto();
+        this.cargarPlantituloadjunto();
+    }
+    
     public void cargarPlantitulo() {        
-        try {
+        try {            
             this.plantituloList = new ArrayList<>();
             gestorPlanTitulo = new GestorPlanTitulo();
-            this.plantituloList.addAll((Collection<? extends PlanTitulo>) gestorPlanTitulo.cargarPlanTituloList(s.getEstablecimiento().getCodigoEstablecimiento()));
+            this.plantituloList.addAll((Collection<? extends PlanTitulo>) gestorPlanTitulo.cargarPlanTituloList(s.getEstablecimiento().getCodigoEstablecimiento()));            
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -75,25 +118,21 @@ public class UIPlantitulo implements Serializable{
             UtilLog.generarLog(this.getClass(), ex);
         }
     }
-    
-    /*public void cargarPlantituloadjunto() {                
-        try {
+    public void cargarPlantituloadjunto() {        
+        try {            
             this.plantituloadjuntoList = new ArrayList<>();
-            gestorPlanMaestro = new GestorPlanMaestro();
-            this.plantituloadjuntoList.addAll((Collection<? extends PlanTituloAdiuntos>) gestorPlanMaestro.cargarListaTituloadjunto(plantitulo));                        
+            gestorPlanTitulo = new GestorPlanTitulo();
+            this.plantituloadjuntoList.addAll((Collection<? extends PlanTituloAdiuntos>) gestorPlanTitulo.cargarPlanTituloadjuntoList(plantitulo));
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
-    }*/
-    
+    }
         
-    public void guardarTitulo(){                        
-        
+    public void guardarTitulo(){     
         try {                                                    
             GestorPlanTitulo gestorPlantitulo = new GestorPlanTitulo();
 
-            plantitulopk.setCodTitulo(Integer.parseInt(plantitulo.getNumeral()));
-            
+            plantitulopk.setCodTitulo(Integer.parseInt(plantitulo.getNumeral()));            
             
             PlanTitulo pltitulo = new PlanTitulo(new PlanTituloPK(
             s.getEstablecimiento().getCodigoEstablecimiento(), plantitulopk.getCodTitulo()),plantitulo.getNombre(),plantitulo.getNumeral()
@@ -103,8 +142,7 @@ public class UIPlantitulo implements Serializable{
             gestorPlantitulo.almacenarTitulo(pltitulo);
 
             UtilMSG.addSuccessMsg("Titulo almacenado correctamente.");
-            UtilJSF.setBean("Plantitulo", new PlanTitulo(), UtilJSF.SESSION_SCOPE);
-            this.limpiar();
+            UtilJSF.setBean("planTitulo", new PlanTitulo(), UtilJSF.SESSION_SCOPE);            
             
 
         } catch (Exception e) {
@@ -115,26 +153,23 @@ public class UIPlantitulo implements Serializable{
                 UtilLog.generarLog(this.getClass(), e);
             }
         }
-    }
-    
-    /*public void guardarTituloadjunto(){
-        Integer codE=1;        
+    }    
+
+    public void guardarTituloadjunto(){              
         try {                                    
-            
-            plantitulopk.setCodTitulo(codTit); 
             GestorPlanTitulo gestorPlantitulo = new GestorPlanTitulo();                                    
-            plantituloadjuntopk.setCodTituloAdjunto(plantituloadjuntoList.size()+1);    
+            if(plantituloadjuntopk.getCodTituloAdjunto()==0){
+                plantituloadjuntopk.setCodTituloAdjunto(1);
+            }
             
-            PlanTituloAdiuntos pltituloadjunto = new PlanTituloAdiuntos(new PlanTituloAdiuntosPK(codE, plantituloadjuntopk.getCodTituloAdjunto(), plantitulopk.getCodTitulo()) , plantituloadjunto.getCodCategoria(),
-                    plantituloadjunto.getCodCategoriaTipo(), plantituloadjunto.getTitulo(), plantituloadjunto.getDescripcion(), plantituloadjunto.getDocumento()                    
+            PlanTituloAdiuntos pltituloadjunto = new PlanTituloAdiuntos(new PlanTituloAdiuntosPK(s.getEstablecimiento().getCodigoEstablecimiento(), 
+                plantituloadjuntopk.getCodTituloAdjunto(), plantitulo.getPlanTituloPK().getCodTitulo()) , adjuntoscategoria.getCodCategoria(),
+                adjuntoscategoria.getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo(), plantituloadjunto.getTitulo(), plantituloadjunto.getDescripcion(), plantituloadjunto.getDocumento()                    
             );
-//           gestorPlantitulo.almacenarTituloadjunto(pltituloadjunto);
+           gestorPlantitulo.almacenarTituloadjunto(pltituloadjunto);
             
             UtilMSG.addSuccessMsg("Adjunto almacenado correctamente.");
-            UtilJSF.setBean("Plantitulo", new PlanTitulo(), UtilJSF.SESSION_SCOPE);
-            this.plantitulotextopk.setCodTituloTexto(0);
-            this.plantitulotextoList.clear();
-            this.codTit=null;
+            UtilJSF.setBean("planTitulo", new PlanTitulo(), UtilJSF.SESSION_SCOPE);
             
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
@@ -143,9 +178,8 @@ public class UIPlantitulo implements Serializable{
                 UtilMSG.addSupportMsg();
                 UtilLog.generarLog(this.getClass(), e);
             }
-        }
-        
-    }*/
+        }        
+    }
     
     public void guardarTitulotexto(){                
          
@@ -158,7 +192,7 @@ public class UIPlantitulo implements Serializable{
             gestorPlantitulo.almacenarTitulotexto(pltitulotexto);            
             
             UtilMSG.addSuccessMsg("Texto almacenado correctamente.");
-            UtilJSF.setBean("Plantitulo", new PlanTitulo(), UtilJSF.SESSION_SCOPE); 
+            UtilJSF.setBean("planTitulo", new PlanTitulo(), UtilJSF.SESSION_SCOPE); 
             this.cargarPlantitulotexto();
             
             
@@ -172,18 +206,24 @@ public class UIPlantitulo implements Serializable{
         }
         
     }    
-    
-    public void limpiar(){
-        
-        this.plantitulo.setNumeral("");
-        this.plantitulo.setNombre("");        
-        this.cargarPlantitulo();
-        this.plantitulotextoList.clear();
-        this.plantitulotexto.setTexto("");
-    }    
-    
+
+    public AdjuntosCategoria getAdjuntoscategoria() {
+        return adjuntoscategoria;
+    }
+
+    public void setAdjuntoscategoria(AdjuntosCategoria adjuntoscategoria) {
+        this.adjuntoscategoria = adjuntoscategoria;
+    }
+
+    public List<AdjuntosCategoria> getAdjuntosCategoriaitems() {
+        return adjuntosCategoriaitems;
+    }
+
+    public void setAdjuntosCategoriaitems(List<AdjuntosCategoria> adjuntosCategoriaitems) {
+        this.adjuntosCategoriaitems = adjuntosCategoriaitems;
+    }
    
-    public String administrarPlanmaestro(){
+    public String administrarPlanmaestro() throws IOException{        
         return ("/seguimiento/admin-plan-maestro.xhtml?faces-redirect=true");
     }    
 

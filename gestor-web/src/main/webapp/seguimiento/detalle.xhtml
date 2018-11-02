@@ -27,9 +27,8 @@
                     <p:column>
                         <h:outputText value="#{varPlantitulo.nombre}"/>
                     </p:column>
-                </p:dataTable>
-                <br/>
-                
+                </p:dataTable> 
+                <br/>                
                 <p:dataTable  style="width: 40%" value="#{uiPlanseccion.planseccion}" var="varPlanseccion" emptyMessage="No hay Seccion"
                               rowStyleClass="Centro" >
 
@@ -47,7 +46,7 @@
                     </p:column>                    
                 </p:dataTable>
                 <br/>                
-                <p:dataTable  style="width: 40%" value="#{uiPlandetalle}" var="varPlandetalle" emptyMessage="No hay Detalle"
+                <p:dataTable  style="width: 40%" value="#{uiPlandetalle.plansecciondetalleList}" var="varPlandetalle" emptyMessage="No hay Detalle"
                               rowStyleClass="Centro" >
 
                     <p:columnGroup type="header">  
@@ -60,46 +59,117 @@
                     <p:column >
                         
                         <p:commandButton icon="ui-icon-radio" title="Seleccionar Seccion" update="formDetalle" 
-                                        action="#{uiPlandetalle}" >
-                            
+                                         action="#{uiPlandetalle.subirItemPlansecciondetalle()}" >                            
+                            <f:actionListener binding= "#{uiPlanitem.cargarPlansecciondetalleitem()}"/>
                         </p:commandButton>
                             
                     </p:column>
                     <p:column>
-                        <h:outputText value="#{varPlandetalle}"/>
+                        <h:outputText value="#{varPlandetalle.numeral}"/>
                     </p:column>
                     <p:column>
-                        <h:outputText value="#{varPlandetalle}"/>
+                        <h:outputText value="#{varPlandetalle.nombre}"/>
                     </p:column>                    
                 </p:dataTable>
                 <br/>
-                <h:panelGrid columns="5">
+                <h:panelGrid columns="3">
+                    <p:inputMask mask="9" value="#{uiPlandetalle.plansecciondetallepk.codSeccionDetalle}" placeholder="Numeral" />                    
                     <p:inputText value="#{uiPlandetalle.plansecciondetalle.nombre}" placeholder="Nombre" />                    
-                    <p:inputText value="#{uiPlandetalle.plansecciondetalle.numeral}" placeholder="Numeral" />                    
                 </h:panelGrid>
-                    <h:panelGrid columns="4">                
-                        <p:commandButton value="Crear Detalle" action="#{uiPlandetalle.guardarSeccionDetalle()}"
+                <h:panelGrid columns="4">                
+                        <p:commandButton value="Crear/Modificar Detalle" action="#{uiPlandetalle.guardarSeccionDetalle()}"
                                      icon="ui-icon-new"
-                                     update="formDetalle"/>                            
-                        <p:commandButton value="Modificar" action="#{uiPlanseccion}" 
-                                     icon="ui-icon-disk"
                                      update="formDetalle"/> 
-                                             
                 </h:panelGrid>
                 <br/>
                 <h:panelGrid >  
-                    <p:inputTextarea rows="10" cols="60"  value="#{uiPlandetalle}" placeholder="Nuevo Texto"/>
+                    <p:inputTextarea rows="10" cols="60"  value="#{uiPlandetalle.plansecciondetalletexto.texto}" placeholder="Nuevo Texto"/>
                 </h:panelGrid>
-                <br/>
                 <h:panelGrid columns="4">
-                    <p:commandButton value="Guardar Texto Seccion" action="#{uiPlandetalle.guardarSecciontexto()}" 
+                    <p:commandButton value="Guardar Texto Seccion" action="#{uiPlandetalle.guardarSecciondetalletexto()}" 
                                      icon="ui-icon-new"
                                      update="formDetalle"/>  
+                </h:panelGrid>   
+                <br/>
+                
+                 <h:panelGrid columns="8">                    
+                    <p:inputText  placeholder="Titulo" value="#{uiPlantitulo.plantituloadjunto.titulo}"/>  
+                    <p:inputText  placeholder="Descripcion" value="#{uiPlantitulo.plantituloadjunto.descripcion}"/>  
+                        
+                        
+                    <p:selectOneMenu value="#{uiPlantitulo.adjuntoscategoria}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;">  
+                    <f:selectItem itemLabel="Seleccionar categoria" itemValue="" /> 
+                    <f:selectItems value="#{uiPlantitulo.adjuntosCategoriaitems}" var="pta" itemLabel="#{pta.nombre}" itemValue="#{pta}"/>
+                    <p:ajax update="formDetalle" listener="#{uiPlantitulo.cargarAdjuntosCategoriaTipo()}" />
+                    </p:selectOneMenu>
                     
-                    <p:commandButton value="Regresar " action="#{uiPlantitulo.administrarPlanmaestro()}" 
-                                     icon="ui-icon-return"
-                                     />
+                    <p:selectOneMenu value="#{uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;" disabled="#{empty evaluacionAdjuntos.adjuntosCategoria }">  
+                        <f:selectItem itemLabel="Seleccionar tipo" itemValue="" /> 
+                        <f:selectItems value="#{uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipoList}" var="pta" itemLabel="#{pta.nombre}" 
+                                       itemValue="#{pta}"/>
+                    </p:selectOneMenu>
+                                      
+                </h:panelGrid>                
+                <h:panelGrid columns="4">
+                    <p:commandButton value="Guardar Adjunto" action="#{uiPlantitulo.guardarTituloadjunto()}" 
+                                     icon="ui-icon-new"
+                                     update="formDetalle"/>                    
+                    <p:commandButton value="Limpiar" action="#{uiPlantitulo.limpiar()}" 
+                                     icon="ui-icon-cancel"
+                                     update="formDetalle"/>
                 </h:panelGrid>
+                <br/>                
+                <p:dataTable style="width: 80%" value="#{uiPlantitulo.plantituloadjuntoList}" var="varPlantituloadjunto" emptyMessage="No hay Documentos"
+                            rowStyleClass="Centro">
+
+                    <p:columnGroup type="header" >  
+                        <p:row>                              
+                            <p:column  headerText="Seleccionar"/>                            
+                            <p:column  headerText="Numeral"/>
+                            <p:column  headerText="Titulo"/>    
+                            <p:column  headerText="Descripcion"/>    
+                            <p:column  headerText="Categoria"/>
+                            <p:column  headerText="Categoria Tipo"/>
+                        </p:row> 
+                    </p:columnGroup>
+                    
+                    <p:column>
+                        <p:commandButton icon="ui-icon-check" title="Modificar Titulo Texto" update="formDetalle"
+                                         action="#{uiPlantitulo.subirItemPlantituloadjunto()}"/>
+                    </p:column>
+                    
+                    <p:column>
+                        <h:outputText value="#{varPlantituloadjunto.planTituloAdiuntosPK.codTituloAdjunto}"/>    
+                    </p:column>                    
+                    
+                    <p:column>
+                        <h:outputText value="#{varPlantituloadjunto.titulo}"/>                            
+                    </p:column>
+                    
+                    <p:column>                        
+                        <h:outputText value="#{varPlantituloadjunto.descripcion}"/>    
+                    </p:column>
+                    
+                    <p:column>
+                        <h:outputText value="#{varPlantituloadjunto.codCategoria}"/>                            
+                    </p:column>                        
+                    
+                    <p:column>                        
+                        <h:outputText value="#{varPlantituloadjunto.codCategoriaTipo}"/>    
+                    </p:column>                        
+                </p:dataTable>                                
+                <br/>                    
+                <h:panelGrid columns="3">
+                    <p:commandButton value="REGRESAR " action="#{uiPlantitulo.administrarPlanmaestro()}" 
+                    icon="ui-icon-return"
+                    />
+                    <p:commandButton value="ADMIN SUBTITULO 3 " action="#{uiPlanMaestro.crearItem()}" 
+                    icon="ui-icon-return"
+                    />
+                    
+                </h:panelGrid> 
                 
             </p:panel>
         </h:form>

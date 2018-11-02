@@ -7,12 +7,14 @@ package com.gestor.seguimiento;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
+import com.gestor.gestor.AdjuntosCategoria;
 import com.gestor.modelo.Sesion;
 import com.gestor.seguimiento.controlador.GestorPlanSeccion;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -29,30 +31,44 @@ public class UIPlanSeccion implements Serializable{
     private PlanSeccionTexto plansecciontexto = new PlanSeccionTexto();
     private PlanSeccionPK planseccionpk = new PlanSeccionPK();
     private PlanSeccionTextoPK plansecciontextopk = new PlanSeccionTextoPK();
+    private PlanSeccionAdjuntos planseccionadjuntos= new PlanSeccionAdjuntos();
+    private PlanSeccionAdjuntosPK planseccionadjuntospk= new PlanSeccionAdjuntosPK();
+    private AdjuntosCategoria adjuntoscategoria = new AdjuntosCategoria();    
     private List<PlanSeccion> planseccionList = new ArrayList<>();    
     private List<PlanSeccionTexto> plansecciontextoList = new ArrayList<>();    
+    private List<PlanSeccionAdjuntos> planseccionadjuntosList = new ArrayList<>();   
     
     Sesion s = (Sesion) UtilJSF.getBean("sesion");    
 
     public UIPlanSeccion(){        
     }   
     
-    
-    public void subirItemPlanseccion() {                               
-        planseccion = (PlanSeccion) UtilJSF.getBean("varPlanseccion");
-        UtilJSF.setBean("Planseccion", planseccion, UtilJSF.SESSION_SCOPE);      
+    @PostConstruct
+    public void init() {          
+        this.cargarPlanseccion();
         this.cargarPlansecciontexto();
-           
+    }
+    
+    
+    public void subirItemPlanseccion() {       
+        
+        planseccion = (PlanSeccion) UtilJSF.getBean("varPlanseccion");                     
+        Integer codSeccion=Integer.parseInt(planseccion.getNumeral().substring(2, 3));
+        planseccionpk.setCodSeccion(codSeccion);   
+        UtilJSF.setBean("planSeccion", planseccion, UtilJSF.SESSION_SCOPE);        
+        this.cargarPlansecciontexto();
     }
     
     public void cargarPlanseccion() {
         
-        try {               
-            PlanTitulo pt=(PlanTitulo) UtilJSF.getBean("varPlantitulo");
+        try {                                  
+            PlanTitulo pt=(PlanTitulo) UtilJSF.getBean("planTitulo");            
             this.planseccionList=new ArrayList<>();
-            gestorPlanSeccion = new GestorPlanSeccion();            
-            this.planseccionList.addAll((Collection<? extends PlanSeccion>) gestorPlanSeccion.cargarListaSeccion(pt));                        
-            
+            gestorPlanSeccion = new GestorPlanSeccion();                   
+            this.planseccionList.addAll((Collection<? extends PlanSeccion>) gestorPlanSeccion.cargarListaSeccion(pt));   
+            if(planseccionList==null){
+                planseccionList.clear();
+            }
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -77,25 +93,21 @@ public class UIPlanSeccion implements Serializable{
             PlanTitulo pt=(PlanTitulo) UtilJSF.getBean("Plantitulo");            
             planseccionpk.setCodTitulo(pt.getPlanTituloPK().getCodTitulo());
             
-            planseccionpk.setCodSeccion(Integer.parseInt(planseccion.getNumeral()));
             if(planseccionpk.getCodSeccion()==0){
                 planseccionpk.setCodSeccion(1);
-            }
+            }                        
             
-            planseccion.setNumeral(Integer.toString(planseccionpk.getCodSeccion()));            
-            
+            planseccion.setNumeral(pt.getNumeral()+"."+Integer.toString(planseccionpk.getCodSeccion()));
             PlanSeccion plseccion = new PlanSeccion(new PlanSeccionPK(
             s.getEstablecimiento().getCodigoEstablecimiento(), planseccionpk.getCodTitulo(), planseccionpk.getCodSeccion()),planseccion.getNombre(),planseccion.getNumeral(), planseccion.getImagen()
-            );
+            );            
+                       
             
             gestorPlanseccion.validarPlanseccion(plseccion);
             gestorPlanseccion.almacenarSeccion(plseccion); 
-            
-            this.planseccionList.add(planseccionList.size(), plseccion);            
-                        
+                                                
             UtilMSG.addSuccessMsg("Seccion almacenado correctamente."); 
-            UtilJSF.setBean("Planseccion", new PlanSeccion(), UtilJSF.SESSION_SCOPE);
-
+            UtilJSF.setBean("planSeccion", new PlanSeccion(), UtilJSF.SESSION_SCOPE);
             
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
@@ -106,35 +118,6 @@ public class UIPlanSeccion implements Serializable{
             }
         }
     }
-    
-    
-    public void modificarSeccion(){   
-        
-        try {                        
-            GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();                         
-            PlanTitulo pt=(PlanTitulo) UtilJSF.getBean("Plantitulo");     
-
-            
-            PlanSeccion plseccion = new PlanSeccion(new PlanSeccionPK(s.getEstablecimiento().getCodigoEstablecimiento(), pt.getPlanTituloPK().getCodTitulo() ,
-                    planseccion.getPlanSeccionPK().getCodSeccion()) , planseccion.getNombre(), planseccion.getNumeral(), planseccion.getImagen()
-            );
-            gestorPlanseccion.modificarSeccion(plseccion);
-            
-            UtilMSG.addSuccessMsg("Titulo Seccion modificado correctamente.");
-            UtilJSF.setBean("Planseccion", new PlanSeccion(), UtilJSF.SESSION_SCOPE);  
-            
-            
-            
-        } catch (Exception e) {
-            if (UtilLog.causaControlada(e)) {
-                UtilMSG.addWarningMsg(e.getMessage());
-            } else {    
-                UtilMSG.addSupportMsg();
-                UtilLog.generarLog(this.getClass(), e);
-            }
-        }
-        
-    }    
     
     public void guardarSecciontexto(){                
          
@@ -148,7 +131,7 @@ public class UIPlanSeccion implements Serializable{
             gestorPlanseccion.almacenarSecciontexto(plsecciontexto);            
             
             UtilMSG.addSuccessMsg("Texto almacenado correctamente.");
-            UtilJSF.setBean("Planseccion", new PlanSeccion(), UtilJSF.SESSION_SCOPE); 
+            UtilJSF.setBean("planSeccion", new PlanSeccion(), UtilJSF.SESSION_SCOPE); 
             this.cargarPlansecciontexto();
             
         } catch (Exception e) {
@@ -160,6 +143,67 @@ public class UIPlanSeccion implements Serializable{
             }
         }
         
+    }
+    
+    public void guardarTituloadjunto(){              
+        try {                                    
+            GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();                                    
+            planseccionadjuntospk.setCodSeccionAdjunto(planseccionadjuntosList.size()+1);             
+            
+            
+            PlanSeccionAdjuntos plseccionadjunto = new PlanSeccionAdjuntos(new PlanSeccionAdjuntosPK(s.getEstablecimiento().getCodigoEstablecimiento(), 
+                planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodTitulo(),planseccionadjuntospk.getCodSeccionAdjunto(), planseccion.getPlanSeccionPK().getCodSeccion()) , adjuntoscategoria.getCodCategoria(),
+                adjuntoscategoria.getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo(), planseccionadjuntos.getTitulo(), planseccionadjuntos.getDescripcion(), planseccionadjuntos.getDocumento()                    
+            );
+           gestorPlanseccion.almacenarSeccionadjunto(plseccionadjunto);
+            
+            UtilMSG.addSuccessMsg("Adjunto almacenado correctamente.");
+            UtilJSF.setBean("planSeccion", new PlanSeccion(), UtilJSF.SESSION_SCOPE);
+            
+        } catch (Exception e) {
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getMessage());
+            } else {    
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }
+        }        
+    }
+
+    public PlanSeccionAdjuntos getPlanseccionadjuntos() {
+        return planseccionadjuntos;
+    }
+
+    public void setPlanseccionadjuntos(PlanSeccionAdjuntos planseccionadjuntos) {
+        this.planseccionadjuntos = planseccionadjuntos;
+    }
+
+    public PlanSeccionAdjuntosPK getPlanseccionadjuntospk() {
+        return planseccionadjuntospk;
+    }
+
+    public void setPlanseccionadjuntospk(PlanSeccionAdjuntosPK planseccionadjuntospk) {
+        this.planseccionadjuntospk = planseccionadjuntospk;
+    }
+
+    public AdjuntosCategoria getAdjuntoscategoria() {
+        return adjuntoscategoria;
+    }
+
+    public void setAdjuntoscategoria(AdjuntosCategoria adjuntoscategoria) {
+        this.adjuntoscategoria = adjuntoscategoria;
+    }
+
+    public List<PlanSeccionAdjuntos> getPlanseccionadjuntosList() {
+        return planseccionadjuntosList;
+    }
+
+    public void setPlanseccionadjuntosList(List<PlanSeccionAdjuntos> planseccionadjuntosList) {
+        this.planseccionadjuntosList = planseccionadjuntosList;
+    }
+    
+    public void limpiarBean(){
+      planseccion= new PlanSeccion();
     }
 
     public PlanSeccionTexto getPlansecciontexto() {
@@ -190,7 +234,7 @@ public class UIPlanSeccion implements Serializable{
         return ("/seguimiento/admin-plan-maestro.xhtml?faces-redirect=true");
     }    
 
-    public List<PlanSeccion> getPlanseccionList() {
+    public List<PlanSeccion> getPlanseccionList() {        
         return planseccionList;
     }
 

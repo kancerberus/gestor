@@ -38,58 +38,121 @@
                         <p:row>  
                             <p:column   headerText="Seleccionar" />
                             <p:column  headerText="Numeral" />
-                            <p:column  headerText="Seccion"/>
-                            <p:column  headerText="Imagen"/>
+                            <p:column  headerText="Seccion"/>                            
                         </p:row> 
                     </p:columnGroup >
-                    <p:column >
-                        
+                    <p:column >                        
                         <p:commandButton icon="ui-icon-radio" title="Seleccionar Seccion" update="formSeccion" 
-                                        action="#{uiPlanseccion.subirItemPlanseccion()}" >
-                            
-                        </p:commandButton>
-                            
+                                        action="#{uiPlanseccion.subirItemPlanseccion()}" >                            
+                            <f:actionListener binding="#{uiPlandetalle.cargarPlansecciondetalle()}"/>
+                        </p:commandButton>                            
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varPlanseccion.numeral}"/>
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varPlanseccion.nombre}"/>
-                    </p:column>
-                    <p:column>
-                        <h:outputText value="#{varPlanseccion.imagen}"/>
-                    </p:column>
+                    </p:column>                    
                 </p:dataTable>
                 <br/>
                 <h:panelGrid columns="5">
-                    <p:inputText value="#{uiPlanseccion.planseccion.nombre}" placeholder="Nombre" />                    
-                    <p:inputText value="#{uiPlanseccion.planseccion.numeral}" placeholder="Numeral" />                    
-                    <p:inputText value="#{uiPlanseccion.planseccion.imagen}" placeholder="Imagen"/>                    
-                    
+                    <p:inputMask id="codS" mask="9" placeholder="Numeral" value="#{uiPlanseccion.planseccionpk.codSeccion}" />  
+                    <p:inputText value="#{uiPlanseccion.planseccion.nombre}" placeholder="Nombre" />                                            
                 </h:panelGrid>
                     <h:panelGrid columns="4">                
-                        <p:commandButton value="Crear Seccion" action="#{uiPlanseccion.guardarSeccion()}" 
+                        <p:commandButton value="Crear/Modificar Seccion" action="#{uiPlanseccion.guardarSeccion()}" 
                                      icon="ui-icon-new"
-                                     update="formSeccion"/>                            
-                        <p:commandButton value="Modificar" action="#{uiPlanseccion.modificarSeccion()}" 
-                                     icon="ui-icon-disk"
-                                     update="formSeccion"/> 
-                                             
+                                     update="formSeccion"/>  
                 </h:panelGrid>
                 <br/>
                 <h:panelGrid >  
                     <p:inputTextarea rows="10" cols="60"  value="#{uiPlanseccion.plansecciontexto.texto}" placeholder="Nuevo Texto"/>
                 </h:panelGrid>
-                <br/>
+                
                 <h:panelGrid columns="4">
                     <p:commandButton value="Guardar Texto Seccion" action="#{uiPlanseccion.guardarSecciontexto()}" 
                                      icon="ui-icon-new"
-                                     update="formSeccion"/>  
-                    
-                    <p:commandButton value="Detalle " action="#{uiPlanMaestro.crearDetalle()}" 
-                                     icon="ui-icon-return"
-                                     />
+                                     update="formSeccion"/>
                 </h:panelGrid>
+                <br/>
+                <h:panelGrid columns="8">
+                    <p:inputText  placeholder="Titulo" value="#{uiPlanseccion.planseccionadjuntos.titulo}"/>  
+                    <p:inputText  placeholder="Descripcion" value="#{uiPlanseccion.planseccionadjuntos.descripcion}"/>  
+                        
+                    <p:selectOneMenu value="#{uiPlanseccion.adjuntoscategoria}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;">  
+                    <f:selectItem itemLabel="Seleccionar categoria" itemValue="" /> 
+                    <f:selectItems value="#{uiPlantitulo.adjuntosCategoriaitems}" var="psa" itemLabel="#{psa.nombre}" itemValue="#{psa}"/>
+                    <p:ajax update="formSeccion" listener="#{uiPlantitulo.cargarAdjuntosCategoriaTipo()}" />
+                    </p:selectOneMenu>
+                    
+                    <p:selectOneMenu value="#{uiPlanseccion.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;" disabled="#{empty evaluacionAdjuntos.adjuntosCategoria }">  
+                        <f:selectItem itemLabel="Seleccionar tipo" itemValue="" /> 
+                        <f:selectItems value="#{uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipoList}" var="psa" itemLabel="#{psa.nombre}" 
+                                       itemValue="#{psa}"/>
+                    </p:selectOneMenu>
+                                      
+                </h:panelGrid>
+                
+                <h:panelGrid columns="4">
+                    <p:commandButton value="Guardar Adjunto" action="#{uiPlanseccion.guardarTituloadjunto()}" 
+                                     icon="ui-icon-new"
+                                     update="formSeccion"/>                    
+                    <p:commandButton value="Limpiar" action="#{uiPlantitulo.limpiar()}" 
+                                     icon="ui-icon-cancel"
+                                     update="formSeccion"/>
+                </h:panelGrid>
+                <br/>
+                <p:dataTable style="width: 80%" value="#{uiPlanseccion.planseccionadjuntosList}" var="varPlanseccionadjunto" emptyMessage="No hay Documentos"
+                            rowStyleClass="Centro">
+
+                    <p:columnGroup type="header" >  
+                        <p:row>                              
+                            <p:column  headerText="Seleccionar"/>                            
+                            <p:column  headerText="Adjunto"/>
+                            <p:column  headerText="Titulo"/>    
+                            <p:column  headerText="Descripcion"/>    
+                            <p:column  headerText="Categoria"/>
+                            <p:column  headerText="Categoria Tipo"/>
+                        </p:row> 
+                    </p:columnGroup>
+                    
+                    <p:column>
+                        <p:commandButton icon="ui-icon-check" title="Modificar Seccion adjunto" update="formSeccion"
+                                         action="#{uiPlanseccion.subirItemPlanseccionadjunto()}"/>
+                    </p:column>
+                    
+                    <p:column>
+                        <h:outputText value="#{varPlanseccionadjunto.planSeccionAdjuntosPK.codSeccionAdjunto}"/>    
+                    </p:column>                    
+                    
+                    <p:column>
+                        <h:outputText value="#{varPlanseccionadjunto.titulo}"/>                            
+                    </p:column>
+                    
+                    <p:column>                        
+                        <h:outputText value="#{varPlanseccionadjunto.descripcion}"/>    
+                    </p:column>
+                    
+                    <p:column>
+                        <h:outputText value="#{varPlanseccionadjunto.codCategoria}"/>                            
+                    </p:column>                        
+                    
+                    <p:column>                        
+                        <h:outputText value="#{varPlanseccionadjunto.codCategoriaTipo}"/>    
+                    </p:column>                        
+                </p:dataTable>
+                <br/>
+                <h:panelGrid columns="3">
+                    <p:commandButton value="REGRESAR " action="#{uiPlantitulo.administrarPlanmaestro()}" 
+                    icon="ui-icon-return"
+                    />
+                    <p:commandButton value="ADMIN SUBTITULO 2 " action="#{uiPlanMaestro.crearDetalle()}" 
+                    icon="ui-icon-return"
+                    />
+                    
+                </h:panelGrid> 
                 
             </p:panel>
         </h:form>
