@@ -62,6 +62,18 @@ public class GestorPlanSeccion extends Gestor implements Serializable{
         }
     }
     
+    public Collection<? extends PlanSeccionDetalleAdjuntos> cargarPlanSecciondetalleadjuntoList(PlanSeccionDetalle plansecciondetalle) throws Exception {
+        try {
+            this.abrirConexion();
+            PlanSeccionDetalleAdjuntosDAO planSecciondetalleadjuntosDAO = new PlanSeccionDetalleAdjuntosDAO(conexion);
+            Collection<PlanSeccionDetalleAdjuntos> planSecciondetalleadjuntosList = new ArrayList<>();
+            planSecciondetalleadjuntosList.addAll(planSecciondetalleadjuntosDAO.cargarPlanSecciondetalleadjuntosList(plansecciondetalle));
+            return planSecciondetalleadjuntosList;
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
     public void almacenarSeccion(PlanSeccion planseccion) throws Exception {
         try {
             this.abrirConexion();
@@ -81,6 +93,18 @@ public class GestorPlanSeccion extends Gestor implements Serializable{
             PlanSeccionTextoDAO plansecciontextoDAO = new PlanSeccionTextoDAO(conexion);
             plansecciontextoDAO.insertarPlanseccionTexto(plansecciontexto);
             this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends PlanSeccionDetalleItemAdjuntos> cargarPlanSecciondetalleitemadjuntoList(PlanSeccionDetalleItem plansecciondetalleitem) throws Exception {
+        try {
+            this.abrirConexion();
+            PlanSeccionDetalleItemAdjuntosDAO planSecciondetalleitemadjuntosDAO = new PlanSeccionDetalleItemAdjuntosDAO(conexion);
+            Collection<PlanSeccionDetalleItemAdjuntos> planSecciondetalleitemadjuntosList = new ArrayList<>();
+            planSecciondetalleitemadjuntosList.addAll(planSecciondetalleitemadjuntosDAO.cargarPlanSecciondetalleitemadjuntosList(plansecciondetalleitem));
+            return planSecciondetalleitemadjuntosList;
         } finally {
             this.cerrarConexion();
         }
