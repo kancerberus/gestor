@@ -27,7 +27,7 @@ public class PlanSeccionDetalleDAO {
     public PlanSeccionDetalleDAO(Connection connection) {
         this.conexion = connection;
     }
-
+    
     public List<PlanSeccionDetalle> cargarPlanSeccionDetalle(PlanSeccionPK planSeccionPK) throws SQLException {
         ResultSet rs = null;
         Consulta consulta = null;
@@ -63,12 +63,15 @@ public class PlanSeccionDetalleDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "INSERT INTO seguimiento.plan_seccion "
-                    + " ( codigo_establecimiento, cod_titulo, cod_seccion, nombre, numeral)"
+                    "INSERT INTO seguimiento.plan_seccion_detalle "
+                    + " ( codigo_establecimiento, cod_titulo, cod_seccion, cod_seccion_detalle, nombre, numeral)"
                     +" VALUES ('"+plansecciondetalle.getPlanSeccionDetallePK().getCodigoEstablecimiento()+"', "
                             + " '"+plansecciondetalle.getPlanSeccionDetallePK().getCodTitulo()+"', "
+                            +" '"+plansecciondetalle.getPlanSeccionDetallePK().getCodSeccion()+"', "
                             + " '"+plansecciondetalle.getPlanSeccionDetallePK().getCodSeccionDetalle()+"',  "
                             + " '"+plansecciondetalle.getNombre()+"','"+plansecciondetalle.getNumeral()+"') "                                        
+                            + " ON CONFLICT (cod_titulo, codigo_establecimiento, cod_seccion, cod_seccion_detalle) DO UPDATE"
+                            + " SET nombre=EXCLUDED.nombre, numeral=EXCLUDED.numeral "
             );
             consulta.actualizar(sql);
         } finally {

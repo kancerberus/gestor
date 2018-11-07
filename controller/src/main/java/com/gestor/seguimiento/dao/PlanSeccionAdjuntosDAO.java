@@ -29,22 +29,23 @@ public class PlanSeccionAdjuntosDAO {
         this.conexion = conexion;
     }        
             
-    /*public Collection<? extends PlanSeccionAdjuntos> cargarPlanSeccionadjuntosList(PlanSeccion plantitulo) throws SQLException {
+    public Collection<? extends PlanSeccionAdjuntos> cargarPlanSeccionadjuntosList(PlanSeccion planseccion) throws SQLException {
         ResultSet rs = null;
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
             Collection<PlanSeccionAdjuntos> planSeccionadjuntosList = new ArrayList<>();
             StringBuilder sql = new StringBuilder(
-                    "SELECT codigo_establecimiento, cod_titulo, cod_titulo_adjunto, cod_categoria, cod_categoria_tipo, titulo, descripcion, documento"
-                    + " FROM seguimiento.plan_titulo_adiuntos"
-                    + " WHERE codigo_establecimiento='"+plantitulo.getPlanSeccionPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+plantitulo.getPlanSeccionPK().getCodSeccion()+"' "
-                    + " ORDER BY cod_titulo_adjunto"  
+                    "SELECT codigo_establecimiento, cod_titulo, cod_seccion, cod_seccion_adjunto, cod_categoria, cod_categoria_tipo, titulo, descripcion, documento"
+                    + " FROM seguimiento.plan_seccion_adjuntos"
+                    + " WHERE codigo_establecimiento='"+planseccion.getPlanSeccionPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+planseccion.getPlanSeccionPK().getCodSeccion()+"' "
+                    + " AND cod_seccion= '"+planseccion.getPlanSeccionPK().getCodSeccion()+"' "
+                    + " ORDER BY cod_seccion_adjunto"  
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
-                PlanSeccionAdiuntos pta = new PlanSeccionAdiuntos(new PlanSeccionAdiuntosPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo_adjunto"),
-                        rs.getInt("cod_titulo")), rs.getInt("cod_categoria"), rs.getInt("cod_categoria_tipo"), rs.getString("titulo"), rs.getString("descripcion"), rs.getString("documento")
+                PlanSeccionAdjuntos pta = new PlanSeccionAdjuntos(new PlanSeccionAdjuntosPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo"), rs.getInt("cod_seccion"), rs.getInt("cod_seccion_adjunto")),
+                        rs.getInt("cod_categoria"), rs.getInt("cod_categoria_tipo"), rs.getString("titulo"), rs.getString("descripcion"), rs.getString("documento")
                 );
                 planSeccionadjuntosList.add(pta);
             }
@@ -57,7 +58,7 @@ public class PlanSeccionAdjuntosDAO {
                 consulta.desconectar();
             }
         }
-    }*/
+    }
     
     public void insertarPlanseccionadjunto(PlanSeccionAdjuntos planseccionadjuntos) throws SQLException {
         Consulta consulta = null;
@@ -66,10 +67,10 @@ public class PlanSeccionAdjuntosDAO {
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO seguimiento.plan_seccion_adjuntos "
                     + " ( codigo_establecimiento, cod_titulo, cod_seccion, cod_seccion_adjunto, cod_categoria, cod_categoria_tipo, titulo, descripcion, documento )"
-                    + " VALUES ('"+planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodigoEstablecimiento()+"', '"+planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodSeccionAdjunto()+"', "
-                    + " '"+planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodSeccion()+"', '"+planseccionadjuntos.getCodCategoria()+"', "
+                    + " VALUES ('"+planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodigoEstablecimiento()+"', '"+planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodTitulo()+"', '"+planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodSeccion()+"', "
+                    + "'"+planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodSeccionAdjunto()+"', '"+planseccionadjuntos.getCodCategoria()+"', "
                     + " '"+planseccionadjuntos.getCodCategoriaTipo()+"', '"+planseccionadjuntos.getTitulo()+"', '"+planseccionadjuntos.getDescripcion()+"', '"+planseccionadjuntos.getDocumento()+"') "
-                    + " ON CONFLICT ( codigo_establecimiento, cod_titulo, cod_seccion_adjunto ) DO UPDATE "
+                    + " ON CONFLICT ( codigo_establecimiento, cod_titulo, cod_seccion, cod_seccion_adjunto ) DO UPDATE "
                     + " SET titulo=EXCLUDED.titulo, descripcion=EXCLUDED.descripcion, documento=EXCLUDED.documento "
                     
             );

@@ -92,14 +92,14 @@ public class PlanSeccionDAO {
     }
     
     
-    public void insertarPlanseccion(PlanSeccion planseccion) throws SQLException {
+    public void modificarplanseccion(PlanSeccion planseccion) throws SQLException {
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "INSERT INTO seguimiento.plan_seccion "
-                    + " ( codigo_establecimiento, cod_titulo, cod_seccion, nombre, numeral, imagen)"
-                    + " VALUES ('"+planseccion.getPlanSeccionPK().getCodigoEstablecimiento()+"', '"+planseccion.getPlanSeccionPK().getCodTitulo()+"', '"+planseccion.getPlanSeccionPK().getCodSeccion()+"', '"+planseccion.getNombre()+"','"+planseccion.getNumeral()+"', '"+planseccion.getImagen()+"') "                                        
+                    "UPDATE seguimiento.plan_seccion "
+                    + " SET nombre='"+planseccion.getNombre()+"', numeral='"+planseccion.getNumeral()+"', imagen ='"+planseccion.getImagen()+"' "
+                    + " WHERE codigo_establecimiento='"+planseccion.getPlanSeccionPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+planseccion.getPlanSeccionPK().getCodTitulo()+"' AND cod_seccion='"+planseccion.getPlanSeccionPK().getCodSeccion()+"'  "
             );
             consulta.actualizar(sql);
         } finally {
@@ -109,14 +109,16 @@ public class PlanSeccionDAO {
         }
     }
     
-    public void modificarplanseccion(PlanSeccion planseccion) throws SQLException {
+    public void insertarPlanseccion(PlanSeccion planseccion) throws SQLException {
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "UPDATE seguimiento.plan_seccion "
-                    + " SET nombre='"+planseccion.getNombre()+"', numeral='"+planseccion.getNumeral()+"', imagen ='"+planseccion.getImagen()+"' "
-                    + " WHERE codigo_establecimiento='"+planseccion.getPlanSeccionPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+planseccion.getPlanSeccionPK().getCodTitulo()+"' AND cod_seccion='"+planseccion.getPlanSeccionPK().getCodSeccion()+"'  "
+                    "INSERT INTO seguimiento.plan_seccion "
+                    + " ( codigo_establecimiento, cod_titulo, cod_seccion, nombre, numeral, imagen)"
+                    + " VALUES ('"+planseccion.getPlanSeccionPK().getCodigoEstablecimiento()+"', '"+planseccion.getPlanSeccionPK().getCodTitulo()+"', '"+planseccion.getPlanSeccionPK().getCodSeccion()+"', '"+planseccion.getNombre()+"','"+planseccion.getNumeral()+"', '"+planseccion.getImagen()+"') "                                        
+                    + " ON CONFLICT (cod_titulo, codigo_establecimiento, cod_seccion) DO UPDATE"
+                    + " SET nombre=EXCLUDED.nombre, numeral=EXCLUDED.numeral , imagen=EXCLUDED.imagen"
             );
             consulta.actualizar(sql);
         } finally {

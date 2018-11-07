@@ -117,8 +117,8 @@ public class PlanTituloDAO {
                     "INSERT INTO seguimiento.plan_titulo "
                     + " ( codigo_establecimiento, cod_titulo, nombre, numeral )"
                     + " VALUES ('"+plantitulo.getPlanTituloPK().getCodigoEstablecimiento()+"', '"+plantitulo.getPlanTituloPK().getCodTitulo()+"', '"+plantitulo.getNombre()+"','"+plantitulo.getNumeral()+"') "                                        
-                    + " ON CONFLICT codigo_establecimiento, cod_titulo, cod_titulo_texto DO UPDATE"
-                    + " SET cod_titulo=EXCLUDED.cod_titulo, codigo_establecimiento=EXCLUDED.codigo_establecimiento,  nombre=EXCLUDED.nombre, numeral=EXCLUDED.numeral "
+                    + " ON CONFLICT ( codigo_establecimiento, cod_titulo ) DO UPDATE"
+                    + " SET nombre=EXCLUDED.nombre, numeral=EXCLUDED.numeral "
                     
             );
             consulta.actualizar(sql);
