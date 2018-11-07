@@ -1,21 +1,27 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:ui="http://java.sun.com/jsf/facelets"                
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"                
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui"                
                 xmlns:f="http://java.sun.com/jsf/core"
-                template="/template.xhtml"
-                >
-
+                template="/template.xhtml">
     <ui:define name="content">
-        <h:form enctype="multipart/form-data" id="formPlanmaestro" style="font-size: small;">
-            
-            <p:remoteCommand autoRun="true" action="#{uiEvaluacion.evaluacionActiva()}"/>
-            
-            <p:panel id="panelPlanmaestro"  header="Planes Maestro" >
 
-                <p:dataTable  value="#{uiEvaluacion.evaluacionList}" var="varEvaluacion" emptyMessage="No hay evaluaciones generadas."
+
+        <h:form enctype="multipart/form-data" id="formAdminPlanesMaestros" style="font-size: small;">
+            <h2>PLANES MAESTROS</h2>            
+
+            <h:panelGroup rendered="#{uiPlanMaestro.filtroActivo}">
+                <p:separator style="height: 3px"/>
+                <p:panelGrid columns="3" styleClass="letra-xx-small-centro" style="font-size: xx-small">                               
+                </p:panelGrid>
+                <p:commandButton value="Consultar Evaluaciones" style="margin: auto auto;width: 210px;height: 30px; border-radius: 10px;"
+                                 action="#{uiPlanMaestro.consultarEvaluacionesLista()}" update="formAdminPlanesMaestros"/>
+                <p:separator style="height: 3px"/>
+            </h:panelGroup>
+            <br/>
+            <br/>
+            <p:dataTable  value="#{uiPlanMaestro.evaluacionList}" var="varEvaluacion" emptyMessage="No hay evaluaciones generadas."
                               widgetVar="varEvaluacionesTable" 
                               rowStyleClass="letra-xx-small-centro" styleClass="letra-xx-small-centro"
                               rowHover="true">
@@ -45,9 +51,10 @@
                     </p:columnGroup>
 
                     <p:column>
-                        <p:commandButton icon="ui-icon-pencil" title="Crear Plan Maestro" 
-                                         update="formPlanmaestro"
-                                         action="#{uiPlanMaestro.administrar()}"/>
+                        <p:commandButton icon="ui-icon-pencil" title="Administrar Plan Maestro" 
+                                         update="formAdminPlanesMaestros"
+                                         action="#{uiPlanMaestro.subirItemevaluacion()}">                            
+                            </p:commandButton>
                     </p:column>
 
                     <p:column>
@@ -73,11 +80,57 @@
 
                 </p:dataTable>
 
-            </p:panel>
 
-            
+            <p:separator/>
+
+            <style type="text/css">
+                .white-button.ui-button.ui-state-default {
+                    background-color: #ffffff;
+                    color: #222222;
+                    border-color: #d6d6d6;
+                }
+
+                .white-button.ui-button.ui-state-default:enabled:hover, 
+                .white-button.ui-button.ui-state-default:focus {
+                    background-color: #f2f2f2;
+                    border-color: #ccc;
+                    color: #373a3c;
+                }
+
+                .green-button.ui-button.ui-state-default {
+                    background-color: #5cb85c;
+                    border-color: #5cb85c;
+                    color: #fff;
+                }
+
+                .green-button.ui-button.ui-state-default:enabled:hover, 
+                .green-button.ui-button.ui-state-default:focus {
+                    background-color: #4cae4c;
+                    border-color: #5cb85c;
+                }
+
+                .red-button.ui-button.ui-state-default {
+                    background-color: #d9534f;
+                    border-color: #d9534f;
+                    color: #fff;
+                }
+
+                .red-button.ui-button.ui-state-default:enabled:hover, 
+                .red-button.ui-button.ui-state-default:focus {
+                    background-color: #d43f3a;
+                    border-color: #d9534f;
+                }
+
+            </style>
+
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}" width="#{dialogo.width}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}"  update="dialog" />
+         
         </h:form>
 
     </ui:define>
-
 </ui:composition>

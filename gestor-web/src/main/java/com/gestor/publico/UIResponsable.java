@@ -27,9 +27,6 @@ import javax.faces.bean.SessionScoped;
 public class UIResponsable implements Serializable{
     private GestorResponsable gestorResponsable;
     private GestorGeneral gestorGeneral;
-    
-    
-
     private Responsable responsable = new Responsable();
     
     private List<Responsable> responsableList = new ArrayList<>();    

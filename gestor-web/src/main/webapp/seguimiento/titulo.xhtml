@@ -11,6 +11,46 @@
         <h:form enctype="multipart/form-data" id="formTitulo" style="font-size: small;">            
             <p:panel  style="float: right;" id="panelTitulos"  header="Administrar Titulos" >                
                 <br/>   
+                
+                
+                
+                <p:dataTable   style="width: 30%" value="#{uiPlantitulo.plantituloList}" var="varPlantitulo" emptyMessage="No hay Titulos"
+                              rowStyleClass="Centro">
+
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column   headerText="Seleccionar" />
+                            <p:column  headerText="Numeral" />
+                            <p:column  headerText="Titulo"/>
+                        </p:row> 
+                    </p:columnGroup>
+                    <p:column>
+                        
+                        <p:commandButton icon="ui-icon-check" title="Seleccionar Titulo" update="formTitulo" 
+                                         action="#{uiPlantitulo.subirItemPlantitulo()}" >
+                            <f:actionListener binding="#{uiPlanseccion.cargarPlanseccion()}"/>
+                        </p:commandButton>
+                        
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlantitulo.numeral}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlantitulo.nombre}"/>
+                    </p:column>
+                </p:dataTable>
+                <br></br>
+                <h:panelGrid columns="2">
+                    <p:inputText  value="#{uiPlantitulo.plantitulo.numeral}" placeholder="Numeral"/>                    
+                    <p:inputText  value="#{uiPlantitulo.plantitulo.nombre}" placeholder="Nombre"/>                    
+                </h:panelGrid>
+                <h:panelGrid columns="1">
+                    <p:commandButton value="Crear / Modificar" action="#{uiPlantitulo.guardarTitulo()}"
+                                     icon="ui-icon-disk"
+                                     update="formTitulo">                    
+                    </p:commandButton>    
+                </h:panelGrid>
+                <br/>
                 <p:dataTable   style="width: 30%" value="#{uiPlantitulo.plantitulo}" var="varPlantitulo" emptyMessage="No hay Titulos"
                      rowStyleClass="Centro">
 
@@ -48,11 +88,11 @@
                                      style="text-align: center;width: 180px;">  
                     <f:selectItem itemLabel="Seleccionar categoria" itemValue="" /> 
                     <f:selectItems value="#{uiPlantitulo.adjuntosCategoriaitems}" var="pta" itemLabel="#{pta.nombre}" itemValue="#{pta}"/>
-                    <p:ajax update="formTitulo" listener="#{uiPlantitulo.cargarAdjuntosCategoriaTipo()}" />
+                    <p:ajax update="cattipo" listener="#{uiPlantitulo.cargarAdjuntosCategoriaTipo()}" />
                     </p:selectOneMenu>
                     
-                    <p:selectOneMenu value="#{uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
-                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlantitulo.adjuntoscategoria}">  
+                    <p:selectOneMenu id="cattipo" value="#{uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlantitulo.adjuntoscategoria or empty uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipo}">  
                         <f:selectItem itemLabel="Seleccionar tipo" itemValue="" /> 
                         <f:selectItems value="#{uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipoList}" var="pta" itemLabel="#{pta.nombre}" 
                                        itemValue="#{pta}"/>

@@ -88,7 +88,8 @@ public class UIPlanMaestro {
     private Date fechaActualizaFin;
 
     @PostConstruct
-    public void init() {
+    public void init() {        
+        
         try {
             Sesion s = (Sesion) UtilJSF.getBean("sesion");
 
@@ -111,7 +112,11 @@ public class UIPlanMaestro {
         }
         return null;
     }
-
+    
+    public String administrarPlanmaestro(){
+        return ("/seguimiento/titulo.xhtml?faces-redirect=true");
+    }
+    
     public void cancelarProcesarPlanMaestro() {
         establecimiento = new Establecimiento();
         evaluacionList = new ArrayList<>();
@@ -208,6 +213,36 @@ public class UIPlanMaestro {
         }
 
     }
+    
+    public void consultarEvaluacionesLista() {
+        try {
+            evaluacionList = new ArrayList<>();
+            GestorEvaluacion gestorEvaluacion = new GestorEvaluacion();
+            Sesion s = (Sesion) UtilJSF.getBean("sesion");            
+            evaluacionList.addAll(gestorEvaluacion.cargarEvaluacionList(s.getEstablecimiento().getCodigoEstablecimiento(), s.getConfiguracion().get(App.CONFIGURACION_MOSTRAR_EVALUACIONES).toString())                                
+            );
+          
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+
+    }
+    
+    public String subirItemevaluacion() {            
+        
+            
+        try{                        
+            UIPlantitulo pt = (UIPlantitulo) UtilJSF.getBean("uiPlantitulo");
+            evaluacion = (Evaluacion) UtilJSF.getBean("varEvaluacion");        
+            UtilJSF.setBean("evaluacion", evaluacion, UtilJSF.SESSION_SCOPE);            
+            pt.cargarPlantitulo();
+            return ("/seguimiento/titulo.xhtml?faces-redirect=true");                    
+             
+        }catch(Exception e){
+            UtilLog.generarLog(this.getClass(), e);
+        }        
+        return ("/seguimiento/titulo.xhtml?faces-redirect=true");                    
+    }     
 
     public String cargarPlanMaestro() {
         try {
@@ -236,8 +271,8 @@ public class UIPlanMaestro {
         }
         return null;
     }
-    public String administrar(){
-        return("/seguimiento/admin-plan-maestro.xhtml?faces-redirect=true");
+    public String administrar(){        
+        return("/seguimiento/titulo.xhtml?faces-redirect=true");
     }
     
     public String crearTitulo(){

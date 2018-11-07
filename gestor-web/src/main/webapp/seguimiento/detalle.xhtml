@@ -105,7 +105,7 @@
                     </p:selectOneMenu>
                     
                     <p:selectOneMenu value="#{uiPlandetalle.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
-                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlandetalle.adjuntoscategoria }">  
+                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlandetalle.adjuntoscategoria or empty uiPlandetalle.adjuntoscategoria.adjuntosCategoriaTipo}">  
                         <f:selectItem itemLabel="Seleccionar tipo" itemValue="" /> 
                         <f:selectItems value="#{uiPlandetalle.adjuntoscategoria.adjuntosCategoriaTipoList}" var="pda" itemLabel="#{pda.nombre}" 
                                        itemValue="#{pda}"/>

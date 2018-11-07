@@ -33,6 +33,9 @@ public class UIPlanItem implements Serializable{
     private PlanSeccionDetalleItemTexto plansecciondetalleitemtexto = new PlanSeccionDetalleItemTexto();
     private PlanSeccionDetalleItemTextoPK plansecciondetalleitemtextopk = new PlanSeccionDetalleItemTextoPK();
     private PlanSeccionDetalleItemPK plansecciondetalleitempk = new PlanSeccionDetalleItemPK();
+    private PlanSeccionDetalleItemAdjuntos plansecciondetalleitemadjuntos = new PlanSeccionDetalleItemAdjuntos();
+    private PlanSeccionDetalleItemAdjuntosPK plansecciondetalleitemadjuntospk = new PlanSeccionDetalleItemAdjuntosPK();
+    private List<PlanSeccionDetalleItemAdjuntos> plansecciondetalleitemadjuntosList = new ArrayList<>();   
     private List<PlanSeccionDetalleItem> plansecciondetalleitemList = new ArrayList<>();    
     private List<PlanSeccionDetalleItemTexto> plansecciondetalleitemtextoList = new ArrayList<>(); 
     private GestorAdjuntosCategoria gestorAdjuntosCategoria;   
@@ -53,8 +56,7 @@ public class UIPlanItem implements Serializable{
     public void subirItemPlansecciondetalleitem() {  
         plansecciondetalleitem = (PlanSeccionDetalleItem) UtilJSF.getBean("varPlanitem");                     
         Integer coditem=Integer.parseInt(plansecciondetalleitem.getNumeral().substring(6, 7));
-        plansecciondetalleitempk.setCodSeccionDetalleItem(coditem);   
-        plansecciondetalleitem = (PlanSeccionDetalleItem) UtilJSF.getBean("varPlanitem");
+        plansecciondetalleitempk.setCodSeccionDetalleItem(coditem);           
         UtilJSF.setBean("planItem", plansecciondetalleitem, UtilJSF.SESSION_SCOPE);      
         this.cargarPlansecciondetalleitemtexto();           
     }
@@ -149,6 +151,61 @@ public class UIPlanItem implements Serializable{
             }
         }
         
+    }
+    
+    /*public void guardarSecciondetalleitemadjunto(){              
+        try {                                    
+            GestorPlanSeccionDetalleItem gestorPlansecciondetalleitem = new GestorPlanSeccionDetalleItem();                                    
+            if(plantituloadjuntopk.getCodTituloAdjunto()==0){
+                plantituloadjuntopk.setCodTituloAdjunto(1);
+            }
+            
+            plantituloadjuntopk.setCodTituloAdjunto(plantituloadjuntoList.size()+1);             
+            
+            
+            PlanTituloAdiuntos pltituloadjunto = new PlanTituloAdiuntos(new PlanTituloAdiuntosPK(s.getEstablecimiento().getCodigoEstablecimiento(), 
+                plantituloadjuntopk.getCodTituloAdjunto(), plantitulo.getPlanTituloPK().getCodTitulo()) , adjuntoscategoria.getCodCategoria(),
+                adjuntoscategoria.getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo(), plantituloadjunto.getTitulo(), plantituloadjunto.getDescripcion(), plantituloadjunto.getDocumento()                    
+            );
+           gestorPlantitulo.almacenarTituloadjunto(pltituloadjunto);
+            
+            UtilMSG.addSuccessMsg("Adjunto almacenado correctamente.");
+            UtilJSF.setBean("planTitulo", new PlanTitulo(), UtilJSF.SESSION_SCOPE);
+            this.plantituloadjunto= new PlanTituloAdiuntos();
+            this.cargarPlantituloadjunto();
+            
+        } catch (Exception e) {
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getMessage());
+            } else {    
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }
+        }        
+    }*/
+
+    public PlanSeccionDetalleItemAdjuntos getPlansecciondetalleitemadjuntos() {
+        return plansecciondetalleitemadjuntos;
+    }
+
+    public void setPlansecciondetalleitemadjuntos(PlanSeccionDetalleItemAdjuntos plansecciondetalleitemadjuntos) {
+        this.plansecciondetalleitemadjuntos = plansecciondetalleitemadjuntos;
+    }
+
+    public PlanSeccionDetalleItemAdjuntosPK getPlansecciondetalleitemadjuntospk() {
+        return plansecciondetalleitemadjuntospk;
+    }
+
+    public void setPlansecciondetalleitemadjuntospk(PlanSeccionDetalleItemAdjuntosPK plansecciondetalleitemadjuntospk) {
+        this.plansecciondetalleitemadjuntospk = plansecciondetalleitemadjuntospk;
+    }
+
+    public List<PlanSeccionDetalleItemAdjuntos> getPlansecciondetalleitemadjuntosList() {
+        return plansecciondetalleitemadjuntosList;
+    }
+
+    public void setPlansecciondetalleitemadjuntosList(List<PlanSeccionDetalleItemAdjuntos> plansecciondetalleitemadjuntosList) {
+        this.plansecciondetalleitemadjuntosList = plansecciondetalleitemadjuntosList;
     }
 
     public AdjuntosCategoria getAdjuntoscategoria() {

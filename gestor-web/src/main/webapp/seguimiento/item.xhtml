@@ -108,8 +108,11 @@
                 </h:panelGrid>
                 <br/>
                 <h:panelGrid columns="8">                    
-                    <p:inputText  placeholder="Titulo" value="#{uiPlantitulo.plantituloadjunto.titulo}"/>  
-                    <p:inputText  placeholder="Descripcion" value="#{uiPlantitulo.plantituloadjunto.descripcion}"/>  
+                    <p:inputText  placeholder="Titulo" value="#{uiPlanitem.plansecciondetalleitemadjuntos.titulo}"/>  
+                    <p:inputText  placeholder="Descripcion" value="#{uiPlanitem.plansecciondetalleitemadjuntos.descripcion}"/>  
+                    <p:inputText  placeholder="Actividad" value="#{uiPlanitem.plansecciondetalleitemadjuntos.actividad}"/>  
+                    <p:inputText  placeholder="Descripcion General" value="#{uiPlanitem.plansecciondetalleitemadjuntos.descripcionGeneral}"/>  
+                    <p:inputText  placeholder="Documento" value="#{uiPlanitem.plansecciondetalleitemadjuntos.documento}"/>  
                         
                         
                     <p:selectOneMenu value="#{uiPlanitem.adjuntoscategoria}" converter="convertidorGenerico"
@@ -120,7 +123,7 @@
                     </p:selectOneMenu>
                     
                     <p:selectOneMenu value="#{uiPlanitem.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
-                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlanitem.adjuntoscategoria }">  
+                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlanitem.adjuntoscategoria or empty uiPlanitem.adjuntoscategoria.adjuntosCategoriaTipo}">  
                         <f:selectItem itemLabel="Seleccionar tipo" itemValue="" /> 
                         <f:selectItems value="#{uiPlanitem.adjuntoscategoria.adjuntosCategoriaTipoList}" var="pta" itemLabel="#{pta.nombre}" 
                                        itemValue="#{pta}"/>
@@ -128,7 +131,7 @@
                                       
                 </h:panelGrid>                
                 <h:panelGrid columns="4">
-                    <p:commandButton value="Guardar Adjunto" action="#{uiPlantitulo.guardarTituloadjunto()}" 
+                    <p:commandButton value="Guardar Adjunto" action="#{uiPlanitem.guardarSecciondetalleitemadjuntos()}" 
                                      icon="ui-icon-new"
                                      update="formItem"/>                    
                     <p:commandButton value="Limpiar" action="#{uiPlantitulo.limpiar()}" 
