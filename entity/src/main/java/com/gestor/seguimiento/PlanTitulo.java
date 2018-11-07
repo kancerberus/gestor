@@ -53,7 +53,7 @@ public class PlanTitulo implements Serializable {
     public PlanTitulo(PlanTituloPK planTituloPK, String nombre, String numeral) {
         this.planTituloPK = planTituloPK;
         this.nombre = nombre;
-        this.numeral = numeral;
+        this.numeral = numeral;        
     }
 
     public PlanTituloPK getPlanTituloPK() {

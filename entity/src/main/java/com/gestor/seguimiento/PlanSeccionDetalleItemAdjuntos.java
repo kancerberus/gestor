@@ -27,6 +27,10 @@ public class PlanSeccionDetalleItemAdjuntos implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected PlanSeccionDetalleItemAdjuntosPK planSeccionDetalleItemAdjuntosPK;
+    @Column(name = "cod_categoria")
+    private Integer codCategoria;
+    @Column(name = "cod_categoria_tipo")
+    private Integer codCategoriaTipo;
     @Column(name = "titulo")
     private String titulo;
     @Column(name = "descripcion")
@@ -40,34 +44,51 @@ public class PlanSeccionDetalleItemAdjuntos implements Serializable {
     
     private EvaluacionAdjuntos evaluacionAdjuntos;
 
-    public PlanSeccionDetalleItemAdjuntos(PlanSeccionDetalleItemAdjuntosPK planSeccionDetalleItemAdjuntosPK, String titulo, String descripcion, String actividad, String descripcionGeneral, String documento) {
-        this.planSeccionDetalleItemAdjuntosPK = planSeccionDetalleItemAdjuntosPK;
-        this.titulo = titulo;
-        this.descripcion = descripcion;
-        this.actividad = actividad;
-        this.descripcionGeneral = descripcionGeneral;
-        this.documento = documento;
+    public PlanSeccionDetalleItemAdjuntos() {
     }
     
-    
-
-    public PlanSeccionDetalleItemAdjuntos() {
+    public PlanSeccionDetalleItemAdjuntos(PlanSeccionDetalleItemAdjuntosPK planSeccionDetalleItemAdjuntosPK, Integer codCategoria, Integer codCategoriaTipo, String titulo, String descripcion, String actividad, String descripciongeneral, String documento) {
+        this.planSeccionDetalleItemAdjuntosPK = planSeccionDetalleItemAdjuntosPK;
+        this.codCategoria = codCategoria;
+        this.codCategoriaTipo = codCategoriaTipo;
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.actividad = actividad ;
+        this.descripcionGeneral = descripciongeneral ;        
+        this.documento = documento;
     }
 
     public PlanSeccionDetalleItemAdjuntos(PlanSeccionDetalleItemAdjuntosPK planSeccionDetalleItemAdjuntosPK) {
         this.planSeccionDetalleItemAdjuntosPK = planSeccionDetalleItemAdjuntosPK;
     }
 
-    public PlanSeccionDetalleItemAdjuntos(short codigoEstablecimiento, int codTitulo, int codSeccion, int codSeccionDetalle, int codSeccionDetalleItem, int codSeccionDetalleItemAdjuntos) {
+    public PlanSeccionDetalleItemAdjuntos(int codigoEstablecimiento, int codTitulo, int codSeccion, int codSeccionDetalle, int codSeccionDetalleItem, int codSeccionDetalleItemAdjuntos) {
         this.planSeccionDetalleItemAdjuntosPK = new PlanSeccionDetalleItemAdjuntosPK(codigoEstablecimiento, codTitulo, codSeccion, codSeccionDetalle, codSeccionDetalleItem, codSeccionDetalleItemAdjuntos);
     }
 
     public PlanSeccionDetalleItemAdjuntosPK getPlanSeccionDetalleItemAdjuntosPK() {
         return planSeccionDetalleItemAdjuntosPK;
     }
+    
 
     public void setPlanSeccionDetalleItemAdjuntosPK(PlanSeccionDetalleItemAdjuntosPK planSeccionDetalleItemAdjuntosPK) {
         this.planSeccionDetalleItemAdjuntosPK = planSeccionDetalleItemAdjuntosPK;
+    }
+    
+    public Integer getCodCategoria() {
+        return codCategoria;
+    }
+
+    public void setCodCategoria(Integer codCategoria) {
+        this.codCategoria = codCategoria;
+    }
+
+    public Integer getCodCategoriaTipo() {
+        return codCategoriaTipo;
+    }
+
+    public void setCodCategoriaTipo(Integer codCategoriaTipo) {
+        this.codCategoriaTipo = codCategoriaTipo;
     }
 
     public String getTitulo() {
