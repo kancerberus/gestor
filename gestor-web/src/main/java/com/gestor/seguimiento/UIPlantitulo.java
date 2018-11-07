@@ -44,8 +44,9 @@ public class UIPlantitulo implements Serializable{
     private List<PlanTituloTexto> plantitulotextoList = new ArrayList<>();
     private List<PlanTituloAdiuntos> plantituloadjuntoList = new ArrayList<>();   
     private AdjuntosCategoria adjuntoscategoria = new AdjuntosCategoria();            
+    private AdjuntosCategoriaTipo adjuntosCategoriaTipo= new AdjuntosCategoriaTipo();
     private List<AdjuntosCategoria> adjuntosCategoriaitems = new ArrayList<>();    
-    private List<Evaluacion> evaluacionList = new ArrayList<>();    
+    
     Sesion s = (Sesion) UtilJSF.getBean("sesion");
     
     
@@ -54,11 +55,15 @@ public class UIPlantitulo implements Serializable{
     }        
     
     @PostConstruct
-    public void init() {         
+    public void init() {
+        adjuntoscategoria= new AdjuntosCategoria();
+        adjuntoscategoria.setAdjuntosCategoriaTipo( adjuntosCategoriaTipo);
+        adjuntosCategoriaTipo = new AdjuntosCategoriaTipo();
+        adjuntosCategoriaTipo.setAdjuntosCategoria(new AdjuntosCategoria());       
+        
+        this.cargarPlantitulo();
         this.cargarCategoriaitems();
         this.cargarAdjuntosCategoriaTipo();
-        this.cargarPlantitulo();
-        
     }
     
     public void cargarCategoriaitems() {
@@ -233,12 +238,12 @@ public class UIPlantitulo implements Serializable{
         
     }    
 
-    public List<Evaluacion> getEvaluacionList() {
-        return evaluacionList;
+    public AdjuntosCategoriaTipo getAdjuntosCategoriaTipo() {
+        return adjuntosCategoriaTipo;
     }
 
-    public void setEvaluacionList(List<Evaluacion> evaluacionList) {
-        this.evaluacionList = evaluacionList;
+    public void setAdjuntosCategoriaTipo(AdjuntosCategoriaTipo adjuntosCategoriaTipo) {
+        this.adjuntosCategoriaTipo = adjuntosCategoriaTipo;
     }
 
     public AdjuntosCategoria getAdjuntoscategoria() {

@@ -59,8 +59,10 @@
                     <p:column >
                         
                         <p:commandButton icon="ui-icon-radio" title="Seleccionar Seccion" update="formDetalle" 
-                                         action="#{uiPlandetalle.subirItemPlansecciondetalle()}" >                            
-                            <f:actionListener binding= "#{uiPlanitem.cargarPlansecciondetalleitem()}"/>
+                                         action="#{uiPlandetalle.subirItemPlansecciondetalle()}" >                                                        
+                            <f:actionListener binding= "#{uiPlandetalle.cargarPlansecciondetalletexto()}"/>
+                            <f:actionListener binding= "#{uiPlandetalle.cargarPlansecciondetalleadjunto()}"/>
+                            <f:actionListener binding= "#{uiPlanitem.cargarPlansecciondetalleitem()}"/>                            
                         </p:commandButton>
                             
                     </p:column>
@@ -93,19 +95,20 @@
                 <br/>
                 
                  <h:panelGrid columns="8">                    
-                    <p:inputText  placeholder="Titulo" value="#{uiPlantitulo.plantituloadjunto.titulo}"/>  
-                    <p:inputText  placeholder="Descripcion" value="#{uiPlantitulo.plantituloadjunto.descripcion}"/>  
+                     <p:inputText  placeholder="Titulo" value="#{uiPlandetalle.plansecciondetalleadjuntos.titulo}"/>  
+                     <p:inputText  placeholder="Descripcion" value="#{uiPlandetalle.plansecciondetalleadjuntos.descripcion}"/>  
+                     <p:inputText  placeholder="Documento" value="#{uiPlandetalle.plansecciondetalleadjuntos.documento}"/>  
                         
                         
-                    <p:selectOneMenu value="#{uiPlandetalle.adjuntoscategoria}" converter="convertidorGenerico"
+                     <p:selectOneMenu value="#{uiPlandetalle.adjuntoscategoria}" converter="convertidorGenerico"
                                      style="text-align: center;width: 180px;">  
                     <f:selectItem itemLabel="Seleccionar categoria" itemValue="" /> 
                     <f:selectItems value="#{uiPlandetalle.adjuntosCategoriaitems}" var="pda" itemLabel="#{pda.nombre}" itemValue="#{pda}"/>
-                    <p:ajax update="formDetalle" listener="#{uiPlandetalle.cargarAdjuntosCategoriaTipo()}" />
+                    <p:ajax update="cattipo" listener="#{uiPlandetalle.cargarAdjuntosCategoriaTipo()}" />
                     </p:selectOneMenu>
                     
-                    <p:selectOneMenu value="#{uiPlandetalle.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
-                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlandetalle.adjuntoscategoria or empty uiPlandetalle.adjuntoscategoria.adjuntosCategoriaTipo}">  
+                     <p:selectOneMenu id="cattipo" value="#{uiPlandetalle.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
+                                      style="text-align: center;width: 180px;" disabled="#{empty uiPlandetalle.adjuntoscategoria }">  
                         <f:selectItem itemLabel="Seleccionar tipo" itemValue="" /> 
                         <f:selectItems value="#{uiPlandetalle.adjuntoscategoria.adjuntosCategoriaTipoList}" var="pda" itemLabel="#{pda.nombre}" 
                                        itemValue="#{pda}"/>
@@ -113,15 +116,15 @@
                                       
                 </h:panelGrid>                
                 <h:panelGrid columns="4">
-                    <p:commandButton value="Guardar Adjunto" action="#{uiPlantitulo.guardarTituloadjunto()}" 
+                    <p:commandButton value="Guardar Adjunto" action="#{uiPlandetalle.guardarSecciondetalleadjunto()}" 
                                      icon="ui-icon-new"
                                      update="formDetalle"/>                    
-                    <p:commandButton value="Limpiar" action="#{uiPlantitulo.limpiar()}" 
+                    <p:commandButton value="Limpiar" action="#{uiPlandetalle.limpiar()}" 
                                      icon="ui-icon-cancel"
                                      update="formDetalle"/>
                 </h:panelGrid>
                 <br/>                
-                <p:dataTable style="width: 80%" value="#{uiPlantitulo.plantituloadjuntoList}" var="varPlantituloadjunto" emptyMessage="No hay Documentos"
+                <p:dataTable style="width: 80%" value="#{uiPlandetalle.plansecciondetalleadjuntosList}" var="varPlandetalleadjunto" emptyMessage="No hay Documentos"
                             rowStyleClass="Centro">
 
                     <p:columnGroup type="header" >  
@@ -129,7 +132,8 @@
                             <p:column  headerText="Seleccionar"/>                            
                             <p:column  headerText="Numeral"/>
                             <p:column  headerText="Titulo"/>    
-                            <p:column  headerText="Descripcion"/>    
+                            <p:column  headerText="Descripcion"/>
+                            <p:column  headerText="Documento"/>
                             <p:column  headerText="Categoria"/>
                             <p:column  headerText="Categoria Tipo"/>
                         </p:row> 
@@ -137,27 +141,31 @@
                     
                     <p:column>
                         <p:commandButton icon="ui-icon-check" title="Modificar Titulo Texto" update="formDetalle"
-                                         action="#{uiPlantitulo.subirItemPlantituloadjunto()}"/>
+                                         action="#{uiPlandetalle.subirItemPlansecciondetalleadjunto()}"/>
                     </p:column>
                     
                     <p:column>
-                        <h:outputText value="#{varPlantituloadjunto.planTituloAdiuntosPK.codTituloAdjunto}"/>    
+                        <h:outputText value="#{varPlandetalleadjunto.planSeccionDetalleAdjuntosPK.codSeccionDetalleAdjuntos}"/>    
                     </p:column>                    
                     
                     <p:column>
-                        <h:outputText value="#{varPlantituloadjunto.titulo}"/>                            
+                        <h:outputText value="#{varPlandetalleadjunto.titulo}"/>                            
                     </p:column>
                     
                     <p:column>                        
-                        <h:outputText value="#{varPlantituloadjunto.descripcion}"/>    
+                        <h:outputText value="#{varPlandetalleadjunto.descripcion}"/>    
+                    </p:column>
+                    
+                    <p:column>                        
+                        <h:outputText value="#{varPlandetalleadjunto.documento}"/>    
                     </p:column>
                     
                     <p:column>
-                        <h:outputText value="#{varPlantituloadjunto.codCategoria}"/>                            
+                        <h:outputText value="#{varPlandetalleadjunto.codCategoria}"/>                            
                     </p:column>                        
                     
                     <p:column>                        
-                        <h:outputText value="#{varPlantituloadjunto.codCategoriaTipo}"/>    
+                        <h:outputText value="#{varPlandetalleadjunto.codCategoriaTipo}"/>    
                     </p:column>                        
                 </p:dataTable>                                
                 <br/>                    

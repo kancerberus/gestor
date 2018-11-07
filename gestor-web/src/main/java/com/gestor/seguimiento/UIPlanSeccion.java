@@ -9,6 +9,7 @@ import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
 import com.gestor.gestor.AdjuntosCategoria;
 import com.gestor.gestor.AdjuntosCategoriaTipo;
+import com.gestor.gestor.Evaluacion;
 import com.gestor.gestor.controlador.GestorAdjuntosCategoria;
 import com.gestor.modelo.Sesion;
 import com.gestor.seguimiento.controlador.GestorPlanSeccion;
@@ -41,6 +42,7 @@ public class UIPlanSeccion implements Serializable{
     private List<PlanSeccionTexto> plansecciontextoList = new ArrayList<>();    
     private List<PlanSeccionAdjuntos> planseccionadjuntosList = new ArrayList<>();   
     private List<AdjuntosCategoria> adjuntosCategoriaitems = new ArrayList<>();
+    private List<Evaluacion> evaluacionList = new ArrayList<>();    
     
     Sesion s = (Sesion) UtilJSF.getBean("sesion");    
 
@@ -121,7 +123,7 @@ public class UIPlanSeccion implements Serializable{
 
 
     public void guardarSeccion(){              
-        try {              
+        try {                          
             GestorPlanSeccion gestorPlanseccion= new GestorPlanSeccion();           
             PlanTitulo pt=(PlanTitulo) UtilJSF.getBean("planTitulo");            
             planseccionpk.setCodTitulo(pt.getPlanTituloPK().getCodTitulo());
@@ -132,7 +134,7 @@ public class UIPlanSeccion implements Serializable{
             
             planseccion.setNumeral(pt.getNumeral()+"."+Integer.toString(planseccionpk.getCodSeccion()));
             PlanSeccion plseccion = new PlanSeccion(new PlanSeccionPK(
-            s.getEstablecimiento().getCodigoEstablecimiento(), planseccionpk.getCodTitulo(), planseccionpk.getCodSeccion()),planseccion.getNombre(),planseccion.getNumeral(), planseccion.getImagen()
+            pt.getPlanTituloPK().getCodigoEstablecimiento(), planseccionpk.getCodTitulo(), planseccionpk.getCodSeccion()),planseccion.getNombre(),planseccion.getNumeral(), planseccion.getImagen()
             );            
                        
             
@@ -156,11 +158,13 @@ public class UIPlanSeccion implements Serializable{
     
     public void guardarSecciontexto(){                
          
-        try {                        
+        try {            
+            PlanTitulo pt=(PlanTitulo) UtilJSF.getBean("planTitulo");            
+            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
             GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();                                    
             plansecciontextopk.setCodSeccionTexto(1);    
             
-            PlanSeccionTexto plsecciontexto = new PlanSeccionTexto(new PlanSeccionTextoPK(planseccion.getPlanSeccionPK().getCodigoEstablecimiento(),
+            PlanSeccionTexto plsecciontexto = new PlanSeccionTexto(new PlanSeccionTextoPK(pt.getPlanTituloPK().getCodigoEstablecimiento(),
             planseccion.getPlanSeccionPK().getCodTitulo(), planseccion.getPlanSeccionPK().getCodSeccion(), plansecciontextopk.getCodSeccionTexto()), plansecciontexto.getTexto()
             );
             gestorPlanseccion.almacenarSecciontexto(plsecciontexto);            
@@ -181,12 +185,13 @@ public class UIPlanSeccion implements Serializable{
     }
     
     public void guardarTituloadjunto(){              
-        try {                                    
+        try {     
+            PlanTitulo pt=(PlanTitulo) UtilJSF.getBean("planTitulo");                        
             GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();                                    
             planseccionadjuntospk.setCodSeccionAdjunto(planseccionadjuntosList.size()+1);             
             
             
-            PlanSeccionAdjuntos plseccionadjunto = new PlanSeccionAdjuntos(new PlanSeccionAdjuntosPK(s.getEstablecimiento().getCodigoEstablecimiento(), 
+            PlanSeccionAdjuntos plseccionadjunto = new PlanSeccionAdjuntos(new PlanSeccionAdjuntosPK(pt.getPlanTituloPK().getCodigoEstablecimiento(), 
                 planseccion.getPlanSeccionPK().getCodTitulo(),planseccionadjuntospk.getCodSeccionAdjunto(), planseccion.getPlanSeccionPK().getCodSeccion()) , adjuntoscategoria.getCodCategoria(),
                 adjuntoscategoria.getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo(), planseccionadjuntos.getTitulo(), planseccionadjuntos.getDescripcion(), planseccionadjuntos.getDocumento()                    
             );

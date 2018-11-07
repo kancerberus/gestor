@@ -80,16 +80,18 @@
                 <h:panelGrid columns="8">
                     <p:inputText  placeholder="Titulo" value="#{uiPlanseccion.planseccionadjuntos.titulo}"/>  
                     <p:inputText  placeholder="Descripcion" value="#{uiPlanseccion.planseccionadjuntos.descripcion}"/>  
+                    <p:inputText  placeholder="Documento" value="#{uiPlanseccion.planseccionadjuntos.documento}"/>  
+                    
                         
                     <p:selectOneMenu value="#{uiPlanseccion.adjuntoscategoria}" converter="convertidorGenerico"
                                      style="text-align: center;width: 180px;">  
                     <f:selectItem itemLabel="Seleccionar categoria" itemValue="" /> 
                     <f:selectItems value="#{uiPlanseccion.adjuntosCategoriaitems}" var="psa" itemLabel="#{psa.nombre}" itemValue="#{psa}"/>
-                    <p:ajax update="formSeccion" listener="#{uiPlanseccion.cargarAdjuntosCategoriaTipo()}" />
+                    <p:ajax update="cattipo" listener="#{uiPlanseccion.cargarAdjuntosCategoriaTipo()}" />
                     </p:selectOneMenu>
                     
-                    <p:selectOneMenu value="#{uiPlanseccion.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
-                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlanseccion.adjuntoscategoria or empty uiPlanseccion.adjuntoscategoria.adjuntosCategoriaTipo}">  
+                    <p:selectOneMenu id="cattipo" value="#{uiPlanseccion.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlanseccion.adjuntoscategoria }">  
                         <f:selectItem itemLabel="Seleccionar tipo" itemValue="" /> 
                         <f:selectItems value="#{uiPlanseccion.adjuntoscategoria.adjuntosCategoriaTipoList}" var="psa" itemLabel="#{psa.nombre}" 
                                        itemValue="#{psa}"/>
@@ -115,6 +117,7 @@
                             <p:column  headerText="Adjunto"/>
                             <p:column  headerText="Titulo"/>    
                             <p:column  headerText="Descripcion"/>    
+                            <p:column  headerText="Documento"/>    
                             <p:column  headerText="Categoria"/>
                             <p:column  headerText="Categoria Tipo"/>
                         </p:row> 
@@ -135,6 +138,10 @@
                     
                     <p:column>                        
                         <h:outputText value="#{varPlanseccionadjunto.descripcion}"/>    
+                    </p:column>
+                    
+                    <p:column>                        
+                        <h:outputText value="#{varPlanseccionadjunto.documento}"/>    
                     </p:column>
                     
                     <p:column>

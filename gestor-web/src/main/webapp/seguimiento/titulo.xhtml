@@ -21,7 +21,7 @@
                         <p:row>  
                             <p:column   headerText="Seleccionar" />
                             <p:column  headerText="Numeral" />
-                            <p:column  headerText="Titulo"/>
+                            <p:column  headerText="Titulo"/>                            
                         </p:row> 
                     </p:columnGroup>
                     <p:column>
@@ -37,12 +37,12 @@
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varPlantitulo.nombre}"/>
-                    </p:column>
+                    </p:column>                    
                 </p:dataTable>
                 <br></br>
                 <h:panelGrid columns="2">
                     <p:inputText  value="#{uiPlantitulo.plantitulo.numeral}" placeholder="Numeral"/>                    
-                    <p:inputText  value="#{uiPlantitulo.plantitulo.nombre}" placeholder="Nombre"/>                    
+                    <p:inputText  value="#{uiPlantitulo.plantitulo.nombre}" placeholder="Nombre"/>                                        
                 </h:panelGrid>
                 <h:panelGrid columns="1">
                     <p:commandButton value="Crear / Modificar" action="#{uiPlantitulo.guardarTitulo()}"
@@ -57,7 +57,7 @@
                     <p:columnGroup type="header">  
                         <p:row>                              
                             <p:column  headerText="Numeral" />
-                            <p:column  headerText="Titulo"/>
+                            <p:column  headerText="Titulo"/>                            
                         </p:row> 
                     </p:columnGroup>                    
                     <p:column>
@@ -65,7 +65,7 @@
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varPlantitulo.nombre}"/>
-                    </p:column>
+                    </p:column>                   
                 </p:dataTable>
                 <br/>
                 <h:panelGrid >  
@@ -79,9 +79,9 @@
                 </h:panelGrid>                
                 <br/>
                 <h:panelGrid columns="8">                    
-                    <p:inputText  placeholder="Titulo" value="#{uiPlantitulo.plantituloadjunto.titulo}"/>  
-                    <p:inputText  placeholder="Titulo" value="#{uiPlantitulo.plantituloadjunto.titulo}"/>  
+                    <p:inputText  placeholder="Titulo" value="#{uiPlantitulo.plantituloadjunto.titulo}"/>                      
                     <p:inputText  placeholder="Descripcion" value="#{uiPlantitulo.plantituloadjunto.descripcion}"/>  
+                    <p:inputText  placeholder="Documento" value="#{uiPlantitulo.plantituloadjunto.documento}"/>  
                         
                         
                     <p:selectOneMenu value="#{uiPlantitulo.adjuntoscategoria}" converter="convertidorGenerico"
@@ -92,7 +92,7 @@
                     </p:selectOneMenu>
                     
                     <p:selectOneMenu id="cattipo" value="#{uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
-                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlantitulo.adjuntoscategoria or empty uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipo}">  
+                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlantitulo.adjuntoscategoria }">  
                         <f:selectItem itemLabel="Seleccionar tipo" itemValue="" /> 
                         <f:selectItems value="#{uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipoList}" var="pta" itemLabel="#{pta.nombre}" 
                                        itemValue="#{pta}"/>
@@ -115,8 +115,9 @@
                         <p:row>                              
                             <p:column  headerText="Seleccionar"/>                            
                             <p:column  headerText="Adjunto"/>
-                            <p:column  headerText="Titulo"/>    
+                            <p:column  headerText="Titulo"/>                                                          
                             <p:column  headerText="Descripcion"/>    
+                            <p:column  headerText="Documento"/>  
                             <p:column  headerText="Categoria"/>
                             <p:column  headerText="Categoria Tipo"/>
                         </p:row> 
@@ -138,6 +139,10 @@
                     
                     <p:column>                        
                         <h:outputText value="#{varPlantituloadjunto.descripcion}"/>    
+                    </p:column>
+                    
+                    <p:column>                        
+                        <h:outputText value="#{varPlantituloadjunto.documento}"/>    
                     </p:column>
                     
                     <p:column>

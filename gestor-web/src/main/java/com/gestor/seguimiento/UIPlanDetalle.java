@@ -47,7 +47,9 @@ public class UIPlanDetalle implements Serializable{
     }   
     
     @PostConstruct
-    public void init() {         
+    public void init() {  
+        this.cargarCategoriaitems();
+        this.cargarAdjuntosCategoriaTipo(); 
         this.cargarPlansecciondetalle();
         this.cargarPlansecciondetalletexto();
     }
@@ -66,6 +68,26 @@ public class UIPlanDetalle implements Serializable{
             this.plansecciondetalleList=new ArrayList<>();
             gestorPlanSeccion = new GestorPlanSeccion();            
             this.plansecciondetalleList.addAll((Collection<? extends PlanSeccionDetalle>) gestorPlanSeccion.cargarListaSecciondetalle(ps));                                                
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void cargarPlansecciondetalleadjunto() {        
+        try {            
+            this.plansecciondetalleadjuntosList = new ArrayList<>();
+            gestorPlanSeccion = new GestorPlanSeccion();
+            this.plansecciondetalleadjuntosList.addAll((Collection<? extends PlanSeccionDetalleAdjuntos>) gestorPlanSeccion.cargarPlanSecciondetalleadjuntoList(plansecciondetalle));
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }    
+    
+    public void cargarCategoriaitems() {
+        try {
+            this.adjuntosCategoriaitems = new ArrayList<>();
+            gestorAdjuntosCategoria = new GestorAdjuntosCategoria();
+            this.adjuntosCategoriaitems.addAll((Collection<? extends AdjuntosCategoria>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriapm());                        
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -95,7 +117,7 @@ public class UIPlanDetalle implements Serializable{
     }
     
     public void guardarSeccionDetalle(){              
-        try {              
+        try {                          
             GestorPlanSeccion gestorPlanseccion= new GestorPlanSeccion();           
             PlanSeccion ps=(PlanSeccion) UtilJSF.getBean("planSeccion");            
             
@@ -124,13 +146,13 @@ public class UIPlanDetalle implements Serializable{
         }
     }
     
-    public void guardarSecciondetalletexto(){                
-         
-        try {                        
+    public void guardarSecciondetalletexto(){ 
+        try {         
+            PlanSeccion ps=(PlanSeccion) UtilJSF.getBean("planSeccion");                        
             GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();                                    
             plansecciondetalletextopk.setCodSeccionDetalleTexto(1);    
             
-            PlanSeccionDetalleTexto plsecciondetalletexto = new PlanSeccionDetalleTexto(new PlanSeccionDetalleTextoPK(plansecciondetalle.getPlanSeccionDetallePK().getCodigoEstablecimiento(),
+            PlanSeccionDetalleTexto plsecciondetalletexto = new PlanSeccionDetalleTexto(new PlanSeccionDetalleTextoPK(ps.getPlanSeccionPK().getCodigoEstablecimiento(),
             plansecciondetalle.getPlanSeccionDetallePK().getCodTitulo(), plansecciondetalle.getPlanSeccionDetallePK().getCodSeccion(), plansecciondetalle.getPlanSeccionDetallePK().getCodSeccionDetalle(),
             plansecciondetalletextopk.getCodSeccionDetalleTexto()), plansecciondetalletexto.getTexto()
             );
@@ -151,13 +173,14 @@ public class UIPlanDetalle implements Serializable{
     }
     
     public void guardarSecciondetalleadjunto(){              
-        try {                                    
+        try {                   
+            PlanSeccion ps=(PlanSeccion) UtilJSF.getBean("planSeccion");            
             GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();                                    
             plansecciondetalleadjuntospk.setCodSeccionDetalleAdjuntos(plansecciondetalleadjuntosList.size()+1);             
             
             
-            PlanSeccionDetalleAdjuntos plsecciondetalleadjunto = new PlanSeccionDetalleAdjuntos(new PlanSeccionDetalleAdjuntosPK(plansecciondetallepk.getCodigoEstablecimiento(), 
-                plansecciondetalleadjuntos.getPlanSeccionDetalleAdjuntosPK().getCodTitulo(), plansecciondetalleadjuntospk.getCodSeccion(), plansecciondetalleadjuntospk.getCodSeccionDetalleAdjuntos(), plansecciondetalle.getPlanSeccionDetallePK().getCodSeccion()) , adjuntoscategoria.getCodCategoria(),
+            PlanSeccionDetalleAdjuntos plsecciondetalleadjunto = new PlanSeccionDetalleAdjuntos(new PlanSeccionDetalleAdjuntosPK(ps.getPlanSeccionPK().getCodigoEstablecimiento(),
+                ps.getPlanSeccionPK().getCodTitulo(), ps.getPlanSeccionPK().getCodSeccion(), plansecciondetalle.getPlanSeccionDetallePK().getCodSeccionDetalle(), plansecciondetalleadjuntospk.getCodSeccionDetalleAdjuntos()) , adjuntoscategoria.getCodCategoria(),
                 adjuntoscategoria.getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo(), plansecciondetalleadjuntos.getTitulo(), plansecciondetalleadjuntos.getDescripcion(), plansecciondetalleadjuntos.getDocumento()                    
             );
            gestorPlanseccion.almacenarSecciondetalleadjunto(plsecciondetalleadjunto);
@@ -262,6 +285,5 @@ public class UIPlanDetalle implements Serializable{
     public void setPlansecciondetalleList(List<PlanSeccionDetalle> plansecciondetalleList) {
         this.plansecciondetalleList = plansecciondetalleList;
     }
-    
     
 }
