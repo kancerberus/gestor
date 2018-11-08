@@ -306,7 +306,7 @@ public class PlanTituloAdiuntosDAO {
                         new PlanSeccionDetalleItemAdjuntosPK(
                                 rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo"), rs.getInt("cod_seccion"), 
                                 rs.getInt("cod_seccion_detalle"), rs.getInt("cod_seccion_detalle_item"), rs.getInt("cod_seccion_detalle_item_adjuntos")
-                        ), rs.getString("titulo"), rs.getString("descripcion"), rs.getString("actividad"), rs.getString("descripcion_general"), rs.getString("documento"));
+                        ), rs.getInt("cod_categoria"), rs.getInt("cod_categoria_tipo"), rs.getString("titulo"), rs.getString("descripcion"), rs.getString("actividad"), rs.getString("descripcion_general"), rs.getString("documento"));
 
                 EvaluacionAdjuntos ea = new EvaluacionAdjuntos(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento"),
                         rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getLong("cod_adjunto")
