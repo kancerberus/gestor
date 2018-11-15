@@ -14,6 +14,7 @@ import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
 import com.gestor.entity.UtilTexto;
+import com.gestor.gestor.AdjuntosCategoria;
 import com.gestor.gestor.Evaluacion;
 import com.gestor.gestor.EvaluacionCapacitacionDetalle;
 import com.gestor.gestor.EvaluacionPlanAccionDetalle;
@@ -228,20 +229,18 @@ public class UIPlanMaestro {
 
     }
     
-    public String subirItemevaluacion() {            
-        
-            
-        try{                        
-            UIPlantitulo pt = (UIPlantitulo) UtilJSF.getBean("uiPlantitulo");
-            evaluacion = (Evaluacion) UtilJSF.getBean("varEvaluacion");        
-            UtilJSF.setBean("evaluacion", evaluacion, UtilJSF.SESSION_SCOPE);            
-            pt.cargarPlantitulo();
+    public String subirItemevaluacion() {
+        try{     
+            evaluacion=new Evaluacion();
+            evaluacion = (Evaluacion) UtilJSF.getBean("varEvaluacion"); 
+            UIPlantitulo pt = (UIPlantitulo) UtilJSF.getBean("uiPlantitulo");            
+            UtilJSF.setBean("evaluacion", evaluacion, UtilJSF.SESSION_SCOPE);                                                                                  
+            pt.cargarPlantitulo();     
             return ("/seguimiento/titulo.xhtml?faces-redirect=true");                    
              
         }catch(Exception e){
-            UtilLog.generarLog(this.getClass(), e);
-        }        
         return ("/seguimiento/titulo.xhtml?faces-redirect=true");                    
+        }        
     }     
 
     public String cargarPlanMaestro() {

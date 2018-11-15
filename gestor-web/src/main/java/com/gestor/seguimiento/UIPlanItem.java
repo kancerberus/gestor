@@ -37,51 +37,51 @@ public class UIPlanItem implements Serializable{
     private PlanSeccionDetalleItemAdjuntosPK plansecciondetalleitemadjuntospk = new PlanSeccionDetalleItemAdjuntosPK();
     private List<PlanSeccionDetalleItemAdjuntos> plansecciondetalleitemadjuntosList = new ArrayList<>();   
     private List<PlanSeccionDetalleItem> plansecciondetalleitemList = new ArrayList<>();    
-    private List<PlanSeccionDetalleItemTexto> plansecciondetalleitemtextoList = new ArrayList<>(); 
-    private GestorAdjuntosCategoria gestorAdjuntosCategoria;   
-    private AdjuntosCategoria adjuntoscategoria = new AdjuntosCategoria();    
-    private List<AdjuntosCategoria> adjuntosCategoriaitems = new ArrayList<>();
+    private List<PlanSeccionDetalleItemTexto> plansecciondetalleitemtextoList = new ArrayList<>();       
+    private List<AdjuntosCategoria> adjuntosCategorias = new ArrayList<>();
     
     
     public UIPlanItem(){
     
     }
-    
     @PostConstruct
-    public void init() { 
-        this.cargarCategoriaitems();
-        this.cargarAdjuntosCategoriaTipo();         
+    public void init() {  
         this.cargarPlansecciondetalleitem();
-        this.cargarPlansecciondetalleitemtexto();
-    }
+        this.cargarAdjuntosCategoriaTipo();
+        
+    }      
     
+    public void cargarAdjuntosCategoriaTipo() {
+        try {            
+            GestorAdjuntosCategoria gestorAdjuntosCategoria = new GestorAdjuntosCategoria();    
+            adjuntosCategorias = new ArrayList<>();
+            adjuntosCategorias.addAll(gestorAdjuntosCategoria.cargarListaAdjuntosCategoriapm());            
+            
+            if(plansecciondetalleitemadjuntos.getAdjuntosCategoria().getCodCategoria() != null){
+                plansecciondetalleitemadjuntos.getAdjuntosCategoria().setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(plansecciondetalleitemadjuntos.getAdjuntosCategoria().getCodCategoria()));                                                
+            }            
+            
+        } catch (Exception e) {
+            
+        }        
+    }    
+
     public void subirItemPlansecciondetalleitem() {  
         plansecciondetalleitem = (PlanSeccionDetalleItem) UtilJSF.getBean("varPlanitem");                     
         Integer coditem=Integer.parseInt(plansecciondetalleitem.getNumeral().substring(6, 7));
         plansecciondetalleitempk.setCodSeccionDetalleItem(coditem);           
         UtilJSF.setBean("planItem", plansecciondetalleitem, UtilJSF.SESSION_SCOPE);      
-        this.cargarPlansecciondetalleitemtexto();           
+        this.cargarPlansecciondetalleitemtexto();     
+        this.cargarPlansecciondetalleitemadjuntoList();        
     }
     
-    public void cargarAdjuntosCategoriaTipo() {
-        try {                                   
-            if(getAdjuntoscategoria() != null){                
-                adjuntoscategoria.setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(adjuntoscategoria.getCodCategoria()));                                
-            }            
-        } catch (Exception e) {
-            UtilLog.generarLog(this.getClass(), e);
-            UtilMSG.addSupportMsg();
-        }        
-    }
-    
-    public void cargarCategoriaitems() {
-        try {
-            this.adjuntosCategoriaitems = new ArrayList<>();
-            gestorAdjuntosCategoria = new GestorAdjuntosCategoria();
-            this.adjuntosCategoriaitems.addAll((Collection<? extends AdjuntosCategoria>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriapm());                        
-        } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
-        }
+    public void subirItemPlanitemadjunto() {   
+        
+        
+        plansecciondetalleitemadjuntos = (PlanSeccionDetalleItemAdjuntos) UtilJSF.getBean("varPlanitemadjunto");
+        UtilJSF.setBean("planSecciondetalleitemadjunto", plansecciondetalleitemadjuntos, UtilJSF.SESSION_SCOPE);                          
+        plansecciondetalleitemadjuntospk.setCodSeccionDetalleItemAdjuntos(plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccionDetalleItemAdjuntos());        
+        
     }
     
     public void cargarPlansecciondetalleitem() {        
@@ -94,6 +94,16 @@ public class UIPlanItem implements Serializable{
             UtilLog.generarLog(this.getClass(), ex);
         }
     }
+    
+    public void cargarPlansecciondetalleitemadjuntoList() {        
+        try {            
+            this.plansecciondetalleitemadjuntosList = new ArrayList<>();
+            gestorPlanSeccion = new GestorPlanSeccion();
+            this.plansecciondetalleitemadjuntosList.addAll((Collection<? extends PlanSeccionDetalleItemAdjuntos>) gestorPlanSeccion.cargarPlanSecciondetalleitemadjuntoList(plansecciondetalleitem));
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }   
     
     public void cargarPlansecciondetalleitemtexto() {        
         try {
@@ -136,7 +146,7 @@ public class UIPlanItem implements Serializable{
             gestorPlanseccion.almacenarSecciondetalleitem(plsecciondetalleitem);                    
             
             UtilMSG.addSuccessMsg("Titulo Item almacenado correctamente.");                                 
-            UtilJSF.setBean("planDetalle", new PlanSeccionDetalle(), UtilJSF.SESSION_SCOPE);                        
+            UtilJSF.setBean("planItem", new PlanSeccionDetalle(), UtilJSF.SESSION_SCOPE);                        
             
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
@@ -183,13 +193,16 @@ public class UIPlanItem implements Serializable{
             
             
             PlanSeccionDetalleItemAdjuntos plsecciondetalleitemadjunto = new PlanSeccionDetalleItemAdjuntos(new PlanSeccionDetalleItemAdjuntosPK(psd.getPlanSeccionDetallePK().getCodigoEstablecimiento(),
-                psd.getPlanSeccionDetallePK().getCodTitulo(), psd.getPlanSeccionDetallePK().getCodSeccion(), psd.getPlanSeccionDetallePK().getCodSeccionDetalle(), plansecciondetalleitem.getPlanSeccionDetalleItemPK().getCodSeccionDetalleItem(), plansecciondetalleitemadjuntospk.getCodSeccionDetalleItemAdjuntos()), adjuntoscategoria.getCodCategoria(),
-                adjuntoscategoria.getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo(), plansecciondetalleitemadjuntos.getTitulo(), plansecciondetalleitemadjuntos.getDescripcion(), plansecciondetalleitemadjuntos.getActividad(), plansecciondetalleitemadjuntos.getDescripcionGeneral(), plansecciondetalleitemadjuntos.getDocumento()                    
+                psd.getPlanSeccionDetallePK().getCodTitulo(), psd.getPlanSeccionDetallePK().getCodSeccion(), psd.getPlanSeccionDetallePK().getCodSeccionDetalle(), plansecciondetalleitem.getPlanSeccionDetalleItemPK().getCodSeccionDetalleItem(), plansecciondetalleitemadjuntospk.getCodSeccionDetalleItemAdjuntos()), plansecciondetalleitemadjuntos.getCodCategoria(),
+                plansecciondetalleitemadjuntos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo(), plansecciondetalleitemadjuntos.getTitulo(), plansecciondetalleitemadjuntos.getDescripcion(), plansecciondetalleitemadjuntos.getActividad(), plansecciondetalleitemadjuntos.getDescripcionGeneral(), plansecciondetalleitemadjuntos.getDocumento()                    
             );
            gestorPlanseccion.almacenarSecciondetalleitemadjunto(plsecciondetalleitemadjunto);
             
             UtilMSG.addSuccessMsg("Adjunto almacenado correctamente.");
-            UtilJSF.setBean("planDetalle", new PlanSeccion(), UtilJSF.SESSION_SCOPE);
+            UtilJSF.setBean("planItem", new PlanSeccion(), UtilJSF.SESSION_SCOPE);
+            this.cargarPlansecciondetalleitemadjuntoList();
+            this.plansecciondetalleitemadjuntos=new PlanSeccionDetalleItemAdjuntos();
+            this.plansecciondetalleitemadjuntospk=new PlanSeccionDetalleItemAdjuntosPK();            
             
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
@@ -199,6 +212,14 @@ public class UIPlanItem implements Serializable{
                 UtilLog.generarLog(this.getClass(), e);
             }
         }        
+    }
+
+    public List<AdjuntosCategoria> getAdjuntosCategorias() {
+        return adjuntosCategorias;
+    }
+
+    public void setAdjuntosCategorias(List<AdjuntosCategoria> adjuntosCategorias) {
+        this.adjuntosCategorias = adjuntosCategorias;
     }
 
     public PlanSeccionDetalleItemAdjuntos getPlansecciondetalleitemadjuntos() {
@@ -223,22 +244,6 @@ public class UIPlanItem implements Serializable{
 
     public void setPlansecciondetalleitemadjuntosList(List<PlanSeccionDetalleItemAdjuntos> plansecciondetalleitemadjuntosList) {
         this.plansecciondetalleitemadjuntosList = plansecciondetalleitemadjuntosList;
-    }
-
-    public AdjuntosCategoria getAdjuntoscategoria() {
-        return adjuntoscategoria;
-    }
-
-    public void setAdjuntoscategoria(AdjuntosCategoria adjuntoscategoria) {
-        this.adjuntoscategoria = adjuntoscategoria;
-    }
-
-    public List<AdjuntosCategoria> getAdjuntosCategoriaitems() {
-        return adjuntosCategoriaitems;
-    }
-
-    public void setAdjuntosCategoriaitems(List<AdjuntosCategoria> adjuntosCategoriaitems) {
-        this.adjuntosCategoriaitems = adjuntosCategoriaitems;
     }
 
     public PlanSeccionDetalleItem getPlansecciondetalleitem() {

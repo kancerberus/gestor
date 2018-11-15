@@ -32,8 +32,7 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "uiPlantitulo")
 @SessionScoped
 public class UIPlantitulo implements Serializable{     
-    private GestorPlanTitulo gestorPlanTitulo;   
-    private GestorAdjuntosCategoria gestorAdjuntosCategoria;   
+    private GestorPlanTitulo gestorPlanTitulo;       
     private PlanTitulo plantitulo = new PlanTitulo();       
     private PlanTituloPK plantitulopk = new PlanTituloPK();    
     private PlanTituloTexto plantitulotexto= new PlanTituloTexto(); 
@@ -42,10 +41,9 @@ public class UIPlantitulo implements Serializable{
     private PlanTituloAdiuntosPK plantituloadjuntopk= new PlanTituloAdiuntosPK();     
     private List<PlanTitulo> plantituloList = new ArrayList<>();
     private List<PlanTituloTexto> plantitulotextoList = new ArrayList<>();
-    private List<PlanTituloAdiuntos> plantituloadjuntoList = new ArrayList<>();   
-    private AdjuntosCategoria adjuntoscategoria = new AdjuntosCategoria();            
-    private AdjuntosCategoriaTipo adjuntosCategoriaTipo= new AdjuntosCategoriaTipo();
-    private List<AdjuntosCategoria> adjuntosCategoriaitems = new ArrayList<>();    
+    private List<PlanTituloAdiuntos> plantituloadjuntoList = new ArrayList<>(); 
+    private List<AdjuntosCategoria> adjuntosCategorias = new ArrayList<>();    
+    
     
     Sesion s = (Sesion) UtilJSF.getBean("sesion");
     
@@ -55,73 +53,54 @@ public class UIPlantitulo implements Serializable{
     }        
     
     @PostConstruct
-    public void init() {
-        adjuntoscategoria= new AdjuntosCategoria();
-        adjuntoscategoria.setAdjuntosCategoriaTipo( adjuntosCategoriaTipo);
-        adjuntosCategoriaTipo = new AdjuntosCategoriaTipo();
-        adjuntosCategoriaTipo.setAdjuntosCategoria(new AdjuntosCategoria());       
-        
-        this.cargarPlantitulo();
-        this.cargarCategoriaitems();
+    public void init() {           
+        this.cargarPlantitulo(); 
         this.cargarAdjuntosCategoriaTipo();
-    }
+    }            
     
-    public void cargarCategoriaitems() {
-        try {
-            this.adjuntosCategoriaitems = new ArrayList<>();
-            gestorAdjuntosCategoria = new GestorAdjuntosCategoria();
-            this.adjuntosCategoriaitems.addAll((Collection<? extends AdjuntosCategoria>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriapm());                        
-        } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
-        }
-    }
-        
     public void cargarAdjuntosCategoriaTipo() {
-        try {                                   
-            if(getAdjuntoscategoria() != null){                                
-                this.adjuntoscategoria.setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(adjuntoscategoria.getCodCategoria()));                                
+        try {
+            GestorAdjuntosCategoria gestorAdjuntosCategoria = new GestorAdjuntosCategoria();    
+                        
+            adjuntosCategorias = new ArrayList<>();
+            adjuntosCategorias.addAll(gestorAdjuntosCategoria.cargarListaAdjuntosCategoriapm());            
+            
+            if(plantituloadjunto.getAdjuntosCategoria().getCodCategoria() != null){
+                plantituloadjunto.getAdjuntosCategoria().setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(plantituloadjunto.getAdjuntosCategoria().getCodCategoria()));                                                
             }            
-        } catch (Exception e) {
-            UtilLog.generarLog(this.getClass(), e);
-            UtilMSG.addSupportMsg();
+            
+        } catch (Exception e) {            
         }        
     }
      
-    public void subirItemPlantitulo() {                     
+    public void subirItemPlantitulo() {        
         plantitulo = (PlanTitulo) UtilJSF.getBean("varPlantitulo");
-        UtilJSF.setBean("planTitulo", plantitulo, UtilJSF.SESSION_SCOPE);                  
+        UtilJSF.setBean("planTitulo", plantitulo, UtilJSF.SESSION_SCOPE);  
         this.cargarPlantitulotexto();
         this.cargarPlantituloadjunto();
     }     
     
-    public void subirItemPlantituloadjunto() {   
-        this.adjuntoscategoria= new AdjuntosCategoria();
+    public void subirItemPlantituloadjunto() {           
         plantituloadjunto = (PlanTituloAdiuntos) UtilJSF.getBean("varPlantituloadjunto");
-        UtilJSF.setBean("planTituloadjunto", plantituloadjunto, UtilJSF.SESSION_SCOPE);                          
-        adjuntoscategoria.setCodCategoria(plantituloadjunto.getCodCategoria());
-        this.cargarAdjuntosCategoriaTipo();
-        adjuntoscategoria.getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().setCodCategoriaTipo(plantituloadjunto.getCodCategoriaTipo());        
-        for(int i=0;i<=plantituloadjuntoList.size();i++){
-            if(plantituloadjuntoList.get(i).getCodCategoriaTipo()==plantituloadjunto.getCodCategoriaTipo()){
-                adjuntosCategoriaitems.set(i, adjuntoscategoria);
-            }
-        }
+        UtilJSF.setBean("planTituloadjunto", plantituloadjunto, UtilJSF.SESSION_SCOPE);  
+        plantituloadjuntopk.setCodTituloAdjunto(plantituloadjunto.getPlanTituloAdiuntosPK().getCodTituloAdjunto());                          
     }
     
     public void cargarPlantitulo() {        
-        try {            
+        try {                  
             Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
-            this.plantituloList = new ArrayList<>();
+            plantituloList = new ArrayList<>();
             gestorPlanTitulo = new GestorPlanTitulo();
-            this.plantituloList.addAll((Collection<? extends PlanTitulo>) gestorPlanTitulo.cargarPlanTituloList(e.getEstablecimiento().getCodigoEstablecimiento()));                        
+            this.plantituloList.addAll((Collection<? extends PlanTitulo>) gestorPlanTitulo.cargarPlanTituloList(e.getEstablecimiento().getCodigoEstablecimiento()));                                                                     
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
     }
     
     public void cargarPlantitulolista() {        
-        try {            
-            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
+        try {                   
+            this.plantitulo= new PlanTitulo();
+            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");            
             this.plantituloList = new ArrayList<>();
             gestorPlanTitulo = new GestorPlanTitulo();
             this.plantituloList.addAll((Collection<? extends PlanTitulo>) gestorPlanTitulo.cargarPlanTituloList(e.getEstablecimiento().getCodigoEstablecimiento()));                        
@@ -129,6 +108,17 @@ public class UIPlantitulo implements Serializable{
             UtilLog.generarLog(this.getClass(), ex);
         }
     }
+    
+    public void cargarPlantituloadjuntolista() {        
+        try {            
+            this.plantituloadjuntoList = new ArrayList<>();
+            gestorPlanTitulo = new GestorPlanTitulo();
+            this.plantituloadjuntoList.addAll((Collection<? extends PlanTituloAdiuntos>) gestorPlanTitulo.cargarPlanTituloadjuntoList(plantitulo));
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }    
+ 
     
     public void cargarPlantitulotexto() {        
         try {
@@ -142,10 +132,10 @@ public class UIPlantitulo implements Serializable{
         }
     }
     public void cargarPlantituloadjunto() {        
-        try {            
+        try {                    
             this.plantituloadjuntoList = new ArrayList<>();
-            gestorPlanTitulo = new GestorPlanTitulo();
-            this.plantituloadjuntoList.addAll((Collection<? extends PlanTituloAdiuntos>) gestorPlanTitulo.cargarPlanTituloadjuntoList(plantitulo));
+            gestorPlanTitulo = new GestorPlanTitulo();            
+            this.plantituloadjuntoList.addAll((Collection<? extends PlanTituloAdiuntos>) gestorPlanTitulo.cargarPlanTituloadjuntoList(plantitulo));                                                                                                                     
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -154,6 +144,7 @@ public class UIPlantitulo implements Serializable{
         
     public void guardarTitulo(){     
         try {                
+            
             Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
             GestorPlanTitulo gestorPlantitulo = new GestorPlanTitulo();           
             plantitulopk.setCodTitulo(Integer.parseInt(plantitulo.getNumeral()));            
@@ -178,26 +169,26 @@ public class UIPlantitulo implements Serializable{
         }
     }    
 
-    public void guardarTituloadjunto(){              
-        try {                
-            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
-            GestorPlanTitulo gestorPlantitulo = new GestorPlanTitulo();                                    
+    public void guardarTituloadjunto(){
+        try {            
             if(plantituloadjuntopk.getCodTituloAdjunto()==0){
-                plantituloadjuntopk.setCodTituloAdjunto(1);
-            }
-            
-            plantituloadjuntopk.setCodTituloAdjunto(plantituloadjuntoList.size()+1);             
-            
-            
+                UtilMSG.addSuccessMsg("Ingrese un indice para el adjunto");
+            }            
+            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
+            GestorPlanTitulo gestorPlantitulo = new GestorPlanTitulo();
+                        
+
             PlanTituloAdiuntos pltituloadjunto = new PlanTituloAdiuntos(new PlanTituloAdiuntosPK(e.getEstablecimiento().getCodigoEstablecimiento(), 
-                plantituloadjuntopk.getCodTituloAdjunto(), plantitulo.getPlanTituloPK().getCodTitulo()) , adjuntoscategoria.getCodCategoria(),
-                adjuntoscategoria.getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo(), plantituloadjunto.getTitulo(), plantituloadjunto.getDescripcion(), plantituloadjunto.getDocumento()                    
-            );
-           gestorPlantitulo.almacenarTituloadjunto(pltituloadjunto);
+                plantituloadjuntopk.getCodTituloAdjunto(), plantitulo.getPlanTituloPK().getCodTitulo()) , plantituloadjunto.getAdjuntosCategoria().getCodCategoria(),
+                plantituloadjunto.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo(), plantituloadjunto.getTitulo(), plantituloadjunto.getDescripcion(), plantituloadjunto.getDocumento()                    
+            );                        
+            gestorPlantitulo.almacenarTituloadjunto(pltituloadjunto);
             
             UtilMSG.addSuccessMsg("Adjunto almacenado correctamente.");
-            UtilJSF.setBean("planTitulo", new PlanTitulo(), UtilJSF.SESSION_SCOPE);
-            this.plantituloadjunto= new PlanTituloAdiuntos();            
+            UtilJSF.setBean("planTituloadjunto", new PlanTituloAdiuntos(), UtilJSF.SESSION_SCOPE);            
+            this.cargarPlantituloadjuntolista();
+            this.plantituloadjunto=new PlanTituloAdiuntos();
+            this.plantituloadjuntopk=new PlanTituloAdiuntosPK();                        
             
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
@@ -209,8 +200,42 @@ public class UIPlantitulo implements Serializable{
         }        
     }
     
-    public void limpiar(){
-        this.plantitulo=new PlanTitulo();        
+    public String regresar(){        
+        try{
+        plantitulo=new PlanTitulo();
+        plantitulotexto=new PlanTituloTexto();
+        plantituloadjunto=new PlanTituloAdiuntos();
+        plantituloadjuntoList=new ArrayList<>();
+        
+        
+        UIPlanSeccion ps = (UIPlanSeccion) UtilJSF.getBean("uiPlanseccion");
+        ps.setPlanseccion(new PlanSeccion());        
+        ps.setPlanseccionList(new ArrayList<PlanSeccion>());
+        ps.setPlansecciontexto(new PlanSeccionTexto());        
+        ps.setPlanseccionadjuntos(new PlanSeccionAdjuntos());
+        ps.getPlanseccionList().clear();
+        ps.getPlanseccionadjuntosList().clear();
+        
+        UIPlanDetalle pd = (UIPlanDetalle) UtilJSF.getBean("uiPlandetalle");
+        pd.setPlansecciondetalle(new PlanSeccionDetalle());
+        pd.setPlansecciondetalleList(new ArrayList<PlanSeccionDetalle>());
+        pd.setPlansecciondetalletexto(new PlanSeccionDetalleTexto());
+        pd.setPlansecciondetalleadjuntos(new PlanSeccionDetalleAdjuntos());
+        pd.getPlansecciondetalleList().clear();
+        pd.getPlansecciondetalleadjuntosList().clear();
+                
+        UIPlanItem pi = (UIPlanItem) UtilJSF.getBean("uiPlanitem");
+        pi.setPlansecciondetalleitem(new PlanSeccionDetalleItem());
+        pi.setPlansecciondetalleitemList(new ArrayList<PlanSeccionDetalleItem>());
+        pi.setPlansecciondetalleitemtexto(new PlanSeccionDetalleItemTexto());
+        pi.setPlansecciondetalleitemadjuntos(new PlanSeccionDetalleItemAdjuntos());
+        pi.getPlansecciondetalleitemList().clear();
+        pi.getPlansecciondetalleitemadjuntosList().clear();
+            
+        }catch(Exception e){
+        return ("/seguimiento/administrar-plan-maestro-evaluaciones.xhtml?faces-redirect=true");                    
+        }        
+       return ("/seguimiento/administrar-plan-maestro-evaluaciones.xhtml?faces-redirect=true");                           
     }
     
     public void guardarTitulotexto(){                
@@ -238,28 +263,12 @@ public class UIPlantitulo implements Serializable{
         
     }    
 
-    public AdjuntosCategoriaTipo getAdjuntosCategoriaTipo() {
-        return adjuntosCategoriaTipo;
+    public List<AdjuntosCategoria> getAdjuntosCategorias() {
+        return adjuntosCategorias;
     }
 
-    public void setAdjuntosCategoriaTipo(AdjuntosCategoriaTipo adjuntosCategoriaTipo) {
-        this.adjuntosCategoriaTipo = adjuntosCategoriaTipo;
-    }
-
-    public AdjuntosCategoria getAdjuntoscategoria() {
-        return adjuntoscategoria;
-    }
-
-    public void setAdjuntoscategoria(AdjuntosCategoria adjuntoscategoria) {
-        this.adjuntoscategoria = adjuntoscategoria;
-    }
-
-    public List<AdjuntosCategoria> getAdjuntosCategoriaitems() {
-        return adjuntosCategoriaitems;
-    }
-
-    public void setAdjuntosCategoriaitems(List<AdjuntosCategoria> adjuntosCategoriaitems) {
-        this.adjuntosCategoriaitems = adjuntosCategoriaitems;
+    public void setAdjuntosCategorias(List<AdjuntosCategoria> adjuntosCategorias) {
+        this.adjuntosCategorias = adjuntosCategorias;
     }
    
     public String administrarPlanmaestro() throws IOException{        

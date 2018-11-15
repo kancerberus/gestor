@@ -11,9 +11,6 @@
         <h:form enctype="multipart/form-data" id="formTitulo" style="font-size: small;">            
             <p:panel  style="float: right;" id="panelTitulos"  header="Administrar Titulos" >                
                 <br/>   
-                
-                
-                
                 <p:dataTable   style="width: 30%" value="#{uiPlantitulo.plantituloList}" var="varPlantitulo" emptyMessage="No hay Titulos"
                               rowStyleClass="Centro">
 
@@ -40,7 +37,7 @@
                     </p:column>                    
                 </p:dataTable>
                 <br></br>
-                <h:panelGrid columns="2">
+                <h:panelGrid id="plantitulo" columns="2">
                     <p:inputText  value="#{uiPlantitulo.plantitulo.numeral}" placeholder="Numeral"/>                    
                     <p:inputText  value="#{uiPlantitulo.plantitulo.nombre}" placeholder="Nombre"/>                                        
                 </h:panelGrid>
@@ -78,34 +75,33 @@
                                      update="formTitulo"/>                                      
                 </h:panelGrid>                
                 <br/>
-                <h:panelGrid columns="8">                    
+                <h:panelGrid columns="8">  
+                    <p:inputMask id="codt" mask="9" placeholder="Numeral" value="#{uiPlantitulo.plantituloadjuntopk.codTituloAdjunto}" />  
                     <p:inputText  placeholder="Titulo" value="#{uiPlantitulo.plantituloadjunto.titulo}"/>                      
                     <p:inputText  placeholder="Descripcion" value="#{uiPlantitulo.plantituloadjunto.descripcion}"/>  
                     <p:inputText  placeholder="Documento" value="#{uiPlantitulo.plantituloadjunto.documento}"/>  
                         
                         
-                    <p:selectOneMenu value="#{uiPlantitulo.adjuntoscategoria}" converter="convertidorGenerico"
+                    <p:selectOneMenu value="#{uiPlantitulo.plantituloadjunto.adjuntosCategoria}" converter="convertidorGenerico"
                                      style="text-align: center;width: 180px;">  
                     <f:selectItem itemLabel="Seleccionar categoria" itemValue="" /> 
-                    <f:selectItems value="#{uiPlantitulo.adjuntosCategoriaitems}" var="pta" itemLabel="#{pta.nombre}" itemValue="#{pta}"/>
-                    <p:ajax update="cattipo" listener="#{uiPlantitulo.cargarAdjuntosCategoriaTipo()}" />
+                    <f:selectItems value="#{uiPlantitulo.adjuntosCategorias}" var="pta" itemLabel="#{pta.nombre}" itemValue="#{pta}"/>
+                    <p:ajax  update="cattipo" listener="#{uiPlantitulo.cargarAdjuntosCategoriaTipo()}" />
+                    
                     </p:selectOneMenu>
                     
-                    <p:selectOneMenu id="cattipo" value="#{uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
-                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlantitulo.adjuntoscategoria }">  
-                        <f:selectItem itemLabel="Seleccionar tipo" itemValue="" /> 
-                        <f:selectItems value="#{uiPlantitulo.adjuntoscategoria.adjuntosCategoriaTipoList}" var="pta" itemLabel="#{pta.nombre}" 
-                                       itemValue="#{pta}"/>
+                    <p:selectOneMenu id="cattipo" value="#{uiPlantitulo.plantituloadjunto.adjuntosCategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlantitulo.plantituloadjunto.adjuntosCategoria or empty uiPlantitulo.plantituloadjunto.adjuntosCategoria.adjuntosCategoriaTipoList}">                          
+                        <f:selectItem itemLabel="Seleccionar tipo" itemValue=""  /> 
+                        <f:selectItems value="#{uiPlantitulo.plantituloadjunto.adjuntosCategoria.adjuntosCategoriaTipoList}" var="ptta" itemLabel="#{ptta.nombre}" 
+                                       itemValue="#{ptta}"/>
                     </p:selectOneMenu>
                                       
                 </h:panelGrid>                
                 <h:panelGrid columns="4">
                     <p:commandButton value="Guardar Adjunto" action="#{uiPlantitulo.guardarTituloadjunto()}" 
                                      icon="ui-icon-new"
-                                     update="formTitulo"/>                    
-                    <p:commandButton value="Limpiar" action="#{uiPlantitulo.limpiar()}" 
-                                     icon="ui-icon-cancel"
-                                     update="formTitulo"/>
+                                     update="formTitulo"/>                                        
                 </h:panelGrid>
                 <br/>                
                 <p:dataTable style="width: 80%" value="#{uiPlantitulo.plantituloadjuntoList}" var="varPlantituloadjunto" emptyMessage="No hay Documentos"
@@ -113,13 +109,13 @@
 
                     <p:columnGroup type="header" >  
                         <p:row>                              
-                            <p:column  headerText="Seleccionar"/>                            
+                            <p:column  style="width: 10%" headerText="Seleccionar"/>                            
                             <p:column  headerText="Adjunto"/>
                             <p:column  headerText="Titulo"/>                                                          
                             <p:column  headerText="Descripcion"/>    
                             <p:column  headerText="Documento"/>  
                             <p:column  headerText="Categoria"/>
-                            <p:column  headerText="Categoria Tipo"/>
+                            <p:column  style="width: 15%" headerText="Categoria Tipo"/>
                         </p:row> 
                     </p:columnGroup>
                     
@@ -138,33 +134,29 @@
                     </p:column>
                     
                     <p:column>                        
-                        <h:outputText value="#{varPlantituloadjunto.descripcion}"/>    
+                        <h:outputText style="max-height: 20%; max-width: 30%" value="#{varPlantituloadjunto.descripcion}"/>    
                     </p:column>
                     
                     <p:column>                        
                         <h:outputText value="#{varPlantituloadjunto.documento}"/>    
                     </p:column>
                     
-                    <p:column>
-                        <h:outputText value="#{varPlantituloadjunto.codCategoria}"/>                            
+                    <p:column >
+                        <h:outputText value="#{varPlantituloadjunto.adjuntosCategoria.nombre}"/>                            
                     </p:column>                        
                     
                     <p:column>                        
-                        <h:outputText value="#{varPlantituloadjunto.codCategoriaTipo}"/>    
+                        <h:outputText  value="#{varPlantituloadjunto.adjuntosCategoria.adjuntosCategoriaTipo.nombre}"/>    
                     </p:column>                        
                 </p:dataTable>
                 <br/>
                 <h:panelGrid columns="3">
-                    <p:commandButton value="REGRESAR " action="#{uiPlantitulo.administrarPlanmaestro()}" 
+                    <p:commandButton value="REGRESAR " action="#{uiPlantitulo.regresar()}" 
                     icon="ui-icon-return"/>
                     <p:commandButton value="ADMIN SUBTITULO 1 " action="#{uiPlanMaestro.crearSeccion()}" 
-                    icon="ui-icon-return"/>
-                    
-                </h:panelGrid>                
-                
+                    icon="ui-icon-return"/>                    
+                </h:panelGrid>       
             </p:panel>
         </h:form>
-
     </ui:define>
-
 </ui:composition>

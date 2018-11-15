@@ -76,8 +76,7 @@
                     <p:column >
                         
                         <p:commandButton icon="ui-icon-radio" title="Seleccionar Item" update="formItem" 
-                                         action="#{uiPlanitem.subirItemPlansecciondetalleitem()}" >                            
-                            <f:actionListener binding= "#{uiPlanitem.cargarPlansecciondetalleitemadjunto()}"/>
+                                         action="#{uiPlanitem.subirItemPlansecciondetalleitem()}" >                                                        
                         </p:commandButton>
                             
                     </p:column>
@@ -108,7 +107,8 @@
                                      update="formItem"/>  
                 </h:panelGrid>
                 <br/>
-                <h:panelGrid columns="8">                    
+                <h:panelGrid style="width: 20%" columns="8">     
+                    <p:inputMask id="codiadj" mask="9" placeholder="Numeral" value="#{uiPlanitem.plansecciondetalleitemadjuntospk.codSeccionDetalleItemAdjuntos}" />  
                     <p:inputText  placeholder="Titulo" value="#{uiPlanitem.plansecciondetalleitemadjuntos.titulo}"/>  
                     <p:inputText  placeholder="Descripcion" value="#{uiPlanitem.plansecciondetalleitemadjuntos.descripcion}"/>  
                     <p:inputText  placeholder="Actividad" value="#{uiPlanitem.plansecciondetalleitemadjuntos.actividad}"/>  
@@ -116,17 +116,17 @@
                     <p:inputText  placeholder="Documento" value="#{uiPlanitem.plansecciondetalleitemadjuntos.documento}"/>  
                         
                         
-                    <p:selectOneMenu value="#{uiPlanitem.adjuntoscategoria}" converter="convertidorGenerico"
-                                     style="text-align: center;width: 180px;">  
+                    <p:selectOneMenu value="#{uiPlanitem.plansecciondetalleitemadjuntos.adjuntosCategoria}" converter="convertidorGenerico"
+                                     style="text-align: center;">  
                     <f:selectItem itemLabel="Seleccionar categoria" itemValue="" /> 
-                    <f:selectItems value="#{uiPlanitem.adjuntosCategoriaitems}" var="pia" itemLabel="#{pia.nombre}" itemValue="#{pia}"/>
+                    <f:selectItems value="#{uiPlanitem.adjuntosCategorias}" var="pia" itemLabel="#{pia.nombre}" itemValue="#{pia}"/>
                     <p:ajax update="cattipo" listener="#{uiPlanitem.cargarAdjuntosCategoriaTipo()}" />
                     </p:selectOneMenu>
                     
-                    <p:selectOneMenu id="cattipo" value="#{uiPlanitem.adjuntoscategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
-                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlanitem.adjuntoscategoria}">  
+                    <p:selectOneMenu id="cattipo" value="#{uiPlanitem.plansecciondetalleitemadjuntos.adjuntosCategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
+                                     style="text-align: center;" disabled="#{empty uiPlanitem.plansecciondetalleitemadjuntos.adjuntosCategoria or empty uiPlanitem.plansecciondetalleitemadjuntos.adjuntosCategoria.adjuntosCategoriaTipoList}">
                         <f:selectItem itemLabel="Seleccionar tipo" itemValue="" /> 
-                        <f:selectItems value="#{uiPlanitem.adjuntoscategoria.adjuntosCategoriaTipoList}" var="pia" itemLabel="#{pia.nombre}" 
+                        <f:selectItems value="#{uiPlanitem.plansecciondetalleitemadjuntos.adjuntosCategoria.adjuntosCategoriaTipoList}" var="pia" itemLabel="#{pia.nombre}" 
                                        itemValue="#{pia}"/>
                     </p:selectOneMenu>
                                       
@@ -186,21 +186,19 @@
                         <h:outputText value="#{varPlanitemadjunto.documento}"/>    
                     </p:column>                        
                     <p:column>                        
-                        <h:outputText value="#{varPlanitemadjunto.codCategoria}"/>    
+                        <h:outputText value="#{varPlanitemadjunto.adjuntosCategoria.nombre}"/>    
                     </p:column>                        
                     <p:column>                        
-                        <h:outputText value="#{varPlanitemadjunto.codCategoriaTipo}"/>    
+                        <h:outputText value="#{varPlanitemadjunto.adjuntosCategoria.nombre}"/>    
                     </p:column>                        
                 </p:dataTable>
                 <br/>                
                 <h:panelGrid columns="4">
                     <p:commandButton value="Crear Adjunto" action="#{uiPlantitulo.guardarTituloadjunto()}" 
                                      icon="ui-icon-new"
-                                     update="formItem"/>                    
-                    <p:commandButton value="Limpiar" action="#{uiPlantitulo.limpiar()}" 
-                                     icon="ui-icon-cancel"
-                                     update="formItem"/>
-                    <p:commandButton value="REGRESAR " action="#{uiPlantitulo.administrarPlanmaestro()}" 
+                                     update="formItem"/>                  
+                    
+                    <p:commandButton value="REGRESAR " action="#{uiPlantitulo.regresar()}" 
                                      icon="ui-icon-return"
                                      />                    
                 </h:panelGrid>
