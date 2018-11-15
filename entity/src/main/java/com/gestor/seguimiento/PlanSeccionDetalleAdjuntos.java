@@ -5,6 +5,7 @@
  */
 package com.gestor.seguimiento;
 
+import com.gestor.gestor.AdjuntosCategoria;
 import com.gestor.publico.EvaluacionAdjuntos;
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -37,7 +38,7 @@ public class PlanSeccionDetalleAdjuntos implements Serializable {
     private String descripcion;
     @Column(name = "documento")
     private String documento;
-    
+    private AdjuntosCategoria adjuntosCategoria;
     private EvaluacionAdjuntos evaluacionAdjuntos;
 
     public PlanSeccionDetalleAdjuntos() {
@@ -100,6 +101,14 @@ public class PlanSeccionDetalleAdjuntos implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public AdjuntosCategoria getAdjuntosCategoria() {
+        return adjuntosCategoria;
+    }
+
+    public void setAdjuntosCategoria(AdjuntosCategoria adjuntosCategoria) {
+        this.adjuntosCategoria = adjuntosCategoria;
     }
 
     public String getDocumento() {

@@ -5,6 +5,7 @@
  */
 package com.gestor.seguimiento;
 
+import com.gestor.gestor.AdjuntosCategoria;
 import com.gestor.publico.EvaluacionAdjuntos;
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -42,8 +43,11 @@ public class PlanTituloAdiuntos implements Serializable {
     private String documento;
 
     private EvaluacionAdjuntos evaluacionAdjuntos;
+    private AdjuntosCategoria adjuntosCategoria = new AdjuntosCategoria();
+    
 
     public PlanTituloAdiuntos() {
+        adjuntosCategoria = new AdjuntosCategoria();
     }
 
     public PlanTituloAdiuntos(PlanTituloAdiuntosPK planTituloAdiuntosPK) {
@@ -116,6 +120,15 @@ public class PlanTituloAdiuntos implements Serializable {
     public void setDocumento(String documento) {
         this.documento = documento;
     }
+
+    public AdjuntosCategoria getAdjuntosCategoria() {
+        return adjuntosCategoria;
+    }
+
+    public void setAdjuntosCategoria(AdjuntosCategoria adjuntosCategoria) {
+        this.adjuntosCategoria = adjuntosCategoria;
+    }    
+    
 
     @Override
     public int hashCode() {
