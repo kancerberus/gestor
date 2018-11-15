@@ -5,6 +5,9 @@
  */
 package com.gestor.seguimiento.dao;
 
+import com.gestor.gestor.AdjuntosCategoria;
+import com.gestor.gestor.AdjuntosCategoriaTipo;
+import com.gestor.gestor.AdjuntosCategoriaTipoPK;
 import com.gestor.seguimiento.PlanSeccionAdjuntos;
 import com.gestor.seguimiento.PlanSeccionAdjuntos;
 import com.gestor.seguimiento.PlanSeccionAdjuntosPK;
@@ -36,18 +39,23 @@ public class PlanSeccionAdjuntosDAO {
             consulta = new Consulta(this.conexion);
             Collection<PlanSeccionAdjuntos> planSeccionadjuntosList = new ArrayList<>();
             StringBuilder sql = new StringBuilder(
-                    "SELECT codigo_establecimiento, cod_titulo, cod_seccion, cod_seccion_adjunto, cod_categoria, cod_categoria_tipo, titulo, descripcion, documento"
-                    + " FROM seguimiento.plan_seccion_adjuntos"
-                    + " WHERE codigo_establecimiento='"+planseccion.getPlanSeccionPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+planseccion.getPlanSeccionPK().getCodSeccion()+"' "
-                    + " AND cod_seccion= '"+planseccion.getPlanSeccionPK().getCodSeccion()+"' "
+                    "SELECT codigo_establecimiento, cod_titulo, cod_seccion, cod_seccion_adjunto, cod_categoria, cod_categoria_tipo, titulo, psa.descripcion as descripcionpsa, documento, "
+                    + " cod_categoria, ct.nombre as nombrect, "
+                    + " cod_categoria_tipo, ctt.nombre as nombrectt "
+                    + " FROM seguimiento.plan_seccion_adjuntos psa"
+                    + " JOIN gestor.adjuntos_categoria ct USING (cod_categoria)"
+                    + " JOIN gestor.adjuntos_categoria_tipo ctt USING (cod_categoria, cod_categoria_tipo)"
+                    + " WHERE codigo_establecimiento='"+planseccion.getPlanSeccionPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+planseccion.getPlanSeccionPK().getCodSeccion()+"' "                     
                     + " ORDER BY cod_seccion_adjunto"  
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
-                PlanSeccionAdjuntos pta = new PlanSeccionAdjuntos(new PlanSeccionAdjuntosPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo"), rs.getInt("cod_seccion"), rs.getInt("cod_seccion_adjunto")),
-                        rs.getInt("cod_categoria"), rs.getInt("cod_categoria_tipo"), rs.getString("titulo"), rs.getString("descripcion"), rs.getString("documento")
-                );
-                planSeccionadjuntosList.add(pta);
+                PlanSeccionAdjuntos psa = new PlanSeccionAdjuntos(new PlanSeccionAdjuntosPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo"), rs.getInt("cod_seccion"), rs.getInt("cod_seccion_adjunto")),
+                        rs.getInt("cod_categoria"), rs.getInt("cod_categoria_tipo"), rs.getString("titulo"), rs.getString("descripcionpsa"), rs.getString("documento")
+                );                
+                psa.setAdjuntosCategoria(new AdjuntosCategoria(rs.getInt("cod_categoria"), rs.getString("nombrect"), 0));
+                psa.getAdjuntosCategoria().setAdjuntosCategoriaTipo(new AdjuntosCategoriaTipo(new AdjuntosCategoriaTipoPK(rs.getInt("cod_categoria"), rs.getInt("cod_categoria_tipo")), rs.getString("nombrectt")));
+                planSeccionadjuntosList.add(psa);
             }
             return planSeccionadjuntosList;
         } finally {

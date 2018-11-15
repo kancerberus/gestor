@@ -5,6 +5,9 @@
  */
 package com.gestor.seguimiento.dao;
 
+import com.gestor.gestor.AdjuntosCategoria;
+import com.gestor.gestor.AdjuntosCategoriaTipo;
+import com.gestor.gestor.AdjuntosCategoriaTipoPK;
 import com.gestor.publico.EvaluacionAdjuntos;
 import com.gestor.seguimiento.PlanSeccionAdjuntos;
 import com.gestor.seguimiento.PlanSeccionAdjuntosPK;
@@ -47,16 +50,23 @@ public class PlanTituloAdiuntosDAO {
             consulta = new Consulta(this.conexion);
             Collection<PlanTituloAdiuntos> planTituloadjuntosList = new ArrayList<>();
             StringBuilder sql = new StringBuilder(
-                    "SELECT codigo_establecimiento, cod_titulo, cod_titulo_adjunto, cod_categoria, cod_categoria_tipo, titulo, descripcion, documento"
-                    + " FROM seguimiento.plan_titulo_adiuntos"
+                    "SELECT codigo_establecimiento, cod_titulo, cod_titulo_adjunto, cod_categoria, cod_categoria_tipo, titulo, pta.descripcion as descripcionpta, documento, "
+                    + " cod_categoria, ct.nombre as nombrect, "
+                    + " cod_categoria_tipo, ctt.nombre as nombrectt "
+                    + " FROM seguimiento.plan_titulo_adiuntos pta"
+                    + " JOIN gestor.adjuntos_categoria ct USING (cod_categoria)"
+                    + " JOIN gestor.adjuntos_categoria_tipo ctt USING (cod_categoria, cod_categoria_tipo)"
                     + " WHERE codigo_establecimiento='"+plantitulo.getPlanTituloPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+plantitulo.getPlanTituloPK().getCodTitulo()+"' "
                     + " ORDER BY cod_titulo_adjunto"  
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
                 PlanTituloAdiuntos pta = new PlanTituloAdiuntos(new PlanTituloAdiuntosPK(rs.getInt("codigo_establecimiento"), rs.getInt("cod_titulo_adjunto"),
-                        rs.getInt("cod_titulo")), rs.getInt("cod_categoria"), rs.getInt("cod_categoria_tipo"), rs.getString("titulo"), rs.getString("descripcion"), rs.getString("documento")
-                );
+                        rs.getInt("cod_titulo")), rs.getInt("cod_categoria"), rs.getInt("cod_categoria_tipo"), rs.getString("titulo"), rs.getString("descripcionpta"), rs.getString("documento")
+                );                
+                pta.setAdjuntosCategoria(new AdjuntosCategoria(rs.getInt("cod_categoria"), rs.getString("nombrect"), 0));
+                pta.getAdjuntosCategoria().setAdjuntosCategoriaTipo(new AdjuntosCategoriaTipo(new AdjuntosCategoriaTipoPK(rs.getInt("cod_categoria"), rs.getInt("cod_categoria_tipo")), rs.getString("nombrectt")));
+                
                 planTituloadjuntosList.add(pta);
             }
             return planTituloadjuntosList;
@@ -71,20 +81,22 @@ public class PlanTituloAdiuntosDAO {
     }
     
     public void insertarPlantituloadjunto(PlanTituloAdiuntos plantituloadjuntos) throws SQLException {
-        Consulta consulta = null;
-        try {
+        Consulta consulta = null;           
+        
+        try {                                      
+        
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO seguimiento.plan_titulo_adiuntos "
-                    + " ( codigo_establecimiento, cod_titulo_adjunto, cod_titulo, cod_categoria, cod_categoria_tipo, titulo, descripcion, documento )"
-                    + " VALUES ('"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodigoEstablecimiento()+"', '"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodTituloAdjunto()+"', "
-                    + " '"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodTitulo()+"', '"+plantituloadjuntos.getCodCategoria()+"', "
+                    + " ( codigo_establecimiento, cod_titulo, cod_titulo_adjunto, cod_categoria, cod_categoria_tipo, titulo, descripcion, documento )"
+                    + " VALUES ('"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodigoEstablecimiento()+"','"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodTitulo()+"', '"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodTituloAdjunto()+"', "
+                    + "  '"+plantituloadjuntos.getCodCategoria()+"', "
                     + " '"+plantituloadjuntos.getCodCategoriaTipo()+"', '"+plantituloadjuntos.getTitulo()+"', '"+plantituloadjuntos.getDescripcion()+"', '"+plantituloadjuntos.getDocumento()+"') "
-                    + " ON CONFLICT ( codigo_establecimiento, cod_titulo_adjunto, cod_titulo ) DO UPDATE "
+                    + " ON CONFLICT ( codigo_establecimiento, cod_titulo, cod_titulo_adjunto  ) DO UPDATE "
                     + " SET titulo=EXCLUDED.titulo, descripcion=EXCLUDED.descripcion, documento=EXCLUDED.documento "
                     
             );
-            consulta.actualizar(sql);
+            consulta.actualizar(sql);            
         } finally {
             if (consulta != null) {
                 consulta.desconectar();

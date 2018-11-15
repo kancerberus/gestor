@@ -9,17 +9,15 @@ import com.gestor.gestor.dao.SeccionDAO;
 import com.gestor.gestor.dao.SeccionDetalleDAO;
 import com.gestor.gestor.dao.SeccionDetalleItemsDAO;
 import com.gestor.gestor.dao.SeccionDetalleItemsAyudaDAO;
-import com.gestor.gestor.SeccionDetalleItemsAyuda;
 import com.gestor.controller.Gestor;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author franj
  */
-public class GestorEstandar extends Gestor {    
+public class GestorEstandar extends Gestor implements Serializable{    
     
     public GestorEstandar() throws Exception {
         super();

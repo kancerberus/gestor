@@ -7,6 +7,7 @@ package com.gestor.seguimiento.controlador;
 
 import com.gestor.controller.Gestor;
 import com.gestor.entity.UtilLog;
+import com.gestor.gestor.AdjuntosCategoriaTipo;
 import com.gestor.seguimiento.PlanSeccion;
 import com.gestor.seguimiento.PlanSeccionAdjuntos;
 import com.gestor.seguimiento.PlanSeccionDetalle;
@@ -26,9 +27,11 @@ import com.gestor.seguimiento.dao.PlanSeccionDetalleAdjuntosDAO;
 import com.gestor.seguimiento.dao.PlanSeccionDetalleItemAdjuntosDAO;
 import com.gestor.seguimiento.dao.PlanSeccionDetalleItemDAO;
 import com.gestor.seguimiento.PlanTitulo;
+import com.gestor.gestor.dao.AdjuntosCategoriaDAO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 /**
  *
  * @author Julian D Osorio G
@@ -54,8 +57,15 @@ public class GestorPlanSeccion extends Gestor implements Serializable{
         try {
             this.abrirConexion();
             PlanSeccionAdjuntosDAO planSeccionadjuntosDAO = new PlanSeccionAdjuntosDAO(conexion);
+            AdjuntosCategoriaDAO adjuntosCategoriaDAO = new AdjuntosCategoriaDAO(conexion);
             Collection<PlanSeccionAdjuntos> planSeccionadjuntosList = new ArrayList<>();
             planSeccionadjuntosList.addAll(planSeccionadjuntosDAO.cargarPlanSeccionadjuntosList(planseccion));
+            
+            for (PlanSeccionAdjuntos planSeccionAdjuntos: planSeccionadjuntosList){
+                planSeccionAdjuntos.getAdjuntosCategoria().setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) adjuntosCategoriaDAO.cargarListaAdjuntosCategoriaTipo(planSeccionAdjuntos.getCodCategoria()));
+            }   
+            
+            
             return planSeccionadjuntosList;
         } finally {
             this.cerrarConexion();
@@ -66,8 +76,14 @@ public class GestorPlanSeccion extends Gestor implements Serializable{
         try {
             this.abrirConexion();
             PlanSeccionDetalleAdjuntosDAO planSecciondetalleadjuntosDAO = new PlanSeccionDetalleAdjuntosDAO(conexion);
+            AdjuntosCategoriaDAO adjuntosCategoriaDAO = new AdjuntosCategoriaDAO(conexion);
             Collection<PlanSeccionDetalleAdjuntos> planSecciondetalleadjuntosList = new ArrayList<>();
             planSecciondetalleadjuntosList.addAll(planSecciondetalleadjuntosDAO.cargarPlanSecciondetalleadjuntosList(plansecciondetalle));
+            
+            for (PlanSeccionDetalleAdjuntos planSeccionDetalleAdjuntos: planSecciondetalleadjuntosList){
+                planSeccionDetalleAdjuntos.getAdjuntosCategoria().setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) adjuntosCategoriaDAO.cargarListaAdjuntosCategoriaTipo(planSeccionDetalleAdjuntos.getCodCategoria()));
+            } 
+            
             return planSecciondetalleadjuntosList;
         } finally {
             this.cerrarConexion();
@@ -102,8 +118,14 @@ public class GestorPlanSeccion extends Gestor implements Serializable{
         try {
             this.abrirConexion();
             PlanSeccionDetalleItemAdjuntosDAO planSecciondetalleitemadjuntosDAO = new PlanSeccionDetalleItemAdjuntosDAO(conexion);
+            AdjuntosCategoriaDAO adjuntosCategoriaDAO = new AdjuntosCategoriaDAO(conexion);
             Collection<PlanSeccionDetalleItemAdjuntos> planSecciondetalleitemadjuntosList = new ArrayList<>();
             planSecciondetalleitemadjuntosList.addAll(planSecciondetalleitemadjuntosDAO.cargarPlanSecciondetalleitemadjuntosList(plansecciondetalleitem));
+            
+            for (PlanSeccionDetalleItemAdjuntos planSeccionDetalleItemAdjuntos: planSecciondetalleitemadjuntosList){
+                planSeccionDetalleItemAdjuntos.getAdjuntosCategoria().setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) adjuntosCategoriaDAO.cargarListaAdjuntosCategoriaTipo(planSeccionDetalleItemAdjuntos.getCodCategoria()));
+            } 
+            
             return planSecciondetalleitemadjuntosList;
         } finally {
             this.cerrarConexion();

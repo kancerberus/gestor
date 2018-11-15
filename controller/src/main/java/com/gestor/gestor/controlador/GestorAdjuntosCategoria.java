@@ -10,13 +10,14 @@ import com.gestor.gestor.AdjuntosCategoria;
 import com.gestor.gestor.AdjuntosCategoriaTipo;
 import com.gestor.gestor.SeccionDetalleItemsPK;
 import com.gestor.gestor.dao.AdjuntosCategoriaDAO;
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
  *
  * @author Julian D Osorio G
  */
-public class GestorAdjuntosCategoria extends Gestor {
+public class GestorAdjuntosCategoria extends Gestor implements Serializable{
 
     public GestorAdjuntosCategoria() throws Exception {
         super();

@@ -7,6 +7,7 @@ package com.gestor.seguimiento.controlador;
 
 import com.gestor.controller.Gestor;
 import com.gestor.entity.UtilLog;
+import com.gestor.gestor.AdjuntosCategoriaTipo;
 import com.gestor.publico.Establecimiento;
 import com.gestor.seguimiento.PlanSeccion;
 import com.gestor.seguimiento.PlanSeccionAdjuntos;
@@ -23,6 +24,7 @@ import com.gestor.seguimiento.PlanTituloAdiuntos;
 import com.gestor.seguimiento.dao.PlanTituloDAO;
 import com.gestor.seguimiento.dao.PlanTituloMatrizDAO;
 import com.gestor.seguimiento.dao.PlanTituloTextoDAO;
+import com.gestor.gestor.dao.AdjuntosCategoriaDAO;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -68,8 +70,12 @@ public class GestorPlanTitulo extends Gestor implements Serializable{
         try {
             this.abrirConexion();
             PlanTituloAdiuntosDAO planTituloadjuntosDAO = new PlanTituloAdiuntosDAO(conexion);
-            Collection<PlanTituloAdiuntos> planTituloadjuntosList = new ArrayList<>();
-            planTituloadjuntosList.addAll(planTituloadjuntosDAO.cargarPlanTituloadjuntosList(plantitulo));
+            AdjuntosCategoriaDAO adjuntosCategoriaDAO = new AdjuntosCategoriaDAO(conexion);
+            Collection<? extends PlanTituloAdiuntos> planTituloadjuntosList = planTituloadjuntosDAO.cargarPlanTituloadjuntosList(plantitulo);
+            
+            for (PlanTituloAdiuntos plantituloadjunto: planTituloadjuntosList){
+                plantituloadjunto.getAdjuntosCategoria().setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) adjuntosCategoriaDAO.cargarListaAdjuntosCategoriaTipo(plantituloadjunto.getCodCategoria()));
+            }   
             return planTituloadjuntosList;
         } finally {
             this.cerrarConexion();
