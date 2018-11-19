@@ -25,7 +25,12 @@
                     <p:inputTextarea value="#{evaluacionPlanAccionDetalle.descripcion}" placeholder="Registra la descripción del plan de accción"/>
 
                     <h:outputLabel value="Responsable: " style="font-weight: bold;"/>
-                    <p:inputText value="#{evaluacionPlanAccionDetalle.responsable}" placeholder="Registra el reponsable de la tarea"/>
+                    <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.responsable}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;">  
+                        <f:selectItem itemLabel="Seleccionar Responsable" itemValue="" /> 
+                        <f:selectItems value="#{uiPlanAccion.responsables}" var="res" itemValue="#{res}" itemLabel="#{res.nombresApellidos}" />
+                        <p:ajax event="change" process="@this"/>
+                    </p:selectOneMenu>
 
                 </h:panelGrid>  
 
@@ -43,6 +48,7 @@
                             <p:column  headerText="Fecha" sortBy="#{varPlanAccionDetalle.fechaRegistro}"/>
                             <p:column  headerText="Usuario" filterBy="#{varPlanAccionDetalle.usuarios.usuario}"/>
                             <p:column  headerText="Estado" filterBy="#{varPlanAccionDetalle.estado}"/>
+                            <p:column  headerText="Responsable" filterBy="#{varPlanAccionDetalle.responsable.nombresApellidos}"/>
                         </p:row> 
                     </p:columnGroup>
 
@@ -70,6 +76,9 @@
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varPlanAccionDetalle.estado}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.responsable.nombresApellidos}"/>
                     </p:column>
 
 

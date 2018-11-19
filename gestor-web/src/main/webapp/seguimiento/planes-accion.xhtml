@@ -115,8 +115,8 @@
                 <p:column headerText="Evaluador" filterBy="#{varPlanAccionDetalle.usuarios.nombreApellido}">
                     <h:outputText value="#{varPlanAccionDetalle.usuarios.nombreApellido}" />
                 </p:column>
-                <p:column headerText="Responsable" filterBy="#{varPlanAccionDetalle.responsable}">
-                    <h:outputText value="#{varPlanAccionDetalle.responsable}" />
+                <p:column headerText="Responsable" filterBy="#{varPlanAccionDetalle.responsable.nombresApellidos}">
+                    <h:outputText value="#{varPlanAccionDetalle.responsable.nombresApellidos}" />
                 </p:column>
 
                 <p:column headerText="Ciclo" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.seccionDetalle.seccion.ciclo.nombre}">

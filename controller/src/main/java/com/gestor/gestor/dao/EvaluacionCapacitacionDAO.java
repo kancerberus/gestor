@@ -20,6 +20,7 @@ import com.gestor.gestor.SeccionDetalleItemsPK;
 import com.gestor.gestor.SeccionDetallePK;
 import com.gestor.gestor.SeccionPK;
 import com.gestor.publico.Establecimiento;
+import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.UsuariosPK;
 import conexion.Consulta;
@@ -48,13 +49,15 @@ public class EvaluacionCapacitacionDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT cod_evaluacion, codigo_establecimiento, cod_capacitacion, cod_capacitacion_detalle,"
+                    "SELECT cod_evaluacion, ECD.codigo_establecimiento, cod_capacitacion, cod_capacitacion_detalle,"
                     + " cod_ciclo, cod_seccion, cod_detalle, cod_item, ECD.nombre, descripcion,"
-                    + " estado,ECD.fecha_registro, responsable,"
-                    + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario"
+                    + " ECD.estado,ECD.fecha_registro,"
+                    + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario,"
+                    + " R.cedula r_cedula, R.nombres r_nombres, R.apellidos r_apellidos, R.telefono r_telefono, R.correo r_correo, R.estado r_estado, R.codigo_establecimiento r_codigo_establecimiento"
                     + " FROM gestor.evaluacion_capacitacion_detalle ECD"
                     + " JOIN public.usuarios U USING (documento_usuario)"
-                    + " WHERE cod_evaluacion=" + codEvaluacion + " AND codigo_establecimiento=" + codigoEstablecimiento
+                    + " JOIN public.responsable R USING (cedula)"
+                    + " WHERE cod_evaluacion=" + codEvaluacion + " AND ECD.codigo_establecimiento=" + codigoEstablecimiento
                     + " AND cod_ciclo='" + codCiclo + "' AND cod_seccion=" + codSeccion + " AND cod_detalle=" + codDetalle + " AND cod_item=" + codItem
             );
             rs = consulta.ejecutar(sql);
@@ -68,7 +71,7 @@ public class EvaluacionCapacitacionDAO {
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
                         ), rs.getDate("fecha_registro")
                 );
-                ecd.setResponsable(rs.getString("responsable"));
+                ecd.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));
                 evaluacionCapacitacionDetalles.add(ecd);
             }
             return evaluacionCapacitacionDetalles;
@@ -139,11 +142,11 @@ public class EvaluacionCapacitacionDAO {
                     "INSERT INTO gestor.evaluacion_capacitacion_detalle("
                     + " cod_evaluacion, codigo_establecimiento, cod_capacitacion, cod_capacitacion_detalle,"
                     + " cod_ciclo, cod_seccion, cod_detalle, cod_item, nombre, descripcion,"
-                    + " estado, documento_usuario, responsable)"
+                    + " estado, documento_usuario, cedula)"
                     + " VALUES (" + ecd.getEvaluacionCapacitacionDetallePK().getCodEvaluacion() + ", " + ecd.getEvaluacionCapacitacionDetallePK().getCodigoEstablecimiento()
                     + " , " + ecd.getEvaluacionCapacitacionDetallePK().getCodCapacitacion() + " , " + ecd.getEvaluacionCapacitacionDetallePK().getCodCapacitacionDetalle() + ","
                     + " '" + ecd.getCodCiclo() + "', " + ecd.getCodSeccion() + ", " + ecd.getCodDetalle() + ", " + ecd.getCodItem() + ", '" + ecd.getNombre() + "', '" + ecd.getDescripcion() + "'"
-                    + " , '" + ecd.getEstado() + "','" + ecd.getDocumentoUsuario() + "','" + ecd.getResponsable() + "');"
+                    + " , '" + ecd.getEstado() + "','" + ecd.getDocumentoUsuario() + "','" + ecd.getResponsable().getCedula() + "');"
             );
             consulta.actualizar(sql);
         } finally {
@@ -182,7 +185,7 @@ public class EvaluacionCapacitacionDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "UPDATE gestor.evaluacion_capacitacion_detalle"
-                    + " SET nombre='" + ecd.getNombre() + "', descripcion='" + ecd.getDescripcion() + "', fecha_actualiza=NOW(), responsable='" + ecd.getResponsable() + "'"
+                    + " SET nombre='" + ecd.getNombre() + "', descripcion='" + ecd.getDescripcion() + "', fecha_actualiza=NOW(), cedula='" + ecd.getResponsable().getCedula() + "'"
                     + " WHERE cod_evaluacion=" + ecd.getEvaluacionCapacitacionDetallePK().getCodEvaluacion() + " AND codigo_establecimiento=" + ecd.getEvaluacionCapacitacionDetallePK().getCodigoEstablecimiento()
                     + " AND cod_capacitacion=" + ecd.getEvaluacionCapacitacionDetallePK().getCodCapacitacion() + " AND cod_capacitacion_detalle=" + ecd.getEvaluacionCapacitacionDetallePK().getCodCapacitacionDetalle()
             );
@@ -205,14 +208,15 @@ public class EvaluacionCapacitacionDAO {
             StringBuilder sql = new StringBuilder(
                     "SELECT ECD.cod_evaluacion, ECD.codigo_establecimiento, ECD.cod_capacitacion, ECD.cod_capacitacion_detalle,"
                     + " ECD.cod_ciclo, ECD.cod_seccion, ECD.cod_detalle, ECD.cod_item, ECD.nombre AS ecd_nombre, ECD.descripcion,"
-                    + " ECD.estado,ECD.fecha_registro, ECD.responsable,"
+                    + " ECD.estado,ECD.fecha_registro,"
                     + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario,"
                     + " SDI.cod_item AS sdi_cod_item, SDI.nombre AS sdi_nombre, SDI.detalle AS sdi_detalle, SDI.peso AS sdi_peso, SDI.activo AS sdi_activo, SDI.imagen AS sdi_imagen, SDI.orden AS sdi_orden, SDI.numeral AS sdi_numeral,"
                     + " SD.cod_detalle AS sd_cod_detalle, SD.nombre AS sd_nombre, SD.detalle AS sd_detalle, SD.orden AS sd_orden, SD.peso AS sd_peso, SD.imagen AS sd_imagen, SD.activo AS sd_activo, SD.numeral AS sd_numeral,"
                     + " S.cod_seccion AS s_cod_seccion, S.nombre AS s_nombre, S.activo AS s_activo, S.peso AS s_peso, S.imagen AS s_imagen, S.orden AS s_orden, S.numeral AS s_numeral,"
                     + " E.cod_evaluacion AS e_cod_evaluacion, E.documento_usuario AS e_documento_usuario, E.fecha AS e_fecha, E.fecha_registro AS e_fecha_registro, E.estado AS e_estado,"
                     + " ES.nombre AS es_nombre,"
-                    + " C.cod_ciclo AS c_cod_ciclo, C.nombre AS c_nombre, C.numeral AS c_numeral"
+                    + " C.cod_ciclo AS c_cod_ciclo, C.nombre AS c_nombre, C.numeral AS c_numeral,"
+                    + " R.cedula r_cedula, R.nombres r_nombres, R.apellidos r_apellidos, R.telefono r_telefono, R.correo r_correo, R.estado r_estado, R.codigo_establecimiento r_codigo_establecimiento"
                     + " FROM gestor.evaluacion_capacitacion_detalle ECD"
                     + " JOIN public.usuarios U USING (documento_usuario)"
                     + " JOIN gestor.evaluacion_capacitacion EC USING (cod_evaluacion, codigo_establecimiento, cod_capacitacion)"
@@ -222,6 +226,7 @@ public class EvaluacionCapacitacionDAO {
                     + " JOIN gestor.seccion_detalle SD USING (cod_seccion, cod_ciclo, cod_detalle)"
                     + " JOIN gestor.seccion S USING (cod_seccion, cod_ciclo)"
                     + " JOIN gestor.ciclo C USING (cod_ciclo)"
+                    + " JOIN public.responsable R ON (R.cedula=ECD.cedula)"
                     + condicion
                     + " ORDER BY C.numeral, S.numeral, SD.numeral, SDI.numeral"
             );
@@ -236,7 +241,7 @@ public class EvaluacionCapacitacionDAO {
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
                         ), rs.getDate("fecha_registro")
                 );
-                ecd.setResponsable(rs.getString("responsable"));
+                ecd.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));
 
                 //evaluacion
                 Evaluacion e = new Evaluacion(new EvaluacionPK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento")), rs.getString("documento_usuario"),
@@ -325,7 +330,7 @@ public class EvaluacionCapacitacionDAO {
                 EvaluacionCapacitacionDetalleNotas ecdn = new EvaluacionCapacitacionDetalleNotas(
                         new EvaluacionCapacitacionDetalleNotasPK(pk.getCodEvaluacion(), pk.getCodigoEstablecimiento(), pk.getCodCapacitacion(),
                                 pk.getCodCapacitacionDetalle(), rs.getLong("cod_nota")),
-                         rs.getString("documento_usuario"), rs.getString("estado"), rs.getString("nombre"), rs.getString("descripcion"));
+                        rs.getString("documento_usuario"), rs.getString("estado"), rs.getString("nombre"), rs.getString("descripcion"));
                 ecdn.setFechaRegistro(rs.getDate("fecha_registro"));
                 evaluacionCapacitacionDetalleNotasList.add(ecdn);
             }

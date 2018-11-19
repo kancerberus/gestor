@@ -35,12 +35,12 @@ public class GestorEvaluacionPlanAccion extends Gestor {
         if (epd.getDescripcion() == null || epd.getDescripcion().equalsIgnoreCase("")) {
             throw new Exception("Ingrese el nombre del plan de acción.", UtilLog.TW_VALIDACION);
         }
-        if (epd.getResponsable() == null || epd.getResponsable().equalsIgnoreCase("")) {
+        if (epd.getResponsable() == null || epd.getResponsable().getCedula() == null || epd.getResponsable().getCedula().equalsIgnoreCase("")) {
             throw new Exception("Ingrese el responsable del plan de acción.", UtilLog.TW_VALIDACION);
         }
         epd.setNombre(epd.getNombre().toUpperCase().trim());
         epd.setDescripcion(epd.getDescripcion().toUpperCase().trim());
-        epd.setResponsable(epd.getResponsable().toUpperCase().trim());
+//        epd.setResponsable(epd.getResponsable().toUpperCase().trim());
         return epd;
     }
 
@@ -52,7 +52,6 @@ public class GestorEvaluacionPlanAccion extends Gestor {
             evaluacionPlanAccionDAO.upsertEvaluacionPlanAccion(ep);
             evaluacionPlanAccionDAO.insertaEvaluacionPlanAccionDetalle(ep.getEvaluacionPlanAccionDetalle());
             evaluacionPlanAccionDAO.insertaEvaluacionPlanAccionDetalleNotas(ep.getEvaluacionPlanAccionDetalle().getEvaluacionPlanAccionDetalleNotas());
-            
 
             this.finTransaccion();
         } finally {
@@ -121,13 +120,13 @@ public class GestorEvaluacionPlanAccion extends Gestor {
     }
 
     public EvaluacionPlanAccionDetalleNotas validarEvaluacionPlanAccionDetalleNotas(EvaluacionPlanAccionDetalleNotas epadn) throws Exception {
-         if (epadn == null || epadn.getDescripcion() == null || epadn.getDescripcion().equalsIgnoreCase("")) {
+        if (epadn == null || epadn.getDescripcion() == null || epadn.getDescripcion().equalsIgnoreCase("")) {
             throw new Exception("Ingrese la descripción del seguimiento", UtilLog.TW_VALIDACION);
         }
         if (epadn.getNombre() == null || epadn.getNombre().equalsIgnoreCase("")) {
             epadn.setNombre("SEGUIMIENTO");
         }
-        if(epadn.getDocumentoUsuario() == null || epadn.getDocumentoUsuario().equalsIgnoreCase("")){
+        if (epadn.getDocumentoUsuario() == null || epadn.getDocumentoUsuario().equalsIgnoreCase("")) {
             throw new ViewExpiredException();
         }
         epadn.setDescripcion(epadn.getDescripcion().trim());

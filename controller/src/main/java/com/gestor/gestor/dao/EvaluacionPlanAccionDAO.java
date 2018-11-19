@@ -21,6 +21,7 @@ import com.gestor.gestor.SeccionDetalleItemsPK;
 import com.gestor.gestor.SeccionDetallePK;
 import com.gestor.gestor.SeccionPK;
 import com.gestor.publico.Establecimiento;
+import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.UsuariosPK;
 import conexion.Consulta;
@@ -73,11 +74,11 @@ public class EvaluacionPlanAccionDAO {
                     "INSERT INTO gestor.evaluacion_plan_accion_detalle("
                     + " cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle,"
                     + " cod_ciclo, cod_seccion, cod_detalle, cod_item, nombre, descripcion,"
-                    + " estado, documento_usuario, responsable)"
+                    + " estado, documento_usuario, cedula)"
                     + " VALUES (" + epd.getEvaluacionPlanAccionDetallePK().getCodEvaluacion() + ", " + epd.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento()
                     + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlan()
                     + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle() + ", '" + epd.getCodCiclo() + "', " + epd.getCodSeccion() + ", " + epd.getCodDetalle()
-                    + " ," + epd.getCodItem() + ", '" + epd.getNombre() + "', '" + epd.getDescripcion() + "', '" + epd.getEstado() + "','" + epd.getDocumentoUsuario() + "','" + epd.getResponsable() + "');"
+                    + " ," + epd.getCodItem() + ", '" + epd.getNombre() + "', '" + epd.getDescripcion() + "', '" + epd.getEstado() + "','" + epd.getDocumentoUsuario() + "','" + epd.getResponsable().getCedula() + "');"
             );
             consulta.actualizar(sql);
         } finally {
@@ -93,15 +94,17 @@ public class EvaluacionPlanAccionDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle,"
+                    "SELECT cod_evaluacion, EPAD.codigo_establecimiento, cod_plan, cod_plan_detalle,"
                     + " cod_ciclo, cod_seccion, cod_detalle, cod_item, EPAD.nombre, descripcion,"
-                    + " estado, EPAD.fecha_registro, responsable,"
-                    + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario"
+                    + " EPAD.estado, EPAD.fecha_registro,"
+                    + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario,"
+                    + " R.cedula r_cedula, R.nombres r_nombres, R.apellidos r_apellidos, R.telefono r_telefono, R.correo r_correo, R.estado r_estado, R.codigo_establecimiento r_codigo_establecimiento"
                     + " FROM gestor.evaluacion_plan_accion_detalle EPAD"
                     + " JOIN public.usuarios U USING (documento_usuario)"
-                    + " WHERE cod_evaluacion=" + codEvaluacion + " AND codigo_establecimiento=" + codigoEstablecimiento
+                    + " JOIN public.responsable R USING (cedula)"
+                    + " WHERE cod_evaluacion=" + codEvaluacion + " AND EPAD.codigo_establecimiento=" + codigoEstablecimiento
                     + " AND cod_ciclo='" + codCiclo + "' AND cod_seccion=" + codSeccion + " AND cod_detalle=" + codDetalle + " AND cod_item=" + codItem
-                    + " AND estado<>'" + App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ELIMINADO + "'"
+                    + " AND EPAD.estado<>'" + App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ELIMINADO + "'"
             );
             rs = consulta.ejecutar(sql);
             Collection<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles = new ArrayList<EvaluacionPlanAccionDetalle>();
@@ -113,7 +116,7 @@ public class EvaluacionPlanAccionDAO {
                         ), rs.getDate("fecha_registro"
                         )
                 );
-                epad.setResponsable(rs.getString("responsable"));
+                epad.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));
 
                 evaluacionPlanAccionDetalles.add(epad);
 
@@ -181,7 +184,7 @@ public class EvaluacionPlanAccionDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "UPDATE gestor.evaluacion_plan_accion_detalle"
-                    + " SET nombre='" + epd.getNombre() + "', descripcion='" + epd.getDescripcion() + "', fecha_actualiza=NOW(), responsable='" + epd.getResponsable() + "'"
+                    + " SET nombre='" + epd.getNombre() + "', descripcion='" + epd.getDescripcion() + "', fecha_actualiza=NOW(), cedula='" + epd.getResponsable().getCedula() + "'"
                     + " WHERE cod_evaluacion=" + epd.getEvaluacionPlanAccionDetallePK().getCodEvaluacion() + " AND codigo_establecimiento=" + epd.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento()
                     + " AND cod_plan=" + epd.getEvaluacionPlanAccionDetallePK().getCodPlan() + " AND cod_plan_detalle=" + epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()
             );
@@ -201,14 +204,15 @@ public class EvaluacionPlanAccionDAO {
             StringBuilder sql = new StringBuilder(
                     " SELECT EPAD.cod_evaluacion, EPAD.codigo_establecimiento, EPAD.cod_plan, EPAD.cod_plan_detalle,"
                     + " EPAD.cod_ciclo, EPAD.cod_seccion, EPAD.cod_detalle, EPAD.cod_item, EPAD.nombre AS epad_nombre, EPAD.descripcion,"
-                    + " EPAD.estado, EPAD.fecha_registro, EPAD.responsable,"
+                        + " EPAD.estado, EPAD.fecha_registro,"
                     + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario,"
                     + " SDI.cod_item AS sdi_cod_item, SDI.nombre AS sdi_nombre, SDI.detalle AS sdi_detalle, SDI.peso AS sdi_peso, SDI.activo AS sdi_activo, SDI.imagen AS sdi_imagen, SDI.orden AS sdi_orden, SDI.numeral AS sdi_numeral,"
                     + " SD.cod_detalle AS sd_cod_detalle, SD.nombre AS sd_nombre, SD.detalle AS sd_detalle, SD.orden AS sd_orden, SD.peso AS sd_peso, SD.imagen AS sd_imagen, SD.activo AS sd_activo, SD.numeral AS sd_numeral,"
                     + " S.cod_seccion AS s_cod_seccion, S.nombre AS s_nombre, S.activo AS s_activo, S.peso AS s_peso, S.imagen AS s_imagen, S.orden AS s_orden, S.numeral AS s_numeral,"
                     + " E.cod_evaluacion AS e_cod_evaluacion, E.documento_usuario AS e_documento_usuario, E.fecha AS e_fecha, E.fecha_registro AS e_fecha_registro, E.estado AS e_estado,"
                     + " ES.nombre AS es_nombre,"
-                    + " C.cod_ciclo AS c_cod_ciclo, C.nombre AS c_nombre, C.numeral AS c_numeral"
+                    + " C.cod_ciclo AS c_cod_ciclo, C.nombre AS c_nombre, C.numeral AS c_numeral,"
+                    + " R.cedula r_cedula, R.nombres r_nombres, R.apellidos r_apellidos, R.telefono r_telefono, R.correo r_correo, R.estado r_estado, R.codigo_establecimiento r_codigo_establecimiento"
                     + " FROM gestor.evaluacion_plan_accion_detalle EPAD"
                     + " JOIN public.usuarios U USING (documento_usuario)"
                     + " JOIN gestor.evaluacion_plan_accion EPA USING (cod_evaluacion, codigo_establecimiento, cod_plan)"
@@ -218,6 +222,7 @@ public class EvaluacionPlanAccionDAO {
                     + " JOIN gestor.seccion_detalle SD USING (cod_seccion, cod_ciclo, cod_detalle)"
                     + " JOIN gestor.seccion S USING (cod_seccion, cod_ciclo)"
                     + " JOIN gestor.ciclo C USING (cod_ciclo)"
+                    + " JOIN public.responsable R ON (R.cedula=EPAD.cedula)"
                     + condicion
                     + " ORDER BY C.numeral, S.numeral, SD.numeral, SDI.numeral"
             );
@@ -233,7 +238,7 @@ public class EvaluacionPlanAccionDAO {
                         ), rs.getDate("fecha_registro"
                         )
                 );
-                epad.setResponsable(rs.getString("responsable"));
+                epad.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));
 
                 //evaluacion
                 Evaluacion e = new Evaluacion(new EvaluacionPK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento")), rs.getString("documento_usuario"),
@@ -313,12 +318,11 @@ public class EvaluacionPlanAccionDAO {
             );
             rs = consulta.ejecutar(sql);
             List<EvaluacionPlanAccionDetalleNotas> evaluacionPlanAccionDetalleNotasList = new ArrayList<>();
-            
+
             while (rs.next()) {
                 pk.setCodNota(rs.getLong("cod_nota"));
                 EvaluacionPlanAccionDetalleNotas epadn = new EvaluacionPlanAccionDetalleNotas(
-                        new EvaluacionPlanAccionDetalleNotasPK(pk.getCodEvaluacion(), pk.getCodigoEstablecimiento(), pk.getCodPlan(), pk.getCodPlanDetalle(), rs.getLong("cod_nota"))
-                                ,
+                        new EvaluacionPlanAccionDetalleNotasPK(pk.getCodEvaluacion(), pk.getCodigoEstablecimiento(), pk.getCodPlan(), pk.getCodPlanDetalle(), rs.getLong("cod_nota")),
                         rs.getString("documento_usuario"), rs.getString("estado"), rs.getString("nombre"), rs.getString("descripcion"));
                 epadn.setFechaRegistro(rs.getDate("fecha_registro"));
                 evaluacionPlanAccionDetalleNotasList.add(epadn);

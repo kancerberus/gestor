@@ -109,8 +109,8 @@
                 <p:column headerText="Evaluador" filterBy="#{varCapacitacionDetalle.usuarios.nombreApellido}">
                     <h:outputText value="#{varCapacitacionDetalle.usuarios.nombreApellido}" />
                 </p:column>
-                <p:column headerText="Responsable" filterBy="#{varCapacitacionDetalle.responsable}">
-                    <h:outputText value="#{varCapacitacionDetalle.responsable}" />
+                <p:column headerText="Responsable" filterBy="#{varCapacitacionDetalle.responsable.nombresApellidos}">
+                    <h:outputText value="#{varCapacitacionDetalle.responsable.nombresApellidos}" />
                 </p:column>
 
                 <p:column headerText="Ciclo" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.seccionDetalle.seccion.ciclo.nombre}">

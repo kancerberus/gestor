@@ -6,6 +6,7 @@
 package com.gestor.gestor;
 
 import com.gestor.publico.Establecimiento;
+import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import java.io.Serializable;
 import java.util.Date;
@@ -75,7 +76,7 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
     private EvaluacionCapacitacion evaluacionCapacitacion;
 
     private String documentoUsuario;
-    private String responsable;
+    private Responsable responsable = new Responsable();
 
     private Usuarios usuarios = new Usuarios();
 
@@ -280,19 +281,6 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
         this.documentoUsuario = documentoUsuario;
     }
 
-    /**
-     * @return the responsable
-     */
-    public String getResponsable() {
-        return responsable;
-    }
-
-    /**
-     * @param responsable the responsable to set
-     */
-    public void setResponsable(String responsable) {
-        this.responsable = responsable;
-    }
 
     /**
      * @return the seccionDetalleItems
@@ -362,6 +350,20 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
      */
     public void setEvaluacionCapacitacionDetalleNotas(EvaluacionCapacitacionDetalleNotas evaluacionCapacitacionDetalleNotas) {
         this.evaluacionCapacitacionDetalleNotas = evaluacionCapacitacionDetalleNotas;
+    }
+
+    /**
+     * @return the responsable
+     */
+    public Responsable getResponsable() {
+        return responsable;
+    }
+
+    /**
+     * @param responsable the responsable to set
+     */
+    public void setResponsable(Responsable responsable) {
+        this.responsable = responsable;
     }
 
 }

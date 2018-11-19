@@ -16,7 +16,9 @@ import com.gestor.entity.UtilTexto;
 import com.gestor.gestor.controlador.GestorEvaluacionPlanAccion;
 import com.gestor.modelo.Sesion;
 import com.gestor.publico.Establecimiento;
+import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
+import com.gestor.publico.controlador.GestorResponsable;
 import com.gestor.publico.controlador.GestorUsuario;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,6 +60,8 @@ public class UIPlanAccion {
     private String responsable;
     private Date fechaPlanInicio;
     private Date fechaPlanFin;
+    
+    private List<Responsable> responsables = new ArrayList<>();
 
     public UIPlanAccion() {
         try {
@@ -431,8 +435,12 @@ public class UIPlanAccion {
 
     public void mostrarDialogoPlanAccion() {
         try {
+            Sesion sesion = (Sesion) UtilJSF.getBean("sesion");
             this.sdiSeleccionado = (SeccionDetalleItems) UtilJSF.getBean("varSeccionDetalleItems");
+            
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
+            GestorResponsable gestorResponsable = new GestorResponsable();
+            
             evaluacionPlanAccionDetalles = new ArrayList<>();
             evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
                     sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodEvaluacion(),
@@ -442,6 +450,26 @@ public class UIPlanAccion {
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodDetalle(),
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem()
             ));
+            
+            responsables = new ArrayList<>();
+            List<String> condicionesConsulta = new ArrayList<>();
+            condicionesConsulta.add(App.CONDICION_WHERE);
+            condicionesConsulta.add(Responsable.RESPONSABLE_CONDICION_CODIGO_ESTABLECIMIENTO.replace("?", String.valueOf(sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodigoEstablecimiento())));
+            responsables.addAll(gestorResponsable.cargarListaResponsable(
+                    UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
+            ));
+            
+            List<Responsable> responsablesSisgapp = new ArrayList<>();
+            for (Responsable rs : sesion.getResponsables()) {
+                for (Responsable r : responsables) {
+                    if (!rs.equals(r)) {
+                        responsablesSisgapp.add(rs);
+                    }
+                }
+            }
+            if(!responsablesSisgapp.isEmpty()){
+                responsables.addAll(responsablesSisgapp);
+            }
 
             Dialogo dialogo = new Dialogo("dialogos/plan-accion.xhtml", "Plan Acción", "clip", Dialogo.WIDTH_80);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
@@ -696,6 +724,20 @@ public class UIPlanAccion {
      */
     public void setEvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetalle evaluacionPlanAccionDetalle) {
         this.evaluacionPlanAccionDetalle = evaluacionPlanAccionDetalle;
+    }
+
+    /**
+     * @return the responsables
+     */
+    public List<Responsable> getResponsables() {
+        return responsables;
+    }
+
+    /**
+     * @param responsables the responsables to set
+     */
+    public void setResponsables(List<Responsable> responsables) {
+        this.responsables = responsables;
     }
 
 }

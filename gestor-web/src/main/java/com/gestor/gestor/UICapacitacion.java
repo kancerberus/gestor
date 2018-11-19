@@ -16,7 +16,9 @@ import com.gestor.entity.UtilTexto;
 import com.gestor.gestor.controlador.GestorEvaluacionCapacitacion;
 import com.gestor.modelo.Sesion;
 import com.gestor.publico.Establecimiento;
+import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
+import com.gestor.publico.controlador.GestorResponsable;
 import com.gestor.publico.controlador.GestorUsuario;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,6 +62,8 @@ public class UICapacitacion {
     private String responsable;
     private Date fechaCapacitacionInicio;
     private Date fechaCapacitacionFin;
+    
+    private List<Responsable> responsables = new ArrayList<>();
 
     public UICapacitacion() {
         try {
@@ -431,8 +435,12 @@ public class UICapacitacion {
 
     public void mostrarDialogoCapacitacion() {
         try {
+            Sesion sesion = (Sesion) UtilJSF.getBean("sesion");
             this.sdiSeleccionado = (SeccionDetalleItems) UtilJSF.getBean("varSeccionDetalleItems");
+            
             GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
+            GestorResponsable gestorResponsable = new GestorResponsable();
+            
             evaluacionCapacitacionDetalles = new ArrayList<>();
             evaluacionCapacitacionDetalles.addAll(gestorEvaluacionCapacitacion.cargarListaEvaluacionCapacitacionDetalle(
                     sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodEvaluacion(),
@@ -443,6 +451,27 @@ public class UICapacitacion {
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem()
             ));
 
+            responsables = new ArrayList<>();
+            List<String> condicionesConsulta = new ArrayList<>();
+            condicionesConsulta.add(App.CONDICION_WHERE);
+            condicionesConsulta.add(Responsable.RESPONSABLE_CONDICION_CODIGO_ESTABLECIMIENTO.replace("?", String.valueOf(sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodigoEstablecimiento())));
+            responsables.addAll(gestorResponsable.cargarListaResponsable(
+                    UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
+            ));
+            
+            List<Responsable> responsablesSisgapp = new ArrayList<>();
+            for (Responsable rs : sesion.getResponsables()) {
+                for (Responsable r : responsables) {
+                    if (!rs.equals(r)) {
+                        responsablesSisgapp.add(rs);
+                    }
+                }
+            }
+            if(!responsablesSisgapp.isEmpty()){
+                responsables.addAll(responsablesSisgapp);
+            }
+
+            
             Dialogo dialogo = new Dialogo("dialogos/capacitacion.xhtml", "Capactiación", "clip", Dialogo.WIDTH_80);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
             UtilJSF.execute("PF('dialog').show();");
@@ -697,6 +726,20 @@ public class UICapacitacion {
      */
     public void setEvaluacionCapacitacionDetalle(EvaluacionCapacitacionDetalle evaluacionCapacitacionDetalle) {
         this.evaluacionCapacitacionDetalle = evaluacionCapacitacionDetalle;
+    }
+
+    /**
+     * @return the responsables
+     */
+    public List<Responsable> getResponsables() {
+        return responsables;
+    }
+
+    /**
+     * @param responsables the responsables to set
+     */
+    public void setResponsables(List<Responsable> responsables) {
+        this.responsables = responsables;
     }
 
 }

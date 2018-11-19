@@ -45,12 +45,12 @@ public class GestorEvaluacionCapacitacion extends Gestor {
         if (ecd.getDescripcion() == null || ecd.getDescripcion().equalsIgnoreCase("")) {
             throw new Exception("Ingrese el nombre de la capacitación.", UtilLog.TW_VALIDACION);
         }
-        if (ecd.getResponsable() == null || ecd.getResponsable().equalsIgnoreCase("")) {
+        if (ecd.getResponsable() == null || ecd.getResponsable().getCedula() == null || ecd.getResponsable().getCedula().equalsIgnoreCase("")) {
             throw new Exception("Ingrese el responsable de la capacitación.", UtilLog.TW_VALIDACION);
         }
         ecd.setNombre(ecd.getNombre().toUpperCase().trim());
         ecd.setDescripcion(ecd.getDescripcion().toUpperCase().trim());
-        ecd.setResponsable(ecd.getResponsable().toUpperCase().trim());
+//        ecd.setResponsable(ecd.getResponsable().toUpperCase().trim());
 
         return ecd;
     }
