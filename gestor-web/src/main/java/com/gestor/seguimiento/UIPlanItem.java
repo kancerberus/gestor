@@ -107,6 +107,9 @@ public class UIPlanItem implements Serializable{
     
     public void cargarPlansecciondetalleitemtexto() {        
         try {
+            PlanSeccionDetalle psd=(PlanSeccionDetalle) UtilJSF.getBean("planDetalle");
+            plansecciondetalleitem.getPlanSeccionDetalleItemPK().setCodigoEstablecimiento(psd.getPlanSeccionDetallePK().getCodigoEstablecimiento());
+            plansecciondetalleitem.getPlanSeccionDetalleItemPK().setCodTitulo(psd.getPlanSeccionDetallePK().getCodTitulo());
             plansecciondetalleitemtexto.setTexto("");
             this.plansecciondetalleitemtextoList = new ArrayList<>();
             gestorPlanSeccion = new GestorPlanSeccion();
@@ -126,6 +129,18 @@ public class UIPlanItem implements Serializable{
             UtilLog.generarLog(this.getClass(), ex);
         }
     }   
+    
+    public void cargarPlansecciondetalleitemList() {
+        
+        try {                        
+            PlanSeccionDetalle psd=(PlanSeccionDetalle) UtilJSF.getBean("planDetalle");            
+            this.plansecciondetalleitemList=new ArrayList<>();
+            gestorPlanSeccion = new GestorPlanSeccion();                   
+            this.plansecciondetalleitemList.addAll((Collection<? extends PlanSeccionDetalleItem >) gestorPlanSeccion.cargarListaSecciondetalleitem(psd));                     
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
         
     public void guardarSeccionDetalleItem(){              
         try {              
@@ -147,7 +162,7 @@ public class UIPlanItem implements Serializable{
             
             UtilMSG.addSuccessMsg("Titulo Item almacenado correctamente.");                                 
             UtilJSF.setBean("planItem", new PlanSeccionDetalle(), UtilJSF.SESSION_SCOPE);                        
-            
+            this.cargarPlansecciondetalleitemList();
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());
