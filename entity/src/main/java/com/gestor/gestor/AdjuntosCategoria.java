@@ -47,8 +47,10 @@ public class AdjuntosCategoria implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "adjuntosCategoria")
     private List<AdjuntosCategoriaTipo> adjuntosCategoriaTipoList = new ArrayList<>();
     private AdjuntosCategoriaTipo adjuntosCategoriaTipo = new AdjuntosCategoriaTipo();
-
+    private SeccionDetalleItems secciondetalleitems = new SeccionDetalleItems();
+    
     public AdjuntosCategoria() {
+        secciondetalleitems = new SeccionDetalleItems();
         adjuntosCategoriaTipo = new AdjuntosCategoriaTipo();
         adjuntosCategoriaTipoList = new ArrayList<>();
     }
@@ -147,6 +149,14 @@ public class AdjuntosCategoria implements Serializable {
      */
     public void setAdjuntosCategoriaTipo(AdjuntosCategoriaTipo adjuntosCategoriaTipo) {
         this.adjuntosCategoriaTipo = adjuntosCategoriaTipo;
+    }
+
+    public SeccionDetalleItems getSecciondetalleitems() {
+        return secciondetalleitems;
+    }
+
+    public void setSecciondetalleitems(SeccionDetalleItems secciondetalleitems) {
+        this.secciondetalleitems = secciondetalleitems;
     }
 
 }

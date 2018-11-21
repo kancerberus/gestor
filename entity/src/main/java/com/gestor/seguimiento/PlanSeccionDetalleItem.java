@@ -50,7 +50,7 @@ public class PlanSeccionDetalleItem implements Serializable {
         this.planSeccionDetalleItemPK = planSeccionDetalleItemPK;
     }
 
-    public PlanSeccionDetalleItem(int codTitulo, int codigoEstablecimiento, int codSeccion, int codSeccionDetalle, int codSeccionDetalleItem) {
+    public PlanSeccionDetalleItem(int codigoEstablecimiento, int codTitulo, int codSeccion, int codSeccionDetalle, int codSeccionDetalleItem) {
         this.planSeccionDetalleItemPK = new PlanSeccionDetalleItemPK(codTitulo, codigoEstablecimiento, codSeccion, codSeccionDetalle, codSeccionDetalleItem);
     }
 

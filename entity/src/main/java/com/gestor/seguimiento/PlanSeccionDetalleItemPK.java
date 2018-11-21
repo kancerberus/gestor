@@ -18,11 +18,11 @@ import javax.persistence.Embeddable;
 public class PlanSeccionDetalleItemPK implements Serializable {
 
     @Basic(optional = false)
-    @Column(name = "cod_titulo")
-    private int codTitulo;
-    @Basic(optional = false)
     @Column(name = "codigo_establecimiento")
     private int codigoEstablecimiento;
+    @Basic(optional = false)
+    @Column(name = "cod_titulo")
+    private int codTitulo;    
     @Basic(optional = false)
     @Column(name = "cod_seccion")
     private int codSeccion;

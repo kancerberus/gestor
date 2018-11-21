@@ -61,6 +61,10 @@ public class SeccionDetalleItems implements Serializable, Cloneable {
 
     public SeccionDetalleItems() {
     }
+    
+    public SeccionDetalleItems(String numeral) {
+        this.numeral=numeral;
+    }
 
     public SeccionDetalleItems(SeccionDetalleItemsPK seccionDetalleItemsPK) {
         this.seccionDetalleItemsPK = seccionDetalleItemsPK;
