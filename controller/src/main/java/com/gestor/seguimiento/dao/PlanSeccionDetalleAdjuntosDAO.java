@@ -83,7 +83,7 @@ public class PlanSeccionDetalleAdjuntosDAO {
                     + " '"+plansecciondetalleadjuntos.getPlanSeccionDetalleAdjuntosPK().getCodSeccionDetalle()+"', '"+plansecciondetalleadjuntos.getPlanSeccionDetalleAdjuntosPK().getCodSeccionDetalleAdjuntos()+"', '"+plansecciondetalleadjuntos.getCodCategoria()+"', "
                     + " '"+plansecciondetalleadjuntos.getCodCategoriaTipo()+"', '"+plansecciondetalleadjuntos.getTitulo()+"', '"+plansecciondetalleadjuntos.getDescripcion()+"', '"+plansecciondetalleadjuntos.getDocumento()+"') "
                     + " ON CONFLICT ( codigo_establecimiento, cod_titulo, cod_seccion, cod_seccion_detalle, cod_seccion_detalle_adjuntos ) DO UPDATE "
-                    + " SET titulo=EXCLUDED.titulo, descripcion=EXCLUDED.descripcion, documento=EXCLUDED.documento "
+                    + " SET cod_categoria=EXCLUDED.cod_categoria, cod_categoria_tipo=EXCLUDED.cod_categoria_tipo, titulo=EXCLUDED.titulo, descripcion=EXCLUDED.descripcion, documento=EXCLUDED.documento "
                     
             );
             consulta.actualizar(sql);

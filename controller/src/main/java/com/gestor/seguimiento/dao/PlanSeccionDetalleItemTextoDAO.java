@@ -56,9 +56,9 @@ public class PlanSeccionDetalleItemTextoDAO {
             StringBuilder sql = new StringBuilder(
                     "SELECT codigo_establecimiento, cod_titulo, cod_seccion, cod_seccion_detalle, cod_seccion_detalle_item, cod_seccion_detalle_item_texto, texto"
                     + " FROM seguimiento.plan_seccion_detalle_item_texto"
-                    + " WHERE codigo_establecimiento="+ planSecciondetalleitem.getPlanSeccionDetalleItemPK().getCodigoEstablecimiento() + " AND cod_titulo=" + planSecciondetalleitem.getPlanSeccionDetalleItemPK().getCodTitulo()
+                    + " WHERE  codigo_establecimiento="+ planSecciondetalleitem.getPlanSeccionDetalleItemPK().getCodigoEstablecimiento()+" AND cod_titulo=" + planSecciondetalleitem.getPlanSeccionDetalleItemPK().getCodTitulo()+ " "
                     + " AND  cod_seccion="+ planSecciondetalleitem.getPlanSeccionDetalleItemPK().getCodSeccion()+" AND cod_seccion_detalle="+planSecciondetalleitem.getPlanSeccionDetalleItemPK().getCodSeccionDetalle()+" "
-                    + " AND  cod_seccion_detalle_item='"+planSecciondetalleitem.getPlanSeccionDetalleItemPK().getCodSeccionDetalleItem()+"'"
+                    + " AND  cod_seccion_detalle_item="+planSecciondetalleitem.getPlanSeccionDetalleItemPK().getCodSeccionDetalleItem()+" "
                     
             );
 

@@ -8,6 +8,7 @@ package com.gestor.gestor.dao;
 import com.gestor.gestor.AdjuntosCategoria;
 import com.gestor.gestor.AdjuntosCategoriaTipo;
 import com.gestor.gestor.AdjuntosCategoriaTipoPK;
+import com.gestor.gestor.SeccionDetalleItems;
 import com.gestor.gestor.SeccionDetalleItemsPK;
 import conexion.Consulta;
 import java.sql.Connection;
@@ -15,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.crypto.SealedObject;
 
 /**
  *
@@ -64,12 +66,43 @@ public class AdjuntosCategoriaDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_categoria, nombre, descripcion, meses_vigencia "
-                    + " FROM gestor.adjuntos_categoria "
+                    + " FROM gestor.adjuntos_categoria "                    
+                    
             );
             rs = consulta.ejecutar(sql);
             Collection<AdjuntosCategoria> adjuntosCategorias = new ArrayList<>();
             while (rs.next()) {
                 AdjuntosCategoria ac = new AdjuntosCategoria(rs.getInt("cod_categoria"), rs.getString("nombre"), rs.getString("descripcion"), rs.getInt("meses_vigencia"));
+                adjuntosCategorias.add(ac);
+            }
+            return adjuntosCategorias;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    public Collection<? extends AdjuntosCategoria> cargarListaAdjuntosCategoria() throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT sdi.numeral, ac.cod_categoria, ac.nombre, ac.descripcion, ac.meses_vigencia "
+                    + " FROM gestor.seccion_detalle_items_adjuntos_categoria "
+                    + " JOIN gestor.adjuntos_categoria ac using (cod_categoria) "
+                    + " JOIN gestor.seccion_detalle_items sdi using (cod_seccion, cod_item, cod_ciclo,cod_detalle) "                    
+                    + " ORDER BY ac.cod_categoria"
+            );
+            rs = consulta.ejecutar(sql);
+            Collection<AdjuntosCategoria> adjuntosCategorias = new ArrayList<>();
+            while (rs.next()) {
+                AdjuntosCategoria ac = new AdjuntosCategoria(rs.getInt("cod_categoria"), rs.getString("nombre"), rs.getString("descripcion"), rs.getInt("meses_vigencia"));
+                ac.setSecciondetalleitems(new SeccionDetalleItems(rs.getString("numeral")));
                 adjuntosCategorias.add(ac);
             }
             return adjuntosCategorias;
@@ -104,6 +137,26 @@ public class AdjuntosCategoriaDAO {
             if (rs != null) {
                 rs.close();
             }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+     public void insertarCategoria(AdjuntosCategoria categoria) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO adjuntos_categoria "
+                    + " ( cod_categoria, nombre, descripcion, meses_vigencia )"
+                    + " VALUES ('" + categoria.getCodCategoria() + "', '" + categoria.getNombre() + "', '" + categoria.getDescripcion() + "', "
+                    + " '" + categoria.getMesesVigencia() + "', "                    
+                    + " ON CONFLICT (cod_categoria) DO UPDATE"
+                    + " SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion, meses_vigencia=EXCLUDED.meses_vigencia "                    
+            );
+            consulta.actualizar(sql);
+        } finally {
             if (consulta != null) {
                 consulta.desconectar();
             }

@@ -93,7 +93,7 @@ public class PlanTituloAdiuntosDAO {
                     + "  '"+plantituloadjuntos.getCodCategoria()+"', "
                     + " '"+plantituloadjuntos.getCodCategoriaTipo()+"', '"+plantituloadjuntos.getTitulo()+"', '"+plantituloadjuntos.getDescripcion()+"', '"+plantituloadjuntos.getDocumento()+"') "
                     + " ON CONFLICT ( codigo_establecimiento, cod_titulo, cod_titulo_adjunto  ) DO UPDATE "
-                    + " SET titulo=EXCLUDED.titulo, descripcion=EXCLUDED.descripcion, documento=EXCLUDED.documento "
+                    + " SET cod_categoria=EXCLUDED.cod_categoria,cod_categoria_tipo=EXCLUDED.cod_categoria_tipo, titulo=EXCLUDED.titulo, descripcion=EXCLUDED.descripcion, documento=EXCLUDED.documento"
                     
             );
             consulta.actualizar(sql);            

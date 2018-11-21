@@ -10,7 +10,11 @@ import com.gestor.gestor.dao.SeccionDetalleDAO;
 import com.gestor.gestor.dao.SeccionDetalleItemsDAO;
 import com.gestor.gestor.dao.SeccionDetalleItemsAyudaDAO;
 import com.gestor.controller.Gestor;
+import com.gestor.gestor.AdjuntosCategoria;
+import com.gestor.gestor.SeccionDetalleItems;
+import com.gestor.gestor.dao.AdjuntosCategoriaDAO;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -76,6 +80,8 @@ public class GestorEstandar extends Gestor implements Serializable{
             this.cerrarConexion();
         }
     }  
+       
+    
     
     public List<?> cargarSecciondetalleitemsayudaList(String nomc,String nomsec,String nomsdetalle,String nomsditem) throws Exception {   
         

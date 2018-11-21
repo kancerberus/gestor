@@ -84,7 +84,7 @@ public class PlanSeccionDetalleItemAdjuntosDAO {
                     + " '"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccionDetalle()+"', '"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccionDetalleItem()+"', '"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccionDetalleItemAdjuntos()+"', "                    
                     + " '"+plansecciondetalleitemadjuntos.getCodCategoria()+"', '"+plansecciondetalleitemadjuntos.getCodCategoriaTipo()+"',  '"+plansecciondetalleitemadjuntos.getTitulo()+"', '"+plansecciondetalleitemadjuntos.getDescripcion()+"', '"+ plansecciondetalleitemadjuntos.getActividad()+"', '"+plansecciondetalleitemadjuntos.getDescripcionGeneral()+"', '"+plansecciondetalleitemadjuntos.getDocumento()+"') "
                     + " ON CONFLICT ( codigo_establecimiento, cod_titulo, cod_seccion, cod_seccion_detalle, cod_seccion_detalle_item, cod_seccion_detalle_item_adjuntos ) DO UPDATE "
-                    + " SET titulo=EXCLUDED.titulo, descripcion=EXCLUDED.descripcion, actividad=EXCLUDED.actividad, descripcion_general=EXCLUDED.descripcion_general, documento=EXCLUDED.documento "
+                    + " SET cod_categoria=EXCLUDED.cod_categoria, cod_categoria_tipo=EXCLUDED.cod_categoria_tipo, titulo=EXCLUDED.titulo, descripcion=EXCLUDED.descripcion, actividad=EXCLUDED.actividad, descripcion_general=EXCLUDED.descripcion_general, documento=EXCLUDED.documento "
                     
             );
             consulta.actualizar(sql);
