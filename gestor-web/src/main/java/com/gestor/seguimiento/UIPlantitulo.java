@@ -62,14 +62,15 @@ public class UIPlantitulo implements Serializable{
         try {
             GestorAdjuntosCategoria gestorAdjuntosCategoria = new GestorAdjuntosCategoria();    
                         
-            adjuntosCategorias = new ArrayList<>();
+            adjuntosCategorias= new ArrayList<>();
             adjuntosCategorias.addAll(gestorAdjuntosCategoria.cargarListaAdjuntosCategoriapm());            
             
             if(plantituloadjunto.getAdjuntosCategoria().getCodCategoria() != null){
                 plantituloadjunto.getAdjuntosCategoria().setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(plantituloadjunto.getAdjuntosCategoria().getCodCategoria()));                                                
             }            
             
-        } catch (Exception e) {            
+        } catch (Exception e) {  
+            
         }        
     }
      
@@ -81,6 +82,7 @@ public class UIPlantitulo implements Serializable{
     }     
     
     public void subirItemPlantituloadjunto() {           
+        this.cargarAdjuntosCategoriaTipo();
         plantituloadjunto = (PlanTituloAdiuntos) UtilJSF.getBean("varPlantituloadjunto");
         UtilJSF.setBean("planTituloadjunto", plantituloadjunto, UtilJSF.SESSION_SCOPE);  
         plantituloadjuntopk.setCodTituloAdjunto(plantituloadjunto.getPlanTituloAdiuntosPK().getCodTituloAdjunto());                          

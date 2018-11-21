@@ -80,9 +80,10 @@ public class UIPlanDetalle implements Serializable{
                    
     }
     
-    public void subirItemPlansecciondetalleadjunto() {           
+    public void subirItemPlansecciondetalleadjunto() {  
+        this.cargarAdjuntosCategoriaTipo();
         plansecciondetalleadjuntos = (PlanSeccionDetalleAdjuntos) UtilJSF.getBean("varPlandetalleadjunto");
-        UtilJSF.setBean("planSecciondetalleadjunto", plansecciondetalleadjuntos, UtilJSF.SESSION_SCOPE); 
+        UtilJSF.setBean("planSecciondetalleadjunto", plansecciondetalleadjuntos, UtilJSF.SESSION_SCOPE);         
         plansecciondetalleadjuntospk.setCodSeccionDetalleAdjuntos(plansecciondetalleadjuntos.getPlanSeccionDetalleAdjuntosPK().getCodSeccionDetalleAdjuntos());
     }
     
@@ -200,21 +201,24 @@ public class UIPlanDetalle implements Serializable{
     }
     
     public void guardarSecciondetalleadjunto(){              
-        try {                   
+        try {                            
+            if(plansecciondetalleadjuntospk.getCodSeccionDetalleAdjuntos()==0){
+                UtilMSG.addSuccessMsg("Ingrese un indice para el adjunto");
+            }            
             PlanSeccion ps=(PlanSeccion) UtilJSF.getBean("planSeccion");            
             GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();                                    
             
             PlanSeccionDetalleAdjuntos plsecciondetalleadjunto = new PlanSeccionDetalleAdjuntos(new PlanSeccionDetalleAdjuntosPK(ps.getPlanSeccionPK().getCodigoEstablecimiento(),
-                ps.getPlanSeccionPK().getCodTitulo(), ps.getPlanSeccionPK().getCodSeccion(), plansecciondetalle.getPlanSeccionDetallePK().getCodSeccionDetalle(), plansecciondetalleadjuntospk.getCodSeccionDetalleAdjuntos()) , plansecciondetalleadjuntos.getCodCategoria(),
+                ps.getPlanSeccionPK().getCodTitulo(), ps.getPlanSeccionPK().getCodSeccion(), plansecciondetalle.getPlanSeccionDetallePK().getCodSeccionDetalle(), plansecciondetalleadjuntospk.getCodSeccionDetalleAdjuntos()) , plansecciondetalleadjuntos.getAdjuntosCategoria().getCodCategoria(),
                 plansecciondetalleadjuntos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo(), plansecciondetalleadjuntos.getTitulo(), plansecciondetalleadjuntos.getDescripcion(), plansecciondetalleadjuntos.getDocumento()                    
             );
            gestorPlanseccion.almacenarSecciondetalleadjunto(plsecciondetalleadjunto);
             
             UtilMSG.addSuccessMsg("Adjunto almacenado correctamente.");
-            UtilJSF.setBean("planDetalle", new PlanSeccion(), UtilJSF.SESSION_SCOPE);
+            UtilJSF.setBean("planDetalle", new PlanSeccionDetalle(), UtilJSF.SESSION_SCOPE);
             this.cargarPlansecciondetalleadjuntoList();
             this.plansecciondetalleadjuntos=new PlanSeccionDetalleAdjuntos();
-            this.plansecciondetalleadjuntospk=new PlanSeccionDetalleAdjuntosPK();            
+            this.plansecciondetalleadjuntospk=new PlanSeccionDetalleAdjuntosPK();
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());

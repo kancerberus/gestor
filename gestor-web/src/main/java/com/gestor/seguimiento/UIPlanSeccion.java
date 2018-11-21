@@ -79,16 +79,13 @@ public class UIPlanSeccion implements Serializable{
     }
     
     public void subirItemPlanseccionadjunto() {   
-        this.adjuntoscategoria= new AdjuntosCategoria();
+        this.cargarAdjuntosCategoriaTipo();
         planseccionadjuntos = (PlanSeccionAdjuntos) UtilJSF.getBean("varPlanseccionadjunto");
         UtilJSF.setBean("planSeccionadjunto", planseccionadjuntos, UtilJSF.SESSION_SCOPE);  
         planseccionadjuntospk.setCodSeccionAdjunto(planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodSeccionAdjunto());
         adjuntoscategoria.setCodCategoria(planseccionadjuntos.getCodCategoria());
-        this.cargarAdjuntosCategoriaTipo();     
-        adjuntoscategoria.getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().setCodCategoria(planseccionadjuntos.getCodCategoria());
-        adjuntosCategoriaTipo.getAdjuntosCategoriaTipoPK().setCodCategoria(planseccionadjuntos.getCodCategoria());
-        adjuntosCategoriaTipo.getAdjuntosCategoriaTipoPK().setCodCategoriaTipo(planseccionadjuntos.getCodCategoriaTipo());
-        adjuntoscategoria.getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().setCodCategoriaTipo(planseccionadjuntos.getCodCategoriaTipo());
+        
+        
     }
     
     public void cargarPlanseccion() {
