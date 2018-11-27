@@ -28,6 +28,7 @@
                     <p:inputText value="#{uiResponsable.responsable.telefono}" placeholder="Telefono"/>
                     <p:selectOneMenu id="somItemsEstablecimientos" value="#{uiResponsable.responsable.establecimiento}" converter="convertidorGenerico"
                                      style="text-align: center;width: 180px;">  
+                        <f:selectItem itemLabel="Seleccionar..." itemValue="" /> 
                         <f:selectItems value="#{uiEstablecimiento.establecimientoList}" var="estab" itemLabel="#{estab.nombre}" itemValue="#{estab}"/>
                     </p:selectOneMenu>
                     <p:inputSwitch value="#{uiResponsable.responsable.estado}"  onLabel="ACTIVO" offLabel="INACTIVO"/>

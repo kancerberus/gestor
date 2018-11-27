@@ -9,18 +9,19 @@
                 >
 
     <ui:define name="content">
-        <h:form enctype="multipart/form-data" id="formCategorias" style="font-size: small;">
+        <h:form enctype="multipart/form-data" id="formCategorias" style="font-size: small;">            
             <p:panel id="panelCategoriass"  header="Administrar Categoria Y Categoria Tipo" >
-                <h:panelGrid id="categoria" columns="4" >
+                <h:panelGrid columns="4" >
                     
                     <h:outputText value="Seccion Detalle Item"/>
                     <h:outputText value="Nombre"/>                    
                     <h:outputText value="Descripcion"/>
                     <h:outputText value="Meses de Vigencia"/>
-                    <p:selectOneMenu id="sec" value="#{uiCategoria.categoria.secciondetalleitems}" converter="convertidorGenerico"
+                    <p:selectOneMenu id="secc" value="#{uiCategoria.categoria.secciondetalleitems}" converter="convertidorGenerico"
                                      style="text-align: center;width: 180px;">  
+                        
                     <f:selectItem itemLabel="Seleccionar..." itemValue="" /> 
-                    <f:selectItems value="#{uiCategoria.secciondetalleitemsList}" var="sdi" itemLabel="#{sdi.numeral}" itemValue="#{sdi}"/>                                                            
+                    <f:selectItems value="#{uiCategoria.secciondetalleitemsList}" var="sdi" itemLabel="#{sdi.numeral}" itemValue="#{sdi}"/>                                                                                
                     </p:selectOneMenu>
                     <p:inputText value="#{uiCategoria.categoria.nombre}" placeholder="Nombre"/>
                     <p:inputText value="#{uiCategoria.categoria.descripcion}" placeholder="Descripcion"/>                    
@@ -35,6 +36,7 @@
                                      icon="ui-icon-cancel"
                                      update="formCategorias"/>
                 </h:panelGrid>
+                <br/>
                 <p:dataTable  value="#{uiCategoria.adjuntosCategorias}" var="varCategoria" emptyMessage="No hay Categorias"
                               rowStyleClass="Centro">
 
@@ -50,11 +52,11 @@
 
                     <p:column>
                         <p:commandButton icon="ui-icon-pencil" title="Modificar Categoria" update="formCategorias"
-                                         action="#{uiCategoria.subirItemCategoria()}"/>                   
-                        <p:commandButton icon="ui-icon-newwin" title="Crear Tipo" update="formCategorias"
-                                         action="#{uiCategoria.dialogoTipo()}"/>                        
+                                         action="#{uiCategoria.subirItemCategoria()}" />                                                
                         <p:commandButton icon="ui-icon-trash" title="Eliminar Categoria" update="formCategorias"
                                          action="#{uiCategoria.eliminarCategoria()}"/>  
+                        <p:commandButton icon="ui-icon-plus" title="Crear Tipo" update="formCategorias"
+                                         action="#{uiCategoria.dialogoTipo()}"/>
                     </p:column>                    
                     <p:column>
                         <h:outputText value="#{varCategoria.secciondetalleitems.numeral}"/>

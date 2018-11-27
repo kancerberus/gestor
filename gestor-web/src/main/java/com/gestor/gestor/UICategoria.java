@@ -28,15 +28,13 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class UICategoria implements Serializable{
     private AdjuntosCategoria categoria = new AdjuntosCategoria();
-    private AdjuntosCategoriaTipo tipo= new AdjuntosCategoriaTipo();
-    private SeccionDetalleItems sdi= new SeccionDetalleItems();
+    private AdjuntosCategoriaTipo tipo= new AdjuntosCategoriaTipo();    
     private SeccionDetalleItemsAdjuntosCategorias sdiaca= new SeccionDetalleItemsAdjuntosCategorias();
     private List<AdjuntosCategoria> adjuntosCategorias = new ArrayList<>();   
     private List<SeccionDetalleItems> sdipk= new ArrayList<>();
     private List<AdjuntosCategoriaTipo> adjuntosCategoriaTipos= new ArrayList<>();
     private GestorAdjuntosCategoria gestorAdjuntosCategoria;   
-    private GestorSeccionDetalleItems gestorSeccionDetalleItems;
-    private Ciclo c=new Ciclo(); 
+    private GestorSeccionDetalleItems gestorSeccionDetalleItems;    
     private List<SeccionDetalleItems> secciondetalleitemsList = new ArrayList<>();
     private GestorEstandar gestorEstandar;
     
@@ -91,12 +89,15 @@ public class UICategoria implements Serializable{
     public void subirItemTipo() {
         tipo = (AdjuntosCategoriaTipo) UtilJSF.getBean("varTipo");                
         UtilJSF.setBean("tipo", tipo, UtilJSF.SESSION_SCOPE);        
-    }
+    }    
     
-    public void subirItemCategoria() {
-        categoria = (AdjuntosCategoria) UtilJSF.getBean("varCategoria");                        
-        UtilJSF.setBean("categoria", categoria, UtilJSF.SESSION_SCOPE); 
-        this.cargarCategoriaList();
+    
+    public void subirItemCategoria() {        
+        categoria = (AdjuntosCategoria) UtilJSF.getBean("varCategoria");
+        UtilJSF.setBean("varCategoria", categoria, UtilJSF.SESSION_SCOPE); 
+        UtilJSF.setBean("categoria", categoria, UtilJSF.SESSION_SCOPE);         
+        
+        this.cargarCategoriaList();        
         this.cargarSecciondetalleitems();
     }
     
@@ -224,6 +225,7 @@ public class UICategoria implements Serializable{
             categoria = (AdjuntosCategoria) UtilJSF.getBean("varCategoria");
             gestorAdjuntosCategoria.eliminarCategoria(categoria.getCodCategoria());
             this.cargarCategoriaList();
+            this.cargarSecciondetalleitemsList();
             
             UtilMSG.addSuccessMsg("Categoria eliminada.");
         } catch (Exception ex) {
@@ -286,16 +288,5 @@ public class UICategoria implements Serializable{
     public void setSecciondetalleitemsList(List<SeccionDetalleItems> secciondetalleitemsList) {
         this.secciondetalleitemsList = secciondetalleitemsList;
     }
-
-    public Ciclo getC() {
-        return c;
-    }
-
-    public void setC(Ciclo c) {
-        this.c = c;
-    }
-    
-    
-
     
 }
