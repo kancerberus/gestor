@@ -154,7 +154,7 @@ public class UIPlanSeccion implements Serializable{
             if(planseccionpk.getCodSeccion()==0){
                 planseccionpk.setCodSeccion(1);
             }                        
-            
+
             planseccion.setNumeral(pt.getNumeral()+"."+Integer.toString(planseccionpk.getCodSeccion()));
             PlanSeccion plseccion = new PlanSeccion(new PlanSeccionPK(
             pt.getPlanTituloPK().getCodigoEstablecimiento(), planseccionpk.getCodTitulo(), planseccionpk.getCodSeccion()),planseccion.getNombre(),planseccion.getNumeral(), planseccion.getImagen()

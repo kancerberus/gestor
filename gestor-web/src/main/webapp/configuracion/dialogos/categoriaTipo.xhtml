@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <div style="margin-top: 2%; margin-bottom: 5%">
+        <p:outputPanel id="opTipo">
+             <h2>                
+                 <p class="letraBlueBackgroundWhite">Categoria: #{uiCategoria.categoria.nombre}</p>
+            </h2>
+            <h:panelGrid columns="2" >
+                    <h:outputText value="Nombre Tipo"/>                    
+                    <h:outputText value="Descripcion"/>
+                    
+                    <p:inputText value="#{uiCategoria.tipo.nombre}" placeholder="Nombre"/>
+                    <p:inputText value="#{uiCategoria.tipo.descripcion}" placeholder="Descripcion"/>                    
+            </h:panelGrid>
+            
+            <h:panelGrid columns="2">
+                    <p:commandButton value="Crear / Modificar" action="#{uiCategoria.guardarTipo()}"
+                                     icon="ui-icon-disk"
+                                     update="formCategorias:opTipo"/>
+                    <p:commandButton value="Limpiar" action="#{uiCategoria.limpiartipo()}"
+                                     icon="ui-icon-cancel"
+                                     update="formCategorias:opTipo"/>
+            </h:panelGrid>
+            
+            <p:dataTable  value="#{uiCategoria.adjuntosCategoriaTipos}" var="varTipo" emptyMessage="No hay Tipos"
+                              rowStyleClass="Centro">
+
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column headerText="Opciones" />                            
+                            <p:column headerText="Nombre"/>
+                            <p:column headerText="Descripcion"/>                            
+                        </p:row> 
+                    </p:columnGroup>
+
+                    <p:column>
+                        <p:commandButton icon="ui-icon-pencil" title="Modificar Categoria" update="formCategorias:opTipo"
+                                         action="#{uiCategoria.subirItemTipo()}"/>   
+                        <p:commandButton icon="ui-icon-trash" title="Eliminar Tipo" update="formCategorias:opTipo"
+                                         action="#{uiCategoria.eliminarTipo()}"/> 
+                    </p:column>                                        
+                    <p:column>
+                        <h:outputText value="#{varTipo.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varTipo.descripcion}"/>
+                    </p:column>                    
+            </p:dataTable>
+        </p:outputPanel>            
+    </div>
+</ui:composition>

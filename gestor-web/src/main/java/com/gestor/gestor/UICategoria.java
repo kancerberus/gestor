@@ -5,10 +5,12 @@
  */
 package com.gestor.gestor;
 
+import com.gestor.entity.Dialogo;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
 import com.gestor.gestor.controlador.GestorAdjuntosCategoria;
+import com.gestor.gestor.controlador.GestorSeccionDetalleItems;
 import com.gestor.publico.controlador.GestorEstandar;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,12 +28,22 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class UICategoria implements Serializable{
     private AdjuntosCategoria categoria = new AdjuntosCategoria();
-    private List<AdjuntosCategoria> adjuntosCategorias = new ArrayList<>();    
-    private GestorAdjuntosCategoria gestorAdjuntosCategoria;       
+    private AdjuntosCategoriaTipo tipo= new AdjuntosCategoriaTipo();
+    private SeccionDetalleItems sdi= new SeccionDetalleItems();
+    private SeccionDetalleItemsAdjuntosCategorias sdiaca= new SeccionDetalleItemsAdjuntosCategorias();
+    private List<AdjuntosCategoria> adjuntosCategorias = new ArrayList<>();   
+    private List<SeccionDetalleItems> sdipk= new ArrayList<>();
+    private List<AdjuntosCategoriaTipo> adjuntosCategoriaTipos= new ArrayList<>();
+    private GestorAdjuntosCategoria gestorAdjuntosCategoria;   
+    private GestorSeccionDetalleItems gestorSeccionDetalleItems;
+    private Ciclo c=new Ciclo(); 
+    private List<SeccionDetalleItems> secciondetalleitemsList = new ArrayList<>();
+    private GestorEstandar gestorEstandar;
     
     @PostConstruct
     public void init() {
-        this.cargarCategoria();
+        this.cargarCategoria();         
+        this.cargarSecciondetalleitems();
     }
     
     private void cargarCategoria() {
@@ -44,48 +56,158 @@ public class UICategoria implements Serializable{
         }
     }
     
-    public void subirItemCategoria() {
-        categoria = (AdjuntosCategoria) UtilJSF.getBean("varCategoria");
-        adjuntosCategorias.remove(categoria);
+    public void cargarTipo() {
+        try {
+            categoria = (AdjuntosCategoria) UtilJSF.getBean("categoria");                
+            this.adjuntosCategoriaTipos = new ArrayList<>();
+            gestorAdjuntosCategoria = new GestorAdjuntosCategoria();
+            this.adjuntosCategoriaTipos.addAll((Collection<? extends AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(categoria.getCodCategoria()));
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
     }
     
-    public void codigoCategoria(){
+    public void cargarTipoList() {
         try {
-            if(categoria.getCodCategoria()==0){
-                categoria.setCodCategoria(1);
-            }else{
-                for(int i=0;i<adjuntosCategorias.size();i++){                
-                    if(categoria.getCodCategoria() == adjuntosCategorias.get(i).getCodCategoria()){
-                        categoria.setCodCategoria(categoria.getCodCategoria());
-                    }else{
-                        categoria.setCodCategoria(categoria.getCodCategoria()+1);
-                    }                
-                }
-            }                      
-        } catch (Exception e) {
-            if (UtilLog.causaControlada(e)) {
-                UtilMSG.addWarningMsg(e.getMessage());
-            } else {    
-                UtilMSG.addSupportMsg();
-                UtilLog.generarLog(this.getClass(), e);
-            }
-        }        
+            categoria = (AdjuntosCategoria) UtilJSF.getBean("categoria");                
+            this.adjuntosCategoriaTipos = new ArrayList<>();
+            gestorAdjuntosCategoria = new GestorAdjuntosCategoria();
+            this.adjuntosCategoriaTipos.addAll((Collection<? extends AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(categoria.getCodCategoria()));
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
     }
+    
+    public void cargarSecciondetalleitems() {
+        try {
+            this.secciondetalleitemsList = new ArrayList<>();
+            gestorEstandar = new GestorEstandar();            
+            this.secciondetalleitemsList.addAll((Collection<? extends SeccionDetalleItems>) gestorEstandar.cargarListaSecciondetalleitemsnumeral());            
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void subirItemTipo() {
+        tipo = (AdjuntosCategoriaTipo) UtilJSF.getBean("varTipo");                
+        UtilJSF.setBean("tipo", tipo, UtilJSF.SESSION_SCOPE);        
+    }
+    
+    public void subirItemCategoria() {
+        categoria = (AdjuntosCategoria) UtilJSF.getBean("varCategoria");                        
+        UtilJSF.setBean("categoria", categoria, UtilJSF.SESSION_SCOPE); 
+        this.cargarCategoriaList();
+        this.cargarSecciondetalleitems();
+    }
+    
+    public void cargarSecciondetalleitemsList() {
+        try {
+            this.secciondetalleitemsList = new ArrayList<>();
+            gestorEstandar = new GestorEstandar();            
+            this.secciondetalleitemsList.addAll((Collection<? extends SeccionDetalleItems>) gestorEstandar.cargarListaSecciondetalleitemsnumeral());            
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void limpiar() {
+        categoria=new AdjuntosCategoria();        
+    }
+    
+    public void limpiartipo() {
+        tipo= new AdjuntosCategoriaTipo();        
+    }
+    
+    
+    public void dialogoTipo() {
+        try {
+            
+            tipo=new AdjuntosCategoriaTipo();
+            Dialogo dialogo = new Dialogo("dialogos/categoriaTipo.xhtml", "Crear Tipo", "clip", Dialogo.WIDTH_AUTO);
+            UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
+            UtilJSF.execute("PF('dialog').show();");
+            categoria = (AdjuntosCategoria) UtilJSF.getBean("varCategoria");                
+            UtilJSF.setBean("categoria", categoria, UtilJSF.SESSION_SCOPE);            
+            this.cargarTipo();         
+            this.cargarCategoriaList();
+            this.cargarSecciondetalleitemsList();
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void guardarTipo(){    
+        try {
+            categoria = (AdjuntosCategoria) UtilJSF.getBean("categoria");                            
+
+            if(tipo.getAdjuntosCategoriaTipoPK().getCodCategoriaTipo()==null){
+                tipo.getAdjuntosCategoriaTipoPK().setCodCategoriaTipo(adjuntosCategoriaTipos.size()+1);
+            }
+            
+            /*for(int i=0;i<adjuntosCategoriaTipos.size();i++){
+                if(tipo.getAdjuntosCategoriaTipoPK().getCodCategoriaTipo() != adjuntosCategoriaTipos.get(i).getAdjuntosCategoriaTipoPK().getCodCategoriaTipo()){
+                    tipo.getAdjuntosCategoriaTipoPK().setCodCategoriaTipo(adjuntosCategoriaTipos.size()+1);                    
+                }
+            }*/
+            
+            AdjuntosCategoriaTipo tip= new AdjuntosCategoriaTipo(new AdjuntosCategoriaTipoPK(categoria.getCodCategoria(), tipo.getAdjuntosCategoriaTipoPK().getCodCategoriaTipo())  , tipo.getNombre(), tipo.getDescripcion());            
+            gestorAdjuntosCategoria.validarTipo(tip); 
+            gestorAdjuntosCategoria.almacenarTipo(tip); 
+            
+            UtilMSG.addSuccessMsg("Tipo almacenado correctamente.");
+            UtilJSF.setBean("tipo", new AdjuntosCategoriaTipo(), UtilJSF.SESSION_SCOPE);            
+            this.cargarTipoList();
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    private void cargarCategoriaList() {
+        try {
+            this.adjuntosCategorias = new ArrayList<>();
+            gestorAdjuntosCategoria = new GestorAdjuntosCategoria();
+            this.adjuntosCategorias.addAll((Collection<? extends AdjuntosCategoria>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoria());
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }   
+
     
     public void guardarCategoria() {
-        try {
-            this.codigoCategoria();
-            AdjuntosCategoria cat = this.getCategoria();
+        try {              
+            if(categoria==null){
+            categoria=new AdjuntosCategoria();
+            }
+                        
+            if(categoria.getCodCategoria()==null){                
+                categoria.setCodCategoria(1);
+            }
+            
+            for(int i=0;i<adjuntosCategorias.size();i++){
+                if(categoria.getCodCategoria() != adjuntosCategorias.get(i).getCodCategoria()){
+                    categoria.setCodCategoria(adjuntosCategorias.size()+1);
+                }
+            }        
+            this.sdipk = new ArrayList<>();
+            gestorSeccionDetalleItems= new GestorSeccionDetalleItems();
+            this.sdipk.addAll((Collection<? extends SeccionDetalleItems>) gestorSeccionDetalleItems.buscarNumeral(categoria.getSecciondetalleitems().getNumeral()));
+            
+                        
+            AdjuntosCategoria cat = new AdjuntosCategoria(categoria.getCodCategoria(), categoria.getNombre(),
+            categoria.getDescripcion(), categoria.getMesesVigencia());                        
             
             
             
+            SeccionDetalleItemsAdjuntosCategorias sdiac= new SeccionDetalleItemsAdjuntosCategorias(sdipk.get(0).getSeccionDetalleItemsPK().getCodCiclo(), 
+            sdipk.get(0).getSeccionDetalleItemsPK().getCodSeccion(), sdipk.get(0).getSeccionDetalleItemsPK().getCodDetalle(), sdipk.get(0).getSeccionDetalleItemsPK().getCodItem(), sdiaca.getCodCategoria());
             
-            gestorAdjuntosCategoria.validarCategoria(cat);
-            gestorAdjuntosCategoria.almacenarCategoria(cat);
+            
+            gestorAdjuntosCategoria.validarCategoria(cat); 
+            gestorAdjuntosCategoria.almacenarCategoria(cat, sdiac);
 
             UtilMSG.addSuccessMsg("Categoria almacenada correctamente.");
             UtilJSF.setBean("categoria", new AdjuntosCategoria(), UtilJSF.SESSION_SCOPE);            
-
+            this.cargarCategoriaList();
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());
@@ -96,6 +218,50 @@ public class UICategoria implements Serializable{
         }
 
     }
+    
+    public void eliminarCategoria(){
+        try {
+            categoria = (AdjuntosCategoria) UtilJSF.getBean("varCategoria");
+            gestorAdjuntosCategoria.eliminarCategoria(categoria.getCodCategoria());
+            this.cargarCategoriaList();
+            
+            UtilMSG.addSuccessMsg("Categoria eliminada.");
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void eliminarTipo(){
+        try {
+            tipo= (AdjuntosCategoriaTipo) UtilJSF.getBean("varTipo");            
+            gestorAdjuntosCategoria.eliminarTipo(tipo);
+            
+            
+            UtilMSG.addSuccessMsg("Tipo eliminado.");
+            this.cargarCategoriaList();
+            this.cargarTipoList();
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+
+    public AdjuntosCategoriaTipo getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(AdjuntosCategoriaTipo tipo) {
+        this.tipo = tipo;
+    }
+
+    public List<AdjuntosCategoriaTipo> getAdjuntosCategoriaTipos() {
+        return adjuntosCategoriaTipos;
+    }
+
+    public void setAdjuntosCategoriaTipos(List<AdjuntosCategoriaTipo> adjuntosCategoriaTipos) {
+        this.adjuntosCategoriaTipos = adjuntosCategoriaTipos;
+    }
+
+    
 
     public AdjuntosCategoria getCategoria() {
         return categoria;
@@ -111,6 +277,22 @@ public class UICategoria implements Serializable{
 
     public void setAdjuntosCategorias(List<AdjuntosCategoria> adjuntosCategorias) {
         this.adjuntosCategorias = adjuntosCategorias;
+    }
+
+    public List<SeccionDetalleItems> getSecciondetalleitemsList() {
+        return secciondetalleitemsList;
+    }
+
+    public void setSecciondetalleitemsList(List<SeccionDetalleItems> secciondetalleitemsList) {
+        this.secciondetalleitemsList = secciondetalleitemsList;
+    }
+
+    public Ciclo getC() {
+        return c;
+    }
+
+    public void setC(Ciclo c) {
+        this.c = c;
     }
     
     
