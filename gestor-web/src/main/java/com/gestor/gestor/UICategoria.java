@@ -40,7 +40,7 @@ public class UICategoria implements Serializable{
     
     @PostConstruct
     public void init() {
-        this.cargarCategoria();         
+        this.cargarCategoria(); 
         this.cargarSecciondetalleitems();
     }
     
@@ -93,10 +93,8 @@ public class UICategoria implements Serializable{
     
     
     public void subirItemCategoria() {        
-        categoria = (AdjuntosCategoria) UtilJSF.getBean("varCategoria");
-        UtilJSF.setBean("varCategoria", categoria, UtilJSF.SESSION_SCOPE); 
-        UtilJSF.setBean("categoria", categoria, UtilJSF.SESSION_SCOPE);         
-        
+        categoria = (AdjuntosCategoria) UtilJSF.getBean("varCategoria");         
+        UtilJSF.setBean("categoria", categoria, UtilJSF.SESSION_SCOPE);                 
         this.cargarCategoriaList();        
         this.cargarSecciondetalleitems();
     }
