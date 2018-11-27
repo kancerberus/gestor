@@ -47,12 +47,14 @@ public class AdjuntosCategoria implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "adjuntosCategoria")
     private List<AdjuntosCategoriaTipo> adjuntosCategoriaTipoList = new ArrayList<>();
     private AdjuntosCategoriaTipo adjuntosCategoriaTipo = new AdjuntosCategoriaTipo();
-    private SeccionDetalleItems secciondetalleitems = new SeccionDetalleItems();
+    private SeccionDetalleItems secciondetalleitems;
     
-    public AdjuntosCategoria() {
-        secciondetalleitems = new SeccionDetalleItems();
+    
+    
+    public AdjuntosCategoria() {    
         adjuntosCategoriaTipo = new AdjuntosCategoriaTipo();
         adjuntosCategoriaTipoList = new ArrayList<>();
+        secciondetalleitems = new SeccionDetalleItems();
     }
 
     public AdjuntosCategoria(Integer codCategoria) {

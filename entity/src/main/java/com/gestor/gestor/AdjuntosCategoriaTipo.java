@@ -50,6 +50,12 @@ public class AdjuntosCategoriaTipo implements Serializable {
         this.adjuntosCategoriaTipoPK = adjuntosCategoriaTipoPK;
         this.nombre = nombre;
     }
+    
+    public AdjuntosCategoriaTipo(AdjuntosCategoriaTipoPK adjuntosCategoriaTipoPK, String nombre, String descripcion) {
+        this.adjuntosCategoriaTipoPK = adjuntosCategoriaTipoPK;
+        this.nombre = nombre;
+        this.descripcion= descripcion;
+    }
 
     public AdjuntosCategoriaTipo(int codCategoria, int codCategoriaTipo) {
         this.adjuntosCategoriaTipoPK = new AdjuntosCategoriaTipoPK(codCategoria, codCategoriaTipo);
