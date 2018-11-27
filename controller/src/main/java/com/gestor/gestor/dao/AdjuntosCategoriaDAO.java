@@ -9,6 +9,7 @@ import com.gestor.gestor.AdjuntosCategoria;
 import com.gestor.gestor.AdjuntosCategoriaTipo;
 import com.gestor.gestor.AdjuntosCategoriaTipoPK;
 import com.gestor.gestor.SeccionDetalleItems;
+import com.gestor.gestor.SeccionDetalleItemsAdjuntosCategorias;
 import com.gestor.gestor.SeccionDetalleItemsPK;
 import conexion.Consulta;
 import java.sql.Connection;
@@ -129,7 +130,7 @@ public class AdjuntosCategoriaDAO {
             rs = consulta.ejecutar(sql);
             Collection<AdjuntosCategoriaTipo> adjuntosCategoriaTipos = new ArrayList<>();
             while (rs.next()) {
-                AdjuntosCategoriaTipo act = new AdjuntosCategoriaTipo(new AdjuntosCategoriaTipoPK(rs.getInt("cod_categoria"), rs.getInt("cod_categoria_tipo")), rs.getString("nombre"));
+                AdjuntosCategoriaTipo act = new AdjuntosCategoriaTipo(new AdjuntosCategoriaTipoPK(rs.getInt("cod_categoria"), rs.getInt("cod_categoria_tipo")), rs.getString("nombre"), rs.getString("descripcion"));
                 adjuntosCategoriaTipos.add(act);
             }
             return adjuntosCategoriaTipos;
@@ -143,16 +144,16 @@ public class AdjuntosCategoriaDAO {
         }
     }
     
-     public void insertarCategoria(AdjuntosCategoria categoria) throws SQLException {
+    public void insertarCategoria(AdjuntosCategoria categoria, SeccionDetalleItemsAdjuntosCategorias sdiac) throws SQLException {
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "INSERT INTO adjuntos_categoria "
+                    "INSERT INTO gestor.adjuntos_categoria "
                     + " ( cod_categoria, nombre, descripcion, meses_vigencia )"
                     + " VALUES ('" + categoria.getCodCategoria() + "', '" + categoria.getNombre() + "', '" + categoria.getDescripcion() + "', "
-                    + " '" + categoria.getMesesVigencia() + "', "                    
-                    + " ON CONFLICT (cod_categoria) DO UPDATE"
+                    + " '" + categoria.getMesesVigencia() + "') "                    
+                    + " ON CONFLICT (cod_categoria) DO UPDATE "
                     + " SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion, meses_vigencia=EXCLUDED.meses_vigencia "                    
             );
             consulta.actualizar(sql);
@@ -161,6 +162,97 @@ public class AdjuntosCategoriaDAO {
                 consulta.desconectar();
             }
         }
+        
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO gestor.seccion_detalle_items_adjuntos_categoria "
+                    + " ( cod_ciclo, cod_seccion, cod_detalle, cod_item, cod_categoria )"
+                    + " VALUES ('" + sdiac.getCodCiclo() + "', '" + sdiac.getCodSeccion() + "', '" + sdiac.getCodDetalle() + "', "
+                    + " '" + sdiac.getCodItem() + "', '"+categoria.getCodCategoria()+"') ")                    
+                    ;
+            
+            consulta.actualizar(sql);
+        } finally {
+            if(consulta!=null){
+                consulta.desconectar();
+            }
+                
+           
+        }
+    }
+    
+    public void eliminarCategoria(Integer codCategoria) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE "
+                    + " FROM gestor.seccion_detalle_items_adjuntos_categoria"
+                    + " WHERE cod_categoria='"+codCategoria+"'"
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+        
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE "
+                    + " FROM gestor.adjuntos_categoria"
+                    + " WHERE cod_categoria='"+codCategoria+"'"
+            );
+            
+            consulta.actualizar(sql);
+        } finally {
+            if(consulta!=null){
+                consulta.desconectar();
+            }
+                
+           
+        }
+    }
+    
+    public void eliminarTipo(AdjuntosCategoriaTipo tipo) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE "
+                    + " FROM gestor.adjuntos_categoria_tipo"
+                    + " WHERE cod_categoria='"+tipo.getAdjuntosCategoriaTipoPK().getCodCategoria()+"' AND cod_categoria_tipo='"+tipo.getAdjuntosCategoriaTipoPK().getCodCategoriaTipo()+"'"
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }       
+       
+    }
+    
+    public void insertarTipo(AdjuntosCategoriaTipo tipo) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO gestor.adjuntos_categoria_tipo "
+                    + " ( cod_categoria, cod_categoria_tipo, nombre, descripcion )"
+                    + " VALUES ('" + tipo.getAdjuntosCategoriaTipoPK().getCodCategoria() + "', '" + tipo.getAdjuntosCategoriaTipoPK().getCodCategoriaTipo() + "', '"+tipo.getNombre()+"', '" + tipo.getDescripcion() + "') "                    
+                    + " ON CONFLICT (cod_categoria, cod_categoria_tipo) DO UPDATE "
+                    + " SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion"
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+        
+        
     }
 
 }

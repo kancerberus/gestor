@@ -60,6 +60,35 @@ public class SeccionDetalleItemsDAO {
             }
         }
     }
+    
+    public List<SeccionDetalleItems> buscarNumeral(String numeral) throws SQLException{
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT cod_ciclo, cod_seccion, cod_detalle, cod_item"
+                    + " FROM gestor.seccion_detalle_items"
+                    + " WHERE numeral='"+numeral+"' "
+                    + " ORDER BY numeral"
+            );
+
+            rs = consulta.ejecutar(sql);
+            List<SeccionDetalleItems> seccionDetalleItemspk = new ArrayList<>();
+            while (rs.next()) {
+                SeccionDetalleItems sdipk = new SeccionDetalleItems(new SeccionDetalleItemsPK(rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item")));                
+                seccionDetalleItemspk.add(sdipk);
+            }
+            return seccionDetalleItemspk;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 
     public void upsertEvaluacionPuntajeSeccionDetalleCombos(EvaluacionPuntajeSeccionDetalleCombos epsc) throws SQLException {
         Consulta consulta = null;

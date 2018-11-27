@@ -37,5 +37,14 @@ public class GestorCiclo extends Gestor {
             this.cerrarConexion();
         }
     }
+    
+    public String traerCiclo(String numeral) throws Exception {
+        try {
+            this.abrirConexion();
+            return new CicloDAO(conexion).traerCiclo(numeral);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
 }
 

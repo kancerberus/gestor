@@ -9,6 +9,8 @@ import com.gestor.controller.Gestor;
 import com.gestor.gestor.EvaluacionPuntajeSeccionDetalleCombos;
 import com.gestor.gestor.EvaluacionPuntajeSeccionDetalleCombosPK;
 import com.gestor.gestor.dao.SeccionDetalleItemsDAO;
+import com.gestor.gestor.SeccionDetalleItems;
+import java.util.List;
 
 /**
  *
@@ -37,6 +39,17 @@ public class GestorSeccionDetalleItems extends Gestor {
             this.abrirConexion();
             SeccionDetalleItemsDAO seccionDetalleItemsDAO = new SeccionDetalleItemsDAO(conexion);
             return seccionDetalleItemsDAO.cargarDescripcionEvaluacionPuntajes(evaluacionPuntajeSeccionDetalleCombosPK);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public List<?> buscarNumeral(String numeral) throws Exception {   
+        
+        try {
+            this.abrirConexion();
+            SeccionDetalleItemsDAO secciondetalleitemsDAO = new SeccionDetalleItemsDAO(conexion);                                                 
+            return secciondetalleitemsDAO.buscarNumeral(numeral);
         } finally {
             this.cerrarConexion();
         }

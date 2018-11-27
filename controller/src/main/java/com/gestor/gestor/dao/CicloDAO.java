@@ -53,6 +53,34 @@ public class CicloDAO {
             }
         }
     }   
+    
+    public String traerCiclo(String numeral) throws SQLException{
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT cod_ciclo, nombre, numeral"
+                    + " FROM gestor.ciclo "
+                    + " where numeral = '"+numeral+"' "
+                            
+            );
+
+            rs = consulta.ejecutar(sql);     
+            String c=null;
+            while (rs.next()) {
+                c=(rs.getString("cod_ciclo"));
+            }
+            return c;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 
     
     public List<Ciclo> cargarListaCiclosnombre(String numeral) throws SQLException {
