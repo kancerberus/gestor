@@ -186,7 +186,7 @@ public class UIPlanSeccion implements Serializable{
             plansecciontextopk.setCodSeccionTexto(1);    
             
             PlanSeccionTexto plsecciontexto = new PlanSeccionTexto(new PlanSeccionTextoPK(pt.getPlanTituloPK().getCodigoEstablecimiento(),
-            planseccion.getPlanSeccionPK().getCodTitulo(), planseccion.getPlanSeccionPK().getCodSeccion(), plansecciontextopk.getCodSeccionTexto()), plansecciontexto.getTexto()
+            pt.getPlanTituloPK().getCodTitulo(), planseccionpk.getCodSeccion(), plansecciontextopk.getCodSeccionTexto()), plansecciontexto.getTexto()
             );
             gestorPlanseccion.almacenarSecciontexto(plsecciontexto);            
             

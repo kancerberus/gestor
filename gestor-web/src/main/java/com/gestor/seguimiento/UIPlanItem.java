@@ -107,8 +107,7 @@ public class UIPlanItem implements Serializable{
     }   
     
     public void cargarPlansecciondetalleitemtexto() {        
-        try {            
-            plansecciondetalleitemtexto.setTexto("");
+        try {                        
             this.plansecciondetalleitemtextoList = new ArrayList<>();
             gestorPlanSeccion = new GestorPlanSeccion();
             this.plansecciondetalleitemtextoList.addAll((Collection<? extends PlanSeccionDetalleItemTexto>) gestorPlanSeccion.cargarPlanSecciondetalletextoitemList(plansecciondetalleitem));                                 
@@ -177,12 +176,11 @@ public class UIPlanItem implements Serializable{
             PlanSeccionDetalle psd=(PlanSeccionDetalle) UtilJSF.getBean("planDetalle");                        
             GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();                                    
             plansecciondetalleitemtextopk.setCodSeccionDetalleItemTexto(1); 
-            
-            plansecciondetalleitem.getPlanSeccionDetalleItemPK().setCodTitulo(psd.getPlanSeccionDetallePK().getCodTitulo());
+                        
             
             PlanSeccionDetalleItemTexto plsecciondetalleitemtexto = new PlanSeccionDetalleItemTexto(new PlanSeccionDetalleItemTextoPK(psd.getPlanSeccionDetallePK().getCodigoEstablecimiento(),
             psd.getPlanSeccionDetallePK().getCodTitulo(), psd.getPlanSeccionDetallePK().getCodSeccion(), psd.getPlanSeccionDetallePK().getCodSeccionDetalle(),
-            plansecciondetalleitem.getPlanSeccionDetalleItemPK().getCodSeccionDetalleItem(),plansecciondetalleitemtextopk.getCodSeccionDetalleItemTexto()), plansecciondetalleitemtexto.getTexto()
+            plansecciondetalleitempk.getCodSeccionDetalleItem(),plansecciondetalleitemtextopk.getCodSeccionDetalleItemTexto()), plansecciondetalleitemtexto.getTexto()
             );
             gestorPlanseccion.almacenarSecciondetalleitemtexto(plsecciondetalleitemtexto);            
             

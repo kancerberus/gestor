@@ -108,8 +108,7 @@ public class UIPlanDetalle implements Serializable{
     
     
     public void cargarPlansecciondetalletexto() {        
-        try {
-            plansecciondetalletexto.setTexto("");
+        try {            
             this.plansecciondetalletextoList = new ArrayList<>();
             gestorPlanSeccion = new GestorPlanSeccion();
             this.plansecciondetalletextoList.addAll((Collection<? extends PlanSeccionDetalleTexto>) gestorPlanSeccion.cargarPlanSecciondetalletextoList(plansecciondetalle));                                 
@@ -179,7 +178,7 @@ public class UIPlanDetalle implements Serializable{
             plansecciondetalletextopk.setCodSeccionDetalleTexto(1);    
             
             PlanSeccionDetalleTexto plsecciondetalletexto = new PlanSeccionDetalleTexto(new PlanSeccionDetalleTextoPK(ps.getPlanSeccionPK().getCodigoEstablecimiento(),
-            plansecciondetalle.getPlanSeccionDetallePK().getCodTitulo(), plansecciondetalle.getPlanSeccionDetallePK().getCodSeccion(), plansecciondetalle.getPlanSeccionDetallePK().getCodSeccionDetalle(),
+            ps.getPlanSeccionPK().getCodTitulo(), ps.getPlanSeccionPK().getCodSeccion(), plansecciondetallepk.getCodSeccionDetalle(),
             plansecciondetalletextopk.getCodSeccionDetalleTexto()), plansecciondetalletexto.getTexto()
             );
             gestorPlanseccion.almacenarSecciondetalletexto(plsecciondetalletexto);            
