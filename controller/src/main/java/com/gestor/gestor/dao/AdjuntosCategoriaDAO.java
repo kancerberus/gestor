@@ -93,7 +93,8 @@ public class AdjuntosCategoriaDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT sdi.numeral, ac.cod_categoria, ac.nombre, ac.descripcion, ac.meses_vigencia "
+                    "SELECT sdi.numeral, ac.cod_categoria, ac.nombre, ac.descripcion, ac.meses_vigencia, "
+                    + " sdi.cod_ciclo, sdi.cod_seccion, sdi.cod_detalle, sdi.cod_item "
                     + " FROM gestor.seccion_detalle_items_adjuntos_categoria "
                     + " JOIN gestor.adjuntos_categoria ac using (cod_categoria) "
                     + " JOIN gestor.seccion_detalle_items sdi using (cod_seccion, cod_item, cod_ciclo,cod_detalle) "                    
@@ -103,7 +104,7 @@ public class AdjuntosCategoriaDAO {
             Collection<AdjuntosCategoria> adjuntosCategorias = new ArrayList<>();
             while (rs.next()) {
                 AdjuntosCategoria ac = new AdjuntosCategoria(rs.getInt("cod_categoria"), rs.getString("nombre"), rs.getString("descripcion"), rs.getInt("meses_vigencia"));
-                ac.setSecciondetalleitems(new SeccionDetalleItems(rs.getString("numeral")));
+                ac.setSecciondetalleitems(new SeccionDetalleItems(new SeccionDetalleItemsPK(rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item")), rs.getString("numeral")));
                 adjuntosCategorias.add(ac);
             }
             return adjuntosCategorias;

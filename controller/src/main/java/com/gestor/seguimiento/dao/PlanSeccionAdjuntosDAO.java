@@ -45,7 +45,7 @@ public class PlanSeccionAdjuntosDAO {
                     + " FROM seguimiento.plan_seccion_adjuntos psa"
                     + " JOIN gestor.adjuntos_categoria ct USING (cod_categoria)"
                     + " JOIN gestor.adjuntos_categoria_tipo ctt USING (cod_categoria, cod_categoria_tipo)"
-                    + " WHERE codigo_establecimiento='"+planseccion.getPlanSeccionPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+planseccion.getPlanSeccionPK().getCodSeccion()+"' "                     
+                    + " WHERE codigo_establecimiento='"+planseccion.getPlanSeccionPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+planseccion.getPlanSeccionPK().getCodTitulo()+"' "                     
                     + " ORDER BY cod_seccion_adjunto"  
             );
             rs = consulta.ejecutar(sql);
