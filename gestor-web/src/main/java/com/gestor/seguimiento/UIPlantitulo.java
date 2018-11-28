@@ -172,10 +172,13 @@ public class UIPlantitulo implements Serializable{
     }    
 
     public void guardarTituloadjunto(){
-        try {            
-            if(plantituloadjuntopk.getCodTituloAdjunto()==0){
-                UtilMSG.addSuccessMsg("Ingrese un indice para el adjunto");
-            }            
+        try {         
+            PlanTituloAdiuntos pta = (PlanTituloAdiuntos) UtilJSF.getBean("planTituloadjunto");
+                        
+            if(pta==null || plantituloadjuntopk.getCodTituloAdjunto()==0){
+                plantituloadjuntopk.setCodTituloAdjunto(plantituloadjuntoList.size()+1);
+            }
+            
             Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
             GestorPlanTitulo gestorPlantitulo = new GestorPlanTitulo();
                         

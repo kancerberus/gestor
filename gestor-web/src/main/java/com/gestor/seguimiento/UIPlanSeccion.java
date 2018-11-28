@@ -208,8 +208,10 @@ public class UIPlanSeccion implements Serializable{
     
     public void guardarSeccionadjunto(){              
         try {     
-            if(planseccionadjuntospk.getCodSeccionAdjunto()==0){
-                UtilMSG.addSuccessMsg("Ingrese un indice para el adjunto");
+            PlanSeccionAdjuntos psa = (PlanSeccionAdjuntos) UtilJSF.getBean("planSeccionadjunto");
+                        
+            if(psa==null || planseccionadjuntospk.getCodSeccionAdjunto()==0){
+                planseccionadjuntospk.setCodSeccionAdjunto(planseccionadjuntosList.size()+1);
             }
             
             PlanTitulo pt=(PlanTitulo) UtilJSF.getBean("planTitulo");                        
@@ -223,9 +225,7 @@ public class UIPlanSeccion implements Serializable{
             
             UtilMSG.addSuccessMsg("Adjunto almacenado correctamente.");
             UtilJSF.setBean("planSeccion", new PlanSeccion(), UtilJSF.SESSION_SCOPE);
-            this.cargarPlanseccionadjuntosList();
-            this.planseccionadjuntos=new PlanSeccionAdjuntos();
-            this.planseccionadjuntospk=new PlanSeccionAdjuntosPK();             
+            this.cargarPlanseccionadjuntosList();            
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());

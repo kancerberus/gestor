@@ -203,9 +203,11 @@ public class UIPlanItem implements Serializable{
     
     public void guardarSecciondetalleitemadjunto(){              
         try {           
-            if(plansecciondetalleitemadjuntospk.getCodSeccionDetalleItemAdjuntos()==0){
-                UtilMSG.addSuccessMsg("Ingrese un indice para el adjunto");
-            }            
+            PlanSeccionDetalleItemAdjuntos psdia = (PlanSeccionDetalleItemAdjuntos) UtilJSF.getBean("planSecciondetalleitemadjunto");
+                        
+            if(psdia==null || plansecciondetalleitemadjuntospk.getCodSeccionDetalleItemAdjuntos()==0){
+                plansecciondetalleitemadjuntospk.setCodSeccionDetalleItemAdjuntos(plansecciondetalleitemadjuntosList.size()+1);
+            }
             
             PlanSeccionDetalle psd=(PlanSeccionDetalle) UtilJSF.getBean("planDetalle");            
             GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();                                    

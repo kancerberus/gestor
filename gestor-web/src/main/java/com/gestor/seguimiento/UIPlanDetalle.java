@@ -69,12 +69,10 @@ public class UIPlanDetalle implements Serializable{
 
     
     public void subirItemPlansecciondetalle() {    
-        plansecciondetalle = (PlanSeccionDetalle) UtilJSF.getBean("varPlandetalle");                     
+        plansecciondetalle = (PlanSeccionDetalle) UtilJSF.getBean("varPlandetalle");          
         Integer coddetalle=Integer.parseInt(plansecciondetalle.getNumeral().substring(4, 5));
         plansecciondetallepk.setCodSeccionDetalle(coddetalle);           
-        UtilJSF.setBean("planDetalle", plansecciondetalle, UtilJSF.SESSION_SCOPE);      
-        this.plansecciondetalleadjuntos=new PlanSeccionDetalleAdjuntos();
-        this.plansecciondetalleadjuntospk=new PlanSeccionDetalleAdjuntosPK();
+        UtilJSF.setBean("planDetalle", plansecciondetalle, UtilJSF.SESSION_SCOPE);        
         this.cargarPlansecciondetalletexto();
         this.cargarPlansecciondetalleadjuntoList();        
                    
@@ -202,9 +200,12 @@ public class UIPlanDetalle implements Serializable{
     
     public void guardarSecciondetalleadjunto(){              
         try {                            
-            if(plansecciondetalleadjuntospk.getCodSeccionDetalleAdjuntos()==0){
-                UtilMSG.addSuccessMsg("Ingrese un indice para el adjunto");
+            PlanSeccionDetalleAdjuntos psda = (PlanSeccionDetalleAdjuntos) UtilJSF.getBean("planSecciondetalleadjunto");
+                        
+            if(psda==null || plansecciondetalleadjuntospk.getCodSeccionDetalleAdjuntos()==0){
+                plansecciondetalleadjuntospk.setCodSeccionDetalleAdjuntos(plansecciondetalleadjuntosList.size()+1);
             }            
+            
             PlanSeccion ps=(PlanSeccion) UtilJSF.getBean("planSeccion");            
             GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();                                    
             
