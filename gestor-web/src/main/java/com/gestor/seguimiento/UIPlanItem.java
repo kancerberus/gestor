@@ -67,8 +67,8 @@ public class UIPlanItem implements Serializable{
     public void subirItemPlansecciondetalleitem() {        
         PlanTitulo pt=(PlanTitulo) UtilJSF.getBean("planTitulo");
         plansecciondetalleitem = (PlanSeccionDetalleItem) UtilJSF.getBean("varPlanitem");           
-        Integer codDetalle=Integer.parseInt(plansecciondetalleitem.getNumeral().substring(6, 7));
-        plansecciondetalleitempk.setCodSeccionDetalle(codDetalle);   
+        Integer codItem=Integer.parseInt(plansecciondetalleitem.getNumeral().substring(6, 7));
+        plansecciondetalleitempk.setCodSeccionDetalleItem(codItem);           
         plansecciondetalleitem.getPlanSeccionDetalleItemPK().setCodTitulo(pt.getPlanTituloPK().getCodTitulo());
         plansecciondetalleitem.getPlanSeccionDetalleItemPK().setCodigoEstablecimiento(pt.getPlanTituloPK().getCodigoEstablecimiento());
         UtilJSF.setBean("planItem", plansecciondetalleitem, UtilJSF.SESSION_SCOPE);                
@@ -230,6 +230,26 @@ public class UIPlanItem implements Serializable{
                 UtilLog.generarLog(this.getClass(), e);
             }
         }        
+    }
+    
+    public void eliminarPlansecciondetalleitemadjunto(){
+        try{
+            plansecciondetalleitemadjuntos = (PlanSeccionDetalleItemAdjuntos) UtilJSF.getBean("varPlanitemadjunto");     
+            
+            GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();
+            
+            gestorPlanseccion.eliminarPlansecciondetalleitemadjunto(plansecciondetalleitemadjuntos);
+            
+            UtilMSG.addSuccessMsg("Adjunto eliminado correctamente.");            
+            this.cargarPlansecciondetalleitemadjuntoList();
+        }catch (Exception e) {
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getMessage());
+            } else {    
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }
+        }
     }
 
     public List<AdjuntosCategoria> getAdjuntosCategorias() {

@@ -209,7 +209,7 @@ public class UIPlanDetalle implements Serializable{
             GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();                                    
             
             PlanSeccionDetalleAdjuntos plsecciondetalleadjunto = new PlanSeccionDetalleAdjuntos(new PlanSeccionDetalleAdjuntosPK(ps.getPlanSeccionPK().getCodigoEstablecimiento(),
-                ps.getPlanSeccionPK().getCodTitulo(), ps.getPlanSeccionPK().getCodSeccion(), plansecciondetalle.getPlanSeccionDetallePK().getCodSeccionDetalle(), plansecciondetalleadjuntospk.getCodSeccionDetalleAdjuntos()) , plansecciondetalleadjuntos.getAdjuntosCategoria().getCodCategoria(),
+                ps.getPlanSeccionPK().getCodTitulo(), ps.getPlanSeccionPK().getCodSeccion(), plansecciondetallepk.getCodSeccionDetalle(), plansecciondetalleadjuntospk.getCodSeccionDetalleAdjuntos()) , plansecciondetalleadjuntos.getAdjuntosCategoria().getCodCategoria(),
                 plansecciondetalleadjuntos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo(), plansecciondetalleadjuntos.getTitulo(), plansecciondetalleadjuntos.getDescripcion(), plansecciondetalleadjuntos.getDocumento()                    
             );
            gestorPlanseccion.almacenarSecciondetalleadjunto(plsecciondetalleadjunto);
@@ -228,7 +228,27 @@ public class UIPlanDetalle implements Serializable{
             }
         }        
     }
-
+    
+    public void eliminarPlansecciondetalleadjunto(){
+        try{
+            plansecciondetalleadjuntos = (PlanSeccionDetalleAdjuntos) UtilJSF.getBean("varPlandetalleadjunto");     
+            
+            GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();
+            
+            gestorPlanseccion.eliminarPlansecciondetalleadjunto(plansecciondetalleadjuntos);
+            
+            UtilMSG.addSuccessMsg("Adjunto eliminado correctamente.");            
+            this.cargarPlansecciondetalleadjuntoList();
+        }catch (Exception e) {
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getMessage());
+            } else {    
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }
+        }
+    }
+    
     public List<AdjuntosCategoria> getAdjuntosCategorias() {
         return adjuntosCategorias;
     }

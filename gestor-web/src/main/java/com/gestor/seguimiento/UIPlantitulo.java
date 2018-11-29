@@ -195,6 +195,7 @@ public class UIPlantitulo implements Serializable{
             this.plantituloadjunto=new PlanTituloAdiuntos();
             this.plantituloadjuntopk=new PlanTituloAdiuntosPK();                        
             
+            
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());
@@ -203,6 +204,26 @@ public class UIPlantitulo implements Serializable{
                 UtilLog.generarLog(this.getClass(), e);
             }
         }        
+    }
+    
+    public void eliminarPlantituloadjunto(){
+        try{
+            plantituloadjunto = (PlanTituloAdiuntos) UtilJSF.getBean("varPlantituloadjunto");     
+            
+            GestorPlanTitulo gestorPlantitulo = new GestorPlanTitulo();
+            
+            gestorPlantitulo.eliminarPlantituloadjunto(plantituloadjunto);
+            
+            UtilMSG.addSuccessMsg("Adjunto eliminado correctamente.");            
+            this.cargarPlantituloadjuntolista();
+        }catch (Exception e) {
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getMessage());
+            } else {    
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }
+        }
     }
     
     public String regresar(){        

@@ -206,6 +206,26 @@ public class UIPlanSeccion implements Serializable{
         
     }
     
+    public void eliminarPlanseccionadjunto(){
+        try{
+            planseccionadjuntos = (PlanSeccionAdjuntos) UtilJSF.getBean("varPlanseccionadjunto");     
+            
+            GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();
+            
+            gestorPlanseccion.eliminarPlanseccionadjunto(planseccionadjuntos);
+            
+            UtilMSG.addSuccessMsg("Adjunto eliminado correctamente.");            
+            this.cargarPlanseccionadjuntosList();
+        }catch (Exception e) {
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getMessage());
+            } else {    
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }
+        }
+    }
+    
     public void guardarSeccionadjunto(){              
         try {     
             PlanSeccionAdjuntos psa = (PlanSeccionAdjuntos) UtilJSF.getBean("planSeccionadjunto");
