@@ -114,8 +114,7 @@ public class UIPlanSeccion implements Serializable{
 
     
     public void cargarPlansecciontexto() {        
-        try {
-            plansecciontexto.setTexto("");
+        try {            
             this.plansecciontextoList = new ArrayList<>();
             gestorPlanSeccion = new GestorPlanSeccion();
             this.plansecciontextoList.addAll((Collection<? extends PlanSeccionTexto>) gestorPlanSeccion.cargarPlanSecciontextoList(planseccion));                                 
@@ -163,9 +162,10 @@ public class UIPlanSeccion implements Serializable{
             
             gestorPlanseccion.validarPlanseccion(plseccion);
             gestorPlanseccion.almacenarSeccion(plseccion); 
-                                                
-            UtilMSG.addSuccessMsg("Seccion almacenado correctamente."); 
-            UtilJSF.setBean("planSeccion", new PlanSeccion(), UtilJSF.SESSION_SCOPE);            
+            
+            UtilJSF.setBean("varPlanseccion", plseccion, UtilJSF.SESSION_SCOPE);
+            UtilJSF.setBean("planSeccion", plseccion, UtilJSF.SESSION_SCOPE);
+            UtilMSG.addSuccessMsg("Seccion almacenado correctamente.");             
             this.cargarPlanseccionList();
             
         } catch (Exception e) {

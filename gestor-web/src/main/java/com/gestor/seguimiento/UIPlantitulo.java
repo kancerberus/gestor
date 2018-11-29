@@ -157,9 +157,9 @@ public class UIPlantitulo implements Serializable{
                                     
             gestorPlantitulo.validarPlantitulo(pltitulo);
             gestorPlantitulo.almacenarTitulo(pltitulo);
-
-            UtilMSG.addSuccessMsg("Titulo almacenado correctamente.");
-            UtilJSF.setBean("planTitulo", new PlanTitulo(), UtilJSF.SESSION_SCOPE);                                                
+            UtilJSF.setBean("varPlantitulo", pltitulo, UtilJSF.SESSION_SCOPE);
+            UtilJSF.setBean("planTitulo", pltitulo, UtilJSF.SESSION_SCOPE);
+            UtilMSG.addSuccessMsg("Titulo almacenado correctamente.");            
             this.cargarPlantitulolista();
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {

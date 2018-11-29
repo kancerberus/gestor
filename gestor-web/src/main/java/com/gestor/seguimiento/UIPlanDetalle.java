@@ -156,11 +156,12 @@ public class UIPlanDetalle implements Serializable{
             );            
             
             gestorPlanseccion.validarPlansecciondetalle(plsecciondetalle);
-            gestorPlanseccion.almacenarSecciondetalle(plsecciondetalle);                    
-            this.cargarPlansecciondetalleList();
+            gestorPlanseccion.almacenarSecciondetalle(plsecciondetalle); 
             
-            UtilMSG.addSuccessMsg("Titulo Detalle almacenado correctamente.");                                 
-            UtilJSF.setBean("planDetalle", new PlanSeccionDetalle(), UtilJSF.SESSION_SCOPE);                                    
+            UtilJSF.setBean("varPlandetalle", plsecciondetalle, UtilJSF.SESSION_SCOPE);
+            UtilJSF.setBean("planDetalle", plsecciondetalle, UtilJSF.SESSION_SCOPE);
+            this.cargarPlansecciondetalleList();            
+            UtilMSG.addSuccessMsg("Titulo Detalle almacenado correctamente.");                                             
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());

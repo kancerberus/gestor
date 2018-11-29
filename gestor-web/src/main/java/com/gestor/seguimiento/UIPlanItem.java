@@ -157,8 +157,9 @@ public class UIPlanItem implements Serializable{
             gestorPlanseccion.validarPlansecciondetalleitem(plsecciondetalleitem);
             gestorPlanseccion.almacenarSecciondetalleitem(plsecciondetalleitem);                    
             
-            UtilMSG.addSuccessMsg("Titulo Item almacenado correctamente.");                                 
-            UtilJSF.setBean("planItem", new PlanSeccionDetalle(), UtilJSF.SESSION_SCOPE);                        
+            UtilJSF.setBean("varPlanitem", plsecciondetalleitem, UtilJSF.SESSION_SCOPE);
+            UtilJSF.setBean("planItem", plsecciondetalleitem, UtilJSF.SESSION_SCOPE);
+            UtilMSG.addSuccessMsg("Titulo Item almacenado correctamente.");                                             
             this.cargarPlansecciondetalleitemList();
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
