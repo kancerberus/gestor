@@ -168,6 +168,44 @@ public class GestorPlanSeccion extends Gestor implements Serializable{
         }
     }
     
+    public void eliminarPlanseccionadjunto(PlanSeccionAdjuntos planseccionadjunto) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            PlanSeccionAdjuntosDAO planseccionadjuntoDAO = new PlanSeccionAdjuntosDAO(conexion);
+            planseccionadjuntoDAO.eliminarPlanseccionadjunto(planseccionadjunto);
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public void eliminarPlansecciondetalleadjunto(PlanSeccionDetalleAdjuntos plansecciondetalleadjunto) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            PlanSeccionDetalleAdjuntosDAO plansecciondetalleadjuntoDAO = new PlanSeccionDetalleAdjuntosDAO(conexion);
+            plansecciondetalleadjuntoDAO.eliminarPlansecciondetalleadjunto(plansecciondetalleadjunto);
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }    
+    
+    public void eliminarPlansecciondetalleitemadjunto(PlanSeccionDetalleItemAdjuntos plansecciondetalleitemadjunto) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            PlanSeccionDetalleItemAdjuntosDAO plansecciondetalleitemadjuntoDAO = new PlanSeccionDetalleItemAdjuntosDAO(conexion);
+            plansecciondetalleitemadjuntoDAO.eliminarPlansecciondetalleitemadjunto(plansecciondetalleitemadjunto);
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    
+    
     public void almacenarSecciondetalletexto(PlanSeccionDetalleTexto plansecciondetalletexto) throws Exception {
         try {
             this.abrirConexion();
@@ -227,6 +265,7 @@ public class GestorPlanSeccion extends Gestor implements Serializable{
             this.cerrarConexion();
         }
     }
+    
     
     
     public Collection<? extends PlanSeccionTexto> cargarPlanSecciontextoList(PlanSeccion planseccion) throws Exception {

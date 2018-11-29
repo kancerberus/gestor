@@ -94,6 +94,30 @@ public class PlanSeccionDetalleItemAdjuntosDAO {
             }
         }
     }
+    
+    public void eliminarPlansecciondetalleitemadjunto(PlanSeccionDetalleItemAdjuntos plansecciondetalleitemadjuntos) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE "
+                    + " FROM seguimiento.plan_seccion_detalle_item_adjuntos "
+                    + " WHERE codigo_establecimiento='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodigoEstablecimiento()+"' AND "
+                    + " cod_titulo='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodTitulo()+"' AND "
+                    + " cod_seccion='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccion()+"' AND "
+                    + " cod_seccion_detalle='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccionDetalle()+"' AND "
+                    + " cod_seccion_detalle_item='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccionDetalleItem()+"' AND "
+                    + " cod_seccion_detalle_item_adjuntos='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccionDetalleItemAdjuntos()+"' "
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    
 
     
 

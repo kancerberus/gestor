@@ -93,7 +93,26 @@ public class PlanSeccionDetalleAdjuntosDAO {
             }
         }
     }
-
     
+    public void eliminarPlansecciondetalleadjunto(PlanSeccionDetalleAdjuntos plansecciondetalleadjuntos) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE "
+                    + " FROM seguimiento.plan_seccion_detalle_adjuntos "
+                    + " WHERE codigo_establecimiento='"+plansecciondetalleadjuntos.getPlanSeccionDetalleAdjuntosPK().getCodigoEstablecimiento()+"' AND "
+                    + "cod_titulo='"+plansecciondetalleadjuntos.getPlanSeccionDetalleAdjuntosPK().getCodTitulo()+"' AND "
+                    + "cod_seccion='"+plansecciondetalleadjuntos.getPlanSeccionDetalleAdjuntosPK().getCodSeccion()+"' AND "
+                    + "cod_seccion_detalle='"+plansecciondetalleadjuntos.getPlanSeccionDetalleAdjuntosPK().getCodSeccionDetalle()+"' AND "
+                    + "cod_seccion_detalle_adjuntos='"+plansecciondetalleadjuntos.getPlanSeccionDetalleAdjuntosPK().getCodSeccionDetalleAdjuntos()+"' "
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 
 }

@@ -103,6 +103,27 @@ public class PlanTituloAdiuntosDAO {
             }
         }
     }
+    
+    public void eliminarPlantituloadjunto(PlanTituloAdiuntos plantituloadjuntos) throws SQLException {
+        Consulta consulta = null;  
+        try {                                      
+        
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE"
+                    + " FROM seguimiento.plan_titulo_adiuntos "
+                    + " WHERE  codigo_establecimiento='"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodigoEstablecimiento()+"' AND "
+                    + " cod_titulo='"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodTitulo()+"' AND cod_titulo_adjunto='"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodTituloAdjunto()+"'"
+                    
+            );
+            consulta.actualizar(sql);            
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
         
     public Collection<? extends PlanTituloAdiuntos> cargarPlanTituloAdiuntosList(PlanTituloPK planTituloPK, Long codEvaluacion) throws SQLException {
         ResultSet rs = null;
