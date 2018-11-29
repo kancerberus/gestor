@@ -58,7 +58,7 @@
                     </p:columnGroup >
                     <p:column >
                         
-                        <p:commandButton icon="ui-icon-radio" title="Seleccionar Seccion" update="formDetalle" 
+                        <p:commandButton icon="ui-icon-check" title="Seleccionar Seccion" update="formDetalle" 
                                          action="#{uiPlandetalle.subirItemPlansecciondetalle()}" >                                                                                    
                             <f:actionListener binding= "#{uiPlanitem.cargarPlansecciondetalleitem()}"/>                            
                         </p:commandButton>
@@ -138,8 +138,10 @@
                     </p:columnGroup>
                     
                     <p:column>
-                        <p:commandButton icon="ui-icon-check" title="Modificar Titulo Texto" update="formDetalle"
+                        <p:commandButton icon="ui-icon-check" title="Modificar Adjunto" update="formDetalle"
                                          action="#{uiPlandetalle.subirItemPlansecciondetalleadjunto()}"/>
+                        <p:commandButton icon="ui-icon-trash" title="Eliminar Adjunto" update="formDetalle"
+                                         action="#{uiPlandetalle.eliminarPlansecciondetalleadjunto()}"/>
                     </p:column>
                     
                     <p:column>

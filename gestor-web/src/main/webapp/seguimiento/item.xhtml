@@ -75,7 +75,7 @@
                     </p:columnGroup >
                     <p:column >
                         
-                        <p:commandButton icon="ui-icon-radio" title="Seleccionar Item" update="formItem" 
+                        <p:commandButton icon="ui-icon-check" title="Seleccionar Item" update="formItem" 
                                          action="#{uiPlanitem.subirItemPlansecciondetalleitem()}" >                                                        
                         </p:commandButton>
                             
@@ -88,7 +88,7 @@
                     </p:column>                    
                 </p:dataTable>
                 <br/>
-                <h:panelGrid columns="3">
+                <h:panelGrid columns="2">
                     <p:inputMask mask="9" value="#{uiPlanitem.plansecciondetalleitempk.codSeccionDetalleItem}" placeholder="Numeral" />                    
                     <p:inputText value="#{uiPlanitem.plansecciondetalleitem.nombre}" placeholder="Nombre" />                              
                 </h:panelGrid>
@@ -159,6 +159,8 @@
                     <p:column>
                         <p:commandButton icon="ui-icon-check" title="Modificar Titulo Texto" update="formItem"
                                          action="#{uiPlanitem.subirItemPlanitemadjunto()}"/>
+                        <p:commandButton icon="ui-icon-trash" title="Eliminar Adjunto" update="formItem"
+                                         action="#{uiPlanitem.eliminarPlansecciondetalleitemadjunto()}"/>
                     </p:column>
                     
                     <p:column>
