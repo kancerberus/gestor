@@ -206,6 +206,30 @@ public class UIPlantitulo implements Serializable{
         }        
     }
     
+    public void guardarTitulotexto(){                
+         
+        try {          
+            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
+            GestorPlanTitulo gestorPlantitulo = new GestorPlanTitulo();                                    
+            plantitulotextopk.setCodTituloTexto(1);               
+            
+            PlanTituloTexto pltitulotexto = new PlanTituloTexto(new PlanTituloTextoPK(
+            e.getEstablecimiento().getCodigoEstablecimiento(), plantitulo.getPlanTituloPK().getCodTitulo(),plantitulotextopk.getCodTituloTexto()), plantitulotexto.getTexto());                                   
+            gestorPlantitulo.almacenarTitulotexto(pltitulotexto);            
+            
+            UtilMSG.addSuccessMsg("Texto almacenado correctamente.");            
+            
+        } catch (Exception e) {
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getMessage());
+            } else {    
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }
+        }
+        
+    }
+    
     public void eliminarPlantituloadjunto(){
         try{
             plantituloadjunto = (PlanTituloAdiuntos) UtilJSF.getBean("varPlantituloadjunto");     
@@ -264,30 +288,7 @@ public class UIPlantitulo implements Serializable{
        return ("/seguimiento/administrar-plan-maestro-evaluaciones.xhtml?faces-redirect=true");                           
     }
     
-    public void guardarTitulotexto(){                
-         
-        try {          
-            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
-            GestorPlanTitulo gestorPlantitulo = new GestorPlanTitulo();                                    
-            plantitulotextopk.setCodTituloTexto(1);               
-            
-            PlanTituloTexto pltitulotexto = new PlanTituloTexto(new PlanTituloTextoPK(
-            e.getEstablecimiento().getCodigoEstablecimiento(), plantitulo.getPlanTituloPK().getCodTitulo(),plantitulotextopk.getCodTituloTexto()), plantitulotexto.getTexto());                                   
-            gestorPlantitulo.almacenarTitulotexto(pltitulotexto);            
-            
-            UtilMSG.addSuccessMsg("Texto almacenado correctamente.");
-            UtilJSF.setBean("planTitulo", new PlanTitulo(), UtilJSF.SESSION_SCOPE); 
-            
-        } catch (Exception e) {
-            if (UtilLog.causaControlada(e)) {
-                UtilMSG.addWarningMsg(e.getMessage());
-            } else {    
-                UtilMSG.addSupportMsg();
-                UtilLog.generarLog(this.getClass(), e);
-            }
-        }
         
-    }    
 
     public List<AdjuntosCategoria> getAdjuntosCategorias() {
         return adjuntosCategorias;

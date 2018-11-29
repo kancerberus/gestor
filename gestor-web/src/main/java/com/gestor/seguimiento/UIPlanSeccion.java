@@ -190,8 +190,7 @@ public class UIPlanSeccion implements Serializable{
             );
             gestorPlanseccion.almacenarSecciontexto(plsecciontexto);            
             
-            UtilMSG.addSuccessMsg("Texto almacenado correctamente.");
-            UtilJSF.setBean("planSeccion", new PlanSeccion(), UtilJSF.SESSION_SCOPE); 
+            UtilMSG.addSuccessMsg("Texto almacenado correctamente.");            
             this.cargarPlansecciontexto();
             
             
