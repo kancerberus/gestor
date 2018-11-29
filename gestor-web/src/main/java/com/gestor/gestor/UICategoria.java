@@ -227,7 +227,7 @@ public class UICategoria implements Serializable{
             
             UtilMSG.addSuccessMsg("Categoria eliminada.");
         } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
+            UtilMSG.addSuccessMsg("Categoria en uso.");
         }
     }
     
