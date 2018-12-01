@@ -74,11 +74,11 @@ public class EvaluacionPlanAccionDAO {
                     "INSERT INTO gestor.evaluacion_plan_accion_detalle("
                     + " cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle,"
                     + " cod_ciclo, cod_seccion, cod_detalle, cod_item, nombre, descripcion,"
-                    + " estado, documento_usuario, cedula)"
+                    + " estado, fecha_plazo, documento_usuario, cedula)"
                     + " VALUES (" + epd.getEvaluacionPlanAccionDetallePK().getCodEvaluacion() + ", " + epd.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento()
                     + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlan()
                     + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle() + ", '" + epd.getCodCiclo() + "', " + epd.getCodSeccion() + ", " + epd.getCodDetalle()
-                    + " ," + epd.getCodItem() + ", '" + epd.getNombre() + "', '" + epd.getDescripcion() + "', '" + epd.getEstado() + "','" + epd.getDocumentoUsuario() + "','" + epd.getResponsable().getCedula() + "');"
+                    + " ," + epd.getCodItem() + ", '" + epd.getNombre() + "', '" + epd.getDescripcion() + "', '" + epd.getEstado() + "','"+epd.getFechaPlazo()+"','" + epd.getDocumentoUsuario() + "','" + epd.getResponsable().getCedula() + "');"
             );
             consulta.actualizar(sql);
         } finally {
@@ -96,7 +96,7 @@ public class EvaluacionPlanAccionDAO {
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_evaluacion, EPAD.codigo_establecimiento, cod_plan, cod_plan_detalle,"
                     + " cod_ciclo, cod_seccion, cod_detalle, cod_item, EPAD.nombre, descripcion,"
-                    + " EPAD.estado, EPAD.fecha_registro,"
+                    + " EPAD.estado, EPAD.fecha_registro, EPAD.fecha_plazo,"
                     + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario,"
                     + " R.cedula r_cedula, R.nombres r_nombres, R.apellidos r_apellidos, R.telefono r_telefono, R.correo r_correo, R.estado r_estado, R.codigo_establecimiento r_codigo_establecimiento"
                     + " FROM gestor.evaluacion_plan_accion_detalle EPAD"
@@ -114,7 +114,7 @@ public class EvaluacionPlanAccionDAO {
                         new Usuarios(
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
                         ), rs.getDate("fecha_registro"
-                        )
+                        ), rs.getDate("fecha_plazo")
                 );
                 epad.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));
 
@@ -204,7 +204,7 @@ public class EvaluacionPlanAccionDAO {
             StringBuilder sql = new StringBuilder(
                     " SELECT EPAD.cod_evaluacion, EPAD.codigo_establecimiento, EPAD.cod_plan, EPAD.cod_plan_detalle,"
                     + " EPAD.cod_ciclo, EPAD.cod_seccion, EPAD.cod_detalle, EPAD.cod_item, EPAD.nombre AS epad_nombre, EPAD.descripcion,"
-                        + " EPAD.estado, EPAD.fecha_registro,"
+                    + " EPAD.estado, EPAD.fecha_registro, EPAD.fecha_plazo,"
                     + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario,"
                     + " SDI.cod_item AS sdi_cod_item, SDI.nombre AS sdi_nombre, SDI.detalle AS sdi_detalle, SDI.peso AS sdi_peso, SDI.activo AS sdi_activo, SDI.imagen AS sdi_imagen, SDI.orden AS sdi_orden, SDI.numeral AS sdi_numeral,"
                     + " SD.cod_detalle AS sd_cod_detalle, SD.nombre AS sd_nombre, SD.detalle AS sd_detalle, SD.orden AS sd_orden, SD.peso AS sd_peso, SD.imagen AS sd_imagen, SD.activo AS sd_activo, SD.numeral AS sd_numeral,"
@@ -236,7 +236,7 @@ public class EvaluacionPlanAccionDAO {
                         new Usuarios(
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
                         ), rs.getDate("fecha_registro"
-                        )
+                        ), rs.getDate("fecha_plazo")
                 );
                 epad.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));
 
