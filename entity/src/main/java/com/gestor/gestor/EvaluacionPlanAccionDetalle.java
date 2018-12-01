@@ -60,6 +60,8 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private String nombre;
     @Column(name = "descripcion")
     private String descripcion;
+    @Column(name = "fecha_plazo")
+    private Date fechaPlazo;
     @Basic(optional = false)
     @Column(name = "estado")
     private String estado;
@@ -70,6 +72,10 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private Usuarios usuarios;
 
     private Date fechaRegistro;
+    
+    
+    
+    
 
     private SeccionDetalleItems seccionDetalleItems;
     private Evaluacion evaluacion;
@@ -93,7 +99,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.evaluacionPlanAccionDetallePK = new EvaluacionPlanAccionDetallePK(codEvaluacion, codigoEstablecimiento, codPlan, codPlanDetalle);
     }
 
-    public EvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK, String codCiclo, Integer codSeccion, Integer codDetalle, Integer codItem, String nombre, String descripcion, String estado, Usuarios usuarios, Date fechaRegistro) {
+    public EvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK, String codCiclo, Integer codSeccion, Integer codDetalle, Integer codItem, String nombre, String descripcion, String estado, Usuarios usuarios, Date fechaRegistro, Date fechaPlazo) {
         this.evaluacionPlanAccionDetallePK = evaluacionPlanAccionDetallePK;
         this.codCiclo = codCiclo;
         this.codSeccion = codSeccion;
@@ -104,6 +110,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.estado = estado;
         this.usuarios = usuarios;
         this.fechaRegistro = fechaRegistro;
+        this.fechaPlazo = fechaPlazo;
     }
 
     public EvaluacionPlanAccionDetallePK getEvaluacionPlanAccionDetallePK() {
@@ -208,6 +215,14 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
      */
     public void setFechaRegistro(Date fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
+    }
+
+    public Date getFechaPlazo() {
+        return fechaPlazo;
+    }
+
+    public void setFechaPlazo(Date fechaPlazo) {
+        this.fechaPlazo = fechaPlazo;
     }
 
     /**
