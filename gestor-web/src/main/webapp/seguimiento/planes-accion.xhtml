@@ -140,6 +140,11 @@
                 <p:column headerText="Descripción" filterBy="#{varPlanAccionDetalle.descripcion}" >
                     <h:outputText value="#{varPlanAccionDetalle.descripcion}" />
                 </p:column>
+                <p:column headerText="Fecha Vencimiento" filterBy="#{varPlanAccionDetalle.fechaPlazo}">
+                    <h:outputText value="#{varPlanAccionDetalle.fechaPlazo}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
 
                 <p:column headerText="Estado"
                           filterBy="#{varPlanAccionDetalle.estado}"

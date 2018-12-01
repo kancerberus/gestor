@@ -160,7 +160,10 @@ public class UIPlantitulo implements Serializable{
             UtilJSF.setBean("varPlantitulo", pltitulo, UtilJSF.SESSION_SCOPE);
             UtilJSF.setBean("planTitulo", pltitulo, UtilJSF.SESSION_SCOPE);
             UtilMSG.addSuccessMsg("Titulo almacenado correctamente.");            
-            this.cargarPlantitulolista();
+            this.cargarPlantitulolista();            
+            this.plantitulotexto=new PlanTituloTexto();
+            this.plantituloadjunto=new PlanTituloAdiuntos();
+            this.plantituloadjuntoList.clear();
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());

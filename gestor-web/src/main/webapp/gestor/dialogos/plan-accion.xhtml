@@ -31,6 +31,9 @@
                         <f:selectItems value="#{uiPlanAccion.responsables}" var="res" itemValue="#{res}" itemLabel="#{res.nombresApellidos}" />
                         <p:ajax event="change" process="@this"/>
                     </p:selectOneMenu>
+                    
+                    <h:outputLabel  style="font-weight: bold;" value="Fecha Vencimiento" />
+                    <p:calendar  value="#{evaluacionPlanAccionDetalle.fechaPlazo}" pattern="dd-MM-yyyy" mask="true" />
 
                 </h:panelGrid>  
 
@@ -49,6 +52,7 @@
                             <p:column  headerText="Usuario" filterBy="#{varPlanAccionDetalle.usuarios.usuario}"/>
                             <p:column  headerText="Estado" filterBy="#{varPlanAccionDetalle.estado}"/>
                             <p:column  headerText="Responsable" filterBy="#{varPlanAccionDetalle.responsable.nombresApellidos}"/>
+                            <p:column  headerText="Fecha vencicmiento" filterBy="#{varPlanAccionDetalle.fechaPlazo}"/>
                         </p:row> 
                     </p:columnGroup>
 
@@ -80,7 +84,11 @@
                     <p:column>
                         <h:outputText value="#{varPlanAccionDetalle.responsable.nombresApellidos}"/>
                     </p:column>
-
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.fechaPlazo}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
 
                 </p:dataTable>
 

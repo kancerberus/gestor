@@ -119,6 +119,7 @@ public class UIPlanDetalle implements Serializable{
     }
     
     public void cargarPlansecciondetalleadjuntoList() {        
+        plansecciondetalle = (PlanSeccionDetalle) UtilJSF.getBean("varPlandetalle");          
         try {            
             this.plansecciondetalleadjuntosList = new ArrayList<>();
             gestorPlanSeccion = new GestorPlanSeccion();
@@ -161,6 +162,9 @@ public class UIPlanDetalle implements Serializable{
             UtilJSF.setBean("varPlandetalle", plsecciondetalle, UtilJSF.SESSION_SCOPE);
             UtilJSF.setBean("planDetalle", plsecciondetalle, UtilJSF.SESSION_SCOPE);
             this.cargarPlansecciondetalleList();            
+            this.plansecciondetalletexto= new PlanSeccionDetalleTexto();
+            this.plansecciondetalleadjuntos=new PlanSeccionDetalleAdjuntos();
+            this.plansecciondetalleadjuntosList.clear();
             UtilMSG.addSuccessMsg("Titulo Detalle almacenado correctamente.");                                             
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
@@ -214,11 +218,10 @@ public class UIPlanDetalle implements Serializable{
             );
            gestorPlanseccion.almacenarSecciondetalleadjunto(plsecciondetalleadjunto);
             
-            UtilMSG.addSuccessMsg("Adjunto almacenado correctamente.");
-            UtilJSF.setBean("planDetalle", new PlanSeccionDetalle(), UtilJSF.SESSION_SCOPE);
+            UtilMSG.addSuccessMsg("Adjunto almacenado correctamente.");                        
             this.cargarPlansecciondetalleadjuntoList();
-            this.plansecciondetalleadjuntos=new PlanSeccionDetalleAdjuntos();
-            this.plansecciondetalleadjuntospk=new PlanSeccionDetalleAdjuntosPK();
+            
+            
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());

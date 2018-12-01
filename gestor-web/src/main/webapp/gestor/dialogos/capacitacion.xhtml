@@ -30,6 +30,9 @@
                         <f:selectItems value="#{uiCapacitacion.responsables}" var="res" itemValue="#{res}" itemLabel="#{res.nombresApellidos}" />
                         <p:ajax event="change" process="@this"/>
                     </p:selectOneMenu>
+                    
+                    <h:outputLabel  style="font-weight: bold;" value="Fecha Vencimiento" />
+                    <p:calendar  value="#{evaluacionCapacitacionDetalle.fechaPlazo}" pattern="dd-MM-yyyy" mask="true" />
 
                 </h:panelGrid>
 
@@ -48,6 +51,7 @@
                             <p:column  headerText="Usuario" filterBy="#{varCapacitacionDetalle.usuarios.usuario}"/>
                             <p:column  headerText="Estado" filterBy="#{varCapacitacionDetalle.estado}"/>
                             <p:column  headerText="Responsable" filterBy="#{varCapacitacionDetalle.responsable.nombresApellidos}"/>
+                            <p:column  headerText="Fecha vencimiento" filterBy="#{varCapacitacionDetalle.fechaPlazo}"/>
                         </p:row> 
                     </p:columnGroup>
 
@@ -79,7 +83,11 @@
                     <p:column>
                         <h:outputText value="#{varCapacitacionDetalle.responsable.nombresApellidos}"/>
                     </p:column>
-
+                    <p:column>
+                        <h:outputText value="#{varCapacitacionDetalle.fechaRegistro}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
 
                 </p:dataTable>
 

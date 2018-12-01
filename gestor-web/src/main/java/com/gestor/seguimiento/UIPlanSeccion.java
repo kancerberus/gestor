@@ -134,7 +134,8 @@ public class UIPlanSeccion implements Serializable{
         }
     }    
     
-    public void cargarPlanseccionadjuntosList() {        
+    public void cargarPlanseccionadjuntosList() {    
+        planseccion = (PlanSeccion) UtilJSF.getBean("varPlanseccion");                     
         try {            
             this.planseccionadjuntosList = new ArrayList<>();
             gestorPlanSeccion = new GestorPlanSeccion();
@@ -167,6 +168,10 @@ public class UIPlanSeccion implements Serializable{
             UtilJSF.setBean("planSeccion", plseccion, UtilJSF.SESSION_SCOPE);
             UtilMSG.addSuccessMsg("Seccion almacenado correctamente.");             
             this.cargarPlanseccionList();
+            this.cargarAdjuntosCategoriaTipo();
+            this.plansecciontexto= new PlanSeccionTexto();
+            this.planseccionadjuntos=new PlanSeccionAdjuntos();
+            this.planseccionadjuntosList.clear();
             
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
@@ -232,14 +237,16 @@ public class UIPlanSeccion implements Serializable{
             GestorPlanSeccion gestorPlanseccion = new GestorPlanSeccion();                                    
             
             PlanSeccionAdjuntos plseccionadjunto = new PlanSeccionAdjuntos(new PlanSeccionAdjuntosPK(pt.getPlanTituloPK().getCodigoEstablecimiento(), 
-                planseccion.getPlanSeccionPK().getCodTitulo(), planseccion.getPlanSeccionPK().getCodSeccion() ,planseccionadjuntospk.getCodSeccionAdjunto()),  planseccionadjuntos.getAdjuntosCategoria().getCodCategoria(),
+                pt.getPlanTituloPK().getCodTitulo(), planseccionpk.getCodSeccion() ,planseccionadjuntospk.getCodSeccionAdjunto()),  planseccionadjuntos.getAdjuntosCategoria().getCodCategoria(),
                 planseccionadjuntos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo(), planseccionadjuntos.getTitulo(), planseccionadjuntos.getDescripcion(), planseccionadjuntos.getDocumento()                    
             );
            gestorPlanseccion.almacenarSeccionadjunto(plseccionadjunto);
             
-            UtilMSG.addSuccessMsg("Adjunto almacenado correctamente.");
-            UtilJSF.setBean("planSeccion", new PlanSeccion(), UtilJSF.SESSION_SCOPE);
-            this.cargarPlanseccionadjuntosList();            
+            UtilMSG.addSuccessMsg("Adjunto almacenado correctamente.");            
+            UtilJSF.setBean("planSeccionadjunto", new PlanSeccionAdjuntos(), UtilJSF.SESSION_SCOPE);            
+            this.cargarPlanseccionadjuntosList();
+            this.planseccionadjuntos=new PlanSeccionAdjuntos();
+            this.planseccionadjuntospk=new PlanSeccionAdjuntosPK();                                 
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());
