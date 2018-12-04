@@ -73,7 +73,7 @@ public class UIPlanAccion {
     private String responsable;
     private Date fechaPlanInicio;
     private Date fechaPlanFin;
-    
+
     private List<Responsable> responsables = new ArrayList<>();
 
     public UIPlanAccion() {
@@ -160,6 +160,7 @@ public class UIPlanAccion {
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlan(),
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()
             );
+            evaluacionPlanAccionDetalle.setEvaluacionPlanAccionDetalleNotasList(new ArrayList<EvaluacionPlanAccionDetalleNotas>());
             evaluacionPlanAccionDetalle.setEvaluacionPlanAccionDetalleNotasList(gestorEvaluacionPlanAccion.cargarEvaluacionPlanAccionDetalleNotasList(pk));
 
         } catch (Exception e) {
@@ -193,6 +194,22 @@ public class UIPlanAccion {
             UtilLog.generarLog(this.getClass(), e);
         }
 
+    }
+
+    public void cerrarPlanAccionDetalle() {
+        try {
+            Sesion s = (Sesion) UtilJSF.getBean("sesion");
+            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
+            evaluacionPlanAccionDetalle = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("varPlanAccionDetalle");
+            evaluacionPlanAccionDetalle.setDocumentoUsuario(s.getUsuarios().getUsuariosPK().getDocumentoUsuario());
+            evaluacionPlanAccionDetalle.setEstado(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_CERRADO);
+            
+            gestorEvaluacionPlanAccion.cerrarPlanAccionDetalle(evaluacionPlanAccionDetalle);
+            UtilJSF.update("formPlanesAccion");
+            UtilMSG.addSuccessMsg("Plan Acción Finalizado", "Se finalizo el Plan Acción # " + evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle());
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
     }
 
     private List<String> filtrarOpcionesSeleccionadas() {
@@ -547,10 +564,10 @@ public class UIPlanAccion {
         try {
             Sesion sesion = (Sesion) UtilJSF.getBean("sesion");
             this.sdiSeleccionado = (SeccionDetalleItems) UtilJSF.getBean("varSeccionDetalleItems");
-            
+
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             GestorResponsable gestorResponsable = new GestorResponsable();
-            
+
             evaluacionPlanAccionDetalles = new ArrayList<>();
             evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
                     sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodEvaluacion(),
@@ -560,7 +577,7 @@ public class UIPlanAccion {
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodDetalle(),
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem()
             ));
-            
+
             responsables = new ArrayList<>();
             List<String> condicionesConsulta = new ArrayList<>();
             condicionesConsulta.add(App.CONDICION_WHERE);
@@ -568,7 +585,7 @@ public class UIPlanAccion {
             responsables.addAll(gestorResponsable.cargarListaResponsable(
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
             ));
-            
+
             List<Responsable> responsablesSisgapp = new ArrayList<>();
             for (Responsable rs : sesion.getResponsables()) {
                 for (Responsable r : responsables) {
@@ -577,7 +594,7 @@ public class UIPlanAccion {
                     }
                 }
             }
-            if(!responsablesSisgapp.isEmpty()){
+            if (!responsablesSisgapp.isEmpty()) {
                 responsables.addAll(responsablesSisgapp);
             }
 

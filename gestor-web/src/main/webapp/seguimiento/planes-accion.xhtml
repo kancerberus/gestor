@@ -41,7 +41,10 @@
                             <f:selectItems value="#{uiPlanAccion.establecimientoList}" var="varEmpresa" itemLabel="#{varEmpresa.nombre}" itemValue="#{varEmpresa}" />
 
                             <p:column>
-                                <p:graphicImage url="/resources/imagenes/establecimientos/#{t.nombre.toLowerCase()}.png" width="70%"/> 
+                                <h:graphicImage value="data:image/jpg;base64,#{t.logo}" rendered="#{not empty t.logo}"
+                                                width="70%"/>
+                                <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" width="70%" 
+                                                title="#{t.nombre}" rendered="#{empty t.logo}"/> 
                             </p:column>
 
                             <p:column>
@@ -96,7 +99,8 @@
                 <p:column headerText="Opciones" filterBy="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codEvaluacion}">
                     <p:panelGrid>
                         <p:commandButton icon="ui-icon-clipboard" title="Notas" action="#{uiPlanAccion.mostrarNotaSeguimiento()}" update=":formPlanesAccion:dialog"/>
-                        <p:commandButton icon="ui-icon-disk" title="Finalizar" rendered="#{varPlanAccionDetalle.estado eq 'A'}"/>
+                        <p:commandButton icon="ui-icon-disk" title="Finalizar" rendered="#{varPlanAccionDetalle.estado eq 'A'}"
+                                         action="#{uiPlanAccion.cerrarPlanAccionDetalle()}"/>
                     </p:panelGrid>
                 </p:column>
                 <p:column headerText="Código" filterBy="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codEvaluacion}">

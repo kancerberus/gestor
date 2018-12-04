@@ -40,7 +40,7 @@ public class UIPlanDetalle implements Serializable{
     private List<PlanSeccionDetalleAdjuntos> plansecciondetalleadjuntosList = new ArrayList<>();   
     private List<AdjuntosCategoria> adjuntosCategorias = new ArrayList<>();
     
-    
+        
     @PostConstruct
     public void init() {           
         this.cargarPlansecciondetalle();

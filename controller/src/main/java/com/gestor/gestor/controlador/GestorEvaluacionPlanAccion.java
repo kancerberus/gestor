@@ -142,4 +142,14 @@ public class GestorEvaluacionPlanAccion extends Gestor {
             this.cerrarConexion();
         }
     }
+
+    public void cerrarPlanAccionDetalle(EvaluacionPlanAccionDetalle epad) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionPlanAccionDAO evaluacionPlanAccionDAO = new EvaluacionPlanAccionDAO(conexion);
+            evaluacionPlanAccionDAO.actualizarEstadoEvaluacionPlanAccionDetalle(epad);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
 }

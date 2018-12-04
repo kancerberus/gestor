@@ -44,6 +44,9 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_RESPONSABLE = "EPAD.responsable ILIKE (?)";
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_FECHA_REGISTRO_GTE = "EPAD.fecha_registro::DATE >= ?";
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_FECHA_REGISTRO_LTE = "EPAD.fecha_registro::DATE <= ?";
+    
+    public static String EVALUACION_PLAN_ACCION_DETALLE_ESTADO_CERRADO = "C";
+    
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
