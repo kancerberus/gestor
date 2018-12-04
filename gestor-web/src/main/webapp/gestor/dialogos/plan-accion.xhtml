@@ -103,7 +103,10 @@
             <p:toolbarGroup align="center" style="margin: auto auto;  align-content: center">
                 <h:panelGrid columns="3" cellspacing="10" style="align-content: center; display: inline-block;">
                     <p:commandButton value="Generar Plan Acción" icon="ui-icon-disk" action="#{uiPlanAccion.procesarPlanAccion()}" process="@parent pgPlanAccion" update="pgPlanAccion dtPlanAccionDetalle"
-                                     rendered="#{not uiPlanAccion.modificarActivo}"/>
+                                     rendered="#{not uiPlanAccion.modificarActivo}">
+                        <f:actionListener binding="#{uiPlanAccion.enviarCorreo()}"/>
+                    </p:commandButton>
+                        
                     <p:commandButton value="Modificar Plan Acción" icon="ui-icon-disk" action="#{uiPlanAccion.procesarPlanAccionModificar()}" 
                                      process="@parent pgPlanAccion" update="pgPlanAccion dtPlanAccionDetalle opcionesMenuPlanAccion"
                                      rendered="#{uiPlanAccion.modificarActivo}"/>
@@ -113,16 +116,6 @@
                 </h:panelGrid>
             </p:toolbarGroup>
         </p:toolbar> 
-
-
-
-
-
-
     </div>
-
-
-
-
 
 </ui:composition>

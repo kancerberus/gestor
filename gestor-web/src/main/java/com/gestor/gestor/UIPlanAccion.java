@@ -20,13 +20,26 @@ import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.controlador.GestorResponsable;
 import com.gestor.publico.controlador.GestorUsuario;
+import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeBodyPart;
+import com.sun.xml.internal.ws.api.message.Attachment;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 /**
  *
@@ -432,6 +445,103 @@ public class UIPlanAccion {
         }
 
     }
+    
+    public void enviarCorreo(){
+        final String username = "frvc2891@gmail.com";
+        final String password = "solutech2018";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(props,
+          new javax.mail.Authenticator() {
+              @Override
+              protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password);
+              }
+          });
+
+        try {
+            EvaluacionPlanAccionDetalle epd = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("evaluacionPlanAccionDetalle");
+            // Define message
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setSubject("PLAN ACCION");
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress("carlos.villa@solutech.com.co"));
+            
+            Date fechareg = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            String fechar = sdf.format(fechareg);
+            String fechap = sdf.format(epd.getFechaPlazo());
+            
+            String msg=("<html>\n" +
+            "<head>\n" +
+            "<style>\n" +
+            "table, th, td {\n" +
+            "    border: 1px solid black;\n" +
+            "}\n" +
+            "th, td {\n" +
+            "    padding: 5px;\n" +
+            "    text-align: left;\n" +
+            "}\n" +
+            "</style>\n" +
+            "</head>\n" +
+            "<body>\n" +
+            "\n" +
+            "<table style=\"width:80%\">\n" +
+            "  <tr>\n" +
+            "    <th>Nombre Plan Accion</th>\n" +
+            "    <th>Descripcion</th>\n" +
+            "    <th>Fecha Creacion</th>\n" +
+            "    <th>Responsable</th>\n" +
+            "    <th>Fecha de Vencimiento</th>\n" +
+            "  </tr>\n" +
+            "  <tr>\n" +
+            "    <td>"+epd.getNombre()+"</td>\n" +            
+            "    <td>"+epd.getDescripcion()+"</td>\n" +            
+            "    <td>"+fechar+"</td>\n" +            
+            "    <td>"+epd.getResponsable().getNombresApellidos()+"</td>\n" +
+            "    <td>"+fechap+"</td>\n" +
+            "  </tr>\n" +            
+            "</table>\n" +
+            "\n" +
+            "</body>\n" +
+            "</html>");
+            
+            
+            message.setText(msg,"utf-8", "html");
+                    
+                    
+                    
+            
+            // Envia el mensaje
+            Transport transport = session.getTransport("smtp");
+
+
+            transport.connect("smtp.gmail.com", username, password);
+            transport.sendMessage(message, message.getAllRecipients());
+            transport.close();
+              
+              
+              
+        }catch(Exception e){
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getMessage());
+            } else {
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }            
+        }
+            
+        
+    }
+    
+    
+    
+    
 
     public void mostrarDialogoPlanAccion() {
         try {
