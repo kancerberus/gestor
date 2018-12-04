@@ -20,9 +20,6 @@ import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.controlador.GestorResponsable;
 import com.gestor.publico.controlador.GestorUsuario;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeBodyPart;
-import com.sun.xml.internal.ws.api.message.Attachment;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,14 +29,12 @@ import java.util.Map;
 import java.util.Properties;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 /**
  *
