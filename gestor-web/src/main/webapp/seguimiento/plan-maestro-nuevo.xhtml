@@ -22,8 +22,15 @@
                             <h:panelGrid columns="1" style="width:100%; border: none; width: auto"  cellpadding="20">
                                 <p:commandLink action="#{uiPlanMaestro.seleccionarEstablecimiento()}" title="Seleccionar Empresa"
                                                update="formPlanMaestroNuevo">
-                                    <p:graphicImage url="/resources/imagenes/establecimientos/#{varEstablecimientoPm.nombre.toLowerCase()}.png"/> 
-                                    <h:outputText styleClass="ui-icon ui-icon-newwin" style="margin:0 auto;" />
+                                    <h:panelGroup rendered="#{not empty varEstablecimientoPm.logo}">
+                                        <img src="data:image/jpg;base64,#{varEstablecimientoPm.logo}" />
+                                        <h:outputText styleClass="ui-icon ui-icon-newwin" style="margin:0 auto;" />
+                                    </h:panelGroup>
+                                    <h:panelGrid rendered="#{empty varEstablecimientoPm.logo}" columns="1" styleClass="Centro">
+                                        <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" title="#{varEstablecimientoPm.nombre}"/> 
+                                        <h:outputText value="#{varEstablecimientoPm.nombre}" style="margin:0 auto;" />
+                                    </h:panelGrid>
+
                                 </p:commandLink>
                             </h:panelGrid>
                         </p:dataGrid>
@@ -38,7 +45,10 @@
                                 <p:panelGrid  columns="2" rendered="#{not empty uiPlanMaestro.establecimiento.codigoEstablecimiento}" style="width: 30%"
                                               >
                                     <f:facet name="header">
-                                        <p:graphicImage url="/resources/imagenes/establecimientos/#{uiPlanMaestro.establecimiento.nombre.toLowerCase()}.png"/> 
+                                        <h:graphicImage value="data:image/jpg;base64,#{uiPlanMaestro.establecimiento.logo}" rendered="#{not empty uiPlanMaestro.establecimiento.logo}"
+                                                        width="70%"/>
+                                        <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" width="70%" 
+                                                        title="#{uiPlanMaestro.establecimiento.nombre}" rendered="#{empty uiPlanMaestro.establecimiento.logo}"/> 
                                     </f:facet>
 
                                     <h:outputText value="Codigo:" />

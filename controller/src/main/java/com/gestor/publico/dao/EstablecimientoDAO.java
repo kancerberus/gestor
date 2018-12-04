@@ -34,7 +34,7 @@ public class EstablecimientoDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT codigo_establecimiento, codigo_municipio, nombre, nit, direccion, "
-                    + " telefono, correo, tipo_establecimiento"
+                    + " telefono, correo, tipo_establecimiento, logo"
                     + " FROM establecimiento"
                     + " WHERE codigo_establecimiento=" + codigo
             );
@@ -43,6 +43,7 @@ public class EstablecimientoDAO {
                 establecimiento.setCodigoEstablecimiento(rs.getInt("codigo_establecimiento"));
                 establecimiento.setNombre(rs.getString("nombre"));
                 establecimiento.setTipoEstablecimiento(rs.getString("tipo_establecimiento"));
+                establecimiento.setLogo(rs.getString("logo"));
             }
             return establecimiento;
         } finally {
@@ -103,7 +104,7 @@ public class EstablecimientoDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT codigo_establecimiento, codigo_municipio, E.nombre, E.nit, E.direccion, "
-                    + " E.telefono, E.correo, M.nombre AS nom_municipio"
+                    + " E.telefono, E.correo, M.nombre AS nom_municipio, E.logo"
                     + " FROM establecimiento E"
                     + " JOIN municipios M USING (codigo_municipio)"
             );
@@ -115,7 +116,8 @@ public class EstablecimientoDAO {
                 e.setDireccion(rs.getString("direccion"));
                 e.setTelefono(rs.getString("telefono"));
                 e.setCorreo(rs.getString("correo"));
-                listaEstablecimientos.add(e);
+                e.setLogo(rs.getString("logo"));
+                listaEstablecimientos.add(e );
             }
             return listaEstablecimientos;
         } finally {
@@ -135,14 +137,15 @@ public class EstablecimientoDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT E.codigo_establecimiento, E.nombre, E.nit, E.direccion, E.telefono, E.correo, E.fecha_cierre_diario, E.tipo_establecimiento"
+                    "SELECT E.codigo_establecimiento, E.nombre, E.nit, E.direccion, E.telefono, E.correo, E.fecha_cierre_diario, E.tipo_establecimiento,"
+                    + " E.logo"
                     + " FROM rel_usuarios_establecimiento"
                     + " JOIN establecimiento E USING (codigo_establecimiento)"
                     + " WHERE documento_usuario='" + documentoUsuario + "'"
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
-                listaEstablecimientos.add(new Establecimiento(rs.getInt("codigo_establecimiento"), rs.getString("nombre"), rs.getString("nit"), rs.getString("direccion"), rs.getString("telefono"), rs.getString("correo")));
+                listaEstablecimientos.add(new Establecimiento(rs.getInt("codigo_establecimiento"), rs.getString("nombre"), rs.getString("nit"), rs.getString("direccion"), rs.getString("telefono"), rs.getString("correo"), rs.getString("logo")));
             }
             return listaEstablecimientos;
         } finally {

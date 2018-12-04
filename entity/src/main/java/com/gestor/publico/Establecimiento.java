@@ -55,6 +55,8 @@ public class Establecimiento implements Serializable, Cloneable {
     @Basic(optional = false)
     @Column(name = "tipo_establecimiento")
     private String tipoEstablecimiento;
+    private String logo;
+
     @JoinColumn(name = "codigo_municipio", referencedColumnName = "codigo_municipio")
     @ManyToOne(optional = false)
     private Municipios municipios;
@@ -73,16 +75,15 @@ public class Establecimiento implements Serializable, Cloneable {
         this.nombre = nombre;
     }
 
-    public Establecimiento(Integer codigoEstablecimiento, String nombre, String nit, String direccion, String telefono, String correo) {
+    public Establecimiento(Integer codigoEstablecimiento, String nombre, String nit, String direccion, String telefono, String correo, String logo) {
         this.codigoEstablecimiento = codigoEstablecimiento;
         this.nombre = nombre;
         this.nit = nit;
         this.direccion = direccion;
         this.telefono = telefono;
         this.correo = correo;
+        this.logo = logo;
     }
-    
-    
 
     public Establecimiento(int codigoEstablecimiento, String nit, Date fechaCierreDiario, String tipoEstablecimiento) {
         this.codigoEstablecimiento = codigoEstablecimiento;
@@ -206,7 +207,19 @@ public class Establecimiento implements Serializable, Cloneable {
     public Object clone() throws CloneNotSupportedException {
         return super.clone(); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
+
+    /**
+     * @param logo the logo to set
+     */
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    /**
+     * @return the logo
+     */
+    public String getLogo() {
+        return logo;
+    }
 
 }
