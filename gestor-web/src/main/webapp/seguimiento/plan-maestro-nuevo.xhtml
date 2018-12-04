@@ -18,21 +18,22 @@
                             <f:facet name="header">
                                 Seleccionar Empresa
                             </f:facet>
+                            <centro>
+                                <h:panelGrid columns="1" style="width:100%; border: none; width: auto"  cellpadding="20">
+                                    <p:commandLink action="#{uiPlanMaestro.seleccionarEstablecimiento()}" title="Seleccionar Empresa"
+                                                   update="formPlanMaestroNuevo">
+                                        <h:panelGroup rendered="#{not empty varEstablecimientoPm.logo}">
+                                            <img src="data:image/jpg;base64,#{varEstablecimientoPm.logo}" />
+                                            <h:outputText styleClass="ui-icon ui-icon-newwin" style="margin:0 auto;" />
+                                        </h:panelGroup>
+                                        <h:panelGrid rendered="#{empty varEstablecimientoPm.logo}" columns="1" styleClass="Centro">
+                                            <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" title="#{varEstablecimientoPm.nombre}"/> 
+                                            <h:outputText value="#{varEstablecimientoPm.nombre}" style="margin:0 auto;" />
+                                        </h:panelGrid>
 
-                            <h:panelGrid columns="1" style="width:100%; border: none; width: auto"  cellpadding="20">
-                                <p:commandLink action="#{uiPlanMaestro.seleccionarEstablecimiento()}" title="Seleccionar Empresa"
-                                               update="formPlanMaestroNuevo">
-                                    <h:panelGroup rendered="#{not empty varEstablecimientoPm.logo}">
-                                        <img src="data:image/jpg;base64,#{varEstablecimientoPm.logo}" />
-                                        <h:outputText styleClass="ui-icon ui-icon-newwin" style="margin:0 auto;" />
-                                    </h:panelGroup>
-                                    <h:panelGrid rendered="#{empty varEstablecimientoPm.logo}" columns="1" styleClass="Centro">
-                                        <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" title="#{varEstablecimientoPm.nombre}"/> 
-                                        <h:outputText value="#{varEstablecimientoPm.nombre}" style="margin:0 auto;" />
-                                    </h:panelGrid>
-
-                                </p:commandLink>
-                            </h:panelGrid>
+                                    </p:commandLink>
+                                </h:panelGrid>
+                            </centro>
                         </p:dataGrid>
 
 
