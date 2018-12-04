@@ -78,7 +78,7 @@ public class EvaluacionPlanAccionDAO {
                     + " VALUES (" + epd.getEvaluacionPlanAccionDetallePK().getCodEvaluacion() + ", " + epd.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento()
                     + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlan()
                     + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle() + ", '" + epd.getCodCiclo() + "', " + epd.getCodSeccion() + ", " + epd.getCodDetalle()
-                    + " ," + epd.getCodItem() + ", '" + epd.getNombre() + "', '" + epd.getDescripcion() + "', '" + epd.getEstado() + "','"+epd.getFechaPlazo()+"','" + epd.getDocumentoUsuario() + "','" + epd.getResponsable().getCedula() + "');"
+                    + " ," + epd.getCodItem() + ", '" + epd.getNombre() + "', '" + epd.getDescripcion() + "', '" + epd.getEstado() + "','" + epd.getFechaPlazo() + "','" + epd.getDocumentoUsuario() + "','" + epd.getResponsable().getCedula() + "');"
             );
             consulta.actualizar(sql);
         } finally {
@@ -345,10 +345,10 @@ public class EvaluacionPlanAccionDAO {
             EvaluacionPlanAccionDetalleNotasPK pk = epadn.getEvaluacionPlanAccionDetalleNotasPK();
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO gestor.evaluacion_plan_accion_detalle_notas("
-                    + " cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle, "
+                    + " cod_evaluacion, codigo_establecimiento, cod_plan,  cod_plan_detalle, "
                     + " cod_nota, documento_usuario, estado, nombre, descripcion, fecha_registro)"
                     + " VALUES (" + pk.getCodEvaluacion() + ", " + pk.getCodigoEstablecimiento() + ", " + pk.getCodPlan() + ", " + pk.getCodPlanDetalle()
-                    + " , DEFAULT, '" + epadn.getDocumentoUsuario() + "', '" + epadn.getEstado() + "', '" + epadn.getNombre() + "', '" + epadn.getDescripcion() + "', NOW())"
+                    + " , " + pk.getCodNota() + ", '" + epadn.getDocumentoUsuario() + "', '" + epadn.getEstado() + "', '" + epadn.getNombre() + "', '" + epadn.getDescripcion() + "', NOW())"
                     + " ON CONFLICT (cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle, cod_nota)"
                     + " DO UPDATE SET documento_usuario=excluded.documento_usuario, descripcion=excluded.descripcion"
             );

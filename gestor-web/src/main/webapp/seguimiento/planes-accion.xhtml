@@ -99,7 +99,8 @@
                 <p:column headerText="Opciones" filterBy="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codEvaluacion}">
                     <p:panelGrid>
                         <p:commandButton icon="ui-icon-clipboard" title="Notas" action="#{uiPlanAccion.mostrarNotaSeguimiento()}" update=":formPlanesAccion:dialog"/>
-                        <p:commandButton icon="ui-icon-disk" title="Finalizar" rendered="#{varPlanAccionDetalle.estado eq 'A'}"/>
+                        <p:commandButton icon="ui-icon-disk" title="Finalizar" rendered="#{varPlanAccionDetalle.estado eq 'A'}"
+                                         action="#{uiPlanAccion.cerrarPlanAccionDetalle()}"/>
                     </p:panelGrid>
                 </p:column>
                 <p:column headerText="Código" filterBy="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codEvaluacion}">

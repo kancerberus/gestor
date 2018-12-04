@@ -143,4 +143,14 @@ public class GestorEvaluacionCapacitacion extends Gestor {
             this.cerrarConexion();
         }
     }
+
+    public void cerrarEvaluacionCapacitacionDetalle(EvaluacionCapacitacionDetalle evaluacionCapacitacionDetalle) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionCapacitacionDAO evaluacionCapacitacionDAO = new EvaluacionCapacitacionDAO(conexion);
+            evaluacionCapacitacionDAO.actualizarEstadoEvaluacionCapacitacionDetalle(evaluacionCapacitacionDetalle);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
 }

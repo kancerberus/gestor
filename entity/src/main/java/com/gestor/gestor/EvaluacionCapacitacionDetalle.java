@@ -48,6 +48,8 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
     public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_FECHA_REGISTRO_GTE = "ECD.fecha_registro::DATE >= ?";
     public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_FECHA_REGISTRO_LTE = "ECD.fecha_registro::DATE <= ?";
     
+    public static String EVALUACION_CAPACITACION_DETALLE_ESTADO_CERRADO = "C";
+    
     
     @EmbeddedId
     protected EvaluacionCapacitacionDetallePK evaluacionCapacitacionDetallePK;

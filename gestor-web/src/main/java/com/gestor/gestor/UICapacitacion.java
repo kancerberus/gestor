@@ -182,6 +182,22 @@ public class UICapacitacion {
         }
 
     }
+    
+    public void cerrarEvaluacionCapacitacionDetalle() {
+        try {
+            Sesion s = (Sesion) UtilJSF.getBean("sesion");
+            GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
+            evaluacionCapacitacionDetalle = (EvaluacionCapacitacionDetalle) UtilJSF.getBean("varCapacitacionDetalle");
+            evaluacionCapacitacionDetalle.setDocumentoUsuario(s.getUsuarios().getUsuariosPK().getDocumentoUsuario());
+            evaluacionCapacitacionDetalle.setEstado(EvaluacionCapacitacionDetalle.EVALUACION_CAPACITACION_DETALLE_ESTADO_CERRADO);
+            
+            gestorEvaluacionCapacitacion.cerrarEvaluacionCapacitacionDetalle(evaluacionCapacitacionDetalle);
+            UtilJSF.update("formCapacitaciones");
+            UtilMSG.addSuccessMsg("Capacitación Finalizada", "Se finalizo la capacitación # " + evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetallePK().getCodCapacitacionDetalle());
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+    }
 
     private List<String> filtrarOpcionesSeleccionadas() {
         List<String> condicionesConsulta = new ArrayList<>();
