@@ -170,8 +170,11 @@ public class AdjuntosCategoriaDAO {
                     "INSERT INTO gestor.seccion_detalle_items_adjuntos_categoria "
                     + " ( cod_ciclo, cod_seccion, cod_detalle, cod_item, cod_categoria )"
                     + " VALUES ('" + sdiac.getCodCiclo() + "', '" + sdiac.getCodSeccion() + "', '" + sdiac.getCodDetalle() + "', "
-                    + " '" + sdiac.getCodItem() + "', '"+categoria.getCodCategoria()+"') ")                    
-                    ;
+                    + " '" + sdiac.getCodItem() + "', '"+categoria.getCodCategoria()+"') "
+                    + " ON CONFLICT (cod_ciclo, cod_seccion, cod_detalle,cod_item, cod_categoria) DO UPDATE "
+                    + " SET cod_ciclo=EXCLUDED.cod_ciclo, cod_seccion=EXCLUDED.cod_seccion, cod_detalle=EXCLUDED.cod_detalle, cod_item=EXCLUDED.cod_item, cod_categoria=EXCLUDED.cod_categoria  "
+            
+            );
             
             consulta.actualizar(sql);
         } finally {
