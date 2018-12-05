@@ -180,13 +180,14 @@ public class UICategoria implements Serializable{
                         
             if(categoria.getCodCategoria()==null){                
                 categoria.setCodCategoria(1);
+                for(int i=0;i<adjuntosCategorias.size();i++){
+                    if(categoria.getCodCategoria() == adjuntosCategorias.get(i).getCodCategoria()){
+                        categoria.setCodCategoria(adjuntosCategorias.size()+1);
+                    }
+                }
             }
             
-            for(int i=0;i<adjuntosCategorias.size();i++){
-                if(categoria.getCodCategoria() != adjuntosCategorias.get(i).getCodCategoria()){
-                    categoria.setCodCategoria(adjuntosCategorias.size()+1);
-                }
-            }        
+        
             this.sdipk = new ArrayList<>();
             gestorSeccionDetalleItems= new GestorSeccionDetalleItems();
             this.sdipk.addAll((Collection<? extends SeccionDetalleItems>) gestorSeccionDetalleItems.buscarNumeral(categoria.getSecciondetalleitems().getNumeral()));
