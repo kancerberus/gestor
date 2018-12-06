@@ -459,14 +459,18 @@ public class UIPlanAccion {
     }
     
     public void enviarCorreo(){
-        final String username = "frvc2891@gmail.com";
-        final String password = "solutech2018";
+        final String username = "gestorapp@sisgappcolombia.com";
+        final String password = "4prF$nsL3";
+        final String smtp = "sisgappcolombia.com";
+        final String port = "587";
+        final String ssltrust = "true";
+        final String smtpauth = "true";
 
         Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", smtpauth);
+        props.put("mail.smtp.starttls.enable", ssltrust);
+        props.put("mail.smtp.ssl.trust", smtp);
+        props.put("mail.smtp.port", port);
 
         Session session = Session.getInstance(props,
           new javax.mail.Authenticator() {
@@ -481,7 +485,12 @@ public class UIPlanAccion {
             // Define message
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
-            message.setSubject("PLAN ACCION");
+            
+            //Extrae el codigo del plan de acción para llevarlo al asunto del mensaje
+            //Long plandetalle  = epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle();            
+            // plandetalleS = Long.toString(plandetalle);
+            
+            message.setSubject("Se ha generado un nuevo PLAN DE ACCION");            
             message.addRecipient(Message.RecipientType.TO,new InternetAddress("carlos.villa@solutech.com.co"));
             
             Date fechareg = new Date();
@@ -533,7 +542,7 @@ public class UIPlanAccion {
             Transport transport = session.getTransport("smtp");
 
 
-            transport.connect("smtp.gmail.com", username, password);
+            transport.connect(smtp, username, password);
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
               
