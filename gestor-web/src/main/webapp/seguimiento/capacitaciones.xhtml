@@ -115,19 +115,9 @@
                 <p:column headerText="Responsable" filterBy="#{varCapacitacionDetalle.responsable.nombresApellidos}">
                     <h:outputText value="#{varCapacitacionDetalle.responsable.nombresApellidos}" />
                 </p:column>
-
-                <p:column headerText="Ciclo" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.seccionDetalle.seccion.ciclo.nombre}">
-                    <h:outputText value="#{varCapacitacionDetalle.seccionDetalleItems.seccionDetalle.seccion.ciclo.nombre}" />
-                </p:column>
-                <p:column headerText="Sección" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.seccionDetalle.seccion.nombre}">
-                    <h:outputText value="#{varCapacitacionDetalle.seccionDetalleItems.seccionDetalle.seccion.nombre}" />
-                </p:column> 
-                <p:column headerText="Detalle" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.seccionDetalle.nombre}" >
-                    <h:outputText value="#{varCapacitacionDetalle.seccionDetalleItems.seccionDetalle.nombre}" />
-                </p:column>
-                <p:column headerText="Item" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.nombre}">
-                    <h:outputText value="#{varCapacitacionDetalle.seccionDetalleItems.nombre}" />
-                </p:column>
+                <p:column headerText="Numeral" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.numeral}">
+                    <h:outputText value="#{varCapacitacionDetalle.seccionDetalleItems.numeral}" />
+                </p:column>                
                 <p:column headerText="Item Detalle" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.detalle}" >
                     <h:outputText value="#{varCapacitacionDetalle.seccionDetalleItems.detalle}" />
                 </p:column>

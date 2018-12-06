@@ -122,19 +122,9 @@
                 <p:column headerText="Responsable" filterBy="#{varPlanAccionDetalle.responsable.nombresApellidos}">
                     <h:outputText value="#{varPlanAccionDetalle.responsable.nombresApellidos}" />
                 </p:column>
-
-                <p:column headerText="Ciclo" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.seccionDetalle.seccion.ciclo.nombre}">
-                    <h:outputText value="#{varPlanAccionDetalle.seccionDetalleItems.seccionDetalle.seccion.ciclo.nombre}" />
-                </p:column>
-                <p:column headerText="Sección" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.seccionDetalle.seccion.nombre}">
-                    <h:outputText value="#{varPlanAccionDetalle.seccionDetalleItems.seccionDetalle.seccion.nombre}" />
-                </p:column> 
-                <p:column headerText="Detalle" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.seccionDetalle.nombre}" >
-                    <h:outputText value="#{varPlanAccionDetalle.seccionDetalleItems.seccionDetalle.nombre}" />
-                </p:column>
-                <p:column headerText="Item" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.nombre}">
-                    <h:outputText value="#{varPlanAccionDetalle.seccionDetalleItems.nombre}" />
-                </p:column>
+                <p:column headerText="Numeral" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.numeral}">
+                    <h:outputText value="#{varPlanAccionDetalle.seccionDetalleItems.numeral}" />
+                </p:column>                
                 <p:column headerText="Item Detalle" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.detalle}" >
                     <h:outputText value="#{varPlanAccionDetalle.seccionDetalleItems.detalle}" />
                 </p:column>
