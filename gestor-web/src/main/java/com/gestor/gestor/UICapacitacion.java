@@ -20,15 +20,23 @@ import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.controlador.GestorResponsable;
 import com.gestor.publico.controlador.GestorUsuario;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.faces.application.ViewExpiredException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 /**
  *
@@ -358,6 +366,7 @@ public class UICapacitacion {
             GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
             ecd = gestorEvaluacionCapacitacion.validarEvaluacionCapacitacionDetalle(ecd);
             gestorEvaluacionCapacitacion.actualizarEvaluacionCapacitacionDetalle(ecd);
+            this.enviarCorreo();
             this.modificarActivo = Boolean.FALSE;
 
             evaluacionCapacitacionDetalles = new ArrayList<>();
@@ -428,6 +437,7 @@ public class UICapacitacion {
             ec.setEvaluacionCapacitacionDetalle(ecd);
 
             gestorEvaluacionCapacitacion.procesarCapacitacion(ec);
+            this.enviarCorreo();
             UtilJSF.setBean("evaluacionCapacitacionDetalle", new EvaluacionCapacitacionDetalle(), UtilJSF.SESSION_SCOPE);
             UtilMSG.addSuccessMsg("Capacitación Guardada", "Se almaceno la capacitación satisfactoriamente.");
             evaluacionCapacitacionDetalles = new ArrayList<>();
@@ -500,6 +510,102 @@ public class UICapacitacion {
                 UtilLog.generarLog(this.getClass(), e);
             }
         }
+    }
+    
+    public void enviarCorreo(){
+        final String username = "gestorapp@sisgappcolombia.com";
+        final String password = "4prF$nsL3";
+        final String smtp = "sisgappcolombia.com";
+        final String port = "587";
+        final String ssltrust = "true";
+        final String smtpauth = "true";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", smtpauth);
+        props.put("mail.smtp.starttls.enable", ssltrust);
+        props.put("mail.smtp.ssl.trust", smtp);
+        props.put("mail.smtp.port", port);
+
+        Session session = Session.getInstance(props,
+          new javax.mail.Authenticator() {
+              @Override
+              protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password);
+              }
+          });
+
+        try {
+            EvaluacionCapacitacionDetalle ecd = (EvaluacionCapacitacionDetalle) UtilJSF.getBean("evaluacionCapacitacionDetalle");
+            // Define message
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            
+            //Extrae el codigo del plan de acción para llevarlo al asunto del mensaje
+            //Long plandetalle  = epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle();            
+            // plandetalleS = Long.toString(plandetalle);
+            
+            message.setSubject("Se ha generado una nueva CAPACITACION "+ecd.getEvaluacionCapacitacionDetallePK().getCodCapacitacionDetalle());            
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress(ecd.getResponsable().getCorreo()));
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress("admin@sisgapcolombia.com"));
+            
+            
+            Date fechareg = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            String fechar = sdf.format(fechareg);
+            String fechap = sdf.format(ecd.getFechaPlazo());
+            
+            String msg=("<html>\n" +
+            "<head>\n" +
+            "<style>\n" +
+            "table, th, td {\n" +
+            "    border: 1px solid black;\n" +
+            "}\n" +
+            "th, td {\n" +
+            "    padding: 5px;\n" +
+            "    text-align: left;\n" +
+            "}\n" +
+            "</style>\n" +
+            "</head>\n" +
+            "<body>\n" +
+            "\n" +
+            "<table style=\"width:80%\">\n" +
+            "  <tr>\n" +
+            "    <th>Nombre Capacitacion</th>\n" +
+            "    <th>Descripcion</th>\n" +
+            "    <th>Fecha Creacion</th>\n" +
+            "    <th>Responsable</th>\n" +
+            "    <th>Fecha de Vencimiento</th>\n" +
+            "  </tr>\n" +
+            "  <tr>\n" +
+            "    <td>"+ecd.getNombre()+"</td>\n" +            
+            "    <td>"+ecd.getDescripcion()+"</td>\n" +            
+            "    <td>"+fechar+"</td>\n" +            
+            "    <td>"+ecd.getResponsable().getNombresApellidos()+"</td>\n" +
+            "    <td>"+fechap+"</td>\n" +
+            "  </tr>\n" +            
+            "</table>\n" +
+            "\n" +
+            "</body>\n" +
+            "</html>");
+            message.setText(msg,"utf-8", "html");
+            
+            // Envia el mensaje
+            Transport transport = session.getTransport("smtp");
+
+
+            transport.connect(smtp, username, password);
+            transport.sendMessage(message, message.getAllRecipients());
+            transport.close();
+        }catch(Exception e){
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getMessage());
+            } else {
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }            
+        }
+            
+        
     }
 
     /**

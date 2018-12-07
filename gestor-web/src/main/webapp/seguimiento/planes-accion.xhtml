@@ -109,13 +109,6 @@
                 <p:column headerText="Empresa" filterBy="#{varPlanAccionDetalle.establecimiento.nombre}">
                     <h:outputText value="#{varPlanAccionDetalle.establecimiento.nombre}" />
                 </p:column>
-
-                <p:column headerText="Fecha" filterBy="#{varPlanAccionDetalle.fechaRegistro}">
-                    <h:outputText value="#{varPlanAccionDetalle.fechaRegistro}">
-                        <f:convertDateTime pattern="dd/MM/yyyy" />
-                    </h:outputText>
-                </p:column>
-
                 <p:column headerText="Evaluador" filterBy="#{varPlanAccionDetalle.usuarios.nombreApellido}">
                     <h:outputText value="#{varPlanAccionDetalle.usuarios.nombreApellido}" />
                 </p:column>
@@ -134,12 +127,22 @@
                 <p:column headerText="Descripción" filterBy="#{varPlanAccionDetalle.descripcion}" >
                     <h:outputText value="#{varPlanAccionDetalle.descripcion}" />
                 </p:column>
+                <p:column headerText="Fecha Creacion" filterBy="#{varPlanAccionDetalle.fechaRegistro}">
+                    <h:outputText value="#{varPlanAccionDetalle.fechaRegistro}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
                 <p:column headerText="Fecha Vencimiento" filterBy="#{varPlanAccionDetalle.fechaPlazo}">
                     <h:outputText value="#{varPlanAccionDetalle.fechaPlazo}">
                         <f:convertDateTime pattern="dd/MM/yyyy" />
                     </h:outputText>
                 </p:column>
-
+                <p:column headerText="Fecha Fin" filterBy="#{varPlanAccionDetalle.fechaFin}">
+                    <h:outputText value="#{varPlanAccionDetalle.fechaFin}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+                
                 <p:column headerText="Estado"
                           filterBy="#{varPlanAccionDetalle.estado}"
                           filterMatchMode="equals">

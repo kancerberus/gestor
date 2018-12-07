@@ -367,6 +367,7 @@ public class UIPlanAccion {
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             epd = gestorEvaluacionPlanAccion.validarEvaluacionPlanAccionDetalle(epd);
             gestorEvaluacionPlanAccion.actualizarEvaluacionPlanAccionDetalle(epd);
+            this.enviarCorreo();
             this.modificarActivo = Boolean.FALSE;
 
             evaluacionPlanAccionDetalles = new ArrayList<>();
@@ -435,6 +436,7 @@ public class UIPlanAccion {
 
             ep.setEvaluacionPlanAccionDetalle(epd);
             gestorEvaluacionPlanAccion.procesarPlanAccion(ep);
+            this.enviarCorreo();
             UtilJSF.setBean("evaluacionPlanAccionDetalle", new EvaluacionPlanAccionDetalle(), UtilJSF.SESSION_SCOPE);
             UtilMSG.addSuccessMsg("Plan Acción Guardado", "Se almaceno el plan de acción satisfactoriamente.");
             evaluacionPlanAccionDetalles = new ArrayList<>();
@@ -446,7 +448,7 @@ public class UIPlanAccion {
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodDetalle(),
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem()
             ));
-
+            
         } catch (Exception ex) {
             if (UtilLog.causaControlada(ex)) {
                 UtilMSG.addWarningMsg("Validación", ex.getMessage());
@@ -482,6 +484,7 @@ public class UIPlanAccion {
 
         try {
             EvaluacionPlanAccionDetalle epd = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("evaluacionPlanAccionDetalle");
+            
             // Define message
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
@@ -490,8 +493,11 @@ public class UIPlanAccion {
             //Long plandetalle  = epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle();            
             // plandetalleS = Long.toString(plandetalle);
             
-            message.setSubject("Se ha generado un nuevo PLAN DE ACCION");            
-            message.addRecipient(Message.RecipientType.TO,new InternetAddress("carlos.villa@solutech.com.co"));
+            message.setSubject("Se ha generado un nuevo PLAN DE ACCION "+epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle());            
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress(epd.getResponsable().getCorreo()));
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress("admin@sisgapcolombia.com"));
+            
+            
             
             Date fechareg = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");

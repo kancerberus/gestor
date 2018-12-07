@@ -47,11 +47,13 @@
                         <p:row>  
                             <p:column  headerText="Opciones" />
                             <p:column headerText="Nombre" filterBy="#{varPlanAccionDetalle.nombre}" sortBy="#{varPlanAccionDetalle.nombre}"/>
-                            <p:column  headerText="Descripción"/>
-                            <p:column  headerText="Fecha" sortBy="#{varPlanAccionDetalle.fechaRegistro}"/>
-                            <p:column  headerText="Usuario" filterBy="#{varPlanAccionDetalle.usuarios.usuario}"/>
+                            <p:column  headerText="Descripción"/>        
+                            <p:column  headerText="Usuario" filterBy="#{varPlanAccionDetalle.usuarios.usuario}"/>                            
                             <p:column  headerText="Estado" filterBy="#{varPlanAccionDetalle.estado}"/>
                             <p:column  headerText="Responsable" filterBy="#{varPlanAccionDetalle.responsable.nombresApellidos}"/>
+                            
+                            
+                            <p:column  headerText="Fecha Creacion" sortBy="#{varPlanAccionDetalle.fechaRegistro}"/>
                             <p:column  headerText="Fecha vencicmiento" filterBy="#{varPlanAccionDetalle.fechaPlazo}"/>
                         </p:row> 
                     </p:columnGroup>
@@ -70,11 +72,7 @@
                     <p:column>
                         <h:outputText value="#{varPlanAccionDetalle.descripcion}"/>
                     </p:column>
-                    <p:column>
-                        <h:outputText value="#{varPlanAccionDetalle.fechaRegistro}">
-                            <f:convertDateTime pattern="dd/MM/yyyy" />
-                        </h:outputText>
-                    </p:column>
+                    
                     <p:column>
                         <h:outputText value="#{varPlanAccionDetalle.usuarios.usuario}"/>
                     </p:column>
@@ -84,6 +82,12 @@
                     <p:column>
                         <h:outputText value="#{varPlanAccionDetalle.responsable.nombresApellidos}"/>
                     </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.fechaRegistro}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    
                     <p:column>
                         <h:outputText value="#{varPlanAccionDetalle.fechaPlazo}">
                             <f:convertDateTime pattern="dd/MM/yyyy" />
@@ -103,8 +107,7 @@
             <p:toolbarGroup align="center" style="margin: auto auto;  align-content: center">
                 <h:panelGrid columns="3" cellspacing="10" style="align-content: center; display: inline-block;">
                     <p:commandButton value="Generar Plan Acción" icon="ui-icon-disk" action="#{uiPlanAccion.procesarPlanAccion()}" process="@parent pgPlanAccion" update="pgPlanAccion dtPlanAccionDetalle"
-                                     rendered="#{not uiPlanAccion.modificarActivo}">
-                        <f:actionListener binding="#{uiPlanAccion.enviarCorreo()}"/>
+                                     rendered="#{not uiPlanAccion.modificarActivo}">                        
                     </p:commandButton>
                         
                     <p:commandButton value="Modificar Plan Acción" icon="ui-icon-disk" action="#{uiPlanAccion.procesarPlanAccionModificar()}" 

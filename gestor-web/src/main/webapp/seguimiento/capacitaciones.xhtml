@@ -73,9 +73,10 @@
 
                         <h:outputText value="Fecha Inicio" />
                         <p:calendar value="#{uiCapacitacion.fechaCapacitacionInicio}" pattern="dd/MM/yyyy" placeholder="Fecha Capacitación"/>
-
+                        
                         <h:outputText value="Fecha Fin" />
                         <p:calendar value="#{uiCapacitacion.fechaCapacitacionFin}" pattern="dd/MM/yyyy" placeholder="Fecha Capacitación"/>
+                        
 
                     </h:panelGrid>
                 </p:panelGrid>
@@ -103,12 +104,7 @@
                     <h:outputText value="#{varCapacitacionDetalle.establecimiento.nombre}" />
                 </p:column>
 
-                <p:column headerText="Fecha" filterBy="#{varCapacitacionDetalle.fechaRegistro}">
-                    <h:outputText value="#{varCapacitacionDetalle.fechaRegistro}">
-                        <f:convertDateTime pattern="dd/MM/yyyy" />
-                    </h:outputText>
-                </p:column>
-
+               
                 <p:column headerText="Evaluador" filterBy="#{varCapacitacionDetalle.usuarios.nombreApellido}">
                     <h:outputText value="#{varCapacitacionDetalle.usuarios.nombreApellido}" />
                 </p:column>
@@ -127,6 +123,24 @@
                 <p:column headerText="Descripción" filterBy="#{varCapacitacionDetalle.descripcion}" >
                     <h:outputText value="#{varCapacitacionDetalle.descripcion}" />
                 </p:column>
+                 <p:column headerText="Fecha Creacion" filterBy="#{varCapacitacionDetalle.fechaRegistro}">
+                    <h:outputText value="#{varCapacitacionDetalle.fechaRegistro}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Fecha Vencimiento" filterBy="#{varCapacitacionDetalle.fechaPlazo}">
+                    <h:outputText value="#{varCapacitacionDetalle.fechaPlazo}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Fecha Fin" filterBy="#{varCapacitacionDetalle.fechaFin}">
+                    <h:outputText value="#{varCapacitacionDetalle.fechaFin}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+                
+                
+                
 
                 <p:column headerText="Estado"
                           filterBy="#{varCapacitacionDetalle.estado}"
