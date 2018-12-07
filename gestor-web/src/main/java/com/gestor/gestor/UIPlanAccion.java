@@ -202,6 +202,7 @@ public class UIPlanAccion {
             evaluacionPlanAccionDetalle.setEstado(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_CERRADO);
             
             gestorEvaluacionPlanAccion.cerrarPlanAccionDetalle(evaluacionPlanAccionDetalle);
+            this.cargarPlanAccionGeneral();
             UtilJSF.update("formPlanesAccion");
             UtilMSG.addSuccessMsg("Plan Acción Finalizado", "Se finalizo el Plan Acción # " + evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle());
         } catch (Exception e) {

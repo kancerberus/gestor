@@ -201,6 +201,7 @@ public class UICapacitacion {
             evaluacionCapacitacionDetalle.setEstado(EvaluacionCapacitacionDetalle.EVALUACION_CAPACITACION_DETALLE_ESTADO_CERRADO);
             
             gestorEvaluacionCapacitacion.cerrarEvaluacionCapacitacionDetalle(evaluacionCapacitacionDetalle);
+            this.cargarCapacitacionGeneral();
             UtilJSF.update("formCapacitaciones");
             UtilMSG.addSuccessMsg("Capacitación Finalizada", "Se finalizo la capacitación # " + evaluacionCapacitacionDetalle.getEvaluacionCapacitacionDetallePK().getCodCapacitacionDetalle());
         } catch (Exception e) {

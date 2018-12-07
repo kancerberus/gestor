@@ -51,8 +51,6 @@
                             <p:column  headerText="Usuario" filterBy="#{varPlanAccionDetalle.usuarios.usuario}"/>                            
                             <p:column  headerText="Estado" filterBy="#{varPlanAccionDetalle.estado}"/>
                             <p:column  headerText="Responsable" filterBy="#{varPlanAccionDetalle.responsable.nombresApellidos}"/>
-                            
-                            
                             <p:column  headerText="Fecha Creacion" sortBy="#{varPlanAccionDetalle.fechaRegistro}"/>
                             <p:column  headerText="Fecha vencicmiento" filterBy="#{varPlanAccionDetalle.fechaPlazo}"/>
                         </p:row> 
@@ -86,8 +84,7 @@
                         <h:outputText value="#{varPlanAccionDetalle.fechaRegistro}">
                             <f:convertDateTime pattern="dd/MM/yyyy" />
                         </h:outputText>
-                    </p:column>
-                    
+                    </p:column>                    
                     <p:column>
                         <h:outputText value="#{varPlanAccionDetalle.fechaPlazo}">
                             <f:convertDateTime pattern="dd/MM/yyyy" />
