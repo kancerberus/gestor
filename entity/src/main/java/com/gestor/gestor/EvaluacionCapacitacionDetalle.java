@@ -72,6 +72,8 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
     private String estado;
     @Column(name = "fecha_plazo")
     private Date fechaPlazo;
+    @Column(name = "fecha_fin")
+    private Date fechaFin;
     @JoinColumns({
         @JoinColumn(name = "cod_evaluacion", referencedColumnName = "cod_evaluacion", insertable = false, updatable = false),
         @JoinColumn(name = "codigo_establecimiento", referencedColumnName = "codigo_establecimiento", insertable = false, updatable = false),
@@ -109,7 +111,7 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
     }
 
     public EvaluacionCapacitacionDetalle(EvaluacionCapacitacionDetallePK evaluacionCapacitacionDetallePK, String codCiclo, int codSeccion, int codDetalle, int codItem, String nombre, String descripcion,
-            String estado, Usuarios usuarios, java.sql.Date fechaRegistro, Date fechaPlazo) {
+            String estado, Usuarios usuarios, java.sql.Date fechaRegistro, Date fechaPlazo, Date fechaFin) {
         this.evaluacionCapacitacionDetallePK = evaluacionCapacitacionDetallePK;
         this.codCiclo = codCiclo;
         this.codSeccion = codSeccion;
@@ -121,6 +123,7 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
         this.usuarios = usuarios;
         this.fechaRegistro = fechaRegistro;
         this.fechaPlazo = fechaPlazo;
+        this.fechaFin = fechaFin;
         
     }
 
@@ -150,6 +153,14 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
 
     public String getEstado() {
         return estado;
+    }
+
+    public Date getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(Date fechaFin) {
+        this.fechaFin = fechaFin;
     }
 
     public void setEstado(String estado) {

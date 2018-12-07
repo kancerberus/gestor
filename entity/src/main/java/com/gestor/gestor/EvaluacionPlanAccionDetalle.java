@@ -65,6 +65,8 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private String descripcion;
     @Column(name = "fecha_plazo")
     private Date fechaPlazo;
+    @Column(name = "fecha_fin")
+    private Date fechaFin;
     @Basic(optional = false)
     @Column(name = "estado")
     private String estado;
@@ -102,7 +104,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.evaluacionPlanAccionDetallePK = new EvaluacionPlanAccionDetallePK(codEvaluacion, codigoEstablecimiento, codPlan, codPlanDetalle);
     }
 
-    public EvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK, String codCiclo, Integer codSeccion, Integer codDetalle, Integer codItem, String nombre, String descripcion, String estado, Usuarios usuarios, Date fechaRegistro, Date fechaPlazo) {
+    public EvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK, String codCiclo, Integer codSeccion, Integer codDetalle, Integer codItem, String nombre, String descripcion, String estado, Usuarios usuarios, Date fechaRegistro, Date fechaPlazo, Date fechaFin) {
         this.evaluacionPlanAccionDetallePK = evaluacionPlanAccionDetallePK;
         this.codCiclo = codCiclo;
         this.codSeccion = codSeccion;
@@ -114,6 +116,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.usuarios = usuarios;
         this.fechaRegistro = fechaRegistro;
         this.fechaPlazo = fechaPlazo;
+        this.fechaFin=fechaFin;
     }
 
     public EvaluacionPlanAccionDetallePK getEvaluacionPlanAccionDetallePK() {
@@ -138,6 +141,14 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
 
     public Integer getCodSeccion() {
         return codSeccion;
+    }
+
+    public Date getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(Date fechaFin) {
+        this.fechaFin = fechaFin;
     }
 
     public void setCodSeccion(Integer codSeccion) {
