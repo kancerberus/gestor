@@ -65,8 +65,8 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private String descripcion;
     @Column(name = "fecha_plazo")
     private Date fechaPlazo;
-    @Column(name = "fecha_fin")
-    private Date fechaFin;
+    @Column(name = "fecha_finalizado")
+    private Date fechaFinalizado;
     @Basic(optional = false)
     @Column(name = "estado")
     private String estado;
@@ -76,11 +76,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
 
     private Usuarios usuarios;
 
-    private Date fechaRegistro;
-    
-    
-    
-    
+    private Date fechaRegistro;    
 
     private SeccionDetalleItems seccionDetalleItems;
     private Evaluacion evaluacion;
@@ -104,7 +100,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.evaluacionPlanAccionDetallePK = new EvaluacionPlanAccionDetallePK(codEvaluacion, codigoEstablecimiento, codPlan, codPlanDetalle);
     }
 
-    public EvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK, String codCiclo, Integer codSeccion, Integer codDetalle, Integer codItem, String nombre, String descripcion, String estado, Usuarios usuarios, Date fechaRegistro, Date fechaPlazo, Date fechaFin) {
+    public EvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK, String codCiclo, Integer codSeccion, Integer codDetalle, Integer codItem, String nombre, String descripcion, String estado, Usuarios usuarios, Date fechaRegistro, Date fechaPlazo, Date fechaFinalizado) {
         this.evaluacionPlanAccionDetallePK = evaluacionPlanAccionDetallePK;
         this.codCiclo = codCiclo;
         this.codSeccion = codSeccion;
@@ -116,7 +112,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.usuarios = usuarios;
         this.fechaRegistro = fechaRegistro;
         this.fechaPlazo = fechaPlazo;
-        this.fechaFin=fechaFin;
+        this.fechaFinalizado=fechaFinalizado;
     }
 
     public EvaluacionPlanAccionDetallePK getEvaluacionPlanAccionDetallePK() {
@@ -143,12 +139,12 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         return codSeccion;
     }
 
-    public Date getFechaFin() {
-        return fechaFin;
+    public Date getFechaFinalizado() {
+        return fechaFinalizado;
     }
 
-    public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
+    public void setFechaFinalizado(Date fechaFinalizado) {
+        this.fechaFinalizado = fechaFinalizado;
     }
 
     public void setCodSeccion(Integer codSeccion) {

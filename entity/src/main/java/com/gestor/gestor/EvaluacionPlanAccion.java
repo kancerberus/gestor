@@ -45,6 +45,9 @@ public class EvaluacionPlanAccion implements Serializable {
     @Column(name = "fecha_registro")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaRegistro;
+    @Column(name = "fecha_plazo")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaPlazo;
     @Column(name = "documento_usuario_modifica")
     private String documentoUsuarioModifica;
     @Column(name = "fecha_actualiza")
@@ -78,6 +81,14 @@ public class EvaluacionPlanAccion implements Serializable {
 
     public EvaluacionPlanAccion(Long codEvaluacion, int codigoEstablecimiento, Long codPlan) {
         this.evaluacionPlanAccionPK = new EvaluacionPlanAccionPK(codEvaluacion, codigoEstablecimiento, codPlan);
+    }
+
+    public Date getFechaPlazo() {
+        return fechaPlazo;
+    }
+
+    public void setFechaPlazo(Date fechaPlazo) {
+        this.fechaPlazo = fechaPlazo;
     }
 
     public EvaluacionPlanAccionPK getEvaluacionPlanAccionPK() {

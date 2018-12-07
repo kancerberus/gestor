@@ -47,6 +47,7 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
     public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_RESPONSABLE = "ECD.responsable ILIKE (?)";
     public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_FECHA_REGISTRO_GTE = "ECD.fecha_registro::DATE >= ?";
     public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_FECHA_REGISTRO_LTE = "ECD.fecha_registro::DATE <= ?";
+    public static String EVALUACION_CAPACITACION_DETALLE_CONDICION_FECHA_FINALIZADO_LTE = "ECD.fecha_finalizado::DATE <= ?";
     
     public static String EVALUACION_CAPACITACION_DETALLE_ESTADO_CERRADO = "C";
     
@@ -62,7 +63,6 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
     private Integer codDetalle;
     @Column(name = "cod_item")
     private Integer codItem;
-
     @Column(name = "nombre")
     private String nombre;
     @Column(name = "descripcion")
@@ -70,10 +70,10 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
     @Basic(optional = false)
     @Column(name = "estado")
     private String estado;
+    @Column(name = "fecha_finalizado")
+    private Date fechaFinalizado;  
     @Column(name = "fecha_plazo")
-    private Date fechaPlazo;
-    @Column(name = "fecha_fin")
-    private Date fechaFin;
+    private Date fechaPlazo;    
     @JoinColumns({
         @JoinColumn(name = "cod_evaluacion", referencedColumnName = "cod_evaluacion", insertable = false, updatable = false),
         @JoinColumn(name = "codigo_establecimiento", referencedColumnName = "codigo_establecimiento", insertable = false, updatable = false),
@@ -111,7 +111,7 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
     }
 
     public EvaluacionCapacitacionDetalle(EvaluacionCapacitacionDetallePK evaluacionCapacitacionDetallePK, String codCiclo, int codSeccion, int codDetalle, int codItem, String nombre, String descripcion,
-            String estado, Usuarios usuarios, java.sql.Date fechaRegistro, Date fechaPlazo, Date fechaFin) {
+            String estado, Usuarios usuarios, java.sql.Date fechaRegistro, Date fechaPlazo, Date fechaFinalizado) {
         this.evaluacionCapacitacionDetallePK = evaluacionCapacitacionDetallePK;
         this.codCiclo = codCiclo;
         this.codSeccion = codSeccion;
@@ -122,9 +122,17 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
         this.estado = estado;
         this.usuarios = usuarios;
         this.fechaRegistro = fechaRegistro;
-        this.fechaPlazo = fechaPlazo;
-        this.fechaFin = fechaFin;
+        this.fechaPlazo = fechaPlazo; 
+        this.fechaFinalizado = fechaFinalizado;
         
+    }
+
+    public Date getFechaFinalizado() {
+        return fechaFinalizado;
+    }
+
+    public void setFechaFinalizado(Date fechaFinalizado) {
+        this.fechaFinalizado = fechaFinalizado;
     }
 
     public EvaluacionCapacitacionDetallePK getEvaluacionCapacitacionDetallePK() {
@@ -155,13 +163,6 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
         return estado;
     }
 
-    public Date getFechaFin() {
-        return fechaFin;
-    }
-
-    public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
-    }
 
     public void setEstado(String estado) {
         this.estado = estado;
