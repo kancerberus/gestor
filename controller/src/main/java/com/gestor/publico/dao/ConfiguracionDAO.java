@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import com.gestor.publico.Configuracion;
+
 
 /**
  *
@@ -38,6 +40,30 @@ public class ConfiguracionDAO {
                 c.put(rs.getString("nombre"), rs.getString("valor"));
             }
             return c;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    public String cargarConfiguracioncorreo() throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT cod_configuracion, nombre, valor, email_admin"
+                    + " FROM public.configuracion;"
+            );
+            rs = consulta.ejecutar(sql);
+            if (rs.next()) {
+                return rs.getString("email_admin");
+            }
+            return null;
         } finally {
             if (rs != null) {
                 rs.close();
