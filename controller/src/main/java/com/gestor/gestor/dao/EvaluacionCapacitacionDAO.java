@@ -51,7 +51,7 @@ public class EvaluacionCapacitacionDAO {
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_evaluacion, ECD.codigo_establecimiento, cod_capacitacion, cod_capacitacion_detalle,"
                     + " cod_ciclo, cod_seccion, cod_detalle, cod_item, ECD.nombre, descripcion,"
-                    + " ECD.estado,ECD.fecha_registro,ECD.fecha_plazo,"
+                    + " ECD.estado,ECD.fecha_registro,ECD.fecha_plazo, ECD.fecha_actualiza,"
                     + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario,"
                     + " R.cedula r_cedula, R.nombres r_nombres, R.apellidos r_apellidos, R.telefono r_telefono, R.correo r_correo, R.estado r_estado, R.codigo_establecimiento r_codigo_establecimiento"
                     + " FROM gestor.evaluacion_capacitacion_detalle ECD"
@@ -69,7 +69,7 @@ public class EvaluacionCapacitacionDAO {
                         rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("nombre"), rs.getString("descripcion"), rs.getString("estado"),
                         new Usuarios(
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
-                        ), rs.getDate("fecha_registro"), rs.getDate("fecha_plazo")
+                        ), rs.getDate("fecha_registro"), rs.getDate("fecha_plazo"), rs.getDate("fecha_actualiza")
                 );
                 ecd.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));
                 evaluacionCapacitacionDetalles.add(ecd);
@@ -208,7 +208,7 @@ public class EvaluacionCapacitacionDAO {
             StringBuilder sql = new StringBuilder(
                     "SELECT ECD.cod_evaluacion, ECD.codigo_establecimiento, ECD.cod_capacitacion, ECD.cod_capacitacion_detalle,"
                     + " ECD.cod_ciclo, ECD.cod_seccion, ECD.cod_detalle, ECD.cod_item, ECD.nombre AS ecd_nombre, ECD.descripcion,"
-                    + " ECD.estado,ECD.fecha_registro,ECD.fecha_plazo,"
+                    + " ECD.estado,ECD.fecha_registro,ECD.fecha_plazo, ECD.fecha_actualiza,"
                     + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario,"
                     + " SDI.cod_item AS sdi_cod_item, SDI.nombre AS sdi_nombre, SDI.detalle AS sdi_detalle, SDI.peso AS sdi_peso, SDI.activo AS sdi_activo, SDI.imagen AS sdi_imagen, SDI.orden AS sdi_orden, SDI.numeral AS sdi_numeral,"
                     + " SD.cod_detalle AS sd_cod_detalle, SD.nombre AS sd_nombre, SD.detalle AS sd_detalle, SD.orden AS sd_orden, SD.peso AS sd_peso, SD.imagen AS sd_imagen, SD.activo AS sd_activo, SD.numeral AS sd_numeral,"
@@ -239,7 +239,7 @@ public class EvaluacionCapacitacionDAO {
                         rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("ecd_nombre"), rs.getString("descripcion"), rs.getString("estado"),
                         new Usuarios(
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
-                        ), rs.getDate("fecha_registro"), rs.getDate("fecha_plazo")
+                        ), rs.getDate("fecha_registro"), rs.getDate("fecha_plazo"), rs.getDate("fecha_actualiza")
                 );
                 ecd.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));
 
