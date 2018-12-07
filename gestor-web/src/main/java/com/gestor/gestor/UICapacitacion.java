@@ -18,6 +18,7 @@ import com.gestor.modelo.Sesion;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
+import com.gestor.publico.controlador.GestorConfiguracion;
 import com.gestor.publico.controlador.GestorResponsable;
 import com.gestor.publico.controlador.GestorUsuario;
 import java.text.SimpleDateFormat;
@@ -536,7 +537,9 @@ public class UICapacitacion {
 
         try {
             EvaluacionCapacitacionDetalle ecd = (EvaluacionCapacitacionDetalle) UtilJSF.getBean("evaluacionCapacitacionDetalle");
-            // Define message
+            GestorConfiguracion gestorConfiguracion= new GestorConfiguracion();
+            String correoadmin = gestorConfiguracion.cargarConfiguracioncorreo();
+            // Define message            
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
             
@@ -546,7 +549,7 @@ public class UICapacitacion {
             
             message.setSubject("Se ha generado una nueva CAPACITACION "+ecd.getEvaluacionCapacitacionDetallePK().getCodCapacitacionDetalle());            
             message.addRecipient(Message.RecipientType.TO,new InternetAddress(ecd.getResponsable().getCorreo()));
-            message.addRecipient(Message.RecipientType.TO,new InternetAddress("admin@sisgapcolombia.com"));
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress(correoadmin));
             
             
             Date fechareg = new Date();
@@ -600,7 +603,8 @@ public class UICapacitacion {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());
             } else {
-                UtilMSG.addSupportMsg();
+                UtilMSG.addSupportMsg();                
+                UtilMSG.addWarningMsg("No se puedo enviar el correo "+e.getCause()+e.getMessage());
                 UtilLog.generarLog(this.getClass(), e);
             }            
         }

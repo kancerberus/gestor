@@ -18,6 +18,8 @@ import com.gestor.modelo.Sesion;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
+import com.gestor.publico.controlador.GestorConfiguracion;
+import com.gestor.publico.dao.ConfiguracionDAO;
 import com.gestor.publico.controlador.GestorResponsable;
 import com.gestor.publico.controlador.GestorUsuario;
 import java.text.SimpleDateFormat;
@@ -484,6 +486,9 @@ public class UIPlanAccion {
 
         try {
             EvaluacionPlanAccionDetalle epd = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("evaluacionPlanAccionDetalle");
+            GestorConfiguracion gestorConfiguracion= new GestorConfiguracion();
+            String correoadmin = gestorConfiguracion.cargarConfiguracioncorreo();
+            
             
             // Define message
             MimeMessage message = new MimeMessage(session);
@@ -495,7 +500,7 @@ public class UIPlanAccion {
             
             message.setSubject("Se ha generado un nuevo PLAN DE ACCION "+epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle());            
             message.addRecipient(Message.RecipientType.TO,new InternetAddress(epd.getResponsable().getCorreo()));
-            message.addRecipient(Message.RecipientType.TO,new InternetAddress("admin@sisgapcolombia.com"));
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress(correoadmin));
             
             
             
@@ -537,28 +542,18 @@ public class UIPlanAccion {
             "\n" +
             "</body>\n" +
             "</html>");
-            
-            
             message.setText(msg,"utf-8", "html");
-                    
-                    
-                    
-            
             // Envia el mensaje
             Transport transport = session.getTransport("smtp");
-
-
             transport.connect(smtp, username, password);
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
-              
-              
-              
         }catch(Exception e){
             if (UtilLog.causaControlada(e)) {
-                UtilMSG.addWarningMsg(e.getMessage());
-            } else {
-                UtilMSG.addSupportMsg();
+                UtilMSG.addWarningMsg(e.getMessage());                
+            } else {                                
+                UtilMSG.addSupportMsg();                
+                UtilMSG.addWarningMsg("No se puedo enviar el correo "+e.getCause()+e.getMessage());
                 UtilLog.generarLog(this.getClass(), e);
             }            
         }
