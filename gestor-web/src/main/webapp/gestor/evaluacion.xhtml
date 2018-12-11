@@ -44,15 +44,18 @@
                     <p:button outcome="seccion-detalle-items" value="ITEM #{seccionDetalle.nombre}" icon="ui-icon-arrowreturn-1-e" style="font-size: 9px;"
                               rendered="#{not empty seccionDetalle.seccionDetallePK.codDetalle}"/>
                 </f:facet>
-
+                
+                               
+                <p:panel header="Empresa a Evaluar: #{evaluacion.establecimiento.nombre}">
                 <p:dataGrid var="varCiclo" value="#{evaluacion.ciclos}" columns="2" layout="grid"
-                            rows="4" paginator="true" id="dtCiclos"
-                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                            >
-
-                    <f:facet name="header">
-                        Ciclos Evaluar
+                            rows="5" paginator="true" id="dtCiclos"
+                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"                                                        
+                            >                                   
+                    <f:facet name="header">                        
+                            Ciclos a Evaluar                            
                     </f:facet>
+                    
+                    
 
                     <p:panel header="#{varCiclo.numeralNombre}" style="text-align:center" >
                         <h:panelGrid columns="1" style="width:100%">
@@ -64,7 +67,7 @@
                     </p:panel>
 
                 </p:dataGrid>
-
+</p:panel>
             </p:panel>
 
             <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"

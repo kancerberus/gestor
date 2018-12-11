@@ -35,7 +35,7 @@
                                   rendered="#{not empty seccionDetalle.seccionDetallePK.codDetalle}" styleClass="ui-state-active" disabled="true"/>
                     </h:panelGroup>
                 </f:facet>
-
+                <p:panel header="Empresa a Evaluar: #{evaluacion.establecimiento.nombre}">
                 <p:dataGrid var="varSeccionDetalleItems" value="#{seccionDetalle.seccionDetalleItemsList}" columns="1" layout="grid"
                             rows="1" paginator="true" id="dtSeccionDetalleItems"
                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -70,12 +70,10 @@
                                 <p:remoteCommand name="capacitacion" action="#{uiCapacitacion.mostrarDialogoCapacitacion()}" update=":formSeccionDetalleItems:dialog"/>
                             </h:panelGrid>
                         </p:dataGrid>
-
-
                     </p:panel>  
 
                 </p:dataGrid>
-
+                </p:panel>
             </p:panel>
 
             <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}" width="#{dialogo.width}"

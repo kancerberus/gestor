@@ -47,4 +47,17 @@
         <exception-type>javax.faces.application.ViewExpiredException</exception-type>
         <location>/paginas/sesion.html</location>
     </error-page>
+        <filter>
+    <filter-name>PrimeFaces FileUpload Filter</filter-name>
+     <filter-class>
+        org.primefaces.webapp.filter.FileUploadFilter
+    </filter-class>
+    </filter>
+    <filter-mapping>
+    <filter-name>PrimeFaces FileUpload Filter</filter-name>
+    <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
+    
+          
+    
 </web-app>

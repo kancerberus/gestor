@@ -9,7 +9,7 @@
 
     <ui:define name="content">
         <h:form enctype="multipart/form-data" id="formDetalle" style="font-size: small;">
-            
+            <p:panel style="float: right;" header="Administrador Plan Maestro: #{uiPlanMaestro.evaluacion.establecimiento.nombre}" >
             <p:panel  style="float: right;" id="panelDetalle"  header="Administrar Detalle" >                
                 <br></br>
                 <p:dataTable   style="width: 30%" value="#{uiPlantitulo.plantitulo}" var="varPlantitulo" emptyMessage="No hay Titulos"
@@ -83,7 +83,7 @@
                 </h:panelGrid>
                 <br/>
                 <h:panelGrid >  
-                    <p:inputTextarea rows="10" cols="60"  value="#{uiPlandetalle.plansecciondetalletexto.texto}" placeholder="Nuevo Texto"/>
+                    <p:inputTextarea disabled="#{empty uiPlandetalle.plansecciondetalle.nombre}" rows="10" cols="60"  value="#{uiPlandetalle.plansecciondetalletexto.texto}" placeholder="Nuevo Texto"/>
                 </h:panelGrid>
                 <h:panelGrid columns="4">
                     <p:commandButton value="Guardar Texto Seccion" action="#{uiPlandetalle.guardarSecciondetalletexto()}" 
@@ -93,9 +93,9 @@
                 <br/>
                 
                  <h:panelGrid columns="8">                       
-                     <p:inputText  placeholder="Titulo" value="#{uiPlandetalle.plansecciondetalleadjuntos.titulo}"/>  
-                     <p:inputText  placeholder="Descripcion" value="#{uiPlandetalle.plansecciondetalleadjuntos.descripcion}"/>  
-                     <p:inputText  placeholder="Documento" value="#{uiPlandetalle.plansecciondetalleadjuntos.documento}"/>  
+                     <p:inputText disabled="#{empty uiPlandetalle.plansecciondetalletexto.texto}" placeholder="Titulo" value="#{uiPlandetalle.plansecciondetalleadjuntos.titulo}"/>  
+                     <p:inputText disabled="#{empty uiPlandetalle.plansecciondetalletexto.texto}" placeholder="Descripcion" value="#{uiPlandetalle.plansecciondetalleadjuntos.descripcion}"/>  
+                     <p:inputText disabled="#{empty uiPlandetalle.plansecciondetalletexto.texto}" placeholder="Documento" value="#{uiPlandetalle.plansecciondetalleadjuntos.documento}"/>  
                         
                         
                      <p:selectOneMenu value="#{uiPlandetalle.plansecciondetalleadjuntos.adjuntosCategoria}" converter="convertidorGenerico"
@@ -178,7 +178,7 @@
                     />
                     
                 </h:panelGrid> 
-                
+                </p:panel>
             </p:panel>
         </h:form>
 
