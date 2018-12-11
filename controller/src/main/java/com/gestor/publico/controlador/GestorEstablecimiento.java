@@ -35,6 +35,16 @@ public class GestorEstablecimiento extends Gestor implements Serializable{
             this.cerrarConexion();
         }
     }
+    
+    public Integer buscarSisgapp() throws Exception {
+        try {
+            this.abrirConexion();
+            EstablecimientoDAO establecimientoDAO = new EstablecimientoDAO(conexion);
+            return establecimientoDAO.buscarSisgapp();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
 
     public List<?> cargarListaEstablecimientos() throws Exception {
         try {

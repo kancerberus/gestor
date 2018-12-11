@@ -101,8 +101,9 @@ public class ResponsableDAO {
                     "SELECT R.cedula, E.codigo_establecimiento, R.nombres, R.apellidos, R.correo, R.telefono, R.estado,"
                     + " E.nombre as nomestablecimiento"
                     + " FROM responsable R"
-                    + " INNER JOIN establecimiento E ON (E.codigo_establecimiento=R.codigo_establecimiento) "
-                    + condicion
+                    + " INNER JOIN establecimiento E ON (E.codigo_establecimiento=R.codigo_establecimiento) "                    
+                    + condicion               
+       
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
