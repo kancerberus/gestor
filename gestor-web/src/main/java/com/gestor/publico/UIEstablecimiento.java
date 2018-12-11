@@ -6,11 +6,17 @@
 package com.gestor.publico;
 
 import com.gestor.controller.GestorGeneral;
+import com.gestor.controller.Propiedades;
+import com.gestor.entity.UtilArchivo;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
 import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorMunicipios;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,6 +24,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -26,8 +34,8 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "uiEstablecimiento")
 @SessionScoped
 
-public class UIEstablecimiento implements Serializable {
-
+public class UIEstablecimiento implements Serializable {   
+    private UploadedFile file;
     private GestorEstablecimiento gestorEstablecimiento;
     private GestorGeneral gestorGeneral;
     private GestorMunicipios gestorMunicipios;
@@ -58,7 +66,7 @@ public class UIEstablecimiento implements Serializable {
             gestorEstablecimiento.validarEstablecimiento(e);
             if (e.getCodigoEstablecimiento() == null || e.getCodigoEstablecimiento() == 0) {
                 e.setCodigoEstablecimiento(gestorGeneral.siguienteCodigoEntidad("codigo_establecimiento", "establecimiento"));
-            }
+            }            
             gestorEstablecimiento.almacenarEstablecimiento(e);
 
             UtilMSG.addSuccessMsg("Empresa almacenada correctamente.");
@@ -74,8 +82,8 @@ public class UIEstablecimiento implements Serializable {
             }
         }
 
-    }
-
+    }    
+    
     public void limpiar() {
         this.cargarEstablecimientosInstitucion();
         this.cargarMunicipios();
@@ -115,7 +123,6 @@ public class UIEstablecimiento implements Serializable {
     public void setEstablecimiento(Establecimiento establecimiento) {
         this.establecimiento = establecimiento;
     }
-
     /**
      * @return the establecimientoList
      */
@@ -135,6 +142,14 @@ public class UIEstablecimiento implements Serializable {
      */
     public GestorEstablecimiento getGestorEstablecimiento() {
         return gestorEstablecimiento;
+    }
+
+    public UploadedFile getFile() {
+        return file;
+    }
+
+    public void setFile(UploadedFile file) {
+        this.file = file;
     }
 
     /**

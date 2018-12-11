@@ -22,6 +22,7 @@ import com.gestor.publico.EvaluacionAdjuntosPK;
 import com.gestor.publico.Lista;
 import com.gestor.publico.ListaDetalle;
 import com.gestor.publico.Responsable;
+import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorResponsable;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -183,10 +184,14 @@ public class UIEvaluacionAdjuntos {
             adjuntosCategorias = new ArrayList<>();
             adjuntosCategorias.addAll(gestorAdjuntosCategoria.cargarListaAdjuntosCategoria(sdiSeleccionado.getSeccionDetalleItemsPK()));
 
+            
+            GestorEstablecimiento gestorEstablecimiento= new GestorEstablecimiento();
+            Integer sisgapp = gestorEstablecimiento.buscarSisgapp();
+            
             responsables = new ArrayList<>();
             List<String> condicionesConsulta = new ArrayList<>();
             condicionesConsulta.add(App.CONDICION_WHERE);
-            condicionesConsulta.add(Responsable.RESPONSABLE_CONDICION_CODIGO_ESTABLECIMIENTO.replace("?", String.valueOf(sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodigoEstablecimiento())));
+            condicionesConsulta.add(Responsable.RESPONSABLE_CONDICION_CODIGO_ESTABLECIMIENTO.replace("?", String.valueOf(sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodigoEstablecimiento())+","+sisgapp));
             responsables.addAll(gestorResponsable.cargarListaResponsable(
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
             ));
