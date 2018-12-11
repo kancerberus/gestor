@@ -5,6 +5,8 @@
  */
 package com.gestor.publico;
 
+import com.sun.xml.internal.ws.encoding.MtomCodec;
+import com.sun.xml.internal.ws.message.ByteArrayAttachment;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -54,7 +56,7 @@ public class Establecimiento implements Serializable, Cloneable {
     private Date fechaCierreDiario;
     @Basic(optional = false)
     @Column(name = "tipo_establecimiento")
-    private String tipoEstablecimiento;
+    private String tipoEstablecimiento;    
     private String logo;
 
     @JoinColumn(name = "codigo_municipio", referencedColumnName = "codigo_municipio")
@@ -82,7 +84,8 @@ public class Establecimiento implements Serializable, Cloneable {
         this.direccion = direccion;
         this.telefono = telefono;
         this.correo = correo;
-        this.logo = logo;
+        this.logo = logo;        
+        
     }
 
     public Establecimiento(int codigoEstablecimiento, String nit, Date fechaCierreDiario, String tipoEstablecimiento) {
