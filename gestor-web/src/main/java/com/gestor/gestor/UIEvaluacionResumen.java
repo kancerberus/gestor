@@ -171,6 +171,26 @@ public class UIEvaluacionResumen {
 
     public void consultar() {
     }
+    
+    public void guardarFromEvaluacion() {
+        try {
+            GestorEvaluacionResumen gestorEvaluacionResumen = new GestorEvaluacionResumen();
+            GestorEvaluacion gestorEvaluacion = new GestorEvaluacion();
+            evaluacion.setEstado(gestorEvaluacionResumen.calcularEstadoEvaluacion(evaluacion.getCalificacion(), evaluacion.getPeso()));
+
+            gestorEvaluacionResumen.procesarEvaluacionResumen(evaluacion, evaluacionResumenList);
+            evaluacion.setResumenes(gestorEvaluacion.cargarResumenesEvaluacion(evaluacion.getEvaluacionPK()));
+            evaluacion.setResumenesList(gestorEvaluacion.getResumenesFromJson(evaluacion.getResumenes()));
+            
+        } catch (Exception e) {
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getCause().getMessage(), e.getMessage());
+            } else {
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }
+        }
+    }
 
     public void guardar() {
         try {

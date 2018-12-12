@@ -390,6 +390,7 @@ public class UIEvaluacion {
             uiEvaluacionResumen.setEvaluacion(e);
 
             UtilJSF.setBean("uiEvaluacionResumen", uiEvaluacionResumen, UtilJSF.SESSION_SCOPE);
+            uiEvaluacionResumen.guardarFromEvaluacion();
             return ("/seguimiento/evaluacion-resumen.xhtml?faces-redirect=true");
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
