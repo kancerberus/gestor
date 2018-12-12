@@ -321,8 +321,9 @@ public class EvaluacionCapacitacionDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_evaluacion, codigo_establecimiento, cod_capacitacion, cod_capacitacion_detalle,"
-                    + " cod_nota, documento_usuario, estado, nombre, descripcion, fecha_registro"
-                    + " FROM gestor.evaluacion_capacitacion_detalle_notas"
+                    + " cod_nota, documento_usuario, U.nombre as nombreus, U.apellido as apellidous, estado, ecdn.nombre as nombrec, descripcion, fecha_registro"
+                    + " FROM gestor.evaluacion_capacitacion_detalle_notas ecdn"
+                    + " JOIN public.usuarios U USING (documento_usuario)"
                     + " WHERE cod_evaluacion=" + pk.getCodEvaluacion() + " AND codigo_establecimiento=" + pk.getCodigoEstablecimiento()
                     + " AND cod_capacitacion=" + pk.getCodCapacitacion() + " AND cod_capacitacion_detalle=" + pk.getCodCapacitacionDetalle()
             );
@@ -332,7 +333,9 @@ public class EvaluacionCapacitacionDAO {
                 EvaluacionCapacitacionDetalleNotas ecdn = new EvaluacionCapacitacionDetalleNotas(
                         new EvaluacionCapacitacionDetalleNotasPK(pk.getCodEvaluacion(), pk.getCodigoEstablecimiento(), pk.getCodCapacitacion(),
                                 pk.getCodCapacitacionDetalle(), rs.getLong("cod_nota")),
-                        rs.getString("documento_usuario"), rs.getString("estado"), rs.getString("nombre"), rs.getString("descripcion"));
+                        rs.getString("documento_usuario"), rs.getString("estado"), rs.getString("nombrec"), rs.getString("descripcion"), 
+                        new Usuarios(null, rs.getString("nombreus"), rs.getString("apellidous"))
+                );
                 ecdn.setFechaRegistro(rs.getDate("fecha_registro"));
                 evaluacionCapacitacionDetalleNotasList.add(ecdn);
             }

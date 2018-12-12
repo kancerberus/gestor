@@ -310,8 +310,9 @@ public class EvaluacionPlanAccionDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle,"
-                    + " cod_nota, documento_usuario, estado, nombre, descripcion, fecha_registro"
-                    + " FROM gestor.evaluacion_plan_accion_detalle_notas"
+                    + " cod_nota, documento_usuario, U.nombre as nombreus, U.apellido as apellidous, estado, epadn.nombre as nombrepa, descripcion, fecha_registro"
+                    + " FROM gestor.evaluacion_plan_accion_detalle_notas epadn"
+                    + " JOIN public.usuarios U USING (documento_usuario)"
                     + " WHERE cod_evaluacion=" + pk.getCodEvaluacion() + " AND codigo_establecimiento=" + pk.getCodigoEstablecimiento()
                     + " AND cod_plan=" + pk.getCodPlan() + " AND cod_plan_detalle=" + pk.getCodPlanDetalle()
             );
@@ -322,7 +323,9 @@ public class EvaluacionPlanAccionDAO {
                 pk.setCodNota(rs.getLong("cod_nota"));
                 EvaluacionPlanAccionDetalleNotas epadn = new EvaluacionPlanAccionDetalleNotas(
                         new EvaluacionPlanAccionDetalleNotasPK(pk.getCodEvaluacion(), pk.getCodigoEstablecimiento(), pk.getCodPlan(), pk.getCodPlanDetalle(), rs.getLong("cod_nota")),
-                        rs.getString("documento_usuario"), rs.getString("estado"), rs.getString("nombre"), rs.getString("descripcion"));
+                        rs.getString("documento_usuario"), rs.getString("estado"), rs.getString("nombrepa"), rs.getString("descripcion"),
+                        new Usuarios(null, rs.getString("nombreus"), rs.getString("apellidous"))
+                );
                 epadn.setFechaRegistro(rs.getDate("fecha_registro"));
                 evaluacionPlanAccionDetalleNotasList.add(epadn);
             }
