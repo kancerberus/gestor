@@ -67,12 +67,13 @@ public class EvaluacionPlanAccionDetalleNotas implements Serializable {
         this.evaluacionPlanAccionDetalleNotasPK = evaluacionPlanAccionDetalleNotasPK;
     }
 
-    public EvaluacionPlanAccionDetalleNotas(EvaluacionPlanAccionDetalleNotasPK evaluacionPlanAccionDetalleNotasPK, String documentoUsuario, String estado, String nombre, String descripcion) {
+    public EvaluacionPlanAccionDetalleNotas(EvaluacionPlanAccionDetalleNotasPK evaluacionPlanAccionDetalleNotasPK, String documentoUsuario, String estado, String nombre, String descripcion, Usuarios usuarios) {
         this.evaluacionPlanAccionDetalleNotasPK = evaluacionPlanAccionDetalleNotasPK;
         this.documentoUsuario = documentoUsuario;
         this.estado = estado;
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.usuarios = usuarios;
     }
 
     public String getDocumentoUsuario() {

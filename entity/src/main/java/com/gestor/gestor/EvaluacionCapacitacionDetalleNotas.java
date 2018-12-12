@@ -59,12 +59,13 @@ public class EvaluacionCapacitacionDetalleNotas implements Serializable {
         this.evaluacionCapacitacionDetalleNotasPK = new EvaluacionCapacitacionDetalleNotasPK(codEvaluacion, codigoEstablecimiento, codCapacitacion, codCapacitacionDetalle, codNota);
     }
 
-    public EvaluacionCapacitacionDetalleNotas(EvaluacionCapacitacionDetalleNotasPK evaluacionCapacitacionDetalleNotasPK, String documentoUsuario, String estado, String nombre, String descripcion) {
+    public EvaluacionCapacitacionDetalleNotas(EvaluacionCapacitacionDetalleNotasPK evaluacionCapacitacionDetalleNotasPK, String documentoUsuario, String estado, String nombre, String descripcion, Usuarios usuarios) {
         this.evaluacionCapacitacionDetalleNotasPK = evaluacionCapacitacionDetalleNotasPK;
         this.documentoUsuario = documentoUsuario;
         this.estado = estado;
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.usuarios = usuarios;
     }
 
     public EvaluacionCapacitacionDetalleNotasPK getEvaluacionCapacitacionDetalleNotasPK() {
