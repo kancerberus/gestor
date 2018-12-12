@@ -435,7 +435,7 @@ public class UIPlanAccion {
             EvaluacionPlanAccionDetalleNotas epadn = new EvaluacionPlanAccionDetalleNotas(
                     new EvaluacionPlanAccionDetalleNotasPK(ep.getEvaluacionPlanAccionPK().getCodEvaluacion(), ep.getEvaluacionPlanAccionPK().getCodigoEstablecimiento(),
                             codPlan, epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()),
-                    documentoUsuario, epd.getEstado(), "REGISTRO INICIAL", "Inicia registro de plan acción, responsable: " + UtilTexto.capitalizarCadena(responsable));
+                    documentoUsuario, epd.getEstado(), "REGISTRO INICIAL", "Inicia registro de plan acción, responsable: " + UtilTexto.capitalizarCadena(responsable), usuariosSeleccionado);
             epd.setEvaluacionPlanAccionDetalleNotas(epadn);
 
             ep.setEvaluacionPlanAccionDetalle(epd);

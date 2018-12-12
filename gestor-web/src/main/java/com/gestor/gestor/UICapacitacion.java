@@ -434,7 +434,7 @@ public class UICapacitacion {
                             ec.getEvaluacionCapacitacionPK().getCodigoEstablecimiento(),
                             codCapacitacion, ecd.getEvaluacionCapacitacionDetallePK().getCodCapacitacionDetalle()
                     ),
-                    documentoUsuario, ecd.getEstado(), "REGISTRO INICIAL", "Inicia registro de capacitación, responsable: " + UtilTexto.capitalizarCadena(responsable));
+                    documentoUsuario, ecd.getEstado(), "REGISTRO INICIAL", "Inicia registro de capacitación, responsable: " + UtilTexto.capitalizarCadena(responsable), usuariosSeleccionado);
             ecd.setEvaluacionCapacitacionDetalleNotas(ecdn);
 
             ec.setEvaluacionCapacitacionDetalle(ecd);

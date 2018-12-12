@@ -22,7 +22,7 @@
 
                 </h:panelGrid>
 
-                <p:dataTable id="dtCapacitacionNota"  value="#{uiCapacitacion.evaluacionCapacitacionDetalle}" var="varCapacitacionNota" 
+                <p:dataTable id="dtCapacitacionNota"  value="#{uiCapacitacion.evaluacionCapacitacionDetalle.evaluacionCapacitacionDetalleNotasList}" var="varCapacitacionNota" 
                              emptyMessage="No se tienen notas de seguimiento registradas."
                              rowStyleClass="letra-xx-small-centro" styleClass="letra-xx-small-centro" 
                              rowHover="true">
@@ -64,7 +64,7 @@
                         </h:outputText>
                     </p:column>
                     <p:column>
-                        <h:outputText value="#{varCapacitacionNota.usuarios.usuario}"/>
+                        <h:outputText value="#{varCapacitacionNota.usuarios.nombreApellido}"/>
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varCapacitacionNota.estado}"/>

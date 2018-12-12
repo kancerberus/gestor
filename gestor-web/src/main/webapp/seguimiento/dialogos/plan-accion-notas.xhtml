@@ -22,7 +22,7 @@
 
                 </h:panelGrid>  
 
-                <p:dataTable id="dtPlanAccionNota"  value="#{uiPlanAccion.evaluacionPlanAccionDetalle}" var="varPlanAccionNota" emptyMessage="No se tienen notas de seguimiento registradas."
+                <p:dataTable id="dtPlanAccionNota"  value="#{uiPlanAccion.evaluacionPlanAccionDetalle.evaluacionPlanAccionDetalleNotasList}" var="varPlanAccionNota" emptyMessage="No se tienen notas de seguimiento registradas."
                              rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable"
                              rowHover="true">
                     <f:facet name="header">
@@ -34,7 +34,7 @@
                             <p:column headerText="Nombre" filterBy="#{varPlanAccionNota.nombre}" sortBy="#{varPlanAccionNota.nombre}"/>
                             <p:column  headerText="Descripción"/>
                             <p:column  headerText="Fecha" sortBy="#{varPlanAccionNota.fechaRegistro}"/>
-                            <p:column  headerText="Usuario" filterBy="#{varPlanAccionNota.usuarios.usuario}"/>
+                            <p:column  headerText="Usuario" filterBy="#{varPlanAccionNota.usuarios.nombre}"/>
                             <p:column  headerText="Estado" filterBy="#{varPlanAccionNota.estado}"/>
                         </p:row> 
                     </p:columnGroup>
@@ -65,7 +65,7 @@
                         </h:outputText>
                     </p:column>
                     <p:column>
-                        <h:outputText value="#{varPlanAccionNota.usuarios.usuario}"/>
+                        <h:outputText value="#{varPlanAccionNota.usuarios.nombreApellido}"/>
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varPlanAccionNota.estado}"/>

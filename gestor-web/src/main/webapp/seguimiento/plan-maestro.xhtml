@@ -9,7 +9,7 @@
 
 
         <h:form enctype="multipart/form-data" id="formPlanMaestro" style="font-size: small;">
-            <h2>PLAN MAESTRO</h2>
+            <h2>PLAN MAESTRO <p:outputLabel value="#{planMaestro.establecimiento.nombre}"/></h2>
 
             <p:tabView value="#{planMaestro.planTituloList}" var="varPlanTitulo" >
                 <p:tab title="#{varPlanTitulo.numeral}. #{varPlanTitulo.nombre}">
