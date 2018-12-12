@@ -9,7 +9,7 @@
 
     <ui:define name="content">
         <h:form enctype="multipart/form-data" id="formItem" style="font-size: small;">
-            
+            <p:panel style="float: right;" header="Administrador Plan Maestro: #{uiPlanMaestro.evaluacion.establecimiento.nombre}" >
             <p:panel  style="float: right;" id="panelItem"  header="Administrar Item" >                
                 <br></br>
                 <p:dataTable   style="width: 30%" value="#{uiPlantitulo.plantitulo}" var="varPlantitulo" emptyMessage="No hay Titulos"
@@ -99,7 +99,7 @@
                 </h:panelGrid>
                 <br/>
                 <h:panelGrid >  
-                    <p:inputTextarea rows="10" cols="60"  value="#{uiPlanitem.plansecciondetalleitemtexto.texto}" placeholder="Nuevo Texto"/>
+                    <p:inputTextarea disabled="#{empty uiPlanitem.plansecciondetalleitem.nombre}" rows="10" cols="60"  value="#{uiPlanitem.plansecciondetalleitemtexto.texto}" placeholder="Nuevo Texto"/>
                 </h:panelGrid>                
                 <h:panelGrid columns="1">
                     <p:commandButton value="Guardar Texto Seccion" action="#{uiPlanitem.guardarSecciondetalleitemtexto()}" 
@@ -108,11 +108,11 @@
                 </h:panelGrid>
                 <br/>
                 <h:panelGrid style="width: 20%" columns="8">                         
-                    <p:inputText  placeholder="Titulo" value="#{uiPlanitem.plansecciondetalleitemadjuntos.titulo}"/>  
-                    <p:inputText  placeholder="Descripcion" value="#{uiPlanitem.plansecciondetalleitemadjuntos.descripcion}"/>  
-                    <p:inputText  placeholder="Actividad" value="#{uiPlanitem.plansecciondetalleitemadjuntos.actividad}"/>  
-                    <p:inputText  placeholder="Descripcion General" value="#{uiPlanitem.plansecciondetalleitemadjuntos.descripcionGeneral}"/>  
-                    <p:inputText  placeholder="Documento" value="#{uiPlanitem.plansecciondetalleitemadjuntos.documento}"/>  
+                    <p:inputText disabled="#{empty uiPlanitem.plansecciondetalleitemtexto.texto}" placeholder="Titulo" value="#{uiPlanitem.plansecciondetalleitemadjuntos.titulo}"/>  
+                    <p:inputText disabled="#{empty uiPlanitem.plansecciondetalleitemtexto.texto}" placeholder="Descripcion" value="#{uiPlanitem.plansecciondetalleitemadjuntos.descripcion}"/>  
+                    <p:inputText disabled="#{empty uiPlanitem.plansecciondetalleitemtexto.texto}" placeholder="Actividad" value="#{uiPlanitem.plansecciondetalleitemadjuntos.actividad}"/>  
+                    <p:inputText disabled="#{empty uiPlanitem.plansecciondetalleitemtexto.texto}" placeholder="Descripcion General" value="#{uiPlanitem.plansecciondetalleitemadjuntos.descripcionGeneral}"/>  
+                    <p:inputText disabled="#{empty uiPlanitem.plansecciondetalleitemtexto.texto}" placeholder="Documento" value="#{uiPlanitem.plansecciondetalleitemadjuntos.documento}"/>  
                         
                         
                     <p:selectOneMenu value="#{uiPlanitem.plansecciondetalleitemadjuntos.adjuntosCategoria}" converter="convertidorGenerico"
@@ -201,7 +201,7 @@
                 </h:panelGrid>
 
 
-                
+                </p:panel>
             </p:panel>
         </h:form>
 

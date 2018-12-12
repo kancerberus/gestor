@@ -19,6 +19,7 @@ import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.controlador.GestorConfiguracion;
+import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorResponsable;
 import com.gestor.publico.controlador.GestorUsuario;
 import java.text.SimpleDateFormat;
@@ -478,11 +479,14 @@ public class UICapacitacion {
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodDetalle(),
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem()
             ));
+            
+            GestorEstablecimiento gestorEstablecimiento= new GestorEstablecimiento();
+            Integer sisgapp = gestorEstablecimiento.buscarSisgapp();
 
             responsables = new ArrayList<>();
             List<String> condicionesConsulta = new ArrayList<>();
             condicionesConsulta.add(App.CONDICION_WHERE);
-            condicionesConsulta.add(Responsable.RESPONSABLE_CONDICION_CODIGO_ESTABLECIMIENTO.replace("?", String.valueOf(sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodigoEstablecimiento())));
+            condicionesConsulta.add(Responsable.RESPONSABLE_CONDICION_CODIGO_ESTABLECIMIENTO.replace("?", String.valueOf(sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodigoEstablecimiento())+","+sisgapp));
             responsables.addAll(gestorResponsable.cargarListaResponsable(
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
             ));

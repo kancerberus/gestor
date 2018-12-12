@@ -55,6 +55,31 @@ public class EstablecimientoDAO {
             }
         }
     }
+    
+    public Integer buscarSisgapp() throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT codigo_establecimiento "
+                    + " FROM public.establecimiento "
+                    + " WHERE nombre='SISGAPP' "
+            );
+            rs = consulta.ejecutar(sql);
+            if (rs.next()) {
+                return rs.getInt("codigo_establecimiento");
+            }
+            return null;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 
     public String cargarPrefijo(int codigoEstablecimiento) throws SQLException {
         ResultSet rs = null;
@@ -116,7 +141,7 @@ public class EstablecimientoDAO {
                 e.setDireccion(rs.getString("direccion"));
                 e.setTelefono(rs.getString("telefono"));
                 e.setCorreo(rs.getString("correo"));
-                e.setLogo(rs.getString("logo"));
+                e.setLogo(rs.getString("logo"));                
                 listaEstablecimientos.add(e );
             }
             return listaEstablecimientos;
@@ -137,8 +162,8 @@ public class EstablecimientoDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT E.codigo_establecimiento, E.nombre, E.nit, E.direccion, E.telefono, E.correo, E.fecha_cierre_diario, E.tipo_establecimiento,"
-                    + " E.logo"
+                    "SELECT E.codigo_establecimiento, E.nombre, E.nit, E.direccion, E.telefono, E.correo, E.fecha_cierre_diario, E.tipo_establecimiento, "
+                    + " E.logo, E.archivo"
                     + " FROM rel_usuarios_establecimiento"
                     + " JOIN establecimiento E USING (codigo_establecimiento)"
                     + " WHERE documento_usuario='" + documentoUsuario + "'"

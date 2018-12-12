@@ -9,7 +9,8 @@
 
     <ui:define name="content">
         <h:form enctype="multipart/form-data" id="formTitulo" style="font-size: small;">            
-            <p:panel  style="float: right;" id="panelTitulos"  header="Administrar Titulos" >                
+            <p:panel style="float: right;" header="Administrador Plan Maestro: #{uiPlanMaestro.evaluacion.establecimiento.nombre}" >
+                <p:panel style="float: right;" id="panelTitulos"  header="Administrar Titulos" >
                 <br/>   
                 <p:dataTable   style="width: 30%" value="#{uiPlantitulo.plantituloList}" var="varPlantitulo" emptyMessage="No hay Titulos"
                               rowStyleClass="Centro">
@@ -66,7 +67,7 @@
                 </p:dataTable>
                 <br/>
                 <h:panelGrid >  
-                    <p:inputTextarea rows="10" cols="60"  value="#{uiPlantitulo.plantitulotexto.texto}" placeholder="Nuevo Texto"/>
+                    <p:inputTextarea disabled="#{empty uiPlantitulo.plantitulo.nombre}" rows="10" cols="60"  value="#{uiPlantitulo.plantitulotexto.texto}" placeholder="Nuevo Texto"/>
                 </h:panelGrid>
                 
                 <h:panelGrid columns="3">
@@ -76,9 +77,9 @@
                 </h:panelGrid>                
                 <br/>
                 <h:panelGrid columns="8">                      
-                    <p:inputText  placeholder="Titulo" value="#{uiPlantitulo.plantituloadjunto.titulo}"/>                      
-                    <p:inputText  placeholder="Descripcion" value="#{uiPlantitulo.plantituloadjunto.descripcion}"/>  
-                    <p:inputText  placeholder="Documento" value="#{uiPlantitulo.plantituloadjunto.documento}"/>  
+                    <p:inputText disabled="#{empty uiPlantitulo.plantitulotexto.texto}" placeholder="Titulo" value="#{uiPlantitulo.plantituloadjunto.titulo}"/>                      
+                    <p:inputText disabled="#{empty uiPlantitulo.plantitulotexto.texto}" placeholder="Descripcion" value="#{uiPlantitulo.plantituloadjunto.descripcion}"/>  
+                    <p:inputText disabled="#{empty uiPlantitulo.plantitulotexto.texto}" placeholder="Documento" value="#{uiPlantitulo.plantituloadjunto.documento}"/>  
                         
                         
                     <p:selectOneMenu value="#{uiPlantitulo.plantituloadjunto.adjuntosCategoria}" converter="convertidorGenerico"
@@ -106,7 +107,7 @@
                 <p:dataTable style="width: 80%" value="#{uiPlantitulo.plantituloadjuntoList}" var="varPlantituloadjunto" emptyMessage="No hay Documentos"
                             rowStyleClass="Centro">
 
-                    <p:columnGroup type="header" >  
+                    <p:columnGroup  type="header" >  
                         <p:row>                              
                             <p:column  style="width: 10%" headerText="Seleccionar"/>                            
                             <p:column  headerText="Adjunto"/>
@@ -157,7 +158,8 @@
                     icon="ui-icon-return"/>
                     <p:commandButton value="ADMIN SUBTITULO 1 " action="#{uiPlanMaestro.crearSeccion()}" 
                     icon="ui-icon-return"/>                    
-                </h:panelGrid>       
+                </h:panelGrid>    
+                </p:panel>
             </p:panel>
         </h:form>
     </ui:define>

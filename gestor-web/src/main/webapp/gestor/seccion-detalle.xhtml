@@ -33,7 +33,7 @@
                     <p:button outcome="seccion-detalle-items" value="ITEM #{seccionDetalle.nombre}" icon="ui-icon-arrowreturn-1-e" style="font-size: 9px;"
                               rendered="#{not empty seccionDetalle.seccionDetallePK.codDetalle}"/>
                 </f:facet>
-
+                <p:panel header="Empresa a Evaluar: #{evaluacion.establecimiento.nombre}">
                 <p:dataGrid var="varSeccionDetalle" value="#{seccion.seccionDetalleList}" columns="2" layout="grid"
                             rows="100" paginator="true" id="dtSeccionDetalle"
                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -54,7 +54,7 @@
                     </p:panel>
 
                 </p:dataGrid>
-
+                </p:panel>
             </p:panel>
 
             <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
