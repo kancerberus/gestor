@@ -163,7 +163,7 @@ public class EstablecimientoDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT E.codigo_establecimiento, E.nombre, E.nit, E.direccion, E.telefono, E.correo, E.fecha_cierre_diario, E.tipo_establecimiento, "
-                    + " E.logo, E.archivo"
+                    + " E.logo"
                     + " FROM rel_usuarios_establecimiento"
                     + " JOIN establecimiento E USING (codigo_establecimiento)"
                     + " WHERE documento_usuario='" + documentoUsuario + "'"
