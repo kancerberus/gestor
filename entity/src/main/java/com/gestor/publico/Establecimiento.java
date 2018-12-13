@@ -5,8 +5,6 @@
  */
 package com.gestor.publico;
 
-import com.sun.xml.internal.ws.encoding.MtomCodec;
-import com.sun.xml.internal.ws.message.ByteArrayAttachment;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
