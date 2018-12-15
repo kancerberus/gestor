@@ -5,9 +5,14 @@
  */
 package com.gestor.publico;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +26,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.primefaces.component.graphicimage.GraphicImage;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -62,8 +70,8 @@ public class Establecimiento implements Serializable, Cloneable {
     private Municipios municipios;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "establecimiento")
     private List<RelUsuariosEstablecimiento> relUsuariosEstablecimientoList;
-
-    public Establecimiento() {
+    
+    public Establecimiento() {        
     }
 
     public Establecimiento(int codigoEstablecimiento) {
@@ -82,7 +90,8 @@ public class Establecimiento implements Serializable, Cloneable {
         this.direccion = direccion;
         this.telefono = telefono;
         this.correo = correo;
-        this.logo = logo;        
+        this.logo = logo;
+        
         
     }
 
@@ -91,7 +100,11 @@ public class Establecimiento implements Serializable, Cloneable {
         this.nit = nit;
         this.fechaCierreDiario = fechaCierreDiario;
         this.tipoEstablecimiento = tipoEstablecimiento;
-    }
+    }    
+
+    
+    
+    
 
     public Integer getCodigoEstablecimiento() {
         return codigoEstablecimiento;
@@ -108,14 +121,14 @@ public class Establecimiento implements Serializable, Cloneable {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
+    
     public String getNit() {
         return nit;
     }
 
     public void setNit(String nit) {
         this.nit = nit;
-    }
+    } 
 
     public String getDireccion() {
         return direccion;
