@@ -30,12 +30,12 @@
                                                update="formEvaluaciones:opEstablecimiento">
                                     <h:panelGroup rendered="#{not empty varEstablecimiento.logo}">
                                         <img src="data:image/jpg;base64,#{varEstablecimiento.logo}" />
-                                        <h:outputText styleClass="ui-icon ui-icon-newwin" style="margin:0 auto;" />
+                                        
                                     </h:panelGroup>
-                                    <h:panelGrid rendered="#{empty varEstablecimiento.logo}" columns="1" styleClass="Centro">
-                                        <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" title="#{varEstablecimiento.nombre}"/> 
-                                        <h:outputText value="#{varEstablecimiento.nombre}" style="margin:0 auto;" />
-                                    </h:panelGrid>
+                                    <p:column>                        
+                                        <p:graphicImage value="#{varEstablecimiento.logo}" cache="false" width="80"/>
+                                        <h:outputLabel  value="#{varEstablecimiento.nombre}" style="float:top " />
+                                    </p:column>
                                 </p:commandLink>
                             </h:panelGrid>
                         </center>

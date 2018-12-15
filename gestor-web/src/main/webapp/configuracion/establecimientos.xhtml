@@ -11,13 +11,14 @@
     <ui:define name="content">
         <h:form enctype="multipart/form-data" id="formEstablecimientos" style="font-size: small;">
             <p:panel id="panelEstablecimientos"  header="Administrar Establecimientos" >
-                <h:panelGrid columns="6" >
+                <h:panelGrid columns="7" >
                     <h:outputText value="Nombre"/>
                     <h:outputText value="Municipio"/>
                     <h:outputText value="Nit"/>
                     <h:outputText value="Dirección"/>
                     <h:outputText value="Telefono"/>
-                    <h:outputText value="Correo"/>                    
+                    <h:outputText value="Correo"/>     
+                    <h:outputText value="Logo"/>     
                     
 
                     <p:inputText value="#{uiEstablecimiento.establecimiento.nombre}" placeholder="Nombre Establecimiento"/>
@@ -29,6 +30,10 @@
                     <p:inputText value="#{uiEstablecimiento.establecimiento.direccion}" placeholder="Dirección"/>
                     <p:inputText value="#{uiEstablecimiento.establecimiento.telefono}" placeholder="Telefono"/>
                     <p:inputText value="#{uiEstablecimiento.establecimiento.correo}" placeholder="Correo"/>                    
+                    <p:fileUpload value="#{uiEstablecimiento.file}" mode="advanced" skinSimple="true" label="logo" fileUploadListener="#{uiEstablecimiento.cargarLogo}"
+                                  auto="true"  update="formEstablecimientos" process="@this formEstablecimientos">
+                    <p:outputLabel style="font-weight: bolder;" value="#{uiEstablecimiento.file.fileName}"/>
+                    </p:fileUpload>
 
                 </h:panelGrid>
 
@@ -56,6 +61,7 @@
                             <p:column  headerText="Dirección" />
                             <p:column  headerText="Telefono" />
                             <p:column  headerText="Correo" />
+                            <p:column  headerText="Logos" />
                         </p:row> 
                     </p:columnGroup>
 
@@ -84,7 +90,9 @@
                     <p:column>
                         <h:outputText value="#{varEstablecimiento.correo}"/>
                     </p:column>
-
+                    <p:column>                        
+                        <p:graphicImage value="#{varEstablecimiento.logo}" cache="false" width="70"/>
+                    </p:column>
                 </p:dataTable>
 
             </p:panel>

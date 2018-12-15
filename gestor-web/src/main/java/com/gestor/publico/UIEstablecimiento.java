@@ -13,18 +13,24 @@ import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
 import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorMunicipios;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -39,34 +45,35 @@ public class UIEstablecimiento implements Serializable {
     private GestorEstablecimiento gestorEstablecimiento;
     private GestorGeneral gestorGeneral;
     private GestorMunicipios gestorMunicipios;
-
     private Establecimiento establecimiento = new Establecimiento();
-
     private List<Establecimiento> establecimientoList = new ArrayList<>();
-
-    private List<Municipios> municipiosList = new ArrayList<>();
+    private List<Municipios> municipiosList = new ArrayList<>();    
+    
 
     @PostConstruct
     public void init() {
         this.cargarEstablecimientosInstitucion();
-        this.cargarMunicipios();
+        this.cargarMunicipios();             
     }
 
     public void subirItemEstablecimiento() {
         establecimiento = (Establecimiento) UtilJSF.getBean("varEstablecimiento");
         establecimientoList.remove(establecimiento);
     }
-
+    
     public void guardarEstablecimiento() {
         try {
             Establecimiento e = this.getEstablecimiento();
             GestorEstablecimiento gestorEstablecimiento = new GestorEstablecimiento();
             GestorGeneral gestorGeneral = new GestorGeneral();
-
+            
+            String path2="/resources/imagenes/establecimientos/";
+            e.setLogo(path2+file.getFileName());
             gestorEstablecimiento.validarEstablecimiento(e);
             if (e.getCodigoEstablecimiento() == null || e.getCodigoEstablecimiento() == 0) {
                 e.setCodigoEstablecimiento(gestorGeneral.siguienteCodigoEntidad("codigo_establecimiento", "establecimiento"));
-            }            
+            }                                   
+            
             gestorEstablecimiento.almacenarEstablecimiento(e);
 
             UtilMSG.addSuccessMsg("Empresa almacenada correctamente.");
@@ -88,19 +95,35 @@ public class UIEstablecimiento implements Serializable {
         this.cargarEstablecimientosInstitucion();
         this.cargarMunicipios();
         this.establecimiento = new Establecimiento();
+        this.file=null;
     }
-
-    private void cargarEstablecimientosInstitucion() {
+    private void cargarEstablecimientosInstitucion() {        
         try {
             this.establecimientoList = new ArrayList<>();
-            gestorEstablecimiento = new GestorEstablecimiento();
-            this.establecimientoList.addAll((Collection<? extends Establecimiento>) gestorEstablecimiento.cargarListaEstablecimientos());
+            gestorEstablecimiento = new GestorEstablecimiento();            
+            this.establecimientoList.addAll((Collection<? extends Establecimiento>) gestorEstablecimiento.cargarListaEstablecimientos());                                                                                                
+            
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
+    }    
+    
+    public void cargarLogo(FileUploadEvent event) {
+        try {
+            String ruta = Propiedades.getInstancia().getPropiedades().getProperty("guardarLogos");
+            File carpeta = new File(ruta);
+            if (!carpeta.exists()) {
+                carpeta.mkdirs();
+            }
+
+            UtilArchivo.guardarStream(ruta + File.separator + event.getFile().getFileName(), event.getFile().getInputstream());
+            this.file = event.getFile();           
+        } catch (IOException ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+
     }
-
-
+    
     private void cargarMunicipios() {
         try {
             gestorMunicipios = new GestorMunicipios();
@@ -109,7 +132,6 @@ public class UIEstablecimiento implements Serializable {
             UtilLog.generarLog(this.getClass(), ex);
         }
     }
-
     /**
      * @return the establecimiento
      */
