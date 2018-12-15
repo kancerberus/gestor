@@ -8,7 +8,7 @@ package com.gestor.seguimiento.dao;
 import com.gestor.gestor.AdjuntosCategoria;
 import com.gestor.gestor.AdjuntosCategoriaTipo;
 import com.gestor.gestor.AdjuntosCategoriaTipoPK;
-import com.gestor.seguimiento.PlanSeccionAdjuntos;
+
 import com.gestor.seguimiento.PlanSeccionAdjuntos;
 import com.gestor.seguimiento.PlanSeccionAdjuntosPK;
 import com.gestor.seguimiento.PlanSeccion;

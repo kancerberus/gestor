@@ -13,6 +13,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import conexion.Consulta;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -120,10 +126,11 @@ public class EstablecimientoDAO {
             }
         }
     }
-
-    public List<?> cargarListaEstablecimientos() throws SQLException {
+    
+    public List<?> cargarListaEstablecimientos() throws SQLException {        
         ResultSet rs = null;
-        Consulta consulta = null;
+        
+        Consulta consulta = null;        
         List<Establecimiento> listaEstablecimientos = new ArrayList<>();
         try {
             consulta = new Consulta(this.conexion);
@@ -141,9 +148,10 @@ public class EstablecimientoDAO {
                 e.setDireccion(rs.getString("direccion"));
                 e.setTelefono(rs.getString("telefono"));
                 e.setCorreo(rs.getString("correo"));
-                e.setLogo(rs.getString("logo"));                
-                listaEstablecimientos.add(e );
+                e.setLogo(rs.getString("logo"));  
+                listaEstablecimientos.add(e);
             }
+            
             return listaEstablecimientos;
         } finally {
             if (rs != null) {
@@ -153,8 +161,8 @@ public class EstablecimientoDAO {
                 consulta.desconectar();
             }
         }
-    }
-
+    }  
+    
     public List<?> cargarListaEstablecimientosUsuario(String documentoUsuario) throws SQLException {
         ResultSet rs = null;
         Consulta consulta = null;
@@ -190,13 +198,13 @@ public class EstablecimientoDAO {
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO establecimiento("
                     + " codigo_establecimiento, codigo_municipio, nombre, nit, direccion, "
-                    + " telefono, correo, fecha_cierre_diario, tipo_establecimiento)"
+                    + " telefono, correo, fecha_cierre_diario, tipo_establecimiento, logo)"
                     + " VALUES (" + establecimiento.getCodigoEstablecimiento() + ", '" + establecimiento.getMunicipios().getCodigoMunicipio() + "',"
                     + " '" + establecimiento.getNombre() + "', '" + establecimiento.getNit() + "', '" + establecimiento.getDireccion() + "',"
-                    + " '" + establecimiento.getTelefono() + "', '" + establecimiento.getCorreo() + "', current_date-1, 'I')"
+                    + " '" + establecimiento.getTelefono() + "', '" + establecimiento.getCorreo() + "', current_date-1, 'I', '"+establecimiento.getLogo()+"')"
                     + " ON CONFLICT (codigo_establecimiento) DO UPDATE"
                     + " SET codigo_municipio=EXCLUDED.codigo_municipio, nombre=EXCLUDED.nombre, nit=EXCLUDED.nit, "
-                    + " direccion=EXCLUDED.direccion, telefono=EXCLUDED.telefono, correo=EXCLUDED.correo, fecha_cierre_diario=EXCLUDED.fecha_cierre_diario, tipo_establecimiento=EXCLUDED.tipo_establecimiento"
+                    + " direccion=EXCLUDED.direccion, telefono=EXCLUDED.telefono, correo=EXCLUDED.correo, fecha_cierre_diario=EXCLUDED.fecha_cierre_diario, tipo_establecimiento=EXCLUDED.tipo_establecimiento, logo=EXCLUDED.logo"
             );
             consulta.actualizar(sql);
         } finally {
