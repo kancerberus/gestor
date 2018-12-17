@@ -67,8 +67,12 @@ public class UIEstablecimiento implements Serializable {
             GestorEstablecimiento gestorEstablecimiento = new GestorEstablecimiento();
             GestorGeneral gestorGeneral = new GestorGeneral();
             
+            
+            if(file!=null){
             String path2="/resources/imagenes/establecimientos/";
             e.setLogo(path2+file.getFileName());
+            }
+            
             gestorEstablecimiento.validarEstablecimiento(e);
             if (e.getCodigoEstablecimiento() == null || e.getCodigoEstablecimiento() == 0) {
                 e.setCodigoEstablecimiento(gestorGeneral.siguienteCodigoEntidad("codigo_establecimiento", "establecimiento"));
