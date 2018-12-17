@@ -47,7 +47,7 @@
                                      icon="ui-icon-cancel"
                                      update="formEstablecimientos"/>
                 </h:panelGrid>
-                <p:dataTable  value="#{uiEstablecimiento.establecimientoList}" var="varEstablecimiento" emptyMessage="No hay establecimientos"
+                <p:dataTable value="#{uiEstablecimiento.establecimientoList}" var="varEstablecimiento" emptyMessage="No hay establecimientos"
                               rowStyleClass="letra-x-small-centro"
                               rowHover="true">
 
@@ -90,8 +90,10 @@
                     <p:column>
                         <h:outputText value="#{varEstablecimiento.correo}"/>
                     </p:column>
-                    <p:column>                        
+                    <p:column >                        
                         <p:graphicImage value="#{varEstablecimiento.logo}" cache="false" width="60"/>
+                        <h:graphicImage style="margin-right: 33%" url="/resources/imagenes/establecimientos/establecimiento.png" width="20%" 
+                                        rendered="#{empty varEstablecimiento.logo}"/>
                     </p:column>
                 </p:dataTable>
 

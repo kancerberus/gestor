@@ -31,7 +31,9 @@
                                           var="t" filter="true" filterMatchMode="contains" showCheckbox="true" styleClass="Centro" >
                             <f:selectItems value="#{uiPlanMaestro.establecimientoList}" var="varEmpresa" itemLabel="#{varEmpresa.nombre}" itemValue="#{varEmpresa}" />
                             <p:column>                        
-                                    <p:graphicImage value="#{t.logo}" cache="false" width="20"/>
+                                    <p:graphicImage value="#{t.logo}" cache="false" width="40"/>
+                                    <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" width="20" 
+                                                title="#{t.nombre}" rendered="#{empty t.logo}"/>
                             </p:column>
                             <p:column>
                                 <h:outputText value="#{t.nombre}" />

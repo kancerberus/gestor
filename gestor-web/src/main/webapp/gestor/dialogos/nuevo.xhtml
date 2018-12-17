@@ -33,7 +33,9 @@
                                         
                                     </h:panelGroup>
                                     <p:column>                        
-                                        <p:graphicImage value="#{varEstablecimiento.logo}" cache="false" width="80"/>
+                                        <p:graphicImage value="#{varEstablecimiento.logo}" cache="false" width="50"/>
+                                        <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" width="40" 
+                                                        title="#{varEstablecimiento.nombre}" rendered="#{empty varEstablecimiento.logo}"/>
                                         <h:outputLabel  value="#{varEstablecimiento.nombre}" style="float:top " />
                                     </p:column>
                                 </p:commandLink>

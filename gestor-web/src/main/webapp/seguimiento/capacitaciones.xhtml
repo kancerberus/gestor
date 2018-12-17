@@ -39,9 +39,11 @@
                             <f:selectItems value="#{uiCapacitacion.establecimientoList}" var="varEmpresa" itemLabel="#{varEmpresa.nombre}" itemValue="#{varEmpresa}" />
                             <p:column>
                                 <p:column>
-                                <p:column>                        
-                                    <p:graphicImage value="#{t.logo}" cache="false" width="20"/>
-                            </p:column> 
+                                 <p:column>                        
+                                    <p:graphicImage value="#{t.logo}" cache="false" width="40"/>
+                                    <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" width="20" 
+                                                title="#{t.nombre}" rendered="#{empty t.logo}"/>
+                            </p:column>  
                             </p:column>
                             </p:column>
                             <p:column>
