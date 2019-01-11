@@ -145,6 +145,17 @@ public class GestorEvaluacion extends Gestor {
             this.cerrarConexion();
         }
     }
+    
+    /*public Integer avancePlanaccion( Long codEvaluacion) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionDAO evaluacionDAO = new EvaluacionDAO(conexion);
+            return evaluacionDAO.avancePlanaccion( codEvaluacion);
+
+        } finally {
+            this.cerrarConexion();
+        }
+    }*/
 
     public void finalizarEvaluacion(Evaluacion evaluacion) throws Exception {
         try {

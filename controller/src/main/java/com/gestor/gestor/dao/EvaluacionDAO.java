@@ -270,6 +270,32 @@ public class EvaluacionDAO {
             }
         }
     }
+    
+    
+    /*public Integer avancePlanaccion(Long codEvaluacion) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        Integer total=0;
+        try {            
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(                    
+                    "SELECT count(EPD) as total"
+                    +" FROM gestor.evaluacion_plan_accion_detalle EPD "
+                    +" WHERE cod_evaluacion='"+codEvaluacion+"'  "
+            );
+            rs = consulta.ejecutar(sql);
+            rs.next();            
+            total= rs.getInt("total");
+
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }*/
 
     public void actualizarEstadoEvaluacion(EvaluacionPK evaluacionPK, String estado) throws SQLException {
         Consulta consulta = null;

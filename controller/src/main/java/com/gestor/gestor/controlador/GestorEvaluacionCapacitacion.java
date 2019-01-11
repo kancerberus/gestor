@@ -153,4 +153,55 @@ public class GestorEvaluacionCapacitacion extends Gestor {
             this.cerrarConexion();
         }
     }
+    
+    
+    public List<?> cargarListaModalidad() throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionCapacitacionDAO evaluacionCapacitacionDAO = new EvaluacionCapacitacionDAO(conexion);
+            return evaluacionCapacitacionDAO.cargarListaModalidad();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public List<?> cargarListaTecnicas() throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionCapacitacionDAO evaluacionCapacitacionDAO = new EvaluacionCapacitacionDAO(conexion);
+            return evaluacionCapacitacionDAO.cargarListaTecnicas();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public List<?> cargarListaFacilitadores() throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionCapacitacionDAO evaluacionCapacitacionDAO = new EvaluacionCapacitacionDAO(conexion);
+            return evaluacionCapacitacionDAO.cargarListaFacilitadores();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public List<?> cargarListaDirigidas() throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionCapacitacionDAO evaluacionCapacitacionDAO = new EvaluacionCapacitacionDAO(conexion);
+            return evaluacionCapacitacionDAO.cargarListaDirigidas();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public List<?> cargarListaRecursos() throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionCapacitacionDAO evaluacionCapacitacionDAO = new EvaluacionCapacitacionDAO(conexion);
+            return evaluacionCapacitacionDAO.cargarListaRecursos();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
 }

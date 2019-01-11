@@ -7,7 +7,10 @@ package com.gestor.publico.controlador;
 
 import com.gestor.controller.Gestor;
 import com.gestor.publico.Lista;
+import com.gestor.publico.ListaDetalle;
 import com.gestor.publico.dao.ListaDAO;
+import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -28,6 +31,16 @@ public class GestorLista extends Gestor {
                 l.setListaDetalleList(listaDAO.cargarListaDetalle(l.getCodLista()));
             }
             return l;
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public List<?> cargarListadetalles() throws Exception {
+        try {
+            this.abrirConexion();
+            ListaDAO listaDAO = new ListaDAO(conexion);
+            return listaDAO.cargarListaDetalle();
         } finally {
             this.cerrarConexion();
         }
