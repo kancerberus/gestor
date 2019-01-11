@@ -49,8 +49,7 @@
                             <p align="left" class="letraBackgroundWhite">#{varSeccionDetalleItems.detalle}</p>
                             <br/>
                             <p:outputLabel for="sorPuntaje" value="Puntaje Posible" styleClass="labelOpcion" style="font-size: 20px;"/>
-                            <p:selectOneRadio id="sorPuntaje" value="#{varSeccionDetalleItems.evaluacionPuntajes.descripcion}" layout="responsive" columns="4" tabindex="#{varSeccionDetalleItems.orden}"
-                                               >
+                            <p:selectOneRadio id="sorPuntaje" value="#{varSeccionDetalleItems.evaluacionPuntajes.descripcion}" layout="responsive" columns="4" tabindex="#{varSeccionDetalleItems.orden}">
                                 <f:selectItems value="#{varSeccionDetalleItems.evaluacionPuntajesItems}" var="c" itemLabel="#{descripcion}" itemValue="#{descripcion}"/>
                                 <p:ajax event="change" process="@this" listener="#{uiEvaluacion.guardarSeccionDetalleItems()}" update=":formSeccionDetalleItems:pgAvance"/>
                             </p:selectOneRadio>

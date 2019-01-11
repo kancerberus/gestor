@@ -15,15 +15,18 @@ import com.gestor.entity.UtilMSG;
 import com.gestor.entity.UtilTexto;
 import com.gestor.gestor.controlador.GestorEvaluacionCapacitacion;
 import com.gestor.modelo.Sesion;
+import com.gestor.publico.CentroTrabajo;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
+import com.gestor.publico.controlador.GestorCentroTrabajo;
 import com.gestor.publico.controlador.GestorConfiguracion;
 import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorResponsable;
 import com.gestor.publico.controlador.GestorUsuario;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -70,10 +73,20 @@ public class UICapacitacion {
 
     private Long codEvaluacion;
     private String responsable;
+    private List<Modalidad> modalidades = new ArrayList<>();
+    private List<TecnicaCapacitacion> tecnicas = new ArrayList<>();
+    private List<Facilitador> facilitadores = new ArrayList<>();
+    private List<Dirigida> dirigidas = new ArrayList<>();
+    private List<Recursos> recursos = new ArrayList<>();
+    private List<CentroTrabajo> centrostrabajo = new ArrayList<>();
     private Date fechaCapacitacionInicio;
     private Date fechaCapacitacionFin;
     
     private List<Responsable> responsables = new ArrayList<>();
+    private List<FuenteHallazgo> fuentehallazgos = new ArrayList<>();
+    private List<ClaseHallazgo> clasehallazgos = new ArrayList<>();
+    private List<TipoAccion> tipoacciones = new ArrayList<>();
+    private List<MotivoCorreccion> motivocorrecciones  = new ArrayList<>();
 
     public UICapacitacion() {
         try {
@@ -369,7 +382,7 @@ public class UICapacitacion {
             GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
             ecd = gestorEvaluacionCapacitacion.validarEvaluacionCapacitacionDetalle(ecd);
             gestorEvaluacionCapacitacion.actualizarEvaluacionCapacitacionDetalle(ecd);
-            this.enviarCorreo();
+            //this.enviarCorreo();
             this.modificarActivo = Boolean.FALSE;
 
             evaluacionCapacitacionDetalles = new ArrayList<>();
@@ -396,7 +409,7 @@ public class UICapacitacion {
 
     public void procesarCapacitacion() {
         try {
-            EvaluacionCapacitacionDetalle ecd = (EvaluacionCapacitacionDetalle) UtilJSF.getBean("evaluacionCapacitacionDetalle");;
+            EvaluacionCapacitacionDetalle ecd = (EvaluacionCapacitacionDetalle) UtilJSF.getBean("evaluacionCapacitacionDetalle");
             String documentoUsuario = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios().getUsuariosPK().getDocumentoUsuario();
 
             GestorGeneral gestorGeneral = new GestorGeneral();
@@ -440,7 +453,7 @@ public class UICapacitacion {
             ec.setEvaluacionCapacitacionDetalle(ecd);
 
             gestorEvaluacionCapacitacion.procesarCapacitacion(ec);
-            this.enviarCorreo();
+            //this.enviarCorreo();
             UtilJSF.setBean("evaluacionCapacitacionDetalle", new EvaluacionCapacitacionDetalle(), UtilJSF.SESSION_SCOPE);
             UtilMSG.addSuccessMsg("Capacitación Guardada", "Se almaceno la capacitación satisfactoriamente.");
             evaluacionCapacitacionDetalles = new ArrayList<>();
@@ -469,6 +482,19 @@ public class UICapacitacion {
             
             GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
             GestorResponsable gestorResponsable = new GestorResponsable();
+            
+            if(modalidades.isEmpty()){
+            modalidades.addAll((Collection<? extends Modalidad>) gestorEvaluacionCapacitacion.cargarListaModalidad());
+            tecnicas.addAll((Collection<? extends TecnicaCapacitacion>) gestorEvaluacionCapacitacion.cargarListaTecnicas());
+            facilitadores.addAll((Collection<? extends Facilitador>) gestorEvaluacionCapacitacion.cargarListaFacilitadores());
+            dirigidas.addAll((Collection<? extends Dirigida>) gestorEvaluacionCapacitacion.cargarListaDirigidas());
+            recursos.addAll((Collection<? extends Recursos>) gestorEvaluacionCapacitacion.cargarListaRecursos());
+            }
+            
+            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
+            GestorCentroTrabajo gestorCentrotrabajo = new GestorCentroTrabajo();
+            centrostrabajo= new ArrayList<>();
+            centrostrabajo.addAll((Collection<? extends CentroTrabajo>) gestorCentrotrabajo.cargarListaCentrosTrabajo(e.getEstablecimiento().getCodigoEstablecimiento()));
             
             evaluacionCapacitacionDetalles = new ArrayList<>();
             evaluacionCapacitacionDetalles.addAll(gestorEvaluacionCapacitacion.cargarListaEvaluacionCapacitacionDetalle(
@@ -504,7 +530,7 @@ public class UICapacitacion {
             }
 
             
-            Dialogo dialogo = new Dialogo("dialogos/capacitacion.xhtml", "Capactiación", "clip", Dialogo.WIDTH_80);
+            Dialogo dialogo = new Dialogo("dialogos/capacitacion.xhtml", "Capactiación", "clip", Dialogo.WIDTH_100);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
             UtilJSF.execute("PF('dialog').show();");
 
@@ -615,6 +641,86 @@ public class UICapacitacion {
         }
             
         
+    }
+
+    public List<CentroTrabajo> getCentrostrabajo() {
+        return centrostrabajo;
+    }
+
+    public void setCentrostrabajo(List<CentroTrabajo> centrostrabajo) {
+        this.centrostrabajo = centrostrabajo;
+    }
+
+    public List<Modalidad> getModalidades() {
+        return modalidades;
+    }
+
+    public void setModalidades(List<Modalidad> modalidades) {
+        this.modalidades = modalidades;
+    }
+
+    public List<TecnicaCapacitacion> getTecnicas() {
+        return tecnicas;
+    }
+
+    public void setTecnicas(List<TecnicaCapacitacion> tecnicas) {
+        this.tecnicas = tecnicas;
+    }
+
+    public List<Facilitador> getFacilitadores() {
+        return facilitadores;
+    }
+
+    public void setFacilitadores(List<Facilitador> facilitadores) {
+        this.facilitadores = facilitadores;
+    }
+
+    public List<Dirigida> getDirigidas() {
+        return dirigidas;
+    }
+
+    public void setDirigidas(List<Dirigida> dirigidas) {
+        this.dirigidas = dirigidas;
+    }
+
+    public List<Recursos> getRecursos() {
+        return recursos;
+    }
+
+    public void setRecursos(List<Recursos> recursos) {
+        this.recursos = recursos;
+    }
+    
+    public List<FuenteHallazgo> getFuentehallazgos() {
+        return fuentehallazgos;
+    }
+
+    public void setFuentehallazgos(List<FuenteHallazgo> fuentehallazgos) {
+        this.fuentehallazgos = fuentehallazgos;
+    }
+
+    public List<ClaseHallazgo> getClasehallazgos() {
+        return clasehallazgos;
+    }
+
+    public void setClasehallazgos(List<ClaseHallazgo> clasehallazgos) {
+        this.clasehallazgos = clasehallazgos;
+    }
+
+    public List<TipoAccion> getTipoacciones() {
+        return tipoacciones;
+    }
+
+    public void setTipoacciones(List<TipoAccion> tipoacciones) {
+        this.tipoacciones = tipoacciones;
+    }
+
+    public List<MotivoCorreccion> getMotivocorrecciones() {
+        return motivocorrecciones;
+    }
+
+    public void setMotivocorrecciones(List<MotivoCorreccion> motivocorrecciones) {
+        this.motivocorrecciones = motivocorrecciones;
     }
 
     /**

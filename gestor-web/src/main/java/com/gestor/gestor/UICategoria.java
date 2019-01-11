@@ -28,7 +28,7 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class UICategoria implements Serializable{
     private AdjuntosCategoria categoria = new AdjuntosCategoria();
-    private AdjuntosCategoriaTipo tipo= new AdjuntosCategoriaTipo();    
+    private AdjuntosCategoriaTipo tipo= new AdjuntosCategoriaTipo();
     private SeccionDetalleItemsAdjuntosCategorias sdiaca= new SeccionDetalleItemsAdjuntosCategorias();
     private List<AdjuntosCategoria> adjuntosCategorias = new ArrayList<>();   
     private List<SeccionDetalleItems> sdipk= new ArrayList<>();
@@ -142,12 +142,6 @@ public class UICategoria implements Serializable{
             if(tipo.getAdjuntosCategoriaTipoPK().getCodCategoriaTipo()==null){
                 tipo.getAdjuntosCategoriaTipoPK().setCodCategoriaTipo(adjuntosCategoriaTipos.size()+1);
             }
-            
-            /*for(int i=0;i<adjuntosCategoriaTipos.size();i++){
-                if(tipo.getAdjuntosCategoriaTipoPK().getCodCategoriaTipo() != adjuntosCategoriaTipos.get(i).getAdjuntosCategoriaTipoPK().getCodCategoriaTipo()){
-                    tipo.getAdjuntosCategoriaTipoPK().setCodCategoriaTipo(adjuntosCategoriaTipos.size()+1);                    
-                }
-            }*/
             
             AdjuntosCategoriaTipo tip= new AdjuntosCategoriaTipo(new AdjuntosCategoriaTipoPK(categoria.getCodCategoria(), tipo.getAdjuntosCategoriaTipoPK().getCodCategoriaTipo())  , tipo.getNombre(), tipo.getDescripcion());            
             gestorAdjuntosCategoria.validarTipo(tip); 

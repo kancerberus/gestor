@@ -3,42 +3,104 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://java.sun.com/jsf/facelets"                
                 xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:p="http://primefaces.org/ui"                
+                xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://java.sun.com/jsf/core">
 
-    <div style="margin-top: 10px; text-align: center;">
+    <div style="text-align: center;">
         <p:outputPanel id="opPlanAccion">
             <h3>                
                 <h:outputText value="Plan Acción Ítem"/>
                 Item Asociado #{uiPlanAccion.sdiSeleccionado.detalle}
             </h3>
 
-            <br/>
-            <h:panelGrid columns="2" cellspacing="10">
-                <h:panelGrid id="pgPlanAccion" columns="2" cellspacing="10">
-                    
-                    <h:outputLabel value="Nombre: " style="font-weight: bold;"/>
-                    <p:inputText value="#{evaluacionPlanAccionDetalle.nombre}" placeholder="Registra el nombre del plan de accción"
-                                 />
+            
+            <h:panelGrid id="pgPlanAccion" columns="4"  width="80%" cellspacing="30px">
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="Nombre Plan Accion: " style="font-weight: bold;"/>
+                        <p:inputText value="#{evaluacionPlanAccionDetalle.nombre}" placeholder="Nombre del plan de accción"
+                                     />
 
-                    <h:outputLabel value="Descripción: " style="font-weight: bold;"/>
-                    <p:inputTextarea value="#{evaluacionPlanAccionDetalle.descripcion}" placeholder="Registra la descripción del plan de accción"/>
+                        <h:outputLabel value="Fuente Del Hallazgo: " style="font-weight: bold;"/>
+                        <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.funtehallazgo}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlanAccion.fuentehallazgos}" var="fh" itemValue="#{fh}" itemLabel="#{fh.nombre}" />
+                            <p:ajax event="change" process="@this"/>
+                        </p:selectOneMenu>
+                        
+                        
+                        <h:outputLabel value="Centro De Trabajo: " style="font-weight: bold;"/>
+                        <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.centrotrabajo}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlanAccion.centrostrabajo}" var="ct" itemValue="#{ct}" itemLabel="#{ct.nombre}" />
+                            <p:ajax event="change" process="@this"/>
+                        </p:selectOneMenu>
 
-                    <h:outputLabel value="Responsable: " style="font-weight: bold;"/>
-                    <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.responsable}" converter="convertidorGenerico"
-                                     style="text-align: center;width: 180px;">  
-                        <f:selectItem itemLabel="Seleccionar Responsable" itemValue="" /> 
-                        <f:selectItems value="#{uiPlanAccion.responsables}" var="res" itemValue="#{res}" itemLabel="#{res.nombresApellidos}" />
-                        <p:ajax event="change" process="@this"/>
-                    </p:selectOneMenu>
-                    
-                    <h:outputLabel  style="font-weight: bold;" value="Fecha Vencimiento" />
-                    <p:calendar  value="#{evaluacionPlanAccionDetalle.fechaPlazo}" pattern="dd-MM-yyyy" mask="true" />
+                        <h:outputLabel value="Descripción Del Hallazgo: " style="font-weight: bold;"/>
+                        <p:inputTextarea value="#{evaluacionPlanAccionDetalle.descripcionhallazgo}" placeholder="Registra la descripción del hallazgo"/>
 
-                </h:panelGrid>  
 
+                        <h:outputLabel value="Clase Del Hallazgo: " style="font-weight: bold;"/>
+                        <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.clasehallazgo}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlanAccion.clasehallazgos}" var="ch" itemValue="#{ch}" itemLabel="#{ch.nombre}" />
+                            <p:ajax event="change" process="@this"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="Descripción De La Accion:" style="font-weight: bold;margin-top: 50%"/>
+                        <p:inputTextarea value="#{evaluacionPlanAccionDetalle.descripcion}" placeholder="Registra la descripción de la accción"/>
+
+                        <h:outputLabel value="Tipo Accion:" style="font-weight: bold;"/>
+                        <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.tipoaccion}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlanAccion.tipoacciones}" var="ta" itemValue="#{ta}" itemLabel="#{ta.nombre}" />
+                            <p:ajax event="change" process="@this"/>
+                        </p:selectOneMenu>
+
+                        <h:outputLabel value="Motivo Correccion:" style="font-weight: bold;"/>
+                        <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.motivocorreccion}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlanAccion.motivocorrecciones}" var="ta" itemValue="#{ta}" itemLabel="#{ta.nombre}" />
+                            <p:ajax event="change" process="@this"/>
+                        </p:selectOneMenu>
+
+                        <h:outputLabel value="Responsable:" style="font-weight: bold;"/>
+                        <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.responsable}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlanAccion.responsables}" var="res" itemValue="#{res}" itemLabel="#{res.nombresApellidos}" />
+                            <p:ajax event="change" process="@this"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                    <h:panelGrid columns="1">                        
+                        
+                        <h:outputLabel  style="font-weight: bold;" value="Fecha Vencimiento" />
+                        <p:calendar  value="#{evaluacionPlanAccionDetalle.fechaPlazo}" pattern="dd-MM-yyyy" mask="true" />
+
+                        <h:outputLabel value="Observaciones: " style="font-weight: bold;"/>
+                        <p:inputTextarea value="#{evaluacionPlanAccionDetalle.observaciones}" placeholder="Observaciones"/>
+                    </h:panelGrid>
+                
+                    <h:panelGrid columns="1" style="margin-bottom:10px" cellpadding="5">
+                        <h:outputLabel  style="font-weight: bold;" value="Registro" />
+                        <p:selectBooleanCheckbox value="#{evaluacionPlanAccionDetalle.registro}" />
+                        
+                        <h:outputLabel  style="font-weight: bold;" value="Evaluacion eficacia" />
+                        <p:selectBooleanCheckbox value="#{evaluacionPlanAccionDetalle.eficacia}"/>
+                
+               
+                    </h:panelGrid>
+                
+            </h:panelGrid>            
+            
+            <h:panelGrid>
                 <p:dataTable id="dtPlanAccionDetalle"  value="#{uiPlanAccion.evaluacionPlanAccionDetalles}" var="varPlanAccionDetalle" emptyMessage="El ítem no tiene planes de acción."
-                             rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable"
+                             rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable" style="width: 100%"
                              rowHover="true">
                     <f:facet name="header">
                         Planes de Acción
@@ -47,12 +109,22 @@
                         <p:row>  
                             <p:column  headerText="Opciones" />
                             <p:column headerText="Nombre" filterBy="#{varPlanAccionDetalle.nombre}" sortBy="#{varPlanAccionDetalle.nombre}"/>
-                            <p:column  headerText="Descripción"/>        
+                            <p:column headerText="Fuente Hallazgo" filterBy="#{varPlanAccionDetalle.funtehallazgo}" />
+                            <p:column headerText="Centro Trabajo" filterBy="#{varPlanAccionDetalle.centrotrabajo}" />
+                            <p:column  headerText="Descripción Hallazgo"/>        
+                            <p:column headerText="Clase Hallazgo" filterBy="#{varPlanAccionDetalle.clasehallazgo}" />                            
+                            <p:column  headerText="Descripción Accion"/>        
+                            <p:column headerText="Tipo Accion" filterBy="#{varPlanAccionDetalle.tipoaccion}" />                            
+                            <p:column headerText="Motivo Correccion" filterBy="#{varPlanAccionDetalle.motivocorreccion}" />                                                        
                             <p:column  headerText="Usuario" filterBy="#{varPlanAccionDetalle.usuarios.usuario}"/>                            
                             <p:column  headerText="Estado" filterBy="#{varPlanAccionDetalle.estado}"/>
                             <p:column  headerText="Responsable" filterBy="#{varPlanAccionDetalle.responsable.nombresApellidos}"/>
-                            <p:column  headerText="Fecha Creacion" sortBy="#{varPlanAccionDetalle.fechaRegistro}"/>
-                            <p:column  headerText="Fecha vencicmiento" filterBy="#{varPlanAccionDetalle.fechaPlazo}"/>
+                            <p:column  headerText="Fecha Creacion" sortBy="#{varPlanAccionDetalle.fechaRegistro}"/>                            
+                            <p:column  headerText="Fecha vencicmiento" />
+                            <p:column headerText="Observaciones"/> 
+                            <p:column headerText="Registro"/> 
+                            <p:column headerText="Evaluacion Eficacia"/> 
+                            
                         </p:row> 
                     </p:columnGroup>
 
@@ -66,17 +138,34 @@
                     </p:column>
                     <p:column >
                         <h:outputText value="#{varPlanAccionDetalle.nombre}"/>
+                    </p:column>                    
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.funtehallazgo.nombre}"/>
                     </p:column>
                     <p:column>
-                        <h:outputText value="#{varPlanAccionDetalle.descripcion}"/>
+                        <h:outputText value="#{varPlanAccionDetalle.centrotrabajo.nombre}"/>
                     </p:column>
-                    
+                    <p:column>
+                        <p:commandButton style="margin-right:20px;" icon="ui-icon-comment" title="#{varPlanAccionDetalle.descripcionhallazgo}" />
+                    </p:column>                    
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.clasehallazgo.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <p:commandButton style="margin-right:20px;" icon="ui-icon-comment" title="#{varPlanAccionDetalle.descripcion}" />
+                    </p:column> 
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.tipoaccion.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.motivocorreccion.nombre}"/>
+                    </p:column>
                     <p:column>
                         <h:outputText value="#{varPlanAccionDetalle.usuarios.usuario}"/>
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varPlanAccionDetalle.estado}"/>
-                    </p:column>
+                    </p:column> 
                     <p:column>
                         <h:outputText value="#{varPlanAccionDetalle.responsable.nombresApellidos}"/>
                     </p:column>
@@ -84,15 +173,23 @@
                         <h:outputText value="#{varPlanAccionDetalle.fechaRegistro}">
                             <f:convertDateTime pattern="dd/MM/yyyy" />
                         </h:outputText>
-                    </p:column>                    
+                    </p:column>                                    
                     <p:column>
                         <h:outputText value="#{varPlanAccionDetalle.fechaPlazo}">
                             <f:convertDateTime pattern="dd/MM/yyyy" />
                         </h:outputText>
                     </p:column>
 
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.observaciones}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.registro ? 'Con Registro' : 'Sin Registro' }" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.eficacia ? 'Eficaz' : 'No Eficaz' }" />
+                    </p:column>
                 </p:dataTable>
-
             </h:panelGrid>
 
 

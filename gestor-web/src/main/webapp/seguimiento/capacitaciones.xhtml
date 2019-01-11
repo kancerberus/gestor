@@ -100,28 +100,44 @@
                         <p:commandButton icon="ui-icon-disk" title="Finalizar" rendered="#{varCapacitacionDetalle.estado eq 'A'}" action="#{uiCapacitacion.cerrarEvaluacionCapacitacionDetalle()}"/>
                     </p:panelGrid>
                 </p:column>
-                <p:column headerText="Código" filterBy="#{varCapacitacionDetalle.evaluacionCapacitacionDetallePK.codEvaluacion}">
-                    <h:outputText value="#{varCapacitacionDetalle.evaluacionCapacitacionDetallePK.codEvaluacion}" />    
+                <p:column headerText="Código" filterBy="#{varCapacitacionDetalle.evaluacionCapacitacionDetallePK.codCapacitacionDetalle}">
+                    <h:outputText value="#{varCapacitacionDetalle.evaluacionCapacitacionDetallePK.codCapacitacionDetalle}" />    
+                </p:column>
+                <p:column headerText="Tema" filterBy="#{varCapacitacionDetalle.nombre}" >
+                    <h:outputText value="#{varCapacitacionDetalle.nombre}" />
                 </p:column>
                 <p:column headerText="Empresa" filterBy="#{varCapacitacionDetalle.establecimiento.nombre}">
                     <h:outputText value="#{varCapacitacionDetalle.establecimiento.nombre}" />
+                </p:column>               
+                <p:column headerText="Centro De Trabajo" filterBy="#{varCapacitacionDetalle.centrotrabajo}">
+                    <h:outputText value="#{varCapacitacionDetalle.centrotrabajo.nombre}" />
                 </p:column>
-
-               
                 <p:column headerText="Evaluador" filterBy="#{varCapacitacionDetalle.usuarios.nombreApellido}">
                     <h:outputText value="#{varCapacitacionDetalle.usuarios.nombreApellido}" />
                 </p:column>
                 <p:column headerText="Responsable" filterBy="#{varCapacitacionDetalle.responsable.nombresApellidos}">
                     <h:outputText value="#{varCapacitacionDetalle.responsable.nombresApellidos}" />
                 </p:column>
+                <p:column headerText="Modalidad" filterBy="#{varCapacitacionDetalle.modalidad.nombre}">
+                    <h:outputText value="#{varCapacitacionDetalle.modalidad.nombre}" />
+                </p:column>
+                <p:column headerText="Tecnica Capacitacion" filterBy="#{varCapacitacionDetalle.tecnica}">
+                    <h:outputText value="#{varCapacitacionDetalle.tecnica.nombre}" />
+                </p:column>
+                <p:column headerText="Facilitador" filterBy="#{varCapacitacionDetalle.facilitador}">
+                    <h:outputText value="#{varCapacitacionDetalle.facilitador.nombre}" />
+                </p:column>
+                <p:column headerText="Dirigida" filterBy="#{varCapacitacionDetalle.dirigida}">
+                    <h:outputText value="#{varCapacitacionDetalle.dirigida.nombre}" />
+                </p:column>                
+                <p:column headerText="Recursos" filterBy="#{varCapacitacionDetalle.recursos}">
+                    <h:outputText value="#{varCapacitacionDetalle.recursos.nombre}" />
+                </p:column>
                 <p:column headerText="Numeral" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.numeral}">
                     <h:outputText value="#{varCapacitacionDetalle.seccionDetalleItems.numeral}" />
                 </p:column>                
                 <p:column headerText="Item Detalle" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.detalle}" >
                     <h:outputText value="#{varCapacitacionDetalle.seccionDetalleItems.detalle}" />
-                </p:column>
-                <p:column headerText="Nombre" filterBy="#{varCapacitacionDetalle.nombre}" >
-                    <h:outputText value="#{varCapacitacionDetalle.nombre}" />
                 </p:column>
                 <p:column headerText="Descripción" filterBy="#{varCapacitacionDetalle.descripcion}" >
                     <h:outputText value="#{varCapacitacionDetalle.descripcion}" />

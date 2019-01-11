@@ -7,30 +7,25 @@ package com.gestor.publico;
 
 import com.gestor.controller.GestorGeneral;
 import com.gestor.controller.Propiedades;
+import com.gestor.entity.Dialogo;
 import com.gestor.entity.UtilArchivo;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
+import com.gestor.publico.controlador.GestorCentroTrabajo;
 import com.gestor.publico.controlador.GestorEstablecimiento;
+import com.gestor.publico.controlador.GestorLista;
 import com.gestor.publico.controlador.GestorMunicipios;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -44,16 +39,36 @@ public class UIEstablecimiento implements Serializable {
     private UploadedFile file;
     private GestorEstablecimiento gestorEstablecimiento;
     private GestorGeneral gestorGeneral;
+    private GestorLista gestorLista;
     private GestorMunicipios gestorMunicipios;
     private Establecimiento establecimiento = new Establecimiento();
     private List<Establecimiento> establecimientoList = new ArrayList<>();
     private List<Municipios> municipiosList = new ArrayList<>();    
     
+    private GestorCentroTrabajo gestorCentrotrabajo;   
+    private List<CentroTrabajo> centrostrabajo = new ArrayList<>();
+    private List<ListaDetalle> listadetalles= new ArrayList<>();    
+    private List<MetaEstablecimiento> metas= new ArrayList<>();    
+    private CentroTrabajo centro= new CentroTrabajo();
+    private ListaDetalle listadetalle= new ListaDetalle();
+    private MetaEstablecimiento metaestablecimiento= new MetaEstablecimiento();
+    
 
     @PostConstruct
     public void init() {
         this.cargarEstablecimientosInstitucion();
-        this.cargarMunicipios();             
+        this.cargarMunicipios();           
+    }
+    
+    private void cargarListadetalles() {
+        try {
+            gestorLista = new GestorLista();
+            if(listadetalles.isEmpty()){
+            listadetalles.addAll((Collection<? extends ListaDetalle>) gestorLista.cargarListadetalles());
+            }
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
     }
 
     public void subirItemEstablecimiento() {
@@ -112,6 +127,12 @@ public class UIEstablecimiento implements Serializable {
         }
     }    
     
+        
+    public void limpiarcentro() {
+        centro= new CentroTrabajo();  
+        metaestablecimiento = new MetaEstablecimiento();
+    }
+    
     public void cargarLogo(FileUploadEvent event) {
         try {
             String ruta = Propiedades.getInstancia().getPropiedades().getProperty("guardarLogos");
@@ -128,6 +149,123 @@ public class UIEstablecimiento implements Serializable {
 
     }
     
+    public void dialogoCentro() {
+        try {
+            
+            centro=new CentroTrabajo();
+            Dialogo dialogo = new Dialogo("dialogos/centros.xhtml", "Crear Centro De Trabajo", "clip", Dialogo.WIDTH_80);
+            UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
+            UtilJSF.execute("PF('dialog').show();");
+            establecimiento = (Establecimiento) UtilJSF.getBean("varEstablecimiento");                
+            UtilJSF.setBean("establecimiento", establecimiento, UtilJSF.SESSION_SCOPE);      
+            this.cargarCentroList();
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void dialogoMeta() {
+        try {
+            
+            
+            metaestablecimiento= new MetaEstablecimiento();
+            Dialogo dialogo = new Dialogo ("dialogos/meta.xhtml", "Crear Metas", "clip", Dialogo.WIDTH_80);
+            UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
+            UtilJSF.execute("PF('dialog').show();");
+            establecimiento = (Establecimiento) UtilJSF.getBean("varEstablecimiento");                
+            UtilJSF.setBean("establecimiento", establecimiento, UtilJSF.SESSION_SCOPE);
+            this.cargarListadetalles();
+            this.cargarMetaList();            
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void guardarCentro(){    
+        try {
+            establecimiento = (Establecimiento) UtilJSF.getBean("establecimiento");                            
+
+            if(centro.getCodCentrotrabajo()==null){
+                centro.setCodCentrotrabajo(centrostrabajo.size()+1); 
+            }
+            
+            CentroTrabajo ct= new CentroTrabajo(establecimiento.getCodigoEstablecimiento(), centro.getCodCentrotrabajo(), centro.getNombre(), centro.getNit());
+            gestorCentrotrabajo.validarCentro(ct);
+            gestorCentrotrabajo.almacenarCentro(ct);   
+            
+            UtilMSG.addSuccessMsg("Centro De trabajo almacenado correctamente.");
+            UtilJSF.setBean("centro", new CentroTrabajo(), UtilJSF.SESSION_SCOPE);            
+            this.cargarCentroList();
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void guardarMeta(){    
+        try {
+            establecimiento = (Establecimiento) UtilJSF.getBean("establecimiento");                            
+
+            if(metaestablecimiento.getCodMeta() ==null){
+                metaestablecimiento.setCodMeta(metas.size()+1);                
+            }
+            
+            MetaEstablecimiento me= new MetaEstablecimiento(establecimiento.getCodigoEstablecimiento(), metaestablecimiento.getCodMeta(), metaestablecimiento.getMeta(), listadetalle.getListaDetallePK().getCodDetalle());                        
+            gestorEstablecimiento.almacenarMeta(me);   
+            
+            UtilMSG.addSuccessMsg("Centro De trabajo almacenado correctamente.");
+            UtilJSF.setBean("centro", new CentroTrabajo(), UtilJSF.SESSION_SCOPE);            
+            this.cargarMetaList();
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void cargarCentroList() {
+        try {
+            establecimiento= (Establecimiento) UtilJSF.getBean("establecimiento");
+            this.centrostrabajo= new ArrayList<>();
+            gestorCentrotrabajo= new GestorCentroTrabajo();
+            this.centrostrabajo.addAll((Collection<? extends CentroTrabajo>) gestorCentrotrabajo.cargarListaCentrosTrabajo(establecimiento.getCodigoEstablecimiento()));
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void cargarMetaList() {
+        try {
+            establecimiento= (Establecimiento) UtilJSF.getBean("establecimiento");
+            this.metas= new ArrayList<>();
+            gestorEstablecimiento= new GestorEstablecimiento();
+            metas.addAll((Collection<? extends MetaEstablecimiento>) gestorEstablecimiento.cargarListaMetas(establecimiento.getCodigoEstablecimiento()));
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void eliminarCentro(){
+        try {
+            centro= (CentroTrabajo) UtilJSF.getBean("varCentro");            
+            gestorCentrotrabajo.eliminarCentro(centro);
+            
+            
+            UtilMSG.addSuccessMsg("Centro eliminado.");
+            this.cargarCentroList();  
+            this.limpiarcentro();
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void subirItemCentro() {
+        centro = (CentroTrabajo) UtilJSF.getBean("varCentro");                
+        UtilJSF.setBean("centro", centro, UtilJSF.SESSION_SCOPE);        
+    }   
+    
+    public void subirItemMeta() {        
+        metaestablecimiento = (MetaEstablecimiento) UtilJSF.getBean("varMeta");                
+        UtilJSF.setBean("meta", metaestablecimiento, UtilJSF.SESSION_SCOPE);        
+    }
+    
     private void cargarMunicipios() {
         try {
             gestorMunicipios = new GestorMunicipios();
@@ -136,6 +274,65 @@ public class UIEstablecimiento implements Serializable {
             UtilLog.generarLog(this.getClass(), ex);
         }
     }
+
+    public ListaDetalle getListadetalle() {
+        return listadetalle;
+    }
+
+    public void setListadetalle(ListaDetalle listadetalle) {
+        this.listadetalle = listadetalle;
+    }
+
+    public List<MetaEstablecimiento> getMetas() {
+        return metas;
+    }
+
+    public void setMetas(List<MetaEstablecimiento> metas) {
+        this.metas = metas;
+    }
+
+    public List<ListaDetalle> getListadetalles() {
+        return listadetalles;
+    }
+
+    public void setListadetalles(List<ListaDetalle> listadetalles) {
+        this.listadetalles = listadetalles;
+    }
+
+
+    public MetaEstablecimiento getMetaestablecimiento() {
+        return metaestablecimiento;
+    }
+
+    public void setMetaestablecimiento(MetaEstablecimiento metaestablecimiento) {
+        this.metaestablecimiento = metaestablecimiento;
+    }
+
+
+    public GestorCentroTrabajo getGestorCentrotrabajo() {
+        return gestorCentrotrabajo;
+    }
+
+    public void setGestorCentrotrabajo(GestorCentroTrabajo gestorCentrotrabajo) {
+        this.gestorCentrotrabajo = gestorCentrotrabajo;
+    }
+
+    public List<CentroTrabajo> getCentrostrabajo() {
+        return centrostrabajo;
+    }
+
+    public void setCentrostrabajo(List<CentroTrabajo> centrostrabajo) {
+        this.centrostrabajo = centrostrabajo;
+    }
+
+    public CentroTrabajo getCentro() {
+        return centro;
+    }
+
+    public void setCentro(CentroTrabajo centro) {
+        this.centro = centro;
+    }
+
     /**
      * @return the establecimiento
      */

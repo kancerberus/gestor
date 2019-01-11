@@ -20,11 +20,20 @@ import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.controlador.GestorConfiguracion;
 import com.gestor.publico.controlador.GestorEstablecimiento;
-import com.gestor.publico.dao.ConfiguracionDAO;
 import com.gestor.publico.controlador.GestorResponsable;
+import com.gestor.gestor.controlador.GestorFuenteHallazgo;
+import com.gestor.gestor.controlador.GestorClaseHallazgo;
+import com.gestor.gestor.controlador.GestorEvaluacion;
+import com.gestor.gestor.controlador.GestorMotivoCorreccion;
+import com.gestor.gestor.controlador.GestorTipoAccion;
+import com.gestor.publico.CentroTrabajo;
+import com.gestor.publico.ListaDetalle;
+import com.gestor.publico.MetaEstablecimiento;
+import com.gestor.publico.controlador.GestorCentroTrabajo;
 import com.gestor.publico.controlador.GestorUsuario;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +62,7 @@ public class UIPlanAccion {
     private EvaluacionPlanAccionDetalle evaluacionPlanAccionDetalle = new EvaluacionPlanAccionDetalle();
     private Boolean modificarActivo = Boolean.FALSE;
     private Boolean filtroActivo = Boolean.TRUE;
-
+    private Establecimiento establecimiento = new Establecimiento();
     //filtros
     private List<Establecimiento> establecimientoList = new ArrayList<>();
     private List<Establecimiento> establecimientoListSeleccionado = new ArrayList<>();
@@ -66,13 +75,19 @@ public class UIPlanAccion {
 
     private Map<String, String> capacitacionEstado = new HashMap<>();
     private List<String> capacitacionEstadoSeleccionado = new ArrayList<>();
-
+    private MetaEstablecimiento metaestablecimiento= new MetaEstablecimiento();
+    
     private Long codEvaluacion;
     private String responsable;
     private Date fechaPlanInicio;
     private Date fechaPlanFin;
 
     private List<Responsable> responsables = new ArrayList<>();
+    private List<FuenteHallazgo> fuentehallazgos = new ArrayList<>();
+    private List<ClaseHallazgo> clasehallazgos = new ArrayList<>();
+    private List<TipoAccion> tipoacciones = new ArrayList<>();
+    private List<MotivoCorreccion> motivocorrecciones  = new ArrayList<>();
+    private List<CentroTrabajo> centrostrabajo = new ArrayList<>();    
 
     public UIPlanAccion() {
         try {
@@ -215,7 +230,7 @@ public class UIPlanAccion {
         List<String> condicionesConsulta = new ArrayList<>();
         condicionesConsulta.add(App.CONDICION_WHERE);
 
-        if (establecimientoListSeleccionado != null && !establecimientoListSeleccionado.isEmpty()) {
+        /*if (establecimientoListSeleccionado != null && !establecimientoListSeleccionado.isEmpty()) {
             String cadena = "0";
             for (Establecimiento e : establecimientoListSeleccionado) {
                 cadena += "," + e.getCodigoEstablecimiento();
@@ -223,7 +238,20 @@ public class UIPlanAccion {
             condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena));
         } else {
             condicionesConsulta.add(Boolean.TRUE.toString());
+        }*/
+        
+        if(establecimiento==null){                                    
+            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", "2" ));
+            
         }
+        
+        if(establecimiento!=null){            
+            String cadena="";
+            cadena = Integer.toString(establecimiento.getCodigoEstablecimiento());
+            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena ));                        
+            this.cargarValormeta();
+        }
+        
 
         if (usuariosSeleccionado != null && usuariosSeleccionado.getUsuariosPK() != null
                 && usuariosSeleccionado.getUsuariosPK().getDocumentoUsuario() != null && !usuariosSeleccionado.getUsuariosPK().getDocumentoUsuario().equalsIgnoreCase("")) {
@@ -288,18 +316,17 @@ public class UIPlanAccion {
     }
 
     public String cargarPlanAccionGeneral() {
-        try {
+        try {            
             UtilJSF.setBean("dialogo", new Dialogo(), UtilJSF.SESSION_SCOPE);
             Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
             evaluacionPlanAccionDetalles = new ArrayList<>();
-            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
-
+            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();            
+            
             List<String> condicionesConsulta = new ArrayList<>();
-            condicionesConsulta.add(App.CONDICION_WHERE);
-            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_DOCUMENTO_USUARIO.replace("?", UtilTexto.CARACTER_COMILLA + usuarios.getUsuariosPK().getDocumentoUsuario() + UtilTexto.CARACTER_COMILLA));
-            condicionesConsulta.add(App.CONDICION_AND);
-            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_ESTADO.replace("?", UtilTexto.CARACTER_COMILLA + App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO + UtilTexto.CARACTER_COMILLA));
-
+            condicionesConsulta.add(App.CONDICION_WHERE);            
+            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", "2" ));
+            establecimiento.setCodigoEstablecimiento(2);
+            this.cargarValormeta();
             evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
             )
@@ -371,7 +398,7 @@ public class UIPlanAccion {
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             epd = gestorEvaluacionPlanAccion.validarEvaluacionPlanAccionDetalle(epd);
             gestorEvaluacionPlanAccion.actualizarEvaluacionPlanAccionDetalle(epd);
-            this.enviarCorreo();
+            //this.enviarCorreo();
             this.modificarActivo = Boolean.FALSE;
 
             evaluacionPlanAccionDetalles = new ArrayList<>();
@@ -440,8 +467,8 @@ public class UIPlanAccion {
 
             ep.setEvaluacionPlanAccionDetalle(epd);
             gestorEvaluacionPlanAccion.procesarPlanAccion(ep);
-            this.enviarCorreo();
-            UtilJSF.setBean("evaluacionPlanAccionDetalle", new EvaluacionPlanAccionDetalle(), UtilJSF.SESSION_SCOPE);
+            //this.enviarCorreo();
+            UtilJSF.setBean("evaluacionPlanAccionDetalle", new EvaluacionPlanAccionDetalle(), UtilJSF.SESSION_SCOPE);            
             UtilMSG.addSuccessMsg("Plan Acción Guardado", "Se almaceno el plan de acción satisfactoriamente.");
             evaluacionPlanAccionDetalles = new ArrayList<>();
             evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
@@ -463,6 +490,28 @@ public class UIPlanAccion {
         }
 
     }
+    
+    public void cargarValormeta() {
+        try {           
+            GestorEstablecimiento gestorEstablecimiento= new GestorEstablecimiento();
+            metaestablecimiento.setMeta(gestorEstablecimiento.valorMeta(establecimiento.getCodigoEstablecimiento()));                                
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }        
+    }
+    
+    
+/*    public Integer getAvancePlanAccion() {
+        try {
+            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
+            GestorEvaluacion gestorEvaluacion = new GestorEvaluacion();
+            return gestorEvaluacion.avancePlanAccion(e.getEvaluacionPK().getCodEvaluacion());
+            return gestorEvaluacion.avanceEvaluacionCiclo(e.getEvaluacionPK().getCodigoEstablecimiento(), e.getEvaluacionPK().getCodEvaluacion(), App.COD_CICLO_PLANEAR);
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+        return Integer.MIN_VALUE;
+    }*/
     
     public void enviarCorreo(){
         final String username = "gestorapp@sisgappcolombia.com";
@@ -563,10 +612,6 @@ public class UIPlanAccion {
         
     }
     
-    
-    
-    
-
     public void mostrarDialogoPlanAccion() {
         try {
             Sesion sesion = (Sesion) UtilJSF.getBean("sesion");
@@ -578,7 +623,7 @@ public class UIPlanAccion {
             evaluacionPlanAccionDetalles = new ArrayList<>();
             evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
                     sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodEvaluacion(),
-                    sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodigoEstablecimiento(),
+                    sdiSeleccionado.getSeccionDetalle().getSeccion().getCiclo().getEvaluacion().getEvaluacionPK().getCodigoEstablecimiento(),                    
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodCiclo(),
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodSeccion(),
                     sdiSeleccionado.getSeccionDetalleItemsPK().getCodDetalle(),
@@ -595,6 +640,27 @@ public class UIPlanAccion {
             responsables.addAll(gestorResponsable.cargarListaResponsable(
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO) 
             ));
+            
+            if(fuentehallazgos.isEmpty()){
+            GestorFuenteHallazgo gestorFuentehallazgo = new GestorFuenteHallazgo();            
+            fuentehallazgos.addAll((Collection<? extends FuenteHallazgo>) gestorFuentehallazgo.cargarListaFuentehallazgo());
+            
+            GestorClaseHallazgo gestorClasehallazgo = new GestorClaseHallazgo();            
+            clasehallazgos.addAll((Collection<? extends ClaseHallazgo>) gestorClasehallazgo.cargarListaClasehallazgo());
+            
+            GestorTipoAccion gestorTipoaccion = new GestorTipoAccion();            
+            tipoacciones.addAll((Collection<? extends TipoAccion>) gestorTipoaccion.cargarListaTipoaccion());
+            
+            GestorMotivoCorreccion gestorMotivocorreccion = new GestorMotivoCorreccion();
+            motivocorrecciones.addAll((Collection<? extends MotivoCorreccion>) gestorMotivocorreccion.cargarListaMotivocorreccion());            
+            }
+            
+            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
+            
+            GestorCentroTrabajo gestorCentrotrabajo = new GestorCentroTrabajo();
+            centrostrabajo= new ArrayList<>();
+            centrostrabajo.addAll((Collection<? extends CentroTrabajo>) gestorCentrotrabajo.cargarListaCentrosTrabajo(e.getEstablecimiento().getCodigoEstablecimiento()));
+            
 
             List<Responsable> responsablesSisgapp = new ArrayList<>();
             for (Responsable rs : sesion.getResponsables()) {
@@ -608,7 +674,7 @@ public class UIPlanAccion {
                 responsables.addAll(responsablesSisgapp);
             }
 
-            Dialogo dialogo = new Dialogo("dialogos/plan-accion.xhtml", "Plan Acción", "clip", Dialogo.WIDTH_80);
+            Dialogo dialogo = new Dialogo("dialogos/plan-accion.xhtml", "Plan Acción", "clip", Dialogo.WIDTH_100);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
             UtilJSF.execute("PF('dialog').show();");
 
@@ -620,6 +686,62 @@ public class UIPlanAccion {
                 UtilLog.generarLog(this.getClass(), e);
             }
         }
+    }
+
+    public MetaEstablecimiento getMetaestablecimiento() {
+        return metaestablecimiento;
+    }
+
+    public void setMetaestablecimiento(MetaEstablecimiento metaestablecimiento) {
+        this.metaestablecimiento = metaestablecimiento;
+    }
+
+    public List<FuenteHallazgo> getFuentehallazgos() {
+        return fuentehallazgos;
+    }
+
+    public void setFuentehallazgos(List<FuenteHallazgo> fuentehallazgos) {
+        this.fuentehallazgos = fuentehallazgos;
+    }
+
+    public List<ClaseHallazgo> getClasehallazgos() {
+        return clasehallazgos;
+    }
+
+    public void setClasehallazgos(List<ClaseHallazgo> clasehallazgos) {
+        this.clasehallazgos = clasehallazgos;
+    }
+
+    public List<TipoAccion> getTipoacciones() {
+        return tipoacciones;
+    }
+
+    public void setTipoacciones(List<TipoAccion> tipoacciones) {
+        this.tipoacciones = tipoacciones;
+    }
+
+    public List<MotivoCorreccion> getMotivocorrecciones() {
+        return motivocorrecciones;
+    }
+
+    public void setMotivocorrecciones(List<MotivoCorreccion> motivocorrecciones) {
+        this.motivocorrecciones = motivocorrecciones;
+    }
+
+    public List<CentroTrabajo> getCentrostrabajo() {
+        return centrostrabajo;
+    }
+
+    public void setCentrostrabajo(List<CentroTrabajo> centrostrabajo) {
+        this.centrostrabajo = centrostrabajo;
+    }    
+
+    public Establecimiento getEstablecimiento() {
+        return establecimiento;
+    }
+
+    public void setEstablecimiento(Establecimiento establecimiento) {
+        this.establecimiento = establecimiento;
     }
 
     /**

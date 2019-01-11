@@ -91,9 +91,9 @@ body {
 }
 
 .Centro {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;    
     font-size: small;
-    text-align: center;
+    text-align: center;        
 }
 
 .letra-xx-small {
@@ -216,7 +216,13 @@ root {
 }
 
 
+.itemEnabled {
+    font-family:monospace;
+}
 
+.itemDisabled {
+    font-family:monospace;
+}
 
 
 

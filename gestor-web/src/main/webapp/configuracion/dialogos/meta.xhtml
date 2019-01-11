@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <div style="margin-top: 2%; margin-bottom: 5%">
+        <p:outputPanel id="opMeta">
+             <h2>                
+                 <p class="letraBlueBackgroundWhite">Metas para Establecimiento: #{uiEstablecimiento.establecimiento.nombre}</p>
+            </h2>
+            <h:panelGrid id="grid" columns="4" >    
+                        <h:outputLabel value="Tipo Meta: " style="font-weight: bold;"/>
+                        <p:selectOneMenu id="meta" value="#{uiEstablecimiento.listadetalle}" converter="convertidorGenerico"
+                                             style="text-align: center;width: 180px;">  
+                                <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                                <f:selectItems value="#{uiEstablecimiento.listadetalles}" var="ld" itemValue="#{ld}" itemLabel="#{ld.nombre}" />
+                                <p:ajax event="change" process="@this"/>
+                        </p:selectOneMenu>
+
+                
+                    <h:outputText value="Meta" style=" font-weight: bold;"/>                                                                                
+                    <p:inputText value="#{uiEstablecimiento.metaestablecimiento.meta}" placeholder="Meta"/>
+                    
+                    
+                    
+            </h:panelGrid>
+            
+            <h:panelGrid columns="2">
+                <p:commandButton value="Crear / Modificar" action="#{uiEstablecimiento.guardarMeta()}"
+                                     icon="ui-icon-disk"
+                                     update="formEstablecimientos:opMeta"/>
+                <p:commandButton value="Limpiar" action="#{uiEstablecimiento.limpiarcentro()}"
+                                     icon="ui-icon-cancel"
+                                     update="formEstablecimientos:opMeta"/>
+            </h:panelGrid>
+            
+            <p:dataTable  value="#{uiEstablecimiento.metas}" var="varMeta" emptyMessage="No hay Metas"
+                              rowStyleClass="Centro">
+
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column headerText="Opciones" />                            
+                            <p:column headerText="Meta"/>
+                            <p:column headerText="Tipo Meta"/>
+                        </p:row> 
+                    </p:columnGroup>
+
+                    <p:column>
+                        <p:commandButton icon="ui-icon-pencil" title="Modificar Meta" update="formEstablecimientos:opMeta "
+                                          action="#{uiEstablecimiento.subirItemMeta()}"/>   
+                    </p:column>                                        
+                    <p:column>
+                        <h:outputText value="#{varMeta.meta}"/>
+                    </p:column>                                   
+                    <p:column>
+                        <h:outputText value="#{varMeta.listaDetalle.nombre}"/>
+                    </p:column>
+            </p:dataTable>
+        </p:outputPanel>            
+    </div>
+</ui:composition>

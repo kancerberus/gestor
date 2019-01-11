@@ -15,10 +15,6 @@
                     <p:ajax update="formPlanesAccion"  />
                 </p:inputSwitch>
             </h:panelGrid>
-
-
-
-
             <h:panelGroup rendered="#{uiPlanAccion.filtroActivo}">
                 <p:separator style="height: 3px"/>
                 <p:panelGrid columns="3" styleClass="letra-xx-small-centro" style="font-size: xx-small">
@@ -26,37 +22,31 @@
                         Filtros de Búsqueda
                     </f:facet>
 
-                    <h:panelGrid>
+                    <h:panelGrid  >
 
                         <h:outputLabel value="Evaluador"/>
                         <p:selectOneMenu value="#{uiPlanAccion.usuariosSeleccionado}" converter="convertidorGenerico"
-                                         style="text-align: center;width: 180px;">  
-                            <f:selectItem itemLabel="Seleccione Evaluador" noSelectionOption="true"/>
-                            <f:selectItems value="#{uiPlanAccion.usuariosList}" var="varUsuarios" itemLabel="#{varUsuarios.nombreApellido}" itemValue="#{varUsuarios}"/>
+                                                         style="text-align: center;width: 180px;">  
+                                <f:selectItem itemLabel="Seleccione Evaluador" noSelectionOption="true"/>
+                                <f:selectItems value="#{uiPlanAccion.usuariosList}" var="varUsuarios" itemLabel="#{varUsuarios.nombreApellido}" itemValue="#{varUsuarios}"/>
                         </p:selectOneMenu>
 
                         <h:outputLabel value="Empresas"/>
-                        <p:selectManyMenu value="#{uiPlanAccion.establecimientoListSeleccionado}" converter="establecimientoConverter"
-                                          var="t" filter="true" filterMatchMode="contains" showCheckbox="true" styleClass="Centro" >
-                            <f:selectItems value="#{uiPlanAccion.establecimientoList}" var="varEmpresa" itemLabel="#{varEmpresa.nombre}" itemValue="#{varEmpresa}" />
+                        <p:selectOneListbox value="#{uiPlanAccion.establecimiento}" converter="convertidorGenerico" var="t" filter="true" filterMatchMode="contains" style="font-family: bolder" styleClass="Centro"
+                                                                                        >
+                            <f:selectItems  value="#{uiPlanAccion.establecimientoList}" var="varEmpresa" itemLabel="#{varEmpresa.nombre}" itemValue="#{varEmpresa}" />
 
-                            <p:column>
-                                <p:column>                        
-                                    <p:graphicImage value="#{t.logo}" cache="false" width="40"/>
+                            <p:column >
+                                    <p:graphicImage value="#{t.logo}" cache="false" width="40" />
                                     <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" width="20" 
-                                                title="#{t.nombre}" rendered="#{empty t.logo}"/>
-                            </p:column> 
-                            </p:column>
-
-                            <p:column>
+                                       title="#{t.nombre}" rendered="#{empty t.logo}" />
+                                
+                                </p:column>
+                            <p:column >
                                 <h:outputText value="#{t.nombre}" />
-                            </p:column>
-                            <p:column>
-                                <h:outputText styleClass="ui-icon ui-icon-grip-dotted-horizontal" style="margin:0 auto;" />
-
-                            </p:column>
-                        </p:selectManyMenu>
-                    </h:panelGrid>
+                                </p:column>                                
+                        </p:selectOneListbox>
+                </h:panelGrid>
                     <h:panelGrid columns="2">
                         <h:outputLabel value="Cod Evaluación"/>
                         <p:inputText placeholder="Cod Evaluación" value="#{uiPlanAccion.codEvaluacion}"/>
@@ -85,10 +75,33 @@
 
                     </h:panelGrid>
                 </p:panelGrid>
+                <p:panel style="margin-right: 19%; margin-left: 70%">
+                    <f:facet name="header" >
+                       Consolidado
+                    </f:facet> 
+                    <p:panelGrid columns="2">
+                        
+                        <p:column >        
+                            <p:outputLabel value="Meta "/>
+                            <p:outputLabel value="#{uiPlanAccion.metaestablecimiento.meta}%" />                
+                        </p:column>
+                        <p:column >
+                            <p:outputLabel value="#{uiPlanAccion}%"/>
+                        </p:column>
+                        
+                    </p:panelGrid>
+                </p:panel>
                 <p:commandButton value="Consultar" style="margin: auto auto;width: 210px;height: 30px; border-radius: 10px;"
                                  action="#{uiPlanAccion.consultarSeguimientoPlanAccion()}" update="formPlanesAccion"/>
-                <p:separator style="height: 3px"/>
+                
 
+                
+                <br/>
+                <p:separator style="height: 3px"/>
+                
+                
+                
+                
             </h:panelGroup>
             <br/>
             <br/>
@@ -97,18 +110,21 @@
                          emptyMessage="No tiene planes de acción abiertos."
                          rowHover="true"
                          >
-                <p:column headerText="Opciones" filterBy="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codEvaluacion}">
+                <p:column headerText="Opciones" width="3%" filterBy="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codEvaluacion}">
                     <p:panelGrid>
                         <p:commandButton icon="ui-icon-clipboard" title="Notas" action="#{uiPlanAccion.mostrarNotaSeguimiento()}" update=":formPlanesAccion:dialog"/>
                         <p:commandButton icon="ui-icon-disk" title="Finalizar" rendered="#{varPlanAccionDetalle.estado eq 'A'}"
                                          action="#{uiPlanAccion.cerrarPlanAccionDetalle()}"/>
                     </p:panelGrid>
                 </p:column>
-                <p:column headerText="Código" filterBy="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codEvaluacion}">
-                    <h:outputText value="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codEvaluacion}" />    
+                <p:column headerText="Código" width="2%" filterBy="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codPlanDetalle}">
+                    <h:outputText value="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codPlanDetalle}" />    
                 </p:column>
                 <p:column headerText="Empresa" filterBy="#{varPlanAccionDetalle.establecimiento.nombre}">
                     <h:outputText value="#{varPlanAccionDetalle.establecimiento.nombre}" />
+                </p:column>
+                <p:column headerText="Centro Trabajo" filterBy="#{varPlanAccionDetalle.centrotrabajo.nombre}" >
+                    <h:outputText value="#{varPlanAccionDetalle.centrotrabajo.nombre}" />
                 </p:column>
                 <p:column headerText="Evaluador" filterBy="#{varPlanAccionDetalle.usuarios.nombreApellido}">
                     <h:outputText value="#{varPlanAccionDetalle.usuarios.nombreApellido}" />
@@ -116,7 +132,7 @@
                 <p:column headerText="Responsable" filterBy="#{varPlanAccionDetalle.responsable.nombresApellidos}">
                     <h:outputText value="#{varPlanAccionDetalle.responsable.nombresApellidos}" />
                 </p:column>
-                <p:column headerText="Numeral" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.numeral}">
+                <p:column headerText="Numeral" width="2%" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.numeral}">
                     <h:outputText value="#{varPlanAccionDetalle.seccionDetalleItems.numeral}" />
                 </p:column>                
                 <p:column headerText="Item Detalle" filterBy="#{varPlanAccionDetalle.seccionDetalleItems.detalle}" >
@@ -125,15 +141,40 @@
                 <p:column headerText="Nombre" filterBy="#{varPlanAccionDetalle.nombre}" >
                     <h:outputText value="#{varPlanAccionDetalle.nombre}" />
                 </p:column>
-                <p:column headerText="Descripción" filterBy="#{varPlanAccionDetalle.descripcion}" >
+                <p:column headerText="Fuente Hallazgo" filterBy="#{varPlanAccionDetalle.funtehallazgo.nombre}" >
+                    <h:outputText value="#{varPlanAccionDetalle.funtehallazgo.nombre}" />
+                </p:column>
+                
+                <p:column headerText="Descripcion Hallazgo" filterBy="#{varPlanAccionDetalle.descripcionhallazgo}" >
+                    <h:outputText value="#{varPlanAccionDetalle.descripcionhallazgo}" />
+                </p:column>                
+                <p:column headerText="Clase Hallazgo" filterBy="#{varPlanAccionDetalle.clasehallazgo.nombre}" >
+                    <h:outputText value="#{varPlanAccionDetalle.clasehallazgo.nombre}" />
+                </p:column>                
+                <p:column headerText="Descripción Accion" filterBy="#{varPlanAccionDetalle.descripcion}" >
                     <h:outputText value="#{varPlanAccionDetalle.descripcion}" />
                 </p:column>
-                <p:column headerText="Fecha Creacion" filterBy="#{varPlanAccionDetalle.fechaRegistro}">
+                <p:column headerText="Tipo Accion" filterBy="#{varPlanAccionDetalle.tipoaccion.nombre}" >
+                    <h:outputText value="#{varPlanAccionDetalle.tipoaccion.nombre}" />
+                </p:column>
+                <p:column headerText="Motivo Correccion" filterBy="#{varPlanAccionDetalle.motivocorreccion.nombre}" >
+                    <h:outputText value="#{varPlanAccionDetalle.motivocorreccion.nombre}" />
+                </p:column>
+                <p:column headerText="Registro">
+                    <h:outputText value="#{varPlanAccionDetalle.registro ? 'Con Registro' : 'Sin Registro' }" />
+                </p:column>     
+                <p:column headerText="Evaluacion Eficacia">
+                    <h:outputText value="#{varPlanAccionDetalle.eficacia ? 'Eficaz' : 'No Eficaz' }" />
+                </p:column>
+                <p:column headerText="Observaciones" filterBy="#{varPlanAccionDetalle.observaciones}" >
+                    <h:outputText value="#{varPlanAccionDetalle.observaciones}" />
+                </p:column>   
+                <p:column headerText="Fecha Creacion" >
                     <h:outputText value="#{varPlanAccionDetalle.fechaRegistro}">
                         <f:convertDateTime pattern="dd/MM/yyyy" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="Fecha Vencimiento" filterBy="#{varPlanAccionDetalle.fechaPlazo}">
+                <p:column headerText="Fecha Vencimiento">
                     <h:outputText value="#{varPlanAccionDetalle.fechaPlazo}">
                         <f:convertDateTime pattern="dd/MM/yyyy" />
                     </h:outputText>
@@ -144,8 +185,7 @@
                     </h:outputText>
                 </p:column>
                 
-                <p:column headerText="Estado"
-                          filterBy="#{varPlanAccionDetalle.estado}"
+                <p:column headerText="Estado" filterBy="#{varPlanAccionDetalle.estado}"
                           filterMatchMode="equals">
                     <f:facet name="filter">
                         <p:selectOneButton onchange="PF('planAccionDetalleTable').filter()"
