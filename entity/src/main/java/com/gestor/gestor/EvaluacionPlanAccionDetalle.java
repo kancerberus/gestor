@@ -5,7 +5,9 @@
  */
 package com.gestor.gestor;
 
+import com.gestor.publico.CentroTrabajo;
 import com.gestor.publico.Establecimiento;
+import com.gestor.publico.MetaEstablecimiento;
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import java.io.Serializable;
@@ -64,16 +66,33 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     @Column(name = "descripcion")
     private String descripcion;
     @Column(name = "fecha_plazo")
-    private Date fechaPlazo;
+    private Date fechaPlazo;    
     @Column(name = "fecha_finalizado")
     private Date fechaFinalizado;
     @Basic(optional = false)
     @Column(name = "estado")
     private String estado;
+    @Column(name = "descripcion_hallazgo")
+    private String descripcionhallazgo;
+    @Column(name = "observaciones")
+    private String observaciones;
+    @Column(name = "eficacia")
+    private Boolean eficacia;
+    @Column(name = "registro")
+    private Boolean registro;
+    
+    
+    
     private String documentoUsuario;
     
     private Responsable responsable = new Responsable();
-
+    private FuenteHallazgo funtehallazgo = new FuenteHallazgo();
+    private ClaseHallazgo clasehallazgo = new ClaseHallazgo();
+    private TipoAccion tipoaccion = new TipoAccion();
+    private MotivoCorreccion motivocorreccion = new MotivoCorreccion();
+    private CentroTrabajo centrotrabajo = new CentroTrabajo();
+    private MetaEstablecimiento metaestablecimiento = new MetaEstablecimiento();
+    
     private Usuarios usuarios;
 
     private Date fechaRegistro;    
@@ -100,7 +119,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.evaluacionPlanAccionDetallePK = new EvaluacionPlanAccionDetallePK(codEvaluacion, codigoEstablecimiento, codPlan, codPlanDetalle);
     }
 
-    public EvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK, String codCiclo, Integer codSeccion, Integer codDetalle, Integer codItem, String nombre, String descripcion, String estado, Usuarios usuarios, Date fechaRegistro, Date fechaPlazo, Date fechaFinalizado) {
+    public EvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK, String codCiclo, Integer codSeccion, Integer codDetalle, Integer codItem, String nombre, String descripcion, String estado, Usuarios usuarios, Date fechaRegistro, Date fechaPlazo, Date fechaFinalizado, String descripcionhallazgo, String observaciones, Boolean registro, Boolean eficacia) {
         this.evaluacionPlanAccionDetallePK = evaluacionPlanAccionDetallePK;
         this.codCiclo = codCiclo;
         this.codSeccion = codSeccion;
@@ -112,7 +131,91 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.usuarios = usuarios;
         this.fechaRegistro = fechaRegistro;
         this.fechaPlazo = fechaPlazo;
-        this.fechaFinalizado=fechaFinalizado;
+        this.fechaFinalizado = fechaFinalizado;
+        this.descripcionhallazgo = descripcionhallazgo;
+        this.observaciones = observaciones;
+        this.registro = registro;
+        this.eficacia = eficacia;
+    }
+
+    public MetaEstablecimiento getMetaestablecimiento() {
+        return metaestablecimiento;
+    }
+
+    public void setMetaestablecimiento(MetaEstablecimiento metaestablecimiento) {
+        this.metaestablecimiento = metaestablecimiento;
+    }
+
+    public Boolean getEficacia() {
+        return eficacia;
+    }
+
+    public void setEficacia(Boolean eficacia) {
+        this.eficacia = eficacia;
+    }
+
+    public Boolean getRegistro() {
+        return registro;
+    }
+
+    public void setRegistro(Boolean registro) {
+        this.registro = registro;
+    }
+
+    public CentroTrabajo getCentrotrabajo() {
+        return centrotrabajo;
+    }
+
+    public void setCentrotrabajo(CentroTrabajo centrotrabajo) {
+        this.centrotrabajo = centrotrabajo;
+    }
+
+    public ClaseHallazgo getClasehallazgo() {
+        return clasehallazgo;
+    }
+
+    public void setClasehallazgo(ClaseHallazgo clasehallazgo) {
+        this.clasehallazgo = clasehallazgo;
+    }
+
+    public TipoAccion getTipoaccion() {
+        return tipoaccion;
+    }
+
+    public void setTipoaccion(TipoAccion tipoaccion) {
+        this.tipoaccion = tipoaccion;
+    }
+
+    public MotivoCorreccion getMotivocorreccion() {
+        return motivocorreccion;
+    }
+
+    public void setMotivocorreccion(MotivoCorreccion motivocorreccion) {
+        this.motivocorreccion = motivocorreccion;
+    }
+
+    public FuenteHallazgo getFuntehallazgo() {
+        return funtehallazgo;
+    }
+
+    public void setFuntehallazgo(FuenteHallazgo funtehallazgo) {
+        this.funtehallazgo = funtehallazgo;
+    }
+
+    public String getDescripcionhallazgo() {
+        return descripcionhallazgo;
+    }
+
+    public void setDescripcionhallazgo(String descripcionhallazgo) {
+        this.descripcionhallazgo = descripcionhallazgo;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     public EvaluacionPlanAccionDetallePK getEvaluacionPlanAccionDetallePK() {
@@ -234,6 +337,8 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     public void setFechaPlazo(Date fechaPlazo) {
         this.fechaPlazo = fechaPlazo;
     }
+
+
 
     /**
      * @return the usuarios

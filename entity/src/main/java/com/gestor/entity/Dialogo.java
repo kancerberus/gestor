@@ -21,6 +21,7 @@ public class Dialogo implements Serializable {
     public static String EFECTO = "clip";
     public static String WIDTH_AUTO = "auto";
     public static String WIDTH_80 = "80%";
+    public static String WIDTH_100 = "100%";
 
     public Dialogo() {
     }

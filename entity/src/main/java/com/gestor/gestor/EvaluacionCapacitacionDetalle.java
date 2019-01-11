@@ -5,6 +5,7 @@
  */
 package com.gestor.gestor;
 
+import com.gestor.publico.CentroTrabajo;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
@@ -67,13 +68,15 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
     private String nombre;
     @Column(name = "descripcion")
     private String descripcion;
-    @Basic(optional = false)
+    @Basic(optional = false)    
     @Column(name = "estado")
     private String estado;
     @Column(name = "fecha_finalizado")
     private Date fechaFinalizado;  
     @Column(name = "fecha_plazo")
-    private Date fechaPlazo;    
+    private Date fechaPlazo;  
+
+    
     @JoinColumns({
         @JoinColumn(name = "cod_evaluacion", referencedColumnName = "cod_evaluacion", insertable = false, updatable = false),
         @JoinColumn(name = "codigo_establecimiento", referencedColumnName = "codigo_establecimiento", insertable = false, updatable = false),
@@ -82,8 +85,14 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
     private EvaluacionCapacitacion evaluacionCapacitacion;
 
     private String documentoUsuario;
-    private Responsable responsable = new Responsable();
-
+    private Responsable responsable = new Responsable();    
+    private CentroTrabajo centrotrabajo = new CentroTrabajo();
+    private Modalidad modalidad = new Modalidad();
+    private TecnicaCapacitacion tecnica = new TecnicaCapacitacion();
+    private Facilitador facilitador = new Facilitador();
+    private Dirigida dirigida = new Dirigida();
+    private Recursos recursos = new Recursos();
+    
     private Usuarios usuarios = new Usuarios();
 
     private Date fechaRegistro;
@@ -123,8 +132,16 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
         this.usuarios = usuarios;
         this.fechaRegistro = fechaRegistro;
         this.fechaPlazo = fechaPlazo; 
-        this.fechaFinalizado = fechaFinalizado;
+        this.fechaFinalizado = fechaFinalizado;        
         
+    }
+
+    public CentroTrabajo getCentrotrabajo() {
+        return centrotrabajo;
+    }
+
+    public void setCentrotrabajo(CentroTrabajo centrotrabajo) {
+        this.centrotrabajo = centrotrabajo;
     }
 
     public Date getFechaFinalizado() {
@@ -141,6 +158,46 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
 
     public void setEvaluacionCapacitacionDetallePK(EvaluacionCapacitacionDetallePK evaluacionCapacitacionDetallePK) {
         this.evaluacionCapacitacionDetallePK = evaluacionCapacitacionDetallePK;
+    }    
+
+    public TecnicaCapacitacion getTecnica() {
+        return tecnica;
+    }
+
+    public void setTecnica(TecnicaCapacitacion tecnica) {
+        this.tecnica = tecnica;
+    }
+
+    public Modalidad getModalidad() {
+        return modalidad;
+    }
+
+    public void setModalidad(Modalidad modalidad) {
+        this.modalidad = modalidad;
+    }
+
+    public Facilitador getFacilitador() {
+        return facilitador;
+    }
+
+    public void setFacilitador(Facilitador facilitador) {
+        this.facilitador = facilitador;
+    }
+
+    public Dirigida getDirigida() {
+        return dirigida;
+    }
+
+    public void setDirigida(Dirigida dirigida) {
+        this.dirigida = dirigida;
+    }
+
+    public Recursos getRecursos() {
+        return recursos;
+    }
+
+    public void setRecursos(Recursos recursos) {
+        this.recursos = recursos;
     }
 
     public String getNombre() {
