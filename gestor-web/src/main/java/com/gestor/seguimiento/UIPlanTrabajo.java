@@ -413,7 +413,9 @@ public class UIPlanTrabajo implements Serializable{
     }
         
     public void limpiarPlantrabajo() {  
+        if(plantrabajoList.isEmpty()){
         this.cargarPlantrabajo();
+        }
         plantrabajo= new PlanTrabajo();                
     }
     
