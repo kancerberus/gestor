@@ -17,10 +17,8 @@
                     <h:outputText value="Nit"/>
                     <h:outputText value="Dirección"/>
                     <h:outputText value="Telefono"/>
-                    <h:outputText value="Correo"/>     
-                    <h:outputText value="Logo"/>     
-                    
-
+                    <h:outputText value="Correo"/>
+                    <h:outputText value="Logo"/>
                     <p:inputText value="#{uiEstablecimiento.establecimiento.nombre}" placeholder="Nombre Establecimiento"/>
                     <p:selectOneMenu id="somItemsMunicipios" value="#{uiEstablecimiento.establecimiento.municipios}" converter="convertidorGenerico"
                                      style="text-align: center;width: 180px;">  
@@ -43,7 +41,7 @@
                                      update="formEstablecimientos">                        
                         
                     </p:commandButton>
-                    <p:commandButton value="Limpiar" action="#{uiEstablecimiento.limpiar()}"
+                    <p:commandButton value="Limpiar" action="#{uiEstablecimiento.limpiarEstablecimiento()}"
                                      icon="ui-icon-cancel"
                                      update="formEstablecimientos"/>
                 </h:panelGrid>
@@ -53,7 +51,7 @@
 
                     <p:columnGroup type="header">  
                         <p:row>  
-                            <p:column  headerText="Opciones" />
+                            <p:column width="12%" headerText="Opciones" />
                             <p:column headerText="Codigo"/>
                             <p:column  headerText="Nombre"/>
                             <p:column  headerText="Municipio"/>
@@ -65,13 +63,13 @@
                         </p:row> 
                     </p:columnGroup>
 
-                    <p:column>
+                    <p:column >
                         <p:commandButton icon="ui-icon-pencil" title="Modificar Establecimiento" update="formEstablecimientos"
                                          action="#{uiEstablecimiento.subirItemEstablecimiento()}"/>
                         <p:commandButton icon="ui-icon-plus" title="Crear Centro De trabajo" update="formEstablecimientos"
                                          action="#{uiEstablecimiento.dialogoCentro()}"/>
                         <p:commandButton value="Meta" title="Crear Meta" update="formEstablecimientos"
-                                         action="#{uiEstablecimiento.dialogoMeta()}"/>
+                                         action="#{uiEstablecimiento.dialogoMeta()}"/>                        
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varEstablecimiento.codigoEstablecimiento}"/>

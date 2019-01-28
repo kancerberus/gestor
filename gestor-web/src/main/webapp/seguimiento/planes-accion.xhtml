@@ -8,7 +8,7 @@
     <ui:define name="content">
         <h:form enctype="multipart/form-data" id="formPlanesAccion" style="font-size: small;">
 
-            <h2>SEGUIMIENTO PLANES DE ACCIÓN</h2>
+            <h2>SEGUIMIENTO BANCO DE ACTIVIDADES</h2>
             <h:panelGrid columns="2">
                 <h:outputText value="Filtro Busqueda: " />
                 <p:inputSwitch label="Filtro" onLabel="SI" offLabel="NO" value="#{uiPlanAccion.filtroActivo}" styleClass="letra-xx-small-centro">
@@ -75,33 +75,26 @@
 
                     </h:panelGrid>
                 </p:panelGrid>
-                <p:panel style="margin-right: 19%; margin-left: 70%">
+                <p:panel style="margin-right: 15%; margin-left: 70%;">
                     <f:facet name="header" >
                        Consolidado
                     </f:facet> 
-                    <p:panelGrid columns="2">
+                    <p:panelGrid columns="2" >
                         
                         <p:column >        
                             <p:outputLabel value="Meta "/>
                             <p:outputLabel value="#{uiPlanAccion.metaestablecimiento.meta}%" />                
                         </p:column>
-                        <p:column >
-                            <p:outputLabel value="#{uiPlanAccion}%"/>
+                        <p:column  >
+                            <h:outputLabel value="#{uiPlanAccion.avancePlanAccion}%"  style="#{uiPlanAccion.stylePorcentaje} color: #FFFFFF"/>
                         </p:column>
                         
                     </p:panelGrid>
                 </p:panel>
                 <p:commandButton value="Consultar" style="margin: auto auto;width: 210px;height: 30px; border-radius: 10px;"
                                  action="#{uiPlanAccion.consultarSeguimientoPlanAccion()}" update="formPlanesAccion"/>
-                
-
-                
                 <br/>
-                <p:separator style="height: 3px"/>
-                
-                
-                
-                
+                <p:separator style="height: 3px"/>                
             </h:panelGroup>
             <br/>
             <br/>

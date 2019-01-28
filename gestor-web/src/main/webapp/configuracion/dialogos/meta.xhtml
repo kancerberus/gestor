@@ -11,20 +11,19 @@
              <h2>                
                  <p class="letraBlueBackgroundWhite">Metas para Establecimiento: #{uiEstablecimiento.establecimiento.nombre}</p>
             </h2>
+            
             <h:panelGrid id="grid" columns="4" >    
                         <h:outputLabel value="Tipo Meta: " style="font-weight: bold;"/>
-                        <p:selectOneMenu id="meta" value="#{uiEstablecimiento.listadetalle}" converter="convertidorGenerico"
-                                             style="text-align: center;width: 180px;">  
-                                <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
-                                <f:selectItems value="#{uiEstablecimiento.listadetalles}" var="ld" itemValue="#{ld}" itemLabel="#{ld.nombre}" />
-                                <p:ajax event="change" process="@this"/>
-                        </p:selectOneMenu>
+                        <p:selectOneMenu id="secc" value="#{uiEstablecimiento.metaestablecimiento.listaDetalle}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;" disabled="#{uiEstablecimiento.metas.size() > 2 }" >
+                            <f:selectItem itemLabel="Seleccionar..." itemValue=""/>
+                        <f:selectItems value="#{uiEstablecimiento.listadetalles}"  var="ld" itemLabel="#{ld.nombre}" itemValue="#{ld}"/>
+                        <p:ajax event="change" process="@this"/>
+                    </p:selectOneMenu>
 
                 
                     <h:outputText value="Meta" style=" font-weight: bold;"/>                                                                                
                     <p:inputText value="#{uiEstablecimiento.metaestablecimiento.meta}" placeholder="Meta"/>
-                    
-                    
                     
             </h:panelGrid>
             
@@ -49,8 +48,8 @@
                     </p:columnGroup>
 
                     <p:column>
-                        <p:commandButton icon="ui-icon-pencil" title="Modificar Meta" update="formEstablecimientos:opMeta "
-                                          action="#{uiEstablecimiento.subirItemMeta()}"/>   
+                        <p:commandButton icon="ui-icon-pencil" title="Modificar Meta" update="formEstablecimientos:opMeta formEstablecimientos:secc"
+                                         actionListener="#{uiEstablecimiento.subirItemMeta()}" />                           
                     </p:column>                                        
                     <p:column>
                         <h:outputText value="#{varMeta.meta}"/>
@@ -58,7 +57,7 @@
                     <p:column>
                         <h:outputText value="#{varMeta.listaDetalle.nombre}"/>
                     </p:column>
-            </p:dataTable>
+            </p:dataTable>                
         </p:outputPanel>            
     </div>
 </ui:composition>

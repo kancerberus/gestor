@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml"
+                >
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formPlantrabajo" style="font-size: small;">
+            <p:panel id="panelPlantrabajo"  header="Administrar Plan Trabajo #{uiPlantrabajo.evaluacion.establecimiento.nombre}"  >
+                <h:panelGrid columns="2" >
+                    
+                    <h:outputText style="font-weight: bold;" value="Descripcion"/>
+                    <h:outputLabel style="font-weight: bold;" value="Fecha Vencimiento"/>
+                    
+                    <p:inputText value="#{uiPlantrabajo.plantrabajo.descripcion}" placeholder="Descripcion"/>
+                    <p:calendar  value="#{uiPlantrabajo.plantrabajo.fechaVenc}" pattern="dd-MM-yyyy" mask="true" />
+                    
+
+                </h:panelGrid>
+
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Crear / Modificar" action="#{uiPlantrabajo.guardarPlantrabajo()}"
+                                     icon="ui-icon-disk"
+                                     update="formPlantrabajo">                        
+                        
+                    </p:commandButton>
+                    <p:commandButton value="Limpiar" action="#{uiPlantrabajo.limpiarPlantrabajo()}"
+                                     icon="ui-icon-cancel"
+                                     update="formPlantrabajo"/>
+                </h:panelGrid>
+                <p:dataTable value="#{uiPlantrabajo.plantrabajoList}" var="varPlantrabajo" emptyMessage="No hay planes trabajo"
+                              widgetVar="planTrabajoTable" rowStyleClass="letra-x-small-centro"
+                              rowHover="true">
+
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column width="12%" headerText="Opciones" />                                                                                    
+                            <p:column  headerText="Descripcion" />
+                            <p:column  headerText="Fecha Creacion" />
+                            <p:column  headerText="Fecha Vencimiento" />
+                            <p:column headerText="Estado" filterBy="#{varPlantrabajo.estado}"
+                                    filterMatchMode="equals">
+                                  <f:facet name="filter">
+                                      <p:selectOneButton onchange="PF('planTrabajoTable').filter()"
+                                                     style="font-size: 8px;">
+                                          <f:selectItem itemLabel="ABIERTO" itemValue="A" />
+                                          <f:selectItem itemLabel="CERRADO" itemValue="C" />
+                                          <f:selectItem itemLabel="ELIMINADO" itemValue="E" />
+                                      </p:selectOneButton>
+                                  </f:facet>                                
+                            </p:column>
+                            
+                        </p:row> 
+                    </p:columnGroup>
+
+                    <p:column >
+                        <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Trabajo" update="formPlantrabajo"
+                                         action="#{uiPlantrabajo.subirItemPlantrabajo()}"/>
+                        <p:commandButton value="Objetivo" title="Crear Objetivo" update="formPlantrabajo"
+                                         action="#{uiPlantrabajo.dialogoObjetivo()}"/>
+                        <p:commandButton value="Actividades" title="Crear Actividad" update="formPlantrabajo"
+                                         action="#{uiPlantrabajo.dialogoActividad()}"/>
+                    </p:column>                                                            
+                    <p:column>
+                        <h:outputText value="#{varPlantrabajo.descripcion}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlantrabajo.fechaRegistro}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column> 
+                    <p:column>
+                        <h:outputText value="#{varPlantrabajo.fechaVenc}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>                    
+                    <p:column>
+                        <h:outputText value="#{varPlantrabajo.estado}" />                            
+                    </p:column> 
+                    
+                </p:dataTable>
+
+            </p:panel>
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}" update="dialog" />
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

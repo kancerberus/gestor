@@ -12,10 +12,13 @@ import com.gestor.entity.UtilArchivo;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
+import com.gestor.gestor.Evaluacion;
 import com.gestor.publico.controlador.GestorCentroTrabajo;
 import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorLista;
 import com.gestor.publico.controlador.GestorMunicipios;
+import com.gestor.publico.controlador.GestorObjetivo;
+import com.gestor.publico.controlador.GestorPrograma;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -45,19 +48,24 @@ public class UIEstablecimiento implements Serializable {
     private List<Establecimiento> establecimientoList = new ArrayList<>();
     private List<Municipios> municipiosList = new ArrayList<>();    
     
-    private GestorCentroTrabajo gestorCentrotrabajo;   
+    private GestorCentroTrabajo gestorCentrotrabajo;
+    
+    private GestorPrograma gestorPrograma;
     private List<CentroTrabajo> centrostrabajo = new ArrayList<>();
     private List<ListaDetalle> listadetalles= new ArrayList<>();    
     private List<MetaEstablecimiento> metas= new ArrayList<>();    
+    
+    
     private CentroTrabajo centro= new CentroTrabajo();
     private ListaDetalle listadetalle= new ListaDetalle();
-    private MetaEstablecimiento metaestablecimiento= new MetaEstablecimiento();
+    private MetaEstablecimiento metaestablecimiento= new MetaEstablecimiento();    
+    private PlanTrabajoPrograma programa = new PlanTrabajoPrograma();
     
 
     @PostConstruct
     public void init() {
         this.cargarEstablecimientosInstitucion();
-        this.cargarMunicipios();           
+        this.cargarMunicipios();      
     }
     
     private void cargarListadetalles() {
@@ -97,7 +105,7 @@ public class UIEstablecimiento implements Serializable {
 
             UtilMSG.addSuccessMsg("Empresa almacenada correctamente.");
             UtilJSF.setBean("establecimiento", new Establecimiento(), UtilJSF.SESSION_SCOPE);
-            this.limpiar();
+            this.limpiarEstablecimiento();
 
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
@@ -110,12 +118,15 @@ public class UIEstablecimiento implements Serializable {
 
     }    
     
-    public void limpiar() {
+    public void limpiarEstablecimiento() {
+        this.establecimiento= new Establecimiento();
         this.cargarEstablecimientosInstitucion();
-        this.cargarMunicipios();
-        this.establecimiento = new Establecimiento();
+        this.cargarMunicipios();              
         this.file=null;
     }
+    
+    
+
     private void cargarEstablecimientosInstitucion() {        
         try {
             this.establecimientoList = new ArrayList<>();
@@ -132,7 +143,8 @@ public class UIEstablecimiento implements Serializable {
         centro= new CentroTrabajo();  
         metaestablecimiento = new MetaEstablecimiento();
     }
-    
+      
+
     public void cargarLogo(FileUploadEvent event) {
         try {
             String ruta = Propiedades.getInstancia().getPropiedades().getProperty("guardarLogos");
@@ -150,14 +162,13 @@ public class UIEstablecimiento implements Serializable {
     }
     
     public void dialogoCentro() {
-        try {
-            
+        try {            
             centro=new CentroTrabajo();
             Dialogo dialogo = new Dialogo("dialogos/centros.xhtml", "Crear Centro De Trabajo", "clip", Dialogo.WIDTH_80);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
             UtilJSF.execute("PF('dialog').show();");
-            establecimiento = (Establecimiento) UtilJSF.getBean("varEstablecimiento");                
-            UtilJSF.setBean("establecimiento", establecimiento, UtilJSF.SESSION_SCOPE);      
+            establecimiento = (Establecimiento) UtilJSF.getBean("varEstablecimiento");
+            UtilJSF.setBean("establecimiento", establecimiento, UtilJSF.APPLICATION_SCOPE);
             this.cargarCentroList();
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
@@ -166,8 +177,6 @@ public class UIEstablecimiento implements Serializable {
     
     public void dialogoMeta() {
         try {
-            
-            
             metaestablecimiento= new MetaEstablecimiento();
             Dialogo dialogo = new Dialogo ("dialogos/meta.xhtml", "Crear Metas", "clip", Dialogo.WIDTH_80);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
@@ -208,13 +217,18 @@ public class UIEstablecimiento implements Serializable {
             if(metaestablecimiento.getCodMeta() ==null){
                 metaestablecimiento.setCodMeta(metas.size()+1);                
             }
+            if(metaestablecimiento.getCodMeta()>2){
+                UtilMSG.addSuccessMsg("Modifique meta correctamente.");
+                metaestablecimiento.setCodMeta(null);
+            }
             
-            MetaEstablecimiento me= new MetaEstablecimiento(establecimiento.getCodigoEstablecimiento(), metaestablecimiento.getCodMeta(), metaestablecimiento.getMeta(), listadetalle.getListaDetallePK().getCodDetalle());                        
+            MetaEstablecimiento me= new MetaEstablecimiento(establecimiento.getCodigoEstablecimiento(), metaestablecimiento.getCodMeta(), metaestablecimiento.getMeta(), metaestablecimiento.getListaDetalle().getListaDetallePK().getCodDetalle());                        
             gestorEstablecimiento.almacenarMeta(me);   
             
-            UtilMSG.addSuccessMsg("Centro De trabajo almacenado correctamente.");
-            UtilJSF.setBean("centro", new CentroTrabajo(), UtilJSF.SESSION_SCOPE);            
+            UtilMSG.addSuccessMsg("Meta almacenado correctamente.");
+            UtilJSF.setBean("meta", new CentroTrabajo(), UtilJSF.SESSION_SCOPE);            
             this.cargarMetaList();
+            this.limpiarcentro();
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -246,8 +260,6 @@ public class UIEstablecimiento implements Serializable {
         try {
             centro= (CentroTrabajo) UtilJSF.getBean("varCentro");            
             gestorCentrotrabajo.eliminarCentro(centro);
-            
-            
             UtilMSG.addSuccessMsg("Centro eliminado.");
             this.cargarCentroList();  
             this.limpiarcentro();
@@ -262,8 +274,9 @@ public class UIEstablecimiento implements Serializable {
     }   
     
     public void subirItemMeta() {        
-        metaestablecimiento = (MetaEstablecimiento) UtilJSF.getBean("varMeta");                
-        UtilJSF.setBean("meta", metaestablecimiento, UtilJSF.SESSION_SCOPE);        
+        metaestablecimiento = (MetaEstablecimiento) UtilJSF.getBean("varMeta");         
+        UtilJSF.setBean("meta", metaestablecimiento, UtilJSF.SESSION_SCOPE);           
+        this.cargarMetaList();
     }
     
     private void cargarMunicipios() {
@@ -273,6 +286,14 @@ public class UIEstablecimiento implements Serializable {
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
+    }
+
+    public PlanTrabajoPrograma getPrograma() {
+        return programa;
+    }
+
+    public void setPrograma(PlanTrabajoPrograma programa) {
+        this.programa = programa;
     }
 
     public ListaDetalle getListadetalle() {

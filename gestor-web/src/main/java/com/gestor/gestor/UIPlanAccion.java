@@ -106,8 +106,7 @@ public class UIPlanAccion {
             capacitacionEstado = new HashMap<>();
             capacitacionEstado.put(App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ELIMINADO_TEXTO, App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ELIMINADO);
             capacitacionEstado.put(App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_CERRADO_TEXTO, App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_CERRADO);
-            capacitacionEstado.put(App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO_TEXTO, App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO);
-            capacitacionEstadoSeleccionado.add(App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO);
+            capacitacionEstado.put(App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO_TEXTO, App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO);            
 
             usuariosList = new ArrayList<>();
             usuariosList.addAll(gestorUsuario.cargarListaUsuarios());
@@ -260,8 +259,10 @@ public class UIPlanAccion {
         }
 
         if (codEvaluacion != null && codEvaluacion >= 0) {
+            this.getAvancePlanAccion();
             condicionesConsulta.add(App.CONDICION_AND);
-            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_EVALUACION.replace("?", codEvaluacion.toString()));
+            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_EVALUACION.replace("?", codEvaluacion.toString()));                        
+            
         }
 
         if (ciclosStringSeleccionado != null && !ciclosStringSeleccionado.isEmpty()) {
@@ -325,12 +326,14 @@ public class UIPlanAccion {
             List<String> condicionesConsulta = new ArrayList<>();
             condicionesConsulta.add(App.CONDICION_WHERE);            
             condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", "2" ));
-            establecimiento.setCodigoEstablecimiento(2);
+            establecimiento.setCodigoEstablecimiento(2);            
             this.cargarValormeta();
             evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
             )
             );
+            UtilJSF.setBean("varPlanAccionDetalle", evaluacionPlanAccionDetalles.get(0), UtilJSF.SESSION_SCOPE);
+            this.getAvancePlanAccion();
             return ("/seguimiento/planes-accion.xhtml?faces-redirect=true");
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
@@ -500,18 +503,34 @@ public class UIPlanAccion {
         }        
     }
     
-    
-/*    public Integer getAvancePlanAccion() {
-        try {
-            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
+    public String getStylePorcentaje() {
+        String style = "padding: 6px;"
+                + "opacity: 0.83;"
+                + "transition: opacity 0.6s;";
+        this.getAvancePlanAccion();
+        if(getAvancePlanAccion() >= 0 && getAvancePlanAccion() < 50 ){
+            style += "background-color: #f44336;";
+        }if(getAvancePlanAccion() >= 50 && getAvancePlanAccion()<=71)                {
+                style += "background-color: #fbaa36;";
+        }if(getAvancePlanAccion()>71){
+            style += "background-color: #008000;";
+        }
+        return style;
+    }
+        
+    public Integer getAvancePlanAccion() {
+        try {                          
+            long codEv=0;
+            if(!evaluacionPlanAccionDetalles.isEmpty()){
+            codEv=evaluacionPlanAccionDetalles.get(0).getEvaluacion().getEvaluacionPK().getCodEvaluacion();
+            }
             GestorEvaluacion gestorEvaluacion = new GestorEvaluacion();
-            return gestorEvaluacion.avancePlanAccion(e.getEvaluacionPK().getCodEvaluacion());
-            return gestorEvaluacion.avanceEvaluacionCiclo(e.getEvaluacionPK().getCodigoEstablecimiento(), e.getEvaluacionPK().getCodEvaluacion(), App.COD_CICLO_PLANEAR);
+            return gestorEvaluacion.avancePlanaccion(codEv);
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
-        }
-        return Integer.MIN_VALUE;
-    }*/
+        }        
+        return null;
+    }
     
     public void enviarCorreo(){
         final String username = "gestorapp@sisgappcolombia.com";

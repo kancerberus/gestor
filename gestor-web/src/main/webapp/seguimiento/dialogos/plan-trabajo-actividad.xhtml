@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <div style="text-align: center;">
+        <p:outputPanel id="opActividad">
+            
+            <h:panelGrid id="pgPlanTrabajoActividad" columns="2"  width="80%" cellspacing="30px">
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="Descripcion Actividad: " style="font-weight: bold;"/>
+                        <p:inputText style="margin-left: 9%; text-align: center;width: 200px;" value="#{uiPlantrabajo.plantrabajoactividad.actividad}" placeholder="Actividad"/>
+                        
+                        <h:outputLabel value="Objetivo: " style="font-weight: bold;"/>
+                        <p:selectOneMenu value="#{uiPlantrabajo.plantrabajoactividad.objetivo}" converter="convertidorGenerico"
+                                         style=" margin-left: 10%; text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlantrabajo.objetivoList}" var="pta" itemValue="#{pta}" itemLabel="#{pta.nombre}" />
+                            <p:ajax  update="prog" listener="#{uiPlantrabajo.cargarObjetivoactividad()}" />                            
+                        </p:selectOneMenu> 
+                        
+                        <h:outputLabel value="Programa: " style="font-weight: bold;"/>
+                        <p:selectOneMenu id="prog" value="#{uiPlantrabajo.plantrabajoactividad.programa}" converter="convertidorGenerico"
+                                         style="margin-left: 10%; text-align: center;width: 180px;" disabled="#{empty uiPlantrabajo.plantrabajoactividad.objetivo}">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlantrabajo.programaList}" var="pta" itemValue="#{pta}" itemLabel="#{pta.nombre}" />
+                            <p:ajax event="change" process="@this"/>
+                        </p:selectOneMenu>                        
+                        
+                        <h:outputLabel style="font-weight: bold;" value="Fecha Vencimiento:" />
+                        <p:calendar  style="margin-left: 3%; text-align: center; width: 200px " value="#{uiPlantrabajo.plantrabajoactividad.fechaVenc}" pattern="dd-MM-yyyy" mask="true" />
+                        
+                    </h:panelGrid>                                   
+            </h:panelGrid>            
+            
+            <h:panelGrid>
+                <p:dataTable id="dtPlantrabajoactividad"  value="#{uiPlantrabajo.planTrabajoactividadList}" var="varPlantrabajoactividad" emptyMessage="El ítem no tiene Actividades."
+                             rowStyleClass="letra-xx-small-centro" widgetVar="planTrabajoactividadTable" style="width: 100%"
+                             rowHover="true">
+                    <f:facet name="header">
+                        Actividades Plan de Trabajo
+                    </f:facet>
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column  headerText="Opciones" />
+                            <p:column  headerText="Objetivo" filterBy="#{varPlantrabajoactividad.objetivo.nombre}"/>
+                            <p:column  headerText="Programa" filterBy="#{varPlantrabajoactividad.programa.nombre}"/>
+                            <p:column  headerText="Actividad" filterBy="#{varPlantrabajoactividad.actividad}"/>                                                                                                               
+                            <p:column  headerText="Fecha Creacion" sortBy="#{varPlanAccionDetalle.fechaRegistro}" />                            
+                            <p:column  headerText="Fecha vencicmiento" sortBy="#{varPlanAccionDetalle.fechaRegistro}" />
+                            
+                            <p:column headerText="Estado" filterBy="#{varPlantrabajoactividad.estado}"
+                                    filterMatchMode="equals">
+                                  <f:facet name="filter">
+                                      <p:selectOneButton onchange="PF('planTrabajoactividadTable').filter()"
+                                                     style="font-size: 8px;">
+                                          <f:selectItem itemLabel="ABIERTO" itemValue="A" />
+                                          <f:selectItem itemLabel="CERRADO" itemValue="C" />
+                                          <f:selectItem itemLabel="ELIMINADO" itemValue="E" />
+                                      </p:selectOneButton>
+                                  </f:facet>                                
+                            </p:column>
+                        </p:row> 
+                    </p:columnGroup> 
+                    <p:column >
+                        <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Trabajo" update="formPlantrabajo:opActividad"
+                                         action="#{uiPlantrabajo.subirItemPlantrabajoactividad()}"/>
+                    </p:column>
+                    <p:column >
+                        <h:outputText value="#{varPlantrabajoactividad.objetivo.nombre}"/>
+                    </p:column>                    
+                    <p:column>
+                        <h:outputText value="#{varPlantrabajoactividad.programa.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlantrabajoactividad.actividad}"/>
+                    </p:column>                                                                               
+                    <p:column>
+                        <h:outputText value="#{varPlantrabajoactividad.fechaRegistro}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>                                    
+                    <p:column>
+                        <h:outputText value="#{varPlantrabajoactividad.fechaVenc}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlantrabajoactividad.estado}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:panelGrid>
+
+
+        </p:outputPanel>
+
+        <br/>
+
+        <p:toolbar id="opcionesMenuPlantrabajo" style="height: 45px;">
+            <p:toolbarGroup align="center" style="margin: auto auto;  align-content: center">
+                <h:panelGrid columns="3" cellspacing="10" style="align-content: center; display: inline-block;">
+                    <p:commandButton value="Generar Actividad" icon="ui-icon-disk" action="#{uiPlantrabajo.guardarPlantrabajoactividad()}" process="@parent pgPlanTrabajoActividad" update="pgPlanTrabajoActividad dtPlantrabajoactividad"
+                                     />
+                    <p:commandButton value="Limpiar" action="#{uiPlantrabajo.limpiarPlantrabajoactividad()}"
+                                     icon="ui-icon-cancel"
+                                     update="pgPlanTrabajoActividad dtPlantrabajoactividad"/>
+                </h:panelGrid>
+            </p:toolbarGroup>
+        </p:toolbar>
+    </div>
+
+</ui:composition>

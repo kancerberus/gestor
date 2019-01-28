@@ -69,9 +69,9 @@ public class UIPlantitulo implements Serializable{
                 plantituloadjunto.getAdjuntosCategoria().setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(plantituloadjunto.getAdjuntosCategoria().getCodCategoria()));                                                
             }            
             
-        } catch (Exception e) {  
+        } catch (Exception e) {
             
-        }        
+        }
     }
      
     public void subirItemPlantitulo() {        

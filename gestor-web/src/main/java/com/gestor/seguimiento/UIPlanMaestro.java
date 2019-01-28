@@ -14,17 +14,11 @@ import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
 import com.gestor.entity.UtilTexto;
-import com.gestor.gestor.AdjuntosCategoria;
 import com.gestor.gestor.Evaluacion;
-import com.gestor.gestor.EvaluacionCapacitacionDetalle;
-import com.gestor.gestor.EvaluacionPlanAccionDetalle;
 import com.gestor.gestor.controlador.GestorEvaluacion;
-import com.gestor.gestor.controlador.GestorEvaluacionPlanAccion;
 import com.gestor.modelo.Sesion;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.EvaluacionAdjuntos;
-import com.gestor.publico.Usuarios;
-import com.gestor.publico.controlador.GestorUsuario;
 import com.gestor.seguimiento.controlador.GestorPlanMaestro;
 import com.gestor.seguimiento.controlador.GestorPlanTitulo;
 import java.io.File;
@@ -35,9 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -93,7 +85,6 @@ public class UIPlanMaestro {
         
         try {
             Sesion s = (Sesion) UtilJSF.getBean("sesion");
-
             establecimientoList = new ArrayList<>();
             establecimientoList.addAll(s.getEstablecimientoList());
         } catch (Exception e) {

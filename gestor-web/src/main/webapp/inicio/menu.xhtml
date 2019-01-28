@@ -101,7 +101,7 @@
                     <p:menuitem  value="Administrar Usuarios" style="font-size: 11px;"
                                  action="/usuario/usuarios.xhtml"/>
                     <p:menuitem  value="Administrar Empresas"  style="font-size: 11px;"
-                                 action="/configuracion/establecimientos.xhtml"/>
+                                 action="/configuracion/establecimientos.xhtml"/>                    
                     <p:menuitem  value="Administrar Responsables"  style="font-size: 11px;"
                                  action="/configuracion/responsables.xhtml"/>
                     <p:menuitem  value="Administrar Categoria y Tipo"  style="font-size: 11px;"
@@ -120,11 +120,13 @@
                                  action="/gestor/evaluaciones.xhtml"/>
                     <p:menuitem  value="Resumen Evaluaciones"  action="/seguimiento/evaluacion-resumen-consultar.xhtml"
                                  style="font-size: 11px;"/>
+                    <p:menuitem  value="Planes De Trabajo"  action="/seguimiento/administrar-plan-trabajo-evaluaciones.xhtml"
+                                 style="font-size: 11px;"/>
                 </p:submenu>
                 <p:submenu label="Seguimiento" >
                     <p:menuitem  value="Plan De Capacitaciones"  style="font-size: 11px;"
                                  action="#{uiCapacitacion.cargarCapacitacionGeneral()}"/>
-                    <p:menuitem  value="Plan de Trabajo"  style="font-size: 11px;"
+                    <p:menuitem  value="Banco De Actividades"  style="font-size: 11px;"
                                  action="#{uiPlanAccion.cargarPlanAccionGeneral()}"/>                    
                 </p:submenu>
                 <p:submenu label="Análisis" >
