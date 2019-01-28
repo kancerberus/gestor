@@ -318,8 +318,10 @@ public class EvaluacionPlanAccionDAO {
                 epad.setSeccionDetalleItems(sdi);
 
                 evaluacionPlanAccionDetalles.add(epad);
-            }
+            }            
             return evaluacionPlanAccionDetalles;
+            
+            
         } finally {
             if (rs != null) {
                 rs.close();

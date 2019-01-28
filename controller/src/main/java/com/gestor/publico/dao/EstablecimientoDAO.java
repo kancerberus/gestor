@@ -200,7 +200,7 @@ public class EstablecimientoDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT codigo_establecimiento, cod_meta, cod_detalle, meta , ld.nombre"                    
+                    "SELECT codigo_establecimiento, cod_meta, cod_lista, cod_detalle, meta , ld.nombre"                    
                     + " FROM meta_establecimiento "
                     + " JOIN public.lista_detalle ld USING (cod_detalle)"                    
                     + " WHERE codigo_establecimiento="+codEstablecimiento+""
@@ -208,11 +208,11 @@ public class EstablecimientoDAO {
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
                 MetaEstablecimiento me= new MetaEstablecimiento(rs.getInt("codigo_establecimiento"), rs.getInt("cod_meta"), rs.getInt("cod_detalle"), rs.getInt("meta"));
-                me.setListaDetalle(new ListaDetalle(new ListaDetallePK(0, rs.getInt("cod_detalle")), rs.getString("nombre"), null, null));
+                me.setListaDetalle(new ListaDetalle(new ListaDetallePK(rs.getInt("cod_lista"), rs.getInt("cod_detalle")), rs.getString("nombre"), null, null));
                 me.setCodigoEstablecimiento(rs.getInt("codigo_establecimiento"));
                 me.setCodMeta(rs.getInt("cod_meta"));
                 me.setCodDetalle(rs.getInt("cod_detalle"));
-                me.setMeta(rs.getInt("meta"));                
+                me.setMeta(rs.getInt("meta"));
                 listaMetaestablecimiento.add(me);             
             }
             

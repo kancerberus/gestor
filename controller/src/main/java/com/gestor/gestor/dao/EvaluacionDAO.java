@@ -272,21 +272,31 @@ public class EvaluacionDAO {
     }
     
     
-    /*public Integer avancePlanaccion(Long codEvaluacion) throws SQLException {
+    public Integer avancePlanaccion(Long codEvaluacion) throws SQLException {
         ResultSet rs = null;
         Consulta consulta = null;
-        Integer total=0;
+        
         try {            
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(                    
                     "SELECT count(EPD) as total"
                     +" FROM gestor.evaluacion_plan_accion_detalle EPD "
-                    +" WHERE cod_evaluacion='"+codEvaluacion+"'  "
+                    +" WHERE cod_evaluacion="+codEvaluacion+"  "
             );
             rs = consulta.ejecutar(sql);
             rs.next();            
-            total= rs.getInt("total");
-
+            Integer total= rs.getInt("total");
+            
+            consulta = new Consulta(conexion);
+            StringBuilder sql1= new StringBuilder(
+                    "SELECT count(EPD),(CASE WHEN count(EPD) = 0 THEN 0 ELSE ((count(EPD)::float*100::float)/"+total+")::INT END) AS avance "
+                    +" from gestor.evaluacion_plan_accion_detalle EPD "
+                    +" WHERE cod_evaluacion="+codEvaluacion+" AND estado='C'"                                        
+            );
+            rs = consulta.ejecutar(sql1);
+            rs.next();   
+            
+            return rs.getInt("avance");            
         } finally {
             if (rs != null) {
                 rs.close();
@@ -295,7 +305,7 @@ public class EvaluacionDAO {
                 consulta.desconectar();
             }
         }
-    }*/
+    }
 
     public void actualizarEstadoEvaluacion(EvaluacionPK evaluacionPK, String estado) throws SQLException {
         Consulta consulta = null;

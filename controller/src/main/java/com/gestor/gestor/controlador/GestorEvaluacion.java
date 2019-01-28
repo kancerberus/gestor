@@ -146,7 +146,7 @@ public class GestorEvaluacion extends Gestor {
         }
     }
     
-    /*public Integer avancePlanaccion( Long codEvaluacion) throws Exception {
+    public Integer avancePlanaccion( Long codEvaluacion) throws Exception {
         try {
             this.abrirConexion();
             EvaluacionDAO evaluacionDAO = new EvaluacionDAO(conexion);
@@ -155,7 +155,7 @@ public class GestorEvaluacion extends Gestor {
         } finally {
             this.cerrarConexion();
         }
-    }*/
+    }
 
     public void finalizarEvaluacion(Evaluacion evaluacion) throws Exception {
         try {
