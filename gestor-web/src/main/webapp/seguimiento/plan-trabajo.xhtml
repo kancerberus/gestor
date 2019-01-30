@@ -38,11 +38,11 @@
 
                     <p:columnGroup type="header">  
                         <p:row>  
-                            <p:column width="12%" headerText="Opciones" />                                                                                    
+                            <p:column width="20%" headerText="Opciones" />                                                                                    
                             <p:column  headerText="Descripcion" />
                             <p:column  headerText="Fecha Creacion" />
                             <p:column  headerText="Fecha Vencimiento" />
-                            <p:column headerText="Estado" filterBy="#{varPlantrabajo.estado}"
+                            <p:column width="10%" headerText="Estado" filterBy="#{varPlantrabajo.estado}"
                                     filterMatchMode="equals">
                                   <f:facet name="filter">
                                       <p:selectOneButton onchange="PF('planTrabajoTable').filter()"
@@ -60,6 +60,8 @@
                     <p:column >
                         <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Trabajo" update="formPlantrabajo"
                                          action="#{uiPlantrabajo.subirItemPlantrabajo()}"/>
+                        <p:commandButton value="Meta" title="Crear Meta" update="formPlantrabajo"
+                                         action="#{uiPlantrabajo.dialogoMeta()}"/>
                         <p:commandButton value="Objetivo" title="Crear Objetivo" update="formPlantrabajo"
                                          action="#{uiPlantrabajo.dialogoObjetivo()}"/>
                         <p:commandButton value="Actividades" title="Crear Actividad" update="formPlantrabajo"

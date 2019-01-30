@@ -42,7 +42,7 @@ public class UIEstablecimiento implements Serializable {
     private UploadedFile file;
     private GestorEstablecimiento gestorEstablecimiento;
     private GestorGeneral gestorGeneral;
-    private GestorLista gestorLista;
+    
     private GestorMunicipios gestorMunicipios;
     private Establecimiento establecimiento = new Establecimiento();
     private List<Establecimiento> establecimientoList = new ArrayList<>();
@@ -52,13 +52,13 @@ public class UIEstablecimiento implements Serializable {
     
     private GestorPrograma gestorPrograma;
     private List<CentroTrabajo> centrostrabajo = new ArrayList<>();
-    private List<ListaDetalle> listadetalles= new ArrayList<>();    
-    private List<MetaEstablecimiento> metas= new ArrayList<>();    
+        
+    
     
     
     private CentroTrabajo centro= new CentroTrabajo();
-    private ListaDetalle listadetalle= new ListaDetalle();
-    private MetaEstablecimiento metaestablecimiento= new MetaEstablecimiento();    
+    
+    private PlanTrabajoMeta metaestablecimiento= new PlanTrabajoMeta();    
     private PlanTrabajoPrograma programa = new PlanTrabajoPrograma();
     
 
@@ -68,16 +68,7 @@ public class UIEstablecimiento implements Serializable {
         this.cargarMunicipios();      
     }
     
-    private void cargarListadetalles() {
-        try {
-            gestorLista = new GestorLista();
-            if(listadetalles.isEmpty()){
-            listadetalles.addAll((Collection<? extends ListaDetalle>) gestorLista.cargarListadetalles());
-            }
-        } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
-        }
-    }
+
 
     public void subirItemEstablecimiento() {
         establecimiento = (Establecimiento) UtilJSF.getBean("varEstablecimiento");
@@ -141,9 +132,8 @@ public class UIEstablecimiento implements Serializable {
         
     public void limpiarcentro() {
         centro= new CentroTrabajo();  
-        metaestablecimiento = new MetaEstablecimiento();
+        metaestablecimiento = new PlanTrabajoMeta();
     }
-      
 
     public void cargarLogo(FileUploadEvent event) {
         try {
@@ -175,20 +165,7 @@ public class UIEstablecimiento implements Serializable {
         }
     }
     
-    public void dialogoMeta() {
-        try {
-            metaestablecimiento= new MetaEstablecimiento();
-            Dialogo dialogo = new Dialogo ("dialogos/meta.xhtml", "Crear Metas", "clip", Dialogo.WIDTH_80);
-            UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
-            UtilJSF.execute("PF('dialog').show();");
-            establecimiento = (Establecimiento) UtilJSF.getBean("varEstablecimiento");                
-            UtilJSF.setBean("establecimiento", establecimiento, UtilJSF.SESSION_SCOPE);
-            this.cargarListadetalles();
-            this.cargarMetaList();            
-        } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
-        }
-    }
+
     
     public void guardarCentro(){    
         try {
@@ -210,29 +187,7 @@ public class UIEstablecimiento implements Serializable {
         }
     }
     
-    public void guardarMeta(){    
-        try {
-            establecimiento = (Establecimiento) UtilJSF.getBean("establecimiento");                            
 
-            if(metaestablecimiento.getCodMeta() ==null){
-                metaestablecimiento.setCodMeta(metas.size()+1);                
-            }
-            if(metaestablecimiento.getCodMeta()>2){
-                UtilMSG.addSuccessMsg("Modifique meta correctamente.");
-                metaestablecimiento.setCodMeta(null);
-            }
-            
-            MetaEstablecimiento me= new MetaEstablecimiento(establecimiento.getCodigoEstablecimiento(), metaestablecimiento.getCodMeta(), metaestablecimiento.getMeta(), metaestablecimiento.getListaDetalle().getListaDetallePK().getCodDetalle());                        
-            gestorEstablecimiento.almacenarMeta(me);   
-            
-            UtilMSG.addSuccessMsg("Meta almacenado correctamente.");
-            UtilJSF.setBean("meta", new CentroTrabajo(), UtilJSF.SESSION_SCOPE);            
-            this.cargarMetaList();
-            this.limpiarcentro();
-        } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
-        }
-    }
     
     public void cargarCentroList() {
         try {
@@ -240,17 +195,6 @@ public class UIEstablecimiento implements Serializable {
             this.centrostrabajo= new ArrayList<>();
             gestorCentrotrabajo= new GestorCentroTrabajo();
             this.centrostrabajo.addAll((Collection<? extends CentroTrabajo>) gestorCentrotrabajo.cargarListaCentrosTrabajo(establecimiento.getCodigoEstablecimiento()));
-        } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
-        }
-    }
-    
-    public void cargarMetaList() {
-        try {
-            establecimiento= (Establecimiento) UtilJSF.getBean("establecimiento");
-            this.metas= new ArrayList<>();
-            gestorEstablecimiento= new GestorEstablecimiento();
-            metas.addAll((Collection<? extends MetaEstablecimiento>) gestorEstablecimiento.cargarListaMetas(establecimiento.getCodigoEstablecimiento()));
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -273,12 +217,6 @@ public class UIEstablecimiento implements Serializable {
         UtilJSF.setBean("centro", centro, UtilJSF.SESSION_SCOPE);        
     }   
     
-    public void subirItemMeta() {        
-        metaestablecimiento = (MetaEstablecimiento) UtilJSF.getBean("varMeta");         
-        UtilJSF.setBean("meta", metaestablecimiento, UtilJSF.SESSION_SCOPE);           
-        this.cargarMetaList();
-    }
-    
     private void cargarMunicipios() {
         try {
             gestorMunicipios = new GestorMunicipios();
@@ -296,36 +234,11 @@ public class UIEstablecimiento implements Serializable {
         this.programa = programa;
     }
 
-    public ListaDetalle getListadetalle() {
-        return listadetalle;
-    }
-
-    public void setListadetalle(ListaDetalle listadetalle) {
-        this.listadetalle = listadetalle;
-    }
-
-    public List<MetaEstablecimiento> getMetas() {
-        return metas;
-    }
-
-    public void setMetas(List<MetaEstablecimiento> metas) {
-        this.metas = metas;
-    }
-
-    public List<ListaDetalle> getListadetalles() {
-        return listadetalles;
-    }
-
-    public void setListadetalles(List<ListaDetalle> listadetalles) {
-        this.listadetalles = listadetalles;
-    }
-
-
-    public MetaEstablecimiento getMetaestablecimiento() {
+    public PlanTrabajoMeta getMetaestablecimiento() {
         return metaestablecimiento;
     }
 
-    public void setMetaestablecimiento(MetaEstablecimiento metaestablecimiento) {
+    public void setMetaestablecimiento(PlanTrabajoMeta metaestablecimiento) {
         this.metaestablecimiento = metaestablecimiento;
     }
 

@@ -28,7 +28,7 @@ import com.gestor.gestor.controlador.GestorMotivoCorreccion;
 import com.gestor.gestor.controlador.GestorTipoAccion;
 import com.gestor.publico.CentroTrabajo;
 import com.gestor.publico.ListaDetalle;
-import com.gestor.publico.MetaEstablecimiento;
+import com.gestor.publico.PlanTrabajoMeta;
 import com.gestor.publico.controlador.GestorCentroTrabajo;
 import com.gestor.publico.controlador.GestorUsuario;
 import java.text.SimpleDateFormat;
@@ -75,7 +75,7 @@ public class UIPlanAccion {
 
     private Map<String, String> capacitacionEstado = new HashMap<>();
     private List<String> capacitacionEstadoSeleccionado = new ArrayList<>();
-    private MetaEstablecimiento metaestablecimiento= new MetaEstablecimiento();
+    private PlanTrabajoMeta metaestablecimiento= new PlanTrabajoMeta();
     
     private Long codEvaluacion;
     private String responsable;
@@ -707,11 +707,11 @@ public class UIPlanAccion {
         }
     }
 
-    public MetaEstablecimiento getMetaestablecimiento() {
+    public PlanTrabajoMeta getMetaestablecimiento() {
         return metaestablecimiento;
     }
 
-    public void setMetaestablecimiento(MetaEstablecimiento metaestablecimiento) {
+    public void setMetaestablecimiento(PlanTrabajoMeta metaestablecimiento) {
         this.metaestablecimiento = metaestablecimiento;
     }
 

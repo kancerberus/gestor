@@ -13,8 +13,14 @@ import com.gestor.entity.UtilMSG;
 import com.gestor.gestor.Evaluacion;
 import com.gestor.gestor.controlador.GestorEvaluacion;
 import com.gestor.modelo.Sesion;
+import com.gestor.publico.CentroTrabajo;
+import com.gestor.publico.Establecimiento;
+import com.gestor.publico.ListaDetalle;
+import com.gestor.publico.PlanTrabajoMeta;
 import com.gestor.publico.PlanTrabajoObjetivo;
 import com.gestor.publico.PlanTrabajoPrograma;
+import com.gestor.publico.controlador.GestorEstablecimiento;
+import com.gestor.publico.controlador.GestorLista;
 import com.gestor.publico.controlador.GestorObjetivo;
 import com.gestor.publico.controlador.GestorPrograma;
 import com.gestor.seguimiento.controlador.GestorPlanTrabajo;
@@ -38,17 +44,25 @@ public class UIPlanTrabajo implements Serializable{
     private PlanTrabajo plantrabajo;                    
     private PlanTrabajoObjetivo objetivo;
     private PlanTrabajoPrograma programa;
+    private PlanTrabajoMeta meta;
+    private ListaDetalle listadetalle= new ListaDetalle();
+    
+    
     
     private PlanTrabajoActividad plantrabajoactividad;
     private List<PlanTrabajoActividad> planTrabajoactividadList= new ArrayList<>();    
+    private List<PlanTrabajoActividad> planTrabajoactividadmetaList= new ArrayList<>();    
     
     private GestorObjetivo gestorObjetivo;
     private GestorPrograma gestorPrograma;
     private GestorPlanTrabajo gestorPlanTrabajo;
+    private GestorLista gestorLista;
         
     private List<PlanTrabajoObjetivo> objetivos = new ArrayList<>();    
     private List<PlanTrabajoObjetivo> objetivoList= new ArrayList<>();    
-    private List<PlanTrabajoPrograma> programaList= new ArrayList<>();    
+    private List<PlanTrabajoPrograma> programaList= new ArrayList<>();        
+    private List<PlanTrabajoMeta> metas= new ArrayList<>();    
+    private List<ListaDetalle> listadetalles= new ArrayList<>();
     
     private boolean guardarActivo = false;
     private boolean nuevoActivo = true;
@@ -108,16 +122,15 @@ public class UIPlanTrabajo implements Serializable{
     }
     
     public void guardarObjetivo() {
-        try {                 
-            evaluacion = (Evaluacion) UtilJSF.getBean("evaluacion");  
-            
+        try {              
+            evaluacion = (Evaluacion) UtilJSF.getBean("evaluacion");              
+            UtilJSF.setBean("planTrabajo", plantrabajo, UtilJSF.SESSION_SCOPE); 
             if(objetivoList.isEmpty()){
                 objetivo.setCodObjetivo(1);
             }else{
                 objetivo.setCodObjetivo(objetivoList.size()+1);
-            }            
-            plantrabajo = (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");
-            UtilJSF.setBean("plantrabajo", plantrabajo, UtilJSF.SESSION_SCOPE); 
+            }     
+            
             PlanTrabajoObjetivo obj= new PlanTrabajoObjetivo(evaluacion.getEvaluacionPK().getCodigoEstablecimiento(), plantrabajo.getCodPlantrabajo(), objetivo.getCodObjetivo(), objetivo.getNombre());
             gestorObjetivo.validarObjetivo(obj);
             gestorObjetivo.almacenarObjetivo(obj);                        
@@ -131,7 +144,6 @@ public class UIPlanTrabajo implements Serializable{
                 UtilLog.generarLog(this.getClass(), e);
             }
         }
-
     }
     
     public void cargarObjetivo() {
@@ -139,7 +151,7 @@ public class UIPlanTrabajo implements Serializable{
             plantrabajo = (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");            
             
             if(plantrabajo.getCodPlantrabajo() == null){
-                plantrabajo = (PlanTrabajo) UtilJSF.getBean("plantrabajo");                
+                plantrabajo = (PlanTrabajo) UtilJSF.getBean("planTrabajo");                
             }
             this.objetivoList = new ArrayList<>();
             gestorObjetivo = new GestorObjetivo();
@@ -158,7 +170,7 @@ public class UIPlanTrabajo implements Serializable{
             plantrabajo = (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");                        
             UtilJSF.setBean("varPlantrabajo", plantrabajo, UtilJSF.SESSION_SCOPE); 
             if(plantrabajo.getCodPlantrabajo() == null){
-                plantrabajo = (PlanTrabajo) UtilJSF.getBean("plantrabajo");                
+                plantrabajo = (PlanTrabajo) UtilJSF.getBean("planTrabajo");                
             }
             this.objetivoList = new ArrayList<>();
             gestorObjetivo = new GestorObjetivo();            
@@ -192,6 +204,9 @@ public class UIPlanTrabajo implements Serializable{
         UtilJSF.setBean("planTrabajoactividad", plantrabajoactividad, UtilJSF.SESSION_SCOPE); 
         planTrabajoactividadList.remove(plantrabajoactividad);        
     }
+
+    
+    
     
     public void eliminarObjetivo(){
         try {
@@ -371,21 +386,63 @@ public class UIPlanTrabajo implements Serializable{
         }
     }
     
+    public void cerrarPlantrabajoactividad() {
+        try {
+            plantrabajoactividad = (PlanTrabajoActividad) UtilJSF.getBean("varPlantrabajoactividad");               
+            UtilJSF.setBean("planTrabajoactividad", plantrabajoactividad, UtilJSF.SESSION_SCOPE);                         
+            
+            plantrabajoactividad.setEstado("C");
+            
+            PlanTrabajoActividad pta = new PlanTrabajoActividad(plantrabajoactividad.getCodEstablecimiento(), 
+                    plantrabajoactividad.getCodPlantrabajo(), plantrabajoactividad.getCodObjetivo(), 
+                    plantrabajoactividad.getCodPrograma(), plantrabajoactividad.getCodActividad(), 
+                    plantrabajoactividad.getActividad(), plantrabajoactividad.getFechaVenc(), plantrabajoactividad.getEstado(), 
+                    plantrabajoactividad.getFechaRegistro(), plantrabajoactividad.getPeso()
+            );
+            gestorPlanTrabajo=new GestorPlanTrabajo();
+            gestorPlanTrabajo.almacenarPlantrabajoactividad(pta);
+            UtilMSG.addSuccessMsg("Actividad cerrada correctamente.");
+            UtilJSF.setBean("varPlantrabajoactividad", plantrabajoactividad, UtilJSF.SESSION_SCOPE);
+            this.cargarPlantrabajoactividad();
+            this.limpiarPlantrabajoactividad();
+        } catch (Exception e) {
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getMessage());
+            } else {    
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }
+        }
+    }
+    
     public void guardarPlantrabajoactividad() {
         try { 
             
+            
             if(planTrabajoactividadList.isEmpty()){
-                plantrabajoactividad.setCodActividad(1);
+                plantrabajoactividad.setCodActividad(1);                
             }else{
-                plantrabajoactividad.setCodActividad(planTrabajoactividadList.size()+1);                
+                plantrabajoactividad.setCodActividad(planTrabajoactividadList.size()+1);
+            }
+            
+            gestorPlanTrabajo = new GestorPlanTrabajo();
+            this.planTrabajoactividadmetaList.addAll((Collection<? extends PlanTrabajoActividad>) gestorPlanTrabajo.cargarPlantrabajoactividadmetaList(plantrabajoactividad.getPrograma()));
+            
+            if(planTrabajoactividadmetaList.isEmpty()){                
+                plantrabajoactividad.setPeso(100);
+            }else{                
+                Integer pr= planTrabajoactividadmetaList.size()+1;
+                plantrabajoactividad.setPeso(100/pr);                
+                
             }
             
             plantrabajoactividad.setEstado("A");
+            
             PlanTrabajoActividad pta = new PlanTrabajoActividad(plantrabajoactividad.getPrograma().getCodEstablecimiento(), 
                     plantrabajoactividad.getPrograma().getCodPlantrabajo(), plantrabajoactividad.getPrograma().getCodObjetivo(), 
                     plantrabajoactividad.getPrograma().getCodPrograma(), plantrabajoactividad.getCodActividad(), 
                     plantrabajoactividad.getActividad(), plantrabajoactividad.getFechaVenc(), plantrabajoactividad.getEstado(), 
-                    null
+                    null, plantrabajoactividad.getPeso()
             );
             gestorPlanTrabajo=new GestorPlanTrabajo();
             gestorPlanTrabajo.almacenarPlantrabajoactividad(pta);
@@ -403,6 +460,73 @@ public class UIPlanTrabajo implements Serializable{
         }
 
     }
+    
+    public void guardarMeta(){    
+        try {
+            plantrabajo = (PlanTrabajo)  UtilJSF.getBean("planTrabajo");                       
+
+            if(meta.getCodMeta() ==null){
+                meta.setCodMeta(metas.size()+1);                
+            }
+            if(meta.getCodMeta()>2){
+                UtilMSG.addSuccessMsg("Modifique meta correctamente.");
+                meta.setCodMeta(null);
+            }
+            
+            PlanTrabajoMeta me= new PlanTrabajoMeta(plantrabajo.getCodEstablecimiento(), plantrabajo.getCodPlantrabajo(), meta.getCodMeta(), meta.getMeta(), meta.getListaDetalle().getListaDetallePK().getCodDetalle());                        
+            gestorPlanTrabajo.almacenarMeta(me);   
+            
+            UtilMSG.addSuccessMsg("Meta almacenado correctamente.");
+            UtilJSF.setBean("meta", new PlanTrabajoMeta(), UtilJSF.SESSION_SCOPE);            
+            this.cargarMetaList();            
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void cargarMetaList() {
+        try {
+            plantrabajo = (PlanTrabajo)  UtilJSF.getBean("planTrabajo");
+            this.metas= new ArrayList<>();
+            gestorPlanTrabajo= new GestorPlanTrabajo();
+            metas.addAll((Collection<? extends PlanTrabajoMeta>) gestorPlanTrabajo.cargarListaMetas(plantrabajo.getCodEstablecimiento(), plantrabajo.getCodPlantrabajo()));
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void dialogoMeta() {
+        try {
+            meta= new PlanTrabajoMeta();
+            Dialogo dialogo = new Dialogo ("dialogos/meta.xhtml", "Crear Metas", "clip", Dialogo.WIDTH_80);
+            UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
+            UtilJSF.execute("PF('dialog').show();");
+            plantrabajo = (PlanTrabajo)  UtilJSF.getBean("varPlantrabajo");
+            UtilJSF.setBean("planTrabajo", plantrabajo, UtilJSF.SESSION_SCOPE);
+            this.cargarListadetalles();
+            this.cargarMetaList();            
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    
+    private void cargarListadetalles() {
+        try {
+            gestorLista = new GestorLista();
+            if(listadetalles.isEmpty()){
+            listadetalles.addAll((Collection<? extends ListaDetalle>) gestorLista.cargarListadetalles());
+            }
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    public void subirItemMeta() {        
+        meta = (PlanTrabajoMeta) UtilJSF.getBean("varMeta");         
+        UtilJSF.setBean("meta", meta, UtilJSF.SESSION_SCOPE);           
+        this.cargarMetaList();
+    }
+    
 
     public List<PlanTrabajoActividad> getPlanTrabajoactividadList() {
         return planTrabajoactividadList;
@@ -417,6 +541,46 @@ public class UIPlanTrabajo implements Serializable{
         this.cargarPlantrabajo();
         }
         plantrabajo= new PlanTrabajo();                
+    }
+
+    public List<PlanTrabajoActividad> getPlanTrabajoactividadmetaList() {
+        return planTrabajoactividadmetaList;
+    }
+
+    public void setPlanTrabajoactividadmetaList(List<PlanTrabajoActividad> planTrabajoactividadmetaList) {
+        this.planTrabajoactividadmetaList = planTrabajoactividadmetaList;
+    }
+
+    public PlanTrabajoMeta getMeta() {
+        return meta;
+    }
+
+    public void setMeta(PlanTrabajoMeta meta) {
+        this.meta = meta;
+    }
+
+    public ListaDetalle getListadetalle() {
+        return listadetalle;
+    }
+
+    public void setListadetalle(ListaDetalle listadetalle) {
+        this.listadetalle = listadetalle;
+    }
+
+    public List<PlanTrabajoMeta> getMetas() {
+        return metas;
+    }
+
+    public void setMetas(List<PlanTrabajoMeta> metas) {
+        this.metas = metas;
+    }
+
+    public List<ListaDetalle> getListadetalles() {
+        return listadetalles;
+    }
+
+    public void setListadetalles(List<ListaDetalle> listadetalles) {
+        this.listadetalles = listadetalles;
     }
     
     public void limpiarPlantrabajoactividad() {        

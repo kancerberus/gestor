@@ -66,8 +66,10 @@
                         </p:row> 
                     </p:columnGroup> 
                     <p:column >
-                        <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Trabajo" update="formPlantrabajo:opActividad"
+                        <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Trabajo Actividad" update="formPlantrabajo:opActividad"
                                          action="#{uiPlantrabajo.subirItemPlantrabajoactividad()}"/>
+                        <p:commandButton icon="ui-icon-disk" title="Cerrar Plan Trabajo Actividad" update="formPlantrabajo:opActividad"
+                                         action="#{uiPlantrabajo.cerrarPlantrabajoactividad()}"/>
                     </p:column>
                     <p:column >
                         <h:outputText value="#{varPlantrabajoactividad.objetivo.nombre}"/>
