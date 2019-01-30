@@ -7,9 +7,10 @@ package com.gestor.gestor;
 
 import com.gestor.publico.CentroTrabajo;
 import com.gestor.publico.Establecimiento;
-import com.gestor.publico.MetaEstablecimiento;
+import com.gestor.publico.PlanTrabajoMeta;
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
+import com.gestor.seguimiento.PlanTrabajoActividad;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -91,7 +92,8 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private TipoAccion tipoaccion = new TipoAccion();
     private MotivoCorreccion motivocorreccion = new MotivoCorreccion();
     private CentroTrabajo centrotrabajo = new CentroTrabajo();
-    private MetaEstablecimiento metaestablecimiento = new MetaEstablecimiento();
+    private PlanTrabajoMeta metaestablecimiento = new PlanTrabajoMeta();
+    private PlanTrabajoActividad plantrabajoactividad = new PlanTrabajoActividad();
     
     private Usuarios usuarios;
 
@@ -138,11 +140,19 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.eficacia = eficacia;
     }
 
-    public MetaEstablecimiento getMetaestablecimiento() {
+    public PlanTrabajoActividad getPlantrabajoactividad() {
+        return plantrabajoactividad;
+    }
+
+    public void setPlantrabajoactividad(PlanTrabajoActividad plantrabajoactividad) {
+        this.plantrabajoactividad = plantrabajoactividad;
+    }
+
+    public PlanTrabajoMeta getMetaestablecimiento() {
         return metaestablecimiento;
     }
 
-    public void setMetaestablecimiento(MetaEstablecimiento metaestablecimiento) {
+    public void setMetaestablecimiento(PlanTrabajoMeta metaestablecimiento) {
         this.metaestablecimiento = metaestablecimiento;
     }
 

@@ -20,19 +20,22 @@ import javax.persistence.Table;
  * @author juliano
  */
 @Entity
-@Table(name = "meta_etablecimiento")
+@Table(name = "plan_trabajo_meta")
 @NamedQueries({
-    @NamedQuery(name = "MetaEstablecimiento.findAll", query = "SELECT me FROM MetaEstablecimiento me")})
-public class MetaEstablecimiento implements Serializable, Cloneable {
+    @NamedQuery(name = "PlanTrabajoMeta.findAll", query = "SELECT ptme FROM PlanTrabajoMeta ptsme")})
+public class PlanTrabajoMeta implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @Column(name = "cod_meta")
-    private Integer codMeta;
-    @Basic(optional = false)
     @Column(name = "codigo_establecimiento")
-    private Integer codigoEstablecimiento;    
+    private Integer codigoEstablecimiento;
+    @Basic(optional = false)
+    @Column(name = "cod_plan_trabajo")
+    private Integer codPlantrabajo;
+    @Basic(optional = false)
+    @Column(name = "cod_meta")
+    private Integer codMeta;        
     @Basic(optional = false)
     @Column(name = "cod_detalle")
     private Integer codDetalle;    
@@ -42,24 +45,27 @@ public class MetaEstablecimiento implements Serializable, Cloneable {
     private ListaDetalle listaDetalle= new ListaDetalle();
     
     
-    public MetaEstablecimiento() {        
+    public PlanTrabajoMeta() {        
     }
 
-    public MetaEstablecimiento(Integer codMeta) {
+    public PlanTrabajoMeta(Integer codMeta) {
         this.codMeta = codMeta;        
-    }
+    }    
 
-    public MetaEstablecimiento(Integer codMeta, Integer meta, Integer codDetalle) {
-        this.codMeta = codMeta;
-        this.meta = meta;   
-        this.codDetalle = codDetalle;
-    }
-
-    public MetaEstablecimiento(Integer codigoEstablecimiento, Integer codMeta, Integer meta, Integer codDetalle ) {
+    public PlanTrabajoMeta(Integer codigoEstablecimiento, Integer codPlantrabajo, Integer codMeta, Integer meta, Integer codDetalle ) {
         this.codigoEstablecimiento = codigoEstablecimiento;
+        this.codPlantrabajo = codPlantrabajo;
         this.codMeta = codMeta;
         this.meta = meta;
         this.codDetalle = codDetalle;
+    }
+
+    public Integer getCodPlantrabajo() {
+        return codPlantrabajo;
+    }
+
+    public void setCodPlantrabajo(Integer codPlantrabajo) {
+        this.codPlantrabajo = codPlantrabajo;
     }
 
     public Integer getCodigoEstablecimiento() {
@@ -112,10 +118,10 @@ public class MetaEstablecimiento implements Serializable, Cloneable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof MetaEstablecimiento)) {
+        if (!(object instanceof PlanTrabajoMeta)) {
             return false;
         }
-        MetaEstablecimiento other = (MetaEstablecimiento) object;
+        PlanTrabajoMeta other = (PlanTrabajoMeta) object;
         if ((this.codMeta == null && other.codMeta != null) || (this.codMeta != null && !this.codMeta.equals(other.codMeta))) {
             return false;
         }
@@ -124,7 +130,7 @@ public class MetaEstablecimiento implements Serializable, Cloneable {
 
     @Override
     public String toString() {
-        return "com.gestor.publico.MetaEstablecimiento[ codMeta=" + codMeta + " ]";
+        return "com.gestor.publico.PlanTrabajoMeta[ codMeta=" + codMeta + " ]";
     }
 
     @Override
