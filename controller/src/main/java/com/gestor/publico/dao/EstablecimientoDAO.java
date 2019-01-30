@@ -8,7 +8,7 @@ package com.gestor.publico.dao;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.ListaDetalle;
 import com.gestor.publico.ListaDetallePK;
-import com.gestor.publico.MetaEstablecimiento;
+import com.gestor.publico.PlanTrabajoMeta;
 import com.gestor.publico.Municipios;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -191,42 +191,6 @@ public class EstablecimientoDAO {
         }
     }  
     
-    
-    public List<?> cargarListaMetas(Integer codEstablecimiento) throws SQLException {        
-        ResultSet rs = null;
-        
-        Consulta consulta = null;        
-        List<MetaEstablecimiento> listaMetaestablecimiento = new ArrayList<>();
-        try {
-            consulta = new Consulta(this.conexion);
-            StringBuilder sql = new StringBuilder(
-                    "SELECT codigo_establecimiento, cod_meta, cod_lista, cod_detalle, meta , ld.nombre"                    
-                    + " FROM meta_establecimiento "
-                    + " JOIN public.lista_detalle ld USING (cod_detalle)"                    
-                    + " WHERE codigo_establecimiento="+codEstablecimiento+""
-            );
-            rs = consulta.ejecutar(sql);
-            while (rs.next()) {
-                MetaEstablecimiento me= new MetaEstablecimiento(rs.getInt("codigo_establecimiento"), rs.getInt("cod_meta"), rs.getInt("cod_detalle"), rs.getInt("meta"));
-                me.setListaDetalle(new ListaDetalle(new ListaDetallePK(rs.getInt("cod_lista"), rs.getInt("cod_detalle")), rs.getString("nombre"), null, null));
-                me.setCodigoEstablecimiento(rs.getInt("codigo_establecimiento"));
-                me.setCodMeta(rs.getInt("cod_meta"));
-                me.setCodDetalle(rs.getInt("cod_detalle"));
-                me.setMeta(rs.getInt("meta"));
-                listaMetaestablecimiento.add(me);             
-            }
-            
-            return listaMetaestablecimiento;
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (consulta != null) {
-                consulta.desconectar();
-            }
-        }
-    }
-    
     public List<?> cargarListaEstablecimientosUsuario(String documentoUsuario) throws SQLException {
         ResultSet rs = null;
         Consulta consulta = null;
@@ -278,23 +242,5 @@ public class EstablecimientoDAO {
         }
     }
     
-    public void insertarMeta(MetaEstablecimiento meta) throws SQLException {
-        Consulta consulta = null;
-        try {
-            consulta = new Consulta(this.conexion);
-            StringBuilder sql = new StringBuilder(
-                    "INSERT INTO meta_establecimiento("
-                    + " codigo_establecimiento, cod_meta, cod_detalle, meta)"                    
-                    + " VALUES (" + meta.getCodigoEstablecimiento() + ", " + meta.getCodMeta() + " ,"
-                    + "  " + meta.getCodDetalle() + ", " + meta.getMeta() + ")"                    
-                    + " ON CONFLICT (codigo_establecimiento, cod_meta, cod_detalle) DO UPDATE"
-                    + " SET cod_detalle=EXCLUDED.cod_detalle, meta=EXCLUDED.meta"                    
-            );
-            consulta.actualizar(sql);
-        } finally {
-            if (consulta != null) {
-                consulta.desconectar();
-            }
-        }
-    }
+    
 }

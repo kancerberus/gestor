@@ -29,6 +29,7 @@ import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.UsuariosPK;
+import com.gestor.seguimiento.PlanTrabajoActividad;
 import conexion.Consulta;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -248,6 +249,7 @@ public class EvaluacionPlanAccionDAO {
                     + " ta.cod_tipo_accion cod_ta, ta.nombre nom_ta,"
                     + " mc.cod_motivo_correccion cod_mc, mc.nombre nom_mc,"
                     + " ct.cod_centrotrabajo cod_ct, ct.nombre nom_ct,"
+                    + " PTA.cod_plan_trabajo, PTA.cod_actividad, "
                     + " R.cedula r_cedula, R.nombres r_nombres, R.apellidos r_apellidos, R.telefono r_telefono, R.correo r_correo, R.estado r_estado, R.codigo_establecimiento r_codigo_establecimiento"
                     + " FROM gestor.evaluacion_plan_accion_detalle EPAD"
                     + " JOIN public.usuarios U USING (documento_usuario)"
@@ -264,6 +266,7 @@ public class EvaluacionPlanAccionDAO {
                     + " JOIN gestor.motivo_correccion mc USING (cod_motivo_correccion)"
                     + " JOIN public.centro_trabajo ct USING (cod_centrotrabajo)"
                     + " JOIN public.responsable R ON (R.cedula=EPAD.cedula)"
+                    + " JOIN seguimiento.plan_trabajo_actividad PTA USING (codigo_establecimiento, cod_plan_trabajo, cod_actividad)"                            
                     + condicion
                     + " ORDER BY C.numeral, S.numeral, SD.numeral, SDI.numeral"
             );
@@ -286,6 +289,7 @@ public class EvaluacionPlanAccionDAO {
                 epad.setTipoaccion(new TipoAccion(rs.getInt("cod_ta"), rs.getString("nom_ta")));
                 epad.setMotivocorreccion(new MotivoCorreccion(rs.getInt("cod_mc"), rs.getString("nom_mc")));
                 epad.setCentrotrabajo(new CentroTrabajo(rs.getInt("cod_ct"), rs.getString("nom_ct")));
+                epad.setPlantrabajoactividad(new PlanTrabajoActividad(rs.getInt("codigo_establecimiento"), rs.getInt("cod_plan_trabajo"), rs.getInt("cod_actividad"), 0, 0, condicion, null, condicion, null, 0));
                 //evaluacion
                 Evaluacion e = new Evaluacion(new EvaluacionPK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento")), rs.getString("documento_usuario"),
                         rs.getDate("e_fecha"), rs.getDate("e_fecha_registro"), rs.getString("e_estado"));

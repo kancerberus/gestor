@@ -9,7 +9,7 @@ package com.gestor.publico.controlador;
 import com.gestor.controller.Gestor;
 import com.gestor.entity.UtilLog;
 import com.gestor.publico.Establecimiento;
-import com.gestor.publico.MetaEstablecimiento;
+import com.gestor.publico.PlanTrabajoMeta;
 import com.gestor.publico.dao.EstablecimientoDAO;
 import java.io.Serializable;
 import java.util.List;
@@ -113,27 +113,9 @@ public class GestorEstablecimiento extends Gestor implements Serializable{
     }
     
     
-    public void almacenarMeta(MetaEstablecimiento meta) throws Exception {
-        try {
-            this.abrirConexion();
-            this.inicioTransaccion();
-            EstablecimientoDAO establecimientoDAO = new EstablecimientoDAO(conexion);
-            establecimientoDAO.insertarMeta(meta);
-            this.finTransaccion();
-        } finally {
-            this.cerrarConexion();
-        }
-    }
+
 
     
-    public List<?> cargarListaMetas(int codEstablecimiento) throws Exception {
-        try {
-            this.abrirConexion();
-            EstablecimientoDAO establecimientoDAO = new EstablecimientoDAO(conexion);
-            return establecimientoDAO.cargarListaMetas(codEstablecimiento);            
-        } finally {
-            this.cerrarConexion();
-        }
-    }
+
 
 }
