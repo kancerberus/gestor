@@ -55,7 +55,7 @@ public class GestorPrograma extends Gestor implements Serializable{
         }
     }
     
-    public List<?> cargarListaPrograma(int codEstablecimiento, int codObjetivo, int codPlantrabajo) throws Exception {
+    public List<?> cargarListaProgramas(int codEstablecimiento, int codObjetivo, int codPlantrabajo) throws Exception {
         try {
             this.abrirConexion();
             ProgramaDAO programaDAO= new ProgramaDAO(conexion);
@@ -64,5 +64,26 @@ public class GestorPrograma extends Gestor implements Serializable{
             this.cerrarConexion();
         }
     }
+
+    public List<?> cargarListaProgramasplanaccion(int codEstablecimiento, int codObjetivo) throws Exception {
+        try {
+            this.abrirConexion();
+            ProgramaDAO programaDAO= new ProgramaDAO(conexion);
+            return programaDAO.cargarListaProgramasplanaccion(codEstablecimiento, codObjetivo);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public List<?> cargarListaPrograma(int codEstablecimiento) throws Exception {
+        try {
+            this.abrirConexion();
+            ProgramaDAO programaDAO= new ProgramaDAO(conexion);
+            return programaDAO.cargarListaPrograma(codEstablecimiento);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
     
 }

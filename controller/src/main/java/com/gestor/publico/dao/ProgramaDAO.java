@@ -57,6 +57,72 @@ public class ProgramaDAO {
             }
         }
     }
+    
+    public List<?> cargarListaProgramasplanaccion(int codEstablecimiento, int codObjetivo) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        List<PlanTrabajoPrograma> listaPrograma = new ArrayList<>();
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT codigo_establecimiento, cod_plan_trabajo, cod_programa, cod_objetivo, nombre, peso "                    
+                    + " FROM plan_trabajo_programa "    
+                    + " WHERE codigo_establecimiento='"+codEstablecimiento+"' AND cod_objetivo = '"+codObjetivo+"' "
+            );
+            rs = consulta.ejecutar(sql);
+            while (rs.next()) {
+                PlanTrabajoPrograma pro = new PlanTrabajoPrograma(rs.getInt("codigo_establecimiento"),rs.getInt("cod_plan_trabajo"),rs.getInt("cod_programa"), rs.getInt("cod_objetivo"), rs.getInt("peso"), rs.getString("nombre"));                
+                pro.setCodEstablecimiento(rs.getInt("codigo_establecimiento"));
+                pro.setCodPlantrabajo(rs.getInt("cod_plan_trabajo"));
+                pro.setCodPrograma(rs.getInt("cod_programa"));
+                pro.setCodObjetivo(rs.getInt("cod_objetivo"));
+                pro.setPeso(rs.getInt("peso"));
+                pro.setNombre(rs.getString("nombre"));
+                listaPrograma.add(pro);                
+            }
+            return listaPrograma;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    public List<?> cargarListaPrograma(int codEstablecimiento) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        List<PlanTrabajoPrograma> listaPrograma = new ArrayList<>();
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT codigo_establecimiento, cod_plan_trabajo, cod_programa, cod_objetivo, nombre, peso "                    
+                    + " FROM public.plan_trabajo_programa "    
+                    + " WHERE codigo_establecimiento='"+codEstablecimiento+"' "
+            );
+            rs = consulta.ejecutar(sql);
+            while (rs.next()) {
+                PlanTrabajoPrograma pro = new PlanTrabajoPrograma(rs.getInt("codigo_establecimiento"),rs.getInt("cod_plan_trabajo"),rs.getInt("cod_programa"), rs.getInt("cod_objetivo"), rs.getInt("peso"), rs.getString("nombre"));                
+                pro.setCodEstablecimiento(rs.getInt("codigo_establecimiento"));
+                pro.setCodPlantrabajo(rs.getInt("cod_plan_trabajo"));
+                pro.setCodPrograma(rs.getInt("cod_programa"));
+                pro.setCodObjetivo(rs.getInt("cod_objetivo"));
+                pro.setPeso(rs.getInt("peso"));
+                pro.setNombre(rs.getString("nombre"));
+                listaPrograma.add(pro);                
+            }
+            return listaPrograma;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 
     public void insertarPrograma(PlanTrabajoPrograma programa) throws SQLException {
         Consulta consulta = null;

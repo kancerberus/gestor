@@ -6,9 +6,6 @@
 package com.gestor.publico.dao;
 
 import com.gestor.publico.Establecimiento;
-import com.gestor.publico.ListaDetalle;
-import com.gestor.publico.ListaDetallePK;
-import com.gestor.publico.PlanTrabajoMeta;
 import com.gestor.publico.Municipios;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -16,12 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import conexion.Consulta;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -90,30 +81,7 @@ public class EstablecimientoDAO {
         }
     }
     
-    public Integer valorMeta(Integer codEstablecimiento) throws SQLException {
-        ResultSet rs = null;
-        Consulta consulta = null;
-        try {
-            consulta = new Consulta(this.conexion);
-            StringBuilder sql = new StringBuilder(
-                    "SELECT meta "
-                    + " FROM public.meta_establecimiento "
-                    + " WHERE codigo_establecimiento='"+codEstablecimiento+"' AND cod_detalle=3 "
-            );
-            rs = consulta.ejecutar(sql);
-            if (rs.next()) {
-                return rs.getInt("meta");                
-            }
-            return null;
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (consulta != null) {
-                consulta.desconectar();
-            }
-        }
-    }
+    
 
     public String cargarPrefijo(int codigoEstablecimiento) throws SQLException {
         ResultSet rs = null;

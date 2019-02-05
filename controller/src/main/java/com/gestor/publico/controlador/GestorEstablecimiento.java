@@ -9,7 +9,6 @@ package com.gestor.publico.controlador;
 import com.gestor.controller.Gestor;
 import com.gestor.entity.UtilLog;
 import com.gestor.publico.Establecimiento;
-import com.gestor.publico.PlanTrabajoMeta;
 import com.gestor.publico.dao.EstablecimientoDAO;
 import java.io.Serializable;
 import java.util.List;
@@ -47,15 +46,7 @@ public class GestorEstablecimiento extends Gestor implements Serializable{
         }
     }
     
-    public Integer valorMeta(int codEstablecimiento) throws Exception {
-        try {
-            this.abrirConexion();
-            EstablecimientoDAO establecimientoDAO = new EstablecimientoDAO(conexion);
-            return establecimientoDAO.valorMeta(codEstablecimiento);
-        } finally {
-            this.cerrarConexion();
-        }
-    }
+
 
     public List<?> cargarListaEstablecimientos() throws Exception {
         try {

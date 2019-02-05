@@ -64,4 +64,13 @@ public class GestorObjetivo extends Gestor implements Serializable{
         }
     }
     
+    public List<?> cargarListaObjetivoplanaccion(int codEstablecimiento) throws Exception {
+        try {
+            this.abrirConexion();
+            ObjetivoDAO objetivoDAO= new ObjetivoDAO(conexion);
+            return objetivoDAO.cargarListaObjetivoplanaccion(codEstablecimiento);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
 }

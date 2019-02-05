@@ -57,6 +57,37 @@ public class ObjetivoDAO {
             }
         }
     }
+    
+    public List<?> cargarListaObjetivoplanaccion(int codEstablecimiento) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        List<PlanTrabajoObjetivo> listaObjetivo = new ArrayList<>();
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT codigo_establecimiento, cod_plan_trabajo, cod_objetivo,  nombre "                    
+                    + " FROM plan_trabajo_objetivo "             
+                    + " WHERE codigo_establecimiento='"+codEstablecimiento+"' "
+            );
+            rs = consulta.ejecutar(sql);
+            while (rs.next()) {
+                PlanTrabajoObjetivo obj = new PlanTrabajoObjetivo(rs.getInt("codigo_establecimiento"),rs.getInt("cod_plan_trabajo"),rs.getInt("cod_objetivo"), rs.getString("nombre"));                
+                obj.setCodEstablecimiento(rs.getInt("codigo_establecimiento"));
+                obj.setCodPlantrabajo(rs.getInt("cod_plan_trabajo"));
+                obj.setCodObjetivo(rs.getInt("cod_objetivo"));                
+                obj.setNombre(rs.getString("nombre"));
+                listaObjetivo.add(obj);                
+            }
+            return listaObjetivo;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 
     public void insertarObjetivo(PlanTrabajoObjetivo objetivo) throws SQLException {
         Consulta consulta = null;

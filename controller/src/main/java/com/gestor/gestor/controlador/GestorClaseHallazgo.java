@@ -6,7 +6,6 @@
 package com.gestor.gestor.controlador;
 import com.gestor.gestor.dao.ClaseHallazgoDAO;
 import com.gestor.controller.Gestor;
-import com.gestor.gestor.FuenteHallazgo;
 import java.io.Serializable;
 import java.util.List;
 
