@@ -21,15 +21,16 @@ import com.gestor.publico.Usuarios;
 import com.gestor.publico.controlador.GestorConfiguracion;
 import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorResponsable;
-import com.gestor.gestor.controlador.GestorFuenteHallazgo;
 import com.gestor.gestor.controlador.GestorClaseHallazgo;
 import com.gestor.gestor.controlador.GestorEvaluacion;
 import com.gestor.gestor.controlador.GestorMotivoCorreccion;
 import com.gestor.gestor.controlador.GestorTipoAccion;
 import com.gestor.publico.CentroTrabajo;
-import com.gestor.publico.ListaDetalle;
-import com.gestor.publico.PlanTrabajoMeta;
+import com.gestor.publico.PlanTrabajoObjetivo;
+import com.gestor.publico.PlanTrabajoPrograma;
 import com.gestor.publico.controlador.GestorCentroTrabajo;
+import com.gestor.publico.controlador.GestorObjetivo;
+import com.gestor.publico.controlador.GestorPrograma;
 import com.gestor.publico.controlador.GestorUsuario;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ import javax.mail.internet.MimeMessage;
 public class UIPlanAccion {
 
     private SeccionDetalleItems sdiSeleccionado;
+    private PlanTrabajoObjetivo objetivoSeleccionado;
     private List<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles = new ArrayList<>();
     private EvaluacionPlanAccionDetalle evaluacionPlanAccionDetalle = new EvaluacionPlanAccionDetalle();
     private Boolean modificarActivo = Boolean.FALSE;
@@ -74,8 +76,7 @@ public class UIPlanAccion {
     private List<String> ciclosStringSeleccionado = new ArrayList<>();
 
     private Map<String, String> capacitacionEstado = new HashMap<>();
-    private List<String> capacitacionEstadoSeleccionado = new ArrayList<>();
-    private PlanTrabajoMeta metaestablecimiento= new PlanTrabajoMeta();
+    private List<String> capacitacionEstadoSeleccionado = new ArrayList<>();    
     
     private Long codEvaluacion;
     private String responsable;
@@ -83,7 +84,8 @@ public class UIPlanAccion {
     private Date fechaPlanFin;
 
     private List<Responsable> responsables = new ArrayList<>();
-    private List<FuenteHallazgo> fuentehallazgos = new ArrayList<>();
+    private List<PlanTrabajoPrograma> programas = new ArrayList<>();
+    private List<PlanTrabajoObjetivo> objetivos = new ArrayList<>();
     private List<ClaseHallazgo> clasehallazgos = new ArrayList<>();
     private List<TipoAccion> tipoacciones = new ArrayList<>();
     private List<MotivoCorreccion> motivocorrecciones  = new ArrayList<>();
@@ -124,7 +126,8 @@ public class UIPlanAccion {
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodEvaluacion(),
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento(),
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlan(),
-                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle(),
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlantrabajo()
             );
             evaluacionPlanAccionDetalle.setEvaluacionPlanAccionDetalleNotasList(gestorEvaluacionPlanAccion.cargarEvaluacionPlanAccionDetalleNotasList(pk));
 
@@ -156,8 +159,10 @@ public class UIPlanAccion {
                         pk.getCodEvaluacion(),
                         pk.getCodigoEstablecimiento(),
                         pk.getCodPlan(),
-                        pk.getCodPlanDetalle(),
-                        gestorGeneral.nextval(GestorGeneral.GESTOR_EVALUACION_PLAN_ACCION_DETALLE_NOTAS_COD_NOTA_SEQ)
+                        pk.getCodPlanDetalle(),                                                
+                        gestorGeneral.nextval(GestorGeneral.GESTOR_EVALUACION_PLAN_ACCION_DETALLE_NOTAS_COD_NOTA_SEQ),
+                        pk.getCodPlantrabajo()
+                        
                 ));
             }
 
@@ -170,7 +175,8 @@ public class UIPlanAccion {
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodEvaluacion(),
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento(),
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlan(),
-                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle(),
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlantrabajo()
             );
             evaluacionPlanAccionDetalle.setEvaluacionPlanAccionDetalleNotasList(new ArrayList<EvaluacionPlanAccionDetalleNotas>());
             evaluacionPlanAccionDetalle.setEvaluacionPlanAccionDetalleNotasList(gestorEvaluacionPlanAccion.cargarEvaluacionPlanAccionDetalleNotasList(pk));
@@ -194,7 +200,8 @@ public class UIPlanAccion {
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodEvaluacion(),
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento(),
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlan(),
-                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle(),
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlantrabajo()
             );
             evaluacionPlanAccionDetalle.setEvaluacionPlanAccionDetalleNotasList(gestorEvaluacionPlanAccion.cargarEvaluacionPlanAccionDetalleNotasList(pk));
 
@@ -239,16 +246,19 @@ public class UIPlanAccion {
             condicionesConsulta.add(Boolean.TRUE.toString());
         }*/
         
-        if(establecimiento==null){                                    
-            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", "2" ));
+        if(establecimiento == null){   
+            String cadena = "0";         
+            cadena = Integer.toString(establecimiento.getCodigoEstablecimiento());
+            
+            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena));
             
         }
         
         if(establecimiento!=null){            
             String cadena="";
             cadena = Integer.toString(establecimiento.getCodigoEstablecimiento());
-            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena ));                        
-            this.cargarValormeta();
+            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena )); 
+            establecimiento= new Establecimiento();
         }
         
 
@@ -321,18 +331,19 @@ public class UIPlanAccion {
             UtilJSF.setBean("dialogo", new Dialogo(), UtilJSF.SESSION_SCOPE);
             Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
             evaluacionPlanAccionDetalles = new ArrayList<>();
-            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();            
+            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             
             List<String> condicionesConsulta = new ArrayList<>();
-            condicionesConsulta.add(App.CONDICION_WHERE);            
+            condicionesConsulta.add(App.CONDICION_WHERE);
             condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", "2" ));
-            establecimiento.setCodigoEstablecimiento(2);            
-            this.cargarValormeta();
+            establecimiento.setCodigoEstablecimiento(2);
             evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
             )
             );
+            if(!evaluacionPlanAccionDetalles.isEmpty()){
             UtilJSF.setBean("varPlanAccionDetalle", evaluacionPlanAccionDetalles.get(0), UtilJSF.SESSION_SCOPE);
+            }
             this.getAvancePlanAccion();
             return ("/seguimiento/planes-accion.xhtml?faces-redirect=true");
         } catch (Exception e) {
@@ -457,14 +468,17 @@ public class UIPlanAccion {
             epd.setCodSeccion(sdiSeleccionado.getSeccionDetalleItemsPK().getCodSeccion());
             epd.setCodDetalle(sdiSeleccionado.getSeccionDetalleItemsPK().getCodDetalle());
             epd.setCodItem(sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem());
-            epd.setDocumentoUsuario(documentoUsuario);
-
+            epd.setDocumentoUsuario(documentoUsuario);            
             epd.getEvaluacionPlanAccionDetallePK().setCodPlanDetalle(codPlan);
             epd.getEvaluacionPlanAccionDetallePK().setCodPlanDetalle(gestorGeneral.nextval(GestorGeneral.GESTOR_EVALUACION_PLAN_ACCION_DETALLE_COD_PLAN_DETALLE_SEQ));
+            epd.getEvaluacionPlanAccionDetallePK().setCodPlantrabajo(9999);            
+            if(epd.getEvaluacionPlanAccionDetallePK().getCodPlantrabajo() == 9999){
+                epd.setTipo("EV");
+            }                        
 
             EvaluacionPlanAccionDetalleNotas epadn = new EvaluacionPlanAccionDetalleNotas(
                     new EvaluacionPlanAccionDetalleNotasPK(ep.getEvaluacionPlanAccionPK().getCodEvaluacion(), ep.getEvaluacionPlanAccionPK().getCodigoEstablecimiento(),
-                            codPlan, epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()),
+                            codPlan, epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle(), epd.getEvaluacionPlanAccionDetallePK().getCodPlantrabajo()),
                     documentoUsuario, epd.getEstado(), "REGISTRO INICIAL", "Inicia registro de plan acción, responsable: " + UtilTexto.capitalizarCadena(responsable), usuariosSeleccionado);
             epd.setEvaluacionPlanAccionDetalleNotas(epadn);
 
@@ -491,17 +505,9 @@ public class UIPlanAccion {
                 UtilLog.generarLog(this.getClass(), ex);
             }
         }
-
     }
     
-    public void cargarValormeta() {
-        try {           
-            GestorEstablecimiento gestorEstablecimiento= new GestorEstablecimiento();
-            metaestablecimiento.setMeta(gestorEstablecimiento.valorMeta(establecimiento.getCodigoEstablecimiento()));                                
-        } catch (Exception e) {
-            UtilLog.generarLog(this.getClass(), e);
-        }        
-    }
+
     
     public String getStylePorcentaje() {
         String style = "padding: 6px;"
@@ -627,15 +633,32 @@ public class UIPlanAccion {
                 UtilLog.generarLog(this.getClass(), e);
             }            
         }
+    }
+    
+    public void cargarObjetivo() {
+        try {       
+            evaluacionPlanAccionDetalle = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("evaluacionPlanAccionDetalle");
+            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
+                this.objetivos = new ArrayList<>();
+                GestorObjetivo gestorObjetivo = new GestorObjetivo();            
+                this.objetivos.addAll((Collection<? extends PlanTrabajoObjetivo>) gestorObjetivo.cargarListaObjetivoplanaccion(e.getEvaluacionPK().getCodigoEstablecimiento()));                                        
             
-        
+                if( evaluacionPlanAccionDetalle.getObjetivo().getCodObjetivo() !=  null){
+                    this.programas = new ArrayList<>();
+                    GestorPrograma gestorPrograma = new GestorPrograma();
+                    this.programas.addAll((Collection<? extends PlanTrabajoPrograma>) gestorPrograma.cargarListaProgramasplanaccion(e.getEvaluacionPK().getCodigoEstablecimiento(), evaluacionPlanAccionDetalle.getObjetivo().getCodObjetivo()));
+                }
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
     }
     
     public void mostrarDialogoPlanAccion() {
-        try {
+        try {         
+            this.cargarObjetivo();
             Sesion sesion = (Sesion) UtilJSF.getBean("sesion");
-            this.sdiSeleccionado = (SeccionDetalleItems) UtilJSF.getBean("varSeccionDetalleItems");
-
+            this.sdiSeleccionado = (SeccionDetalleItems) UtilJSF.getBean("varSeccionDetalleItems");                        
+                    
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             GestorResponsable gestorResponsable = new GestorResponsable();
 
@@ -660,18 +683,20 @@ public class UIPlanAccion {
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO) 
             ));
             
-            if(fuentehallazgos.isEmpty()){
-            GestorFuenteHallazgo gestorFuentehallazgo = new GestorFuenteHallazgo();            
-            fuentehallazgos.addAll((Collection<? extends FuenteHallazgo>) gestorFuentehallazgo.cargarListaFuentehallazgo());
             
-            GestorClaseHallazgo gestorClasehallazgo = new GestorClaseHallazgo();            
-            clasehallazgos.addAll((Collection<? extends ClaseHallazgo>) gestorClasehallazgo.cargarListaClasehallazgo());
             
-            GestorTipoAccion gestorTipoaccion = new GestorTipoAccion();            
-            tipoacciones.addAll((Collection<? extends TipoAccion>) gestorTipoaccion.cargarListaTipoaccion());
             
-            GestorMotivoCorreccion gestorMotivocorreccion = new GestorMotivoCorreccion();
-            motivocorrecciones.addAll((Collection<? extends MotivoCorreccion>) gestorMotivocorreccion.cargarListaMotivocorreccion());            
+            if(clasehallazgos.isEmpty()){
+                
+                GestorClaseHallazgo gestorClasehallazgo = new GestorClaseHallazgo();            
+                clasehallazgos.addAll((Collection<? extends ClaseHallazgo>) gestorClasehallazgo.cargarListaClasehallazgo());
+
+                GestorTipoAccion gestorTipoaccion = new GestorTipoAccion();            
+                tipoacciones.addAll((Collection<? extends TipoAccion>) gestorTipoaccion.cargarListaTipoaccion());
+
+                GestorMotivoCorreccion gestorMotivocorreccion = new GestorMotivoCorreccion();
+                motivocorrecciones.addAll((Collection<? extends MotivoCorreccion>) gestorMotivocorreccion.cargarListaMotivocorreccion());            
+            
             }
             
             Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
@@ -707,22 +732,30 @@ public class UIPlanAccion {
         }
     }
 
-    public PlanTrabajoMeta getMetaestablecimiento() {
-        return metaestablecimiento;
+    public PlanTrabajoObjetivo getObjetivoSeleccionado() {
+        return objetivoSeleccionado;
     }
 
-    public void setMetaestablecimiento(PlanTrabajoMeta metaestablecimiento) {
-        this.metaestablecimiento = metaestablecimiento;
+    public void setObjetivoSeleccionado(PlanTrabajoObjetivo objetivoSeleccionado) {
+        this.objetivoSeleccionado = objetivoSeleccionado;
     }
 
-    public List<FuenteHallazgo> getFuentehallazgos() {
-        return fuentehallazgos;
+    public List<PlanTrabajoObjetivo> getObjetivos() {
+        return objetivos;
     }
 
-    public void setFuentehallazgos(List<FuenteHallazgo> fuentehallazgos) {
-        this.fuentehallazgos = fuentehallazgos;
+    public void setObjetivos(List<PlanTrabajoObjetivo> objetivos) {
+        this.objetivos = objetivos;
     }
 
+    public List<PlanTrabajoPrograma> getProgramas() {
+        return programas;
+    }
+
+    public void setProgramas(List<PlanTrabajoPrograma> programas) {
+        this.programas = programas;
+    }
+    
     public List<ClaseHallazgo> getClasehallazgos() {
         return clasehallazgos;
     }

@@ -5,21 +5,23 @@
  */
 package com.gestor.seguimiento;
 
+import com.gestor.controller.GestorGeneral;
 import com.gestor.entity.App;
 import com.gestor.entity.Dialogo;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
 import com.gestor.gestor.Evaluacion;
+import com.gestor.gestor.EvaluacionPlanAccion;
+import com.gestor.gestor.EvaluacionPlanAccionDetalle;
+import com.gestor.gestor.EvaluacionPlanAccionDetallePK;
+import com.gestor.gestor.EvaluacionPlanAccionPK;
 import com.gestor.gestor.controlador.GestorEvaluacion;
+import com.gestor.gestor.controlador.GestorEvaluacionPlanAccion;
 import com.gestor.modelo.Sesion;
-import com.gestor.publico.CentroTrabajo;
-import com.gestor.publico.Establecimiento;
 import com.gestor.publico.ListaDetalle;
-import com.gestor.publico.PlanTrabajoMeta;
 import com.gestor.publico.PlanTrabajoObjetivo;
 import com.gestor.publico.PlanTrabajoPrograma;
-import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorLista;
 import com.gestor.publico.controlador.GestorObjetivo;
 import com.gestor.publico.controlador.GestorPrograma;
@@ -41,27 +43,24 @@ import javax.faces.bean.SessionScoped;
 public class UIPlanTrabajo implements Serializable{
 
     private List<PlanTrabajo> plantrabajoList = new ArrayList<>();    
-    private PlanTrabajo plantrabajo;                    
+    private List<PlanTrabajoActividad> plantrabajoActividadList = new ArrayList<>();
+    private PlanTrabajo plantrabajo;     
+    private PlanTrabajoActividad plantrabajoActividad;     
     private PlanTrabajoObjetivo objetivo;
-    private PlanTrabajoPrograma programa;
-    private PlanTrabajoMeta meta;
+    private PlanTrabajoPrograma programa;    
     private ListaDetalle listadetalle= new ListaDetalle();
     
     
-    
-    private PlanTrabajoActividad plantrabajoactividad;
-    private List<PlanTrabajoActividad> planTrabajoactividadList= new ArrayList<>();    
     private List<PlanTrabajoActividad> planTrabajoactividadmetaList= new ArrayList<>();    
     
     private GestorObjetivo gestorObjetivo;
     private GestorPrograma gestorPrograma;
-    private GestorPlanTrabajo gestorPlanTrabajo;
+    private GestorPlanTrabajo gestorPlanTrabajo;    
     private GestorLista gestorLista;
         
     private List<PlanTrabajoObjetivo> objetivos = new ArrayList<>();    
     private List<PlanTrabajoObjetivo> objetivoList= new ArrayList<>();    
-    private List<PlanTrabajoPrograma> programaList= new ArrayList<>();        
-    private List<PlanTrabajoMeta> metas= new ArrayList<>();    
+    private List<PlanTrabajoPrograma> programaList= new ArrayList<>();            
     private List<ListaDetalle> listadetalles= new ArrayList<>();
     
     private boolean guardarActivo = false;
@@ -83,14 +82,19 @@ public class UIPlanTrabajo implements Serializable{
     @PostConstruct
     public void init() {                   
         plantrabajo = new PlanTrabajo();        
+        plantrabajoActividad = new PlanTrabajoActividad();        
     }
     
     private void cargarPlantrabajo() {
         try {        
-            evaluacion= (Evaluacion) UtilJSF.getBean("varEvaluacion");
+            evaluacion= (Evaluacion) UtilJSF.getBean("varEvaluacion"); 
+            if(evaluacion==null){
+                plantrabajo= (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");
+                evaluacion.getEstablecimiento().setCodigoEstablecimiento(plantrabajo.getCodEstablecimiento());
+            }
             this.plantrabajoList = new ArrayList<>();
-            GestorPlanTrabajo gestorPlanTrabajo= new GestorPlanTrabajo();
-            this.plantrabajoList.addAll((Collection<? extends PlanTrabajo>) gestorPlanTrabajo.cargarPlantrabajoList(evaluacion.getEstablecimiento().getCodigoEstablecimiento()));
+            GestorPlanTrabajo gestorPlantrabajo= new GestorPlanTrabajo();
+            this.plantrabajoList.addAll((Collection<? extends PlanTrabajo>) gestorPlantrabajo.cargarPlantrabajoList(evaluacion.getEstablecimiento().getCodigoEstablecimiento()));
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -199,10 +203,10 @@ public class UIPlanTrabajo implements Serializable{
     }
     
     public void subirItemPlantrabajoactividad() {        
-        plantrabajoactividad = (PlanTrabajoActividad) UtilJSF.getBean("varPlantrabajoactividad");   
+        plantrabajoActividad = (PlanTrabajoActividad) UtilJSF.getBean("varPlantrabajoactividad");   
         this.cargarPrograma();
-        UtilJSF.setBean("planTrabajoactividad", plantrabajoactividad, UtilJSF.SESSION_SCOPE); 
-        planTrabajoactividadList.remove(plantrabajoactividad);        
+        UtilJSF.setBean("planTrabajoactividad", plantrabajoActividad, UtilJSF.SESSION_SCOPE); 
+        plantrabajoActividadList.remove(plantrabajoActividad);        
     }
 
     
@@ -221,30 +225,26 @@ public class UIPlanTrabajo implements Serializable{
     }
     
     public void guardarPlantrabajo(){
-        try {         
+        try {
             evaluacion = (Evaluacion) UtilJSF.getBean("evaluacion");     
             UtilJSF.setBean("varEvaluacion", evaluacion, UtilJSF.APPLICATION_SCOPE);                                     
             if(plantrabajoList.isEmpty()){
                 plantrabajo.setCodPlantrabajo(1);
             }else{
                 plantrabajo.setCodPlantrabajo(plantrabajoList.size()+1);
-            }                                    
-            
-            
+            }                       
             plantrabajo.setPeso(100);
             plantrabajo.setEstado("A");
             
-            PlanTrabajo pltrabajo = new PlanTrabajo( evaluacion.getEvaluacionPK().getCodigoEstablecimiento(), plantrabajo.getCodPlantrabajo(), plantrabajo.getDescripcion(), plantrabajo.getFechaVenc(), plantrabajo.getPeso(), 
+            PlanTrabajo pltrabajo = new PlanTrabajo( evaluacion.getEvaluacionPK().getCodigoEstablecimiento(), plantrabajo.getCodPlantrabajo(), plantrabajo.getDescripcion(), plantrabajo.getFechaVenc(), plantrabajo.getMeta(), plantrabajo.getPeso(), 
                     plantrabajo.getEstado(), null
             );            
             
             GestorPlanTrabajo gestorPlantrabajo= new GestorPlanTrabajo();
-            gestorPlantrabajo.almacenarPlantrabajo(pltrabajo);
+            gestorPlantrabajo.almacenarPlantrabajo(pltrabajo);            
             this.cargarPlantrabajo();
             UtilMSG.addSuccessMsg("Plan Trabajo almacenado correctamente.");
-            UtilJSF.setBean("varPlantrabajo", plantrabajo, UtilJSF.SESSION_SCOPE);            
-            
-            
+            UtilJSF.setBean("varPlantrabajo", plantrabajo, UtilJSF.SESSION_SCOPE);
             
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
@@ -279,13 +279,13 @@ public class UIPlanTrabajo implements Serializable{
             objetivo = (PlanTrabajoObjetivo) UtilJSF.getBean("objetivo");          
             if (objetivo==null){
                 objetivo = new PlanTrabajoObjetivo();
-                objetivo.setCodEstablecimiento(plantrabajoactividad.getObjetivo().getCodEstablecimiento());
-                objetivo.setCodPlantrabajo(plantrabajoactividad.getObjetivo().getCodPlantrabajo());
-                objetivo.setCodObjetivo(plantrabajoactividad.getObjetivo().getCodObjetivo());
+                objetivo.setCodEstablecimiento(plantrabajoActividad.getObjetivo().getCodEstablecimiento());
+                objetivo.setCodPlantrabajo(plantrabajoActividad.getObjetivo().getCodPlantrabajo());
+                objetivo.setCodObjetivo(plantrabajoActividad.getObjetivo().getCodObjetivo());
             }
             this.programaList = new ArrayList<>();
             gestorPrograma = new GestorPrograma();
-            this.programaList.addAll((Collection<? extends PlanTrabajoPrograma>) gestorPrograma.cargarListaPrograma(objetivo.getCodEstablecimiento(),objetivo.getCodObjetivo(), objetivo.getCodPlantrabajo()));                                    
+            this.programaList.addAll((Collection<? extends PlanTrabajoPrograma>) gestorPrograma.cargarListaProgramas(objetivo.getCodEstablecimiento(),objetivo.getCodObjetivo(), objetivo.getCodPlantrabajo()));                                    
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -295,10 +295,9 @@ public class UIPlanTrabajo implements Serializable{
         try {                    
             //UtilJSF.setBean("varPlantrabajo", plantrabajo, UtilJSF.SESSION_SCOPE);
             plantrabajo = (PlanTrabajo)  UtilJSF.getBean("varPlantrabajo");                       
-            this.planTrabajoactividadList = new ArrayList<>();
-            gestorPlanTrabajo = new GestorPlanTrabajo();
-            this.planTrabajoactividadList.addAll((Collection<? extends PlanTrabajoActividad>) gestorPlanTrabajo.cargarPlantrabajoactividadList(plantrabajo));
-
+            this.plantrabajoActividadList = new ArrayList<>();
+            GestorPlanTrabajo gestorPlantrabajo = new GestorPlanTrabajo();
+            this.plantrabajoActividadList.addAll((Collection<? extends PlanTrabajoActividad>) gestorPlantrabajo.cargarPlantrabajoactividadList(plantrabajo));
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -378,7 +377,7 @@ public class UIPlanTrabajo implements Serializable{
             Dialogo dialogo = new Dialogo ("dialogos/plan-trabajo-actividad.xhtml", "Crear Actividad", "clip", Dialogo.WIDTH_80);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
             UtilJSF.execute("PF('dialog').show();");            
-            plantrabajoactividad = new PlanTrabajoActividad();            
+            plantrabajoActividad = new PlanTrabajoActividad();            
             this.cargarObjetivoactividad();            
             this.cargarPlantrabajoactividad();
         } catch (Exception ex) {
@@ -388,23 +387,21 @@ public class UIPlanTrabajo implements Serializable{
     
     public void cerrarPlantrabajoactividad() {
         try {
-            plantrabajoactividad = (PlanTrabajoActividad) UtilJSF.getBean("varPlantrabajoactividad");               
-            UtilJSF.setBean("planTrabajoactividad", plantrabajoactividad, UtilJSF.SESSION_SCOPE);                         
+            plantrabajoActividad = (PlanTrabajoActividad) UtilJSF.getBean("varPlantrabajoactividad");
+            plantrabajoActividad.setEstado("C");
             
-            plantrabajoactividad.setEstado("C");
-            
-            PlanTrabajoActividad pta = new PlanTrabajoActividad(plantrabajoactividad.getCodEstablecimiento(), 
-                    plantrabajoactividad.getCodPlantrabajo(), plantrabajoactividad.getCodObjetivo(), 
-                    plantrabajoactividad.getCodPrograma(), plantrabajoactividad.getCodActividad(), 
-                    plantrabajoactividad.getActividad(), plantrabajoactividad.getFechaVenc(), plantrabajoactividad.getEstado(), 
-                    plantrabajoactividad.getFechaRegistro(), plantrabajoactividad.getPeso()
+            PlanTrabajoActividad pta = new PlanTrabajoActividad(plantrabajoActividad.getCodEstablecimiento(),
+                    plantrabajoActividad.getCodPlantrabajo(), plantrabajoActividad.getCodActividad(), plantrabajoActividad.getCodObjetivo(), 
+                    plantrabajoActividad.getCodPrograma(), 
+                    plantrabajoActividad.getDescripcion(), plantrabajoActividad.getFechaVenc(), plantrabajoActividad.getEstado(), 
+                    null
             );
             gestorPlanTrabajo=new GestorPlanTrabajo();
             gestorPlanTrabajo.almacenarPlantrabajoactividad(pta);
             UtilMSG.addSuccessMsg("Actividad cerrada correctamente.");
-            UtilJSF.setBean("varPlantrabajoactividad", plantrabajoactividad, UtilJSF.SESSION_SCOPE);
+            UtilJSF.setBean("varPlantrabajoactividad", plantrabajoActividad, UtilJSF.SESSION_SCOPE);
             this.cargarPlantrabajoactividad();
-            this.limpiarPlantrabajoactividad();
+            //this.limpiarPlantrabajoactividad();
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());
@@ -417,39 +414,25 @@ public class UIPlanTrabajo implements Serializable{
     
     public void guardarPlantrabajoactividad() {
         try { 
+            plantrabajo= (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");
             
-            
-            if(planTrabajoactividadList.isEmpty()){
-                plantrabajoactividad.setCodActividad(1);                
+            if(plantrabajoActividadList.isEmpty()){
+                plantrabajoActividad.setCodActividad(1);
             }else{
-                plantrabajoactividad.setCodActividad(planTrabajoactividadList.size()+1);
+                plantrabajoActividad.setCodActividad(plantrabajoActividadList.size()+1);
             }
             
-            gestorPlanTrabajo = new GestorPlanTrabajo();
-            this.planTrabajoactividadmetaList.addAll((Collection<? extends PlanTrabajoActividad>) gestorPlanTrabajo.cargarPlantrabajoactividadmetaList(plantrabajoactividad.getPrograma()));
+            plantrabajoActividad.setEstado("A");
+            PlanTrabajoActividad pta= new PlanTrabajoActividad(plantrabajo.getCodEstablecimiento(), plantrabajo.getCodPlantrabajo(), plantrabajoActividad.getCodActividad(),
+                    objetivo.getCodObjetivo(), plantrabajoActividad.getPrograma().getCodPrograma(), plantrabajoActividad.getDescripcion(), plantrabajoActividad.getFechaVenc(),
+                    plantrabajoActividad.getEstado(), null);
             
-            if(planTrabajoactividadmetaList.isEmpty()){                
-                plantrabajoactividad.setPeso(100);
-            }else{                
-                Integer pr= planTrabajoactividadmetaList.size()+1;
-                plantrabajoactividad.setPeso(100/pr);                
-                
-            }
+            GestorPlanTrabajo gestorPlantrabajo= new GestorPlanTrabajo();
+            gestorPlantrabajo.almacenarPlantrabajoactividad(pta);
             
-            plantrabajoactividad.setEstado("A");
-            
-            PlanTrabajoActividad pta = new PlanTrabajoActividad(plantrabajoactividad.getPrograma().getCodEstablecimiento(), 
-                    plantrabajoactividad.getPrograma().getCodPlantrabajo(), plantrabajoactividad.getPrograma().getCodObjetivo(), 
-                    plantrabajoactividad.getPrograma().getCodPrograma(), plantrabajoactividad.getCodActividad(), 
-                    plantrabajoactividad.getActividad(), plantrabajoactividad.getFechaVenc(), plantrabajoactividad.getEstado(), 
-                    null, plantrabajoactividad.getPeso()
-            );
-            gestorPlanTrabajo=new GestorPlanTrabajo();
-            gestorPlanTrabajo.almacenarPlantrabajoactividad(pta);
             UtilMSG.addSuccessMsg("Actividad almacenada correctamente.");
-            UtilJSF.setBean("varPlantrabajoactividad", plantrabajoactividad, UtilJSF.SESSION_SCOPE);            
+            UtilJSF.setBean("varPlantrabajoactividad", plantrabajoActividad, UtilJSF.SESSION_SCOPE);            
             this.cargarPlantrabajoactividad();
-            this.limpiarPlantrabajoactividad();
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());
@@ -459,56 +442,7 @@ public class UIPlanTrabajo implements Serializable{
             }
         }
 
-    }
-    
-    public void guardarMeta(){    
-        try {
-            plantrabajo = (PlanTrabajo)  UtilJSF.getBean("planTrabajo");                       
-
-            if(meta.getCodMeta() ==null){
-                meta.setCodMeta(metas.size()+1);                
-            }
-            if(meta.getCodMeta()>2){
-                UtilMSG.addSuccessMsg("Modifique meta correctamente.");
-                meta.setCodMeta(null);
-            }
-            
-            PlanTrabajoMeta me= new PlanTrabajoMeta(plantrabajo.getCodEstablecimiento(), plantrabajo.getCodPlantrabajo(), meta.getCodMeta(), meta.getMeta(), meta.getListaDetalle().getListaDetallePK().getCodDetalle());                        
-            gestorPlanTrabajo.almacenarMeta(me);   
-            
-            UtilMSG.addSuccessMsg("Meta almacenado correctamente.");
-            UtilJSF.setBean("meta", new PlanTrabajoMeta(), UtilJSF.SESSION_SCOPE);            
-            this.cargarMetaList();            
-        } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
-        }
-    }
-    
-    public void cargarMetaList() {
-        try {
-            plantrabajo = (PlanTrabajo)  UtilJSF.getBean("planTrabajo");
-            this.metas= new ArrayList<>();
-            gestorPlanTrabajo= new GestorPlanTrabajo();
-            metas.addAll((Collection<? extends PlanTrabajoMeta>) gestorPlanTrabajo.cargarListaMetas(plantrabajo.getCodEstablecimiento(), plantrabajo.getCodPlantrabajo()));
-        } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
-        }
-    }
-    
-    public void dialogoMeta() {
-        try {
-            meta= new PlanTrabajoMeta();
-            Dialogo dialogo = new Dialogo ("dialogos/meta.xhtml", "Crear Metas", "clip", Dialogo.WIDTH_80);
-            UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
-            UtilJSF.execute("PF('dialog').show();");
-            plantrabajo = (PlanTrabajo)  UtilJSF.getBean("varPlantrabajo");
-            UtilJSF.setBean("planTrabajo", plantrabajo, UtilJSF.SESSION_SCOPE);
-            this.cargarListadetalles();
-            this.cargarMetaList();            
-        } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
-        }
-    }
+    }   
     
     
     private void cargarListadetalles() {
@@ -521,26 +455,27 @@ public class UIPlanTrabajo implements Serializable{
             UtilLog.generarLog(this.getClass(), ex);
         }
     }
-    public void subirItemMeta() {        
-        meta = (PlanTrabajoMeta) UtilJSF.getBean("varMeta");         
-        UtilJSF.setBean("meta", meta, UtilJSF.SESSION_SCOPE);           
-        this.cargarMetaList();
-    }
-    
 
-    public List<PlanTrabajoActividad> getPlanTrabajoactividadList() {
-        return planTrabajoactividadList;
+    public List<PlanTrabajoActividad> getPlantrabajoActividadList() {
+        return plantrabajoActividadList;
     }
 
-    public void setPlanTrabajoactividadList(List<PlanTrabajoActividad> planTrabajoactividadList) {
-        this.planTrabajoactividadList = planTrabajoactividadList;
+    public void setPlantrabajoActividadList(List<PlanTrabajoActividad> plantrabajoActividadList) {
+        this.plantrabajoActividadList = plantrabajoActividadList;
+    }
+
+    public PlanTrabajoActividad getPlantrabajoActividad() {
+        return plantrabajoActividad;
+    }
+
+    public void setPlantrabajoActividad(PlanTrabajoActividad plantrabajoActividad) {
+        this.plantrabajoActividad = plantrabajoActividad;
     }
         
-    public void limpiarPlantrabajo() {  
-        if(plantrabajoList.isEmpty()){
-        this.cargarPlantrabajo();
-        }
-        plantrabajo= new PlanTrabajo();                
+    public void limpiarPlantrabajo() throws Exception {
+        this.cargarPlantrabajo();        
+        plantrabajo= new PlanTrabajo();
+        
     }
 
     public List<PlanTrabajoActividad> getPlanTrabajoactividadmetaList() {
@@ -551,14 +486,6 @@ public class UIPlanTrabajo implements Serializable{
         this.planTrabajoactividadmetaList = planTrabajoactividadmetaList;
     }
 
-    public PlanTrabajoMeta getMeta() {
-        return meta;
-    }
-
-    public void setMeta(PlanTrabajoMeta meta) {
-        this.meta = meta;
-    }
-
     public ListaDetalle getListadetalle() {
         return listadetalle;
     }
@@ -567,33 +494,12 @@ public class UIPlanTrabajo implements Serializable{
         this.listadetalle = listadetalle;
     }
 
-    public List<PlanTrabajoMeta> getMetas() {
-        return metas;
-    }
-
-    public void setMetas(List<PlanTrabajoMeta> metas) {
-        this.metas = metas;
-    }
-
     public List<ListaDetalle> getListadetalles() {
         return listadetalles;
     }
 
     public void setListadetalles(List<ListaDetalle> listadetalles) {
         this.listadetalles = listadetalles;
-    }
-    
-    public void limpiarPlantrabajoactividad() {        
-        plantrabajoactividad= new PlanTrabajoActividad();
-        this.cargarPlantrabajoactividad();
-    }
-
-    public PlanTrabajoActividad getPlantrabajoactividad() {
-        return plantrabajoactividad;
-    }
-
-    public void setPlantrabajoactividad(PlanTrabajoActividad plantrabajoactividad) {
-        this.plantrabajoactividad = plantrabajoactividad;
     }
 
     public List<PlanTrabajoPrograma> getProgramaList() {

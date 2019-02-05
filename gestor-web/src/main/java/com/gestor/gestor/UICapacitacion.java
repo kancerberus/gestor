@@ -17,6 +17,7 @@ import com.gestor.gestor.controlador.GestorEvaluacionCapacitacion;
 import com.gestor.modelo.Sesion;
 import com.gestor.publico.CentroTrabajo;
 import com.gestor.publico.Establecimiento;
+import com.gestor.publico.PlanTrabajoPrograma;
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.controlador.GestorCentroTrabajo;
@@ -83,7 +84,7 @@ public class UICapacitacion {
     private Date fechaCapacitacionFin;
     
     private List<Responsable> responsables = new ArrayList<>();
-    private List<FuenteHallazgo> fuentehallazgos = new ArrayList<>();
+    private List<PlanTrabajoPrograma> programas = new ArrayList<>();
     private List<ClaseHallazgo> clasehallazgos = new ArrayList<>();
     private List<TipoAccion> tipoacciones = new ArrayList<>();
     private List<MotivoCorreccion> motivocorrecciones  = new ArrayList<>();
@@ -690,14 +691,15 @@ public class UICapacitacion {
     public void setRecursos(List<Recursos> recursos) {
         this.recursos = recursos;
     }
-    
-    public List<FuenteHallazgo> getFuentehallazgos() {
-        return fuentehallazgos;
+
+    public List<PlanTrabajoPrograma> getProgramas() {
+        return programas;
     }
 
-    public void setFuentehallazgos(List<FuenteHallazgo> fuentehallazgos) {
-        this.fuentehallazgos = fuentehallazgos;
+    public void setProgramas(List<PlanTrabajoPrograma> programas) {
+        this.programas = programas;
     }
+    
 
     public List<ClaseHallazgo> getClasehallazgos() {
         return clasehallazgos;

@@ -57,8 +57,6 @@ public class UIEstablecimiento implements Serializable {
     
     
     private CentroTrabajo centro= new CentroTrabajo();
-    
-    private PlanTrabajoMeta metaestablecimiento= new PlanTrabajoMeta();    
     private PlanTrabajoPrograma programa = new PlanTrabajoPrograma();
     
 
@@ -131,8 +129,7 @@ public class UIEstablecimiento implements Serializable {
     
         
     public void limpiarcentro() {
-        centro= new CentroTrabajo();  
-        metaestablecimiento = new PlanTrabajoMeta();
+        centro= new CentroTrabajo();          
     }
 
     public void cargarLogo(FileUploadEvent event) {
@@ -233,15 +230,6 @@ public class UIEstablecimiento implements Serializable {
     public void setPrograma(PlanTrabajoPrograma programa) {
         this.programa = programa;
     }
-
-    public PlanTrabajoMeta getMetaestablecimiento() {
-        return metaestablecimiento;
-    }
-
-    public void setMetaestablecimiento(PlanTrabajoMeta metaestablecimiento) {
-        this.metaestablecimiento = metaestablecimiento;
-    }
-
 
     public GestorCentroTrabajo getGestorCentrotrabajo() {
         return gestorCentrotrabajo;

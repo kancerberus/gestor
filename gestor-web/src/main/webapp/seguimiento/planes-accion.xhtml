@@ -32,9 +32,9 @@
                         </p:selectOneMenu>
 
                         <h:outputLabel value="Empresas"/>
-                        <p:selectOneListbox value="#{uiPlanAccion.establecimiento}" converter="convertidorGenerico" var="t" filter="true" filterMatchMode="contains" style="font-family: bolder" styleClass="Centro"
+                        <p:selectOneListbox  value="#{uiPlanAccion.establecimiento}" converter="convertidorGenerico" var="t" filter="true" filterMatchMode="contains" style="width: 90%; margin-bottom: 30%;font-family: bolder" styleClass="Centro"
                                                                                         >
-                            <f:selectItems  value="#{uiPlanAccion.establecimientoList}" var="varEmpresa" itemLabel="#{varEmpresa.nombre}" itemValue="#{varEmpresa}" />
+                            <f:selectItems value="#{uiPlanAccion.establecimientoList}" var="varEmpresa" itemLabel="#{varEmpresa.nombre}" itemValue="#{varEmpresa}" />
 
                             <p:column >
                                     <p:graphicImage value="#{t.logo}" cache="false" width="40" />
@@ -83,7 +83,7 @@
                         
                         <p:column >        
                             <p:outputLabel value="Meta "/>
-                            <p:outputLabel value="#{uiPlanAccion.metaestablecimiento.meta}%" />                
+                            <p:outputLabel value="#{uiPlanAccion}%" />                
                         </p:column>
                         <p:column  >
                             <h:outputLabel value="#{uiPlanAccion.avancePlanAccion}%"  style="#{uiPlanAccion.stylePorcentaje} color: #FFFFFF"/>
@@ -134,8 +134,8 @@
                 <p:column headerText="Nombre" filterBy="#{varPlanAccionDetalle.nombre}" >
                     <h:outputText value="#{varPlanAccionDetalle.nombre}" />
                 </p:column>
-                <p:column headerText="Fuente Hallazgo" filterBy="#{varPlanAccionDetalle.funtehallazgo.nombre}" >
-                    <h:outputText value="#{varPlanAccionDetalle.funtehallazgo.nombre}" />
+                <p:column headerText="Programa" filterBy="#{varPlanAccionDetalle.programa.nombre}" >
+                    <h:outputText value="#{varPlanAccionDetalle.programa.nombre}" />
                 </p:column>
                 
                 <p:column headerText="Descripcion Hallazgo" filterBy="#{varPlanAccionDetalle.descripcionhallazgo}" >

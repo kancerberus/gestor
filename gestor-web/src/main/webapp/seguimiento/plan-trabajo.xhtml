@@ -11,15 +11,15 @@
     <ui:define name="content">
         <h:form enctype="multipart/form-data" id="formPlantrabajo" style="font-size: small;">
             <p:panel id="panelPlantrabajo"  header="Administrar Plan Trabajo #{uiPlantrabajo.evaluacion.establecimiento.nombre}"  >
-                <h:panelGrid columns="2" >
+                <h:panelGrid columns="3" >
                     
                     <h:outputText style="font-weight: bold;" value="Descripcion"/>
                     <h:outputLabel style="font-weight: bold;" value="Fecha Vencimiento"/>
+                    <h:outputText style="font-weight: bold;" value="Meta"/>
                     
-                    <p:inputText value="#{uiPlantrabajo.plantrabajo.descripcion}" placeholder="Descripcion"/>
+                    <p:inputText value="#{uiPlantrabajo.plantrabajo.descripcion}" placeholder="Descripcion" />
                     <p:calendar  value="#{uiPlantrabajo.plantrabajo.fechaVenc}" pattern="dd-MM-yyyy" mask="true" />
-                    
-
+                    <p:inputText value="#{uiPlantrabajo.plantrabajo.meta}" placeholder="Meta"/>
                 </h:panelGrid>
 
                 <h:panelGrid columns="2">
@@ -29,7 +29,7 @@
                         
                     </p:commandButton>
                     <p:commandButton value="Limpiar" action="#{uiPlantrabajo.limpiarPlantrabajo()}"
-                                     icon="ui-icon-cancel"
+                                     icon="ui-icon-cancel" 
                                      update="formPlantrabajo"/>
                 </h:panelGrid>
                 <p:dataTable value="#{uiPlantrabajo.plantrabajoList}" var="varPlantrabajo" emptyMessage="No hay planes trabajo"
@@ -42,6 +42,7 @@
                             <p:column  headerText="Descripcion" />
                             <p:column  headerText="Fecha Creacion" />
                             <p:column  headerText="Fecha Vencimiento" />
+                            <p:column  headerText="Meta" />                            
                             <p:column width="10%" headerText="Estado" filterBy="#{varPlantrabajo.estado}"
                                     filterMatchMode="equals">
                                   <f:facet name="filter">
@@ -59,9 +60,7 @@
 
                     <p:column >
                         <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Trabajo" update="formPlantrabajo"
-                                         action="#{uiPlantrabajo.subirItemPlantrabajo()}"/>
-                        <p:commandButton value="Meta" title="Crear Meta" update="formPlantrabajo"
-                                         action="#{uiPlantrabajo.dialogoMeta()}"/>
+                                         action="#{uiPlantrabajo.subirItemPlantrabajo()}"/>                        
                         <p:commandButton value="Objetivo" title="Crear Objetivo" update="formPlantrabajo"
                                          action="#{uiPlantrabajo.dialogoObjetivo()}"/>
                         <p:commandButton value="Actividades" title="Crear Actividad" update="formPlantrabajo"
@@ -81,9 +80,11 @@
                         </h:outputText>
                     </p:column>                    
                     <p:column>
+                        <h:outputText value="#{varPlantrabajo.meta}" />                            
+                    </p:column> 
+                    <p:column>
                         <h:outputText value="#{varPlantrabajo.estado}" />                            
                     </p:column> 
-                    
                 </p:dataTable>
 
             </p:panel>

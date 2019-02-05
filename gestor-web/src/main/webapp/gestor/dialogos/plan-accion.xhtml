@@ -19,12 +19,20 @@
                         <h:outputLabel value="Nombre Plan Accion: " style="font-weight: bold;"/>
                         <p:inputText value="#{evaluacionPlanAccionDetalle.nombre}" placeholder="Nombre del plan de accción"
                                      />
-
-                        <h:outputLabel value="Fuente Del Hallazgo: " style="font-weight: bold;"/>
-                        <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.funtehallazgo}" converter="convertidorGenerico"
+                        
+                        <h:outputLabel value="Objetivo: " style="font-weight: bold;"/>
+                        <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.objetivo}" converter="convertidorGenerico"
                                          style="text-align: center;width: 180px;">  
                             <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
-                            <f:selectItems value="#{uiPlanAccion.fuentehallazgos}" var="fh" itemValue="#{fh}" itemLabel="#{fh.nombre}" />
+                            <f:selectItems value="#{uiPlanAccion.objetivos}" var="obj" itemValue="#{obj}" itemLabel="#{obj.nombre}" />
+                            <p:ajax  update="prog" listener="#{uiPlanAccion.cargarObjetivo()}" />                            
+                        </p:selectOneMenu>
+
+                        <h:outputLabel value="Programa: " style="font-weight: bold;"/>
+                        <p:selectOneMenu  id="prog" value="#{evaluacionPlanAccionDetalle.programa}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlanAccion.programas}" var="p" itemValue="#{p}" itemLabel="#{p.nombre}" />
                             <p:ajax event="change" process="@this"/>
                         </p:selectOneMenu>
                         
@@ -41,6 +49,9 @@
                         <p:inputTextarea value="#{evaluacionPlanAccionDetalle.descripcionhallazgo}" placeholder="Registra la descripción del hallazgo"/>
 
 
+                        
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
                         <h:outputLabel value="Clase Del Hallazgo: " style="font-weight: bold;"/>
                         <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.clasehallazgo}" converter="convertidorGenerico"
                                          style="text-align: center;width: 180px;">  
@@ -48,8 +59,6 @@
                             <f:selectItems value="#{uiPlanAccion.clasehallazgos}" var="ch" itemValue="#{ch}" itemLabel="#{ch.nombre}" />
                             <p:ajax event="change" process="@this"/>
                         </p:selectOneMenu>
-                    </h:panelGrid>
-                    <h:panelGrid columns="2">
                         <h:outputLabel value="Descripción De La Accion:" style="font-weight: bold;margin-top: 50%"/>
                         <p:inputTextarea value="#{evaluacionPlanAccionDetalle.descripcion}" placeholder="Registra la descripción de la accción"/>
 
@@ -97,7 +106,7 @@
             
             <h:panelGrid>
                 <p:dataTable id="dtPlanAccionDetalle"  value="#{uiPlanAccion.evaluacionPlanAccionDetalles}" var="varPlanAccionDetalle" emptyMessage="El ítem no tiene planes de acción."
-                             rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable" style="width: 100%"
+                             scrollRows="200" rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable" style="width: 100%"
                              rowHover="true">
                     <f:facet name="header">
                         Planes de Acción
@@ -106,7 +115,7 @@
                         <p:row>  
                             <p:column  headerText="Opciones" />
                             <p:column headerText="Nombre" filterBy="#{varPlanAccionDetalle.nombre}" sortBy="#{varPlanAccionDetalle.nombre}"/>
-                            <p:column headerText="Fuente Hallazgo" filterBy="#{varPlanAccionDetalle.funtehallazgo}" />
+                            <p:column headerText="Programa" filterBy="#{varPlanAccionDetalle.programa}" />
                             <p:column headerText="Centro Trabajo" filterBy="#{varPlanAccionDetalle.centrotrabajo}" />
                             <p:column  headerText="Descripción Hallazgo"/>        
                             <p:column headerText="Clase Hallazgo" filterBy="#{varPlanAccionDetalle.clasehallazgo}" />                            
@@ -137,7 +146,7 @@
                         <h:outputText value="#{varPlanAccionDetalle.nombre}"/>
                     </p:column>                    
                     <p:column>
-                        <h:outputText value="#{varPlanAccionDetalle.funtehallazgo.nombre}"/>
+                        <h:outputText value="#{varPlanAccionDetalle.programa.nombre}"/>
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varPlanAccionDetalle.centrotrabajo.nombre}"/>
