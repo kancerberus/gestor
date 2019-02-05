@@ -29,21 +29,33 @@ public class EvaluacionPlanAccionDetallePK implements Serializable {
     @Basic(optional = false)
     @Column(name = "cod_plan_detalle")
     private Long codPlanDetalle;
+    @Basic(optional = false)
+    @Column(name = "cod_plan_trabajo")
+    private Integer codPlantrabajo;
 
     public EvaluacionPlanAccionDetallePK() {
     }
 
-    public EvaluacionPlanAccionDetallePK(Long codEvaluacion, int codigoEstablecimiento, Long codPlan, Long codPlanDetalle) {
+    public EvaluacionPlanAccionDetallePK(Long codEvaluacion, int codigoEstablecimiento, Long codPlan, Long codPlanDetalle, int codPlantrabajo) {
         this.codEvaluacion = codEvaluacion;
         this.codigoEstablecimiento = codigoEstablecimiento;
-        this.codPlan = codPlan;
+        this.codPlan = codPlan;        
         this.codPlanDetalle = codPlanDetalle;
+        this.codPlantrabajo = codPlantrabajo;
     }
 
     public EvaluacionPlanAccionDetallePK(Long codEvaluacion, int codigoEstablecimiento, Long codPlan) {
         this.codEvaluacion = codEvaluacion;
         this.codigoEstablecimiento = codigoEstablecimiento;
-        this.codPlan = codPlan;
+        this.codPlan = codPlan;                
+    }
+
+    public Integer getCodPlantrabajo() {
+        return codPlantrabajo;
+    }
+
+    public void setCodPlantrabajo(Integer codPlantrabajo) {
+        this.codPlantrabajo = codPlantrabajo;
     }
 
     public Long getCodEvaluacion() {
@@ -113,6 +125,10 @@ public class EvaluacionPlanAccionDetallePK implements Serializable {
     @Override
     public String toString() {
         return "com.gestor.gestor.EvaluacionPlanAccionDetallePK[ codEvaluacion=" + codEvaluacion + ", codigoEstablecimiento=" + codigoEstablecimiento + ", codPlan=" + codPlan + ", codPlanDetalle=" + codPlanDetalle + " ]";
+    }
+
+    public void setCodPlanDetalle(int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

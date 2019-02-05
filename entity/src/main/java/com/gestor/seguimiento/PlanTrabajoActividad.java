@@ -38,22 +38,20 @@ public class PlanTrabajoActividad implements Serializable {
     @Column(name = "codigo_establecimiento")
     private Integer codEstablecimiento;    
     @Column(name = "cod_plan_trabajo")
-    private Integer codPlantrabajo;    
+    private Integer codPlantrabajo;
+    @Column(name = "cod_actividad")
+    private Integer codActividad;    
     @Column(name = "cod_objetivo")
     private Integer codObjetivo;    
     @Column(name = "cod_programa")
-    private Integer codPrograma;    
-    @Column(name = "cod_actividad")
-    private Integer codActividad;        
-    @Column(name = "Actividad")
-    private String actividad;
+    private Integer codPrograma;        
+    @Column(name = "descripcion")
+    private String descripcion;
     @Column(name = "fecha_venc")
     private Date fechaVenc;              
     @Basic(optional = false)
     @Column(name = "estado")
-    private String estado;            
-    @Column(name = "peso")
-    private Integer peso;        
+    private String estado; 
 
     private Date fechaRegistro;       
     
@@ -65,25 +63,24 @@ public class PlanTrabajoActividad implements Serializable {
     public PlanTrabajoActividad() {
     }
 
-    public PlanTrabajoActividad(Integer codEstablecimiento, Integer codPlantrabajo, Integer codObjetivo, Integer codPrograma, Integer codActividad, String actividad, Date fechaVenc, String estado, Date fechaRegistro, Integer peso) {
+    public PlanTrabajoActividad(Integer codEstablecimiento, Integer codPlantrabajo, Integer codActividad, Integer codObjetivo, Integer codPrograma, String descripcion, Date fechaVenc, String estado, Date fechaRegistro) {
         this.codEstablecimiento = codEstablecimiento;
         this.codPlantrabajo = codPlantrabajo;
-        this.codObjetivo = codObjetivo;
-        this.codPrograma = codPrograma;
         this.codActividad = codActividad;
-        this.actividad = actividad;
+        this.codObjetivo = codObjetivo;
+        this.codPrograma = codPrograma;        
+        this.descripcion = descripcion;
         this.fechaVenc = fechaVenc;
         this.estado = estado;
-        this.fechaRegistro = fechaRegistro;
-        this.peso = peso;
+        this.fechaRegistro = fechaRegistro;        
+    }   
+
+    public Integer getCodActividad() {
+        return codActividad;
     }
 
-    public Integer getPeso() {
-        return peso;
-    }
-
-    public void setPeso(Integer peso) {
-        this.peso = peso;
+    public void setCodActividad(Integer codActividad) {
+        this.codActividad = codActividad;
     }
 
     public PlanTrabajoObjetivo getObjetivo() {
@@ -134,22 +131,16 @@ public class PlanTrabajoActividad implements Serializable {
     public void setCodPrograma(Integer codPrograma) {
         this.codPrograma = codPrograma;
     }
-
-    public Integer getCodActividad() {
-        return codActividad;
+    
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setCodActividad(Integer codActividad) {
-        this.codActividad = codActividad;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    public String getActividad() {
-        return actividad;
-    }
-
-    public void setActividad(String actividad) {
-        this.actividad = actividad;
-    }
+    
 
     public Date getFechaVenc() {
         return fechaVenc;

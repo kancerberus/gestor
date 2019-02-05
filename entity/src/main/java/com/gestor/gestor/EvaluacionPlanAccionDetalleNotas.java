@@ -55,8 +55,8 @@ public class EvaluacionPlanAccionDetalleNotas implements Serializable {
         this.evaluacionPlanAccionDetalleNotasPK = evaluacionPlanAccionDetalleNotasPK;
     }
 
-    public EvaluacionPlanAccionDetalleNotas(Long codEvaluacion, int codigoEstablecimiento, Long codPlan, Long codPlanDetalle) {
-        this.evaluacionPlanAccionDetalleNotasPK = new EvaluacionPlanAccionDetalleNotasPK(codEvaluacion, codigoEstablecimiento, codPlan, codPlanDetalle);
+    public EvaluacionPlanAccionDetalleNotas(Long codEvaluacion, int codigoEstablecimiento, Long codPlan, Long codPlanDetalle, Integer codPlantrabajo) {
+        this.evaluacionPlanAccionDetalleNotasPK = new EvaluacionPlanAccionDetalleNotasPK(codEvaluacion, codigoEstablecimiento, codPlan, codPlanDetalle, codPlantrabajo);
     }
 
     public EvaluacionPlanAccionDetalleNotasPK getEvaluacionPlanAccionDetalleNotasPK() {

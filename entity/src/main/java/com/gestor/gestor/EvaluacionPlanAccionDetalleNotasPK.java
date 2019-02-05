@@ -29,27 +29,40 @@ public class EvaluacionPlanAccionDetalleNotasPK implements Serializable {
     private Long codPlan;
     @Basic(optional = false)
     @Column(name = "cod_plan_detalle")
-    private Long codPlanDetalle;
+    private Long codPlanDetalle;    
     @Basic(optional = false)
     @Column(name = "cod_nota")
     private Long codNota;
+    @Basic(optional = false)
+    @Column(name = "cod_plan_trabajo")
+    private Integer codPlantrabajo;
 
     public EvaluacionPlanAccionDetalleNotasPK() {
     }
 
-    public EvaluacionPlanAccionDetalleNotasPK(Long codEvaluacion, int codigoEstablecimiento, Long codPlan, Long codPlanDetalle) {
+    public EvaluacionPlanAccionDetalleNotasPK(Long codEvaluacion, int codigoEstablecimiento, Long codPlan, Long codPlanDetalle, Integer codPlantrabajo) {
         this.codEvaluacion = codEvaluacion;
         this.codigoEstablecimiento = codigoEstablecimiento;
         this.codPlan = codPlan;
         this.codPlanDetalle = codPlanDetalle;
+        this.codPlantrabajo = codPlantrabajo;
     }
 
-    public EvaluacionPlanAccionDetalleNotasPK(Long codEvaluacion, int codigoEstablecimiento, Long codPlan, Long codPlanDetalle, Long codNota) {
+    public EvaluacionPlanAccionDetalleNotasPK(Long codEvaluacion, int codigoEstablecimiento, Long codPlan, Long codPlanDetalle, Long codNota, Integer codPlantrabajo) {
         this.codEvaluacion = codEvaluacion;
         this.codigoEstablecimiento = codigoEstablecimiento;
         this.codPlan = codPlan;
         this.codPlanDetalle = codPlanDetalle;
         this.codNota = codNota;
+        this.codPlantrabajo = codPlantrabajo;
+    }
+
+    public Integer getCodPlantrabajo() {
+        return codPlantrabajo;
+    }
+
+    public void setCodPlantrabajo(Integer codPlantrabajo) {
+        this.codPlantrabajo = codPlantrabajo;
     }
 
     public Long getCodEvaluacion() {
