@@ -123,7 +123,7 @@ public class EvaluacionPlanAccionDAO {
                     + " FROM gestor.evaluacion_plan_accion_detalle EPAD"
                     + " JOIN public.usuarios U USING (documento_usuario)"
                     + " JOIN public.plan_trabajo_objetivo obj USING (codigo_establecimiento, cod_plan_trabajo, cod_objetivo)"
-                    + " JOIN public.plan_trabajo_programa p USING (codigo_establecimiento, cod_plan_trabajo, cod_objetivo, cod_programa)"                            
+                    + " JOIN public.plan_trabajo_programa pr USING (codigo_establecimiento, cod_plan_trabajo, cod_objetivo, cod_programa)"                            
                     + " JOIN gestor.clase_hallazgo ch USING (cod_clase_hallazgo)"                            
                     + " JOIN gestor.tipo_accion ta USING (cod_tipo_accion)"
                     + " JOIN gestor.motivo_correccion mc USING (cod_motivo_correccion)"
