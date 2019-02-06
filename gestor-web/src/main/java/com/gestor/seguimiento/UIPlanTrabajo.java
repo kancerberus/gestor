@@ -95,10 +95,10 @@ public class UIPlanTrabajo implements Serializable{
     
     private void cargarPlantrabajo() {
         try {        
-            evaluacion= (Evaluacion) UtilJSF.getBean("varEvaluacion");             
+            Evaluacion ev= (Evaluacion) UtilJSF.getBean("evaluacion");             
             this.plantrabajoList = new ArrayList<>();
             GestorPlanTrabajo gestorPlantrabajo= new GestorPlanTrabajo();
-            this.plantrabajoList.addAll((Collection<? extends PlanTrabajo>) gestorPlantrabajo.cargarPlantrabajoList(evaluacion.getEstablecimiento().getCodigoEstablecimiento()));
+            this.plantrabajoList.addAll((Collection<? extends PlanTrabajo>) gestorPlantrabajo.cargarPlantrabajoList(ev.getEstablecimiento().getCodigoEstablecimiento()));
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -157,14 +157,10 @@ public class UIPlanTrabajo implements Serializable{
     
     public void cargarObjetivo() {
         try {            
-            plantrabajo = (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");            
-            
-            if(plantrabajo == null){
-                plantrabajo = (PlanTrabajo) UtilJSF.getBean("planTrabajo");                
-            }
+            PlanTrabajo pt = (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");  
             this.objetivoList = new ArrayList<>();
             gestorObjetivo = new GestorObjetivo();
-            this.objetivoList.addAll((Collection<? extends PlanTrabajoObjetivo>) gestorObjetivo.cargarListaObjetivo(plantrabajo.getCodEstablecimiento(),plantrabajo.getCodPlantrabajo()));            
+            this.objetivoList.addAll((Collection<? extends PlanTrabajoObjetivo>) gestorObjetivo.cargarListaObjetivo(pt.getCodEstablecimiento(),pt.getCodPlantrabajo()));            
             
             if(this.objetivo.getCodObjetivo() != null){
                 this.cargarPrograma();
@@ -264,11 +260,12 @@ public class UIPlanTrabajo implements Serializable{
     
     public String subirItemevaluacion() {
         try{     
-            evaluacion=new Evaluacion();
-            evaluacion = (Evaluacion) UtilJSF.getBean("varEvaluacion");      
-            UtilJSF.setBean("evaluacion", evaluacion, UtilJSF.SESSION_SCOPE);                                     
-            this.cargarPlantrabajo();
+            
+            Evaluacion ev = (Evaluacion) UtilJSF.getBean("varEvaluacion");      
+            UtilJSF.setBean("evaluacion", ev , UtilJSF.SESSION_SCOPE);                            
+            this.cargarPlantrabajo();            
             return ("/seguimiento/plan-trabajo.xhtml?faces-redirect=true");  
+            
         }catch(Exception e){
         return ("/seguimiento/plan-trabajo.xhtml?faces-redirect=true");                    
         }        
@@ -379,26 +376,30 @@ public class UIPlanTrabajo implements Serializable{
     public void dialogoActividad() {
         try {
             
-            plantrabajo= (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");
+            PlanTrabajo p= (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");            
+
             GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion= new GestorEvaluacionCapacitacion();
             GestorResponsable gestorResponsable= new GestorResponsable();
+            
             recursos= new ArrayList<>();
             recursos.addAll((Collection<? extends Recursos>) gestorEvaluacionCapacitacion.cargarListaRecursos());
                                    
             responsables = new ArrayList<>();
             List<String> condicionesConsulta = new ArrayList<>();
             condicionesConsulta.add(App.CONDICION_WHERE);
-            condicionesConsulta.add(Responsable.RESPONSABLE_CONDICION_CODIGO_ESTABLECIMIENTO.replace("?", String.valueOf(plantrabajo.getCodEstablecimiento())));
+            condicionesConsulta.add(Responsable.RESPONSABLE_CONDICION_CODIGO_ESTABLECIMIENTO.replace("?", String.valueOf(p.getCodEstablecimiento())));
             responsables.addAll(gestorResponsable.cargarListaResponsable(
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO) 
             ));
             
             Dialogo dialogo = new Dialogo ("dialogos/plan-trabajo-actividad.xhtml", "Crear Actividad", "clip", Dialogo.WIDTH_80);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
-            UtilJSF.execute("PF('dialog').show();");            
+            
+            UtilJSF.execute("PF('dialog').show();");                        
             plantrabajoActividad = new PlanTrabajoActividad();            
             this.cargarObjetivoactividad();            
             this.cargarPlantrabajoactividad();
+            this.limpiarPlantrabajo();
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -496,7 +497,7 @@ public class UIPlanTrabajo implements Serializable{
     }
         
     public void limpiarPlantrabajo() throws Exception {
-        UtilJSF.setBean("varPlantrabajo", plantrabajo=null, UtilJSF.SESSION_SCOPE);            
+        cargarPlantrabajo();
         plantrabajo= new PlanTrabajo();                        
     }
     

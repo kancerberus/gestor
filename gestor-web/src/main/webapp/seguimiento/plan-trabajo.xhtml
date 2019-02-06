@@ -10,7 +10,7 @@
 
     <ui:define name="content">
         <h:form enctype="multipart/form-data" id="formPlantrabajo" style="font-size: small;">
-            <p:panel id="panelPlantrabajo"  header="Administrar Plan Trabajo #{uiPlantrabajo.evaluacion.establecimiento.nombre}"  >
+            <p:panel id="panelPlantrabajo"  header="Administrar Plan Trabajo #{evaluacion.establecimiento.nombre}"  >
                 <h:panelGrid columns="3" >
                     
                     <h:outputText style="font-weight: bold;" value="Descripcion"/>
@@ -29,7 +29,7 @@
                         
                     </p:commandButton>
                     <p:commandButton value="Limpiar" action="#{uiPlantrabajo.limpiarPlantrabajo()}"
-                                     icon="ui-icon-cancel"  disabled="#{empty varPlantrabajo}"
+                                     icon="ui-icon-cancel"  
                                      update="formPlantrabajo"/>
                 </h:panelGrid>
                 <p:dataTable value="#{uiPlantrabajo.plantrabajoList}" var="varPlantrabajo" emptyMessage="No hay planes trabajo"
