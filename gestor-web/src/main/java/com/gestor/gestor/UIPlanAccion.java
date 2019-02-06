@@ -410,7 +410,7 @@ public class UIPlanAccion {
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             epd = gestorEvaluacionPlanAccion.validarEvaluacionPlanAccionDetalle(epd);
             gestorEvaluacionPlanAccion.actualizarEvaluacionPlanAccionDetalle(epd);
-            //this.enviarCorreo();
+            this.enviarCorreo();
             this.modificarActivo = Boolean.FALSE;
 
             evaluacionPlanAccionDetalles = new ArrayList<>();
