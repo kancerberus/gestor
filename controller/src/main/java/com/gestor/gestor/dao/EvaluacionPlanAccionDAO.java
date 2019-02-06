@@ -15,6 +15,7 @@ import com.gestor.gestor.EvaluacionPlanAccionDetalle;
 import com.gestor.gestor.EvaluacionPlanAccionDetalleNotas;
 import com.gestor.gestor.EvaluacionPlanAccionDetalleNotasPK;
 import com.gestor.gestor.EvaluacionPlanAccionDetallePK;
+import com.gestor.gestor.FuenteHallazgo;
 import com.gestor.gestor.MotivoCorreccion;
 import com.gestor.gestor.Seccion;
 import com.gestor.gestor.SeccionDetalle;
@@ -25,14 +26,11 @@ import com.gestor.gestor.SeccionPK;
 import com.gestor.gestor.TipoAccion;
 import com.gestor.publico.CentroTrabajo;
 import com.gestor.publico.Establecimiento;
-import com.gestor.publico.PlanTrabajoObjetivo;
-import com.gestor.publico.PlanTrabajoPrograma;
+
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.UsuariosPK;
-import com.gestor.publico.dao.ObjetivoDAO;
-import com.gestor.publico.dao.ProgramaDAO;
-import com.gestor.seguimiento.PlanTrabajoActividad;
+
 import conexion.Consulta;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -81,18 +79,18 @@ public class EvaluacionPlanAccionDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO gestor.evaluacion_plan_accion_detalle("
-                    + " cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle, cod_plan_trabajo,"
-                    + " cod_objetivo, cod_programa, cod_ciclo, cod_seccion, cod_detalle, cod_item, nombre, descripcion,"
+                    + " cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle,"
+                    + " cod_ciclo, cod_seccion, cod_detalle, cod_item, nombre, descripcion,"
                     + " estado, documento_usuario, fecha_registro, cedula, fecha_plazo,"
-                    + " cod_clase_hallazgo, cod_tipo_accion, cod_motivo_correccion, descripcion_hallazgo, "
-                    + " observaciones, cod_centrotrabajo, registro, eficacia, tipo_plan_accion)"
+                    + " cod_fuente_hallazgo, cod_clase_hallazgo, cod_tipo_accion, cod_motivo_correccion, descripcion_hallazgo, "
+                    + " observaciones, cod_centrotrabajo, registro, eficacia)"
                     + " VALUES (" + epd.getEvaluacionPlanAccionDetallePK().getCodEvaluacion() + ", " + epd.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento()
                     + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlan()
-                    + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle() + ", '"+epd.getEvaluacionPlanAccionDetallePK().getCodPlantrabajo()+"',"+epd.getPrograma().getCodPrograma()+", "+epd.getPrograma().getCodObjetivo()+", '" + epd.getCodCiclo() + "', " + epd.getCodSeccion() + ", " + epd.getCodDetalle()
+                    + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle() + ", '" + epd.getCodCiclo() + "', " + epd.getCodSeccion() + ", " + epd.getCodDetalle()
                     + " ," + epd.getCodItem() + ", '" + epd.getNombre() + "', '" + epd.getDescripcion() + "', '" + epd.getEstado() + "','" + epd.getDocumentoUsuario()+"', " 
-                    + " NOW(), '" + epd.getResponsable().getCedula() + "','" + epd.getFechaPlazo() + "', "+epd.getClasehallazgo().getCodClasehallazgo()
+                    + " NOW(), '" + epd.getResponsable().getCedula() + "','" + epd.getFechaPlazo() + "', "+epd.getFuentehallazgo().getCodFuentehallazgo()+", "+epd.getClasehallazgo().getCodClasehallazgo()
                     + " ," + epd.getTipoaccion().getCodTipoaccion()+", "+epd.getMotivocorreccion().getCodMotivocorreccion()+" "
-                    + ",'" + epd.getDescripcionhallazgo()+"','"+epd.getObservaciones()+"', "+epd.getCentrotrabajo().getCodCentrotrabajo()+", "+epd.getRegistro()+", "+epd.getEficacia()+", '"+epd.getTipo()+"' )" 
+                    + ",'" + epd.getDescripcionhallazgo()+"','"+epd.getObservaciones()+"', "+epd.getCentrotrabajo().getCodCentrotrabajo()+", "+epd.getRegistro()+", "+epd.getEficacia()+" )" 
             );            
             consulta.actualizar(sql);
         } finally {
@@ -108,22 +106,20 @@ public class EvaluacionPlanAccionDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT cod_evaluacion, EPAD.codigo_establecimiento, EPAD.cod_plan, EPAD.cod_plan_detalle, EPAD.cod_plan_trabajo,"
+                    "SELECT cod_evaluacion, EPAD.codigo_establecimiento, EPAD.cod_plan, EPAD.cod_plan_detalle,"
                     + " cod_ciclo, cod_seccion, cod_detalle, cod_item, EPAD.nombre, descripcion,"
                     + " EPAD.estado, EPAD.fecha_registro, EPAD.fecha_plazo, EPAD.fecha_actualiza,"
-                    + " EPAD.descripcion_hallazgo, EPAD.observaciones, EPAD.registro, EPAD.eficacia, EPAD.tipo_plan_accion, "
+                    + " EPAD.descripcion_hallazgo, EPAD.observaciones, EPAD.registro, EPAD.eficacia, "
                     + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario,"
-                    + " R.cedula r_cedula, R.nombres r_nombres, R.apellidos r_apellidos, R.telefono r_telefono, R.correo r_correo, R.estado r_estado, R.codigo_establecimiento r_codigo_establecimiento,"
-                    + " obj.cod_objetivo cod_o, obj.nombre nom_obj,"
-                    + " pr.cod_programa cod_p, pr.nombre nom_p,"                    
+                    + " R.cedula r_cedula, R.nombres r_nombres, R.apellidos r_apellidos, R.telefono r_telefono, R.correo r_correo, R.estado r_estado, R.codigo_establecimiento r_codigo_establecimiento,"                                                         
+                    + " fh.cod_fuente_hallazgo cod_fh, fh.nombre nom_fh,"
                     + " ch.cod_clase_hallazgo cod_ch, ch.nombre nom_ch,"
                     + " ta.cod_tipo_accion cod_ta, ta.nombre nom_ta,"
                     + " mc.cod_motivo_correccion cod_mc, mc.nombre nom_mc,"
                     + " ct.cod_centrotrabajo cod_ct, ct.nombre nom_ct"
                     + " FROM gestor.evaluacion_plan_accion_detalle EPAD"
                     + " JOIN public.usuarios U USING (documento_usuario)"
-                    + " JOIN public.plan_trabajo_objetivo obj USING (codigo_establecimiento, cod_plan_trabajo, cod_objetivo)"
-                    + " JOIN public.plan_trabajo_programa pr USING (codigo_establecimiento, cod_plan_trabajo, cod_objetivo, cod_programa)"                            
+                    + " JOIN gestor.fuente_hallazgo fh USING (cod_fuente_hallazgo)"                                    
                     + " JOIN gestor.clase_hallazgo ch USING (cod_clase_hallazgo)"                            
                     + " JOIN gestor.tipo_accion ta USING (cod_tipo_accion)"
                     + " JOIN gestor.motivo_correccion mc USING (cod_motivo_correccion)"
@@ -136,16 +132,15 @@ public class EvaluacionPlanAccionDAO {
             rs = consulta.ejecutar(sql);
             Collection<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles = new ArrayList<EvaluacionPlanAccionDetalle>();
             while (rs.next()) {
-                EvaluacionPlanAccionDetalle epad = new EvaluacionPlanAccionDetalle(new EvaluacionPlanAccionDetallePK(codEvaluacion, codigoEstablecimiento, rs.getLong("cod_plan"), rs.getLong("cod_plan_detalle"), rs.getInt("cod_plan_trabajo")),
-                        rs.getInt("cod_o"), rs.getInt("cod_p"), rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("nombre"), rs.getString("descripcion"), rs.getString("estado"),
+                EvaluacionPlanAccionDetalle epad = new EvaluacionPlanAccionDetalle(new EvaluacionPlanAccionDetallePK(codEvaluacion, codigoEstablecimiento, rs.getLong("cod_plan"), rs.getLong("cod_plan_detalle")),
+                        rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("nombre"), rs.getString("descripcion"), rs.getString("estado"),
                         new Usuarios(
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
                         ), rs.getDate("fecha_registro"), rs.getDate("fecha_plazo"), rs.getDate("fecha_actualiza"), rs.getString("descripcion_hallazgo"),
-                        rs.getString("observaciones"), rs.getBoolean("registro"), rs.getBoolean("eficacia"), rs.getString("tipo_plan_accion")
+                        rs.getString("observaciones"), rs.getBoolean("registro"), rs.getBoolean("eficacia")
                 );
-                epad.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));
-                epad.setObjetivo(new PlanTrabajoObjetivo(0, 0, rs.getInt("cod_o"), rs.getString("nom_obj")));
-                epad.setPrograma(new PlanTrabajoPrograma(0,0,0,rs.getInt("cod_p"),0, rs.getString("nom_p")));                
+                epad.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));                
+                epad.setFuentehallazgo(new FuenteHallazgo(rs.getInt("cod_fh"), rs.getString("nom_fh")));
                 epad.setClasehallazgo(new ClaseHallazgo(rs.getInt("cod_ch"), rs.getString("nom_ch")));
                 epad.setTipoaccion(new TipoAccion(rs.getInt("cod_ta"), rs.getString("nom_ta")));
                 epad.setMotivocorreccion(new MotivoCorreccion(rs.getInt("cod_mc"), rs.getString("nom_mc")));
@@ -218,7 +213,7 @@ public class EvaluacionPlanAccionDAO {
             StringBuilder sql = new StringBuilder(
                     "UPDATE gestor.evaluacion_plan_accion_detalle"
                     + " SET nombre='" + epd.getNombre() + "', descripcion='" + epd.getDescripcion() + "', fecha_actualiza=NOW(), cedula='" + epd.getResponsable().getCedula() + "',"
-                    + " cod_programa="+epd.getPrograma().getCodPrograma()+",cod_clase_hallazgo="+epd.getClasehallazgo().getCodClasehallazgo()+","
+                    + " cod_fuente_hallazgo= "+epd.getFuentehallazgo().getCodFuentehallazgo()+", cod_clase_hallazgo="+epd.getClasehallazgo().getCodClasehallazgo()+","
                     + " cod_tipo_accion="+epd.getTipoaccion().getCodTipoaccion()+", cod_motivo_correccion="+epd.getMotivocorreccion().getCodMotivocorreccion()+","
                     + " fecha_plazo='"+epd.getFechaPlazo()+"', descripcion_hallazgo='"+epd.getDescripcionhallazgo()+"',"
                     + " observaciones='"+epd.getObservaciones()+"', cod_centrotrabajo='"+epd.getCentrotrabajo().getCodCentrotrabajo()+"', registro="+epd.getRegistro()+", eficacia="+epd.getEficacia()+""                                                                            
@@ -239,7 +234,7 @@ public class EvaluacionPlanAccionDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    " SELECT EPAD.cod_evaluacion, EPAD.codigo_establecimiento, EPAD.cod_plan, EPAD.cod_plan_detalle, EPAD.cod_plan_trabajo,"
+                    " SELECT EPAD.cod_evaluacion, EPAD.codigo_establecimiento, EPAD.cod_plan, EPAD.cod_plan_detalle,"
                     + " EPAD.cod_ciclo, EPAD.cod_seccion, EPAD.cod_detalle, EPAD.cod_item, EPAD.nombre AS epad_nombre, EPAD.descripcion,"
                     + " EPAD.estado, EPAD.fecha_registro, EPAD.fecha_plazo, EPAD.fecha_actualiza, EPAD.fecha_finalizado, EPAD.descripcion_hallazgo,"
                     + " EPAD.observaciones, EPAD.registro, EPAD.eficacia,"                               
@@ -250,7 +245,7 @@ public class EvaluacionPlanAccionDAO {
                     + " E.cod_evaluacion AS e_cod_evaluacion, E.documento_usuario AS e_documento_usuario, E.fecha AS e_fecha, E.fecha_registro AS e_fecha_registro, E.estado AS e_estado,"
                     + " ES.nombre AS es_nombre,"
                     + " C.cod_ciclo AS c_cod_ciclo, C.nombre AS c_nombre, C.numeral AS c_numeral,"
-                    + " p.cod_programa cod_p, p.nombre nom_p,"
+                    + " fh.cod_fuente_hallazgo cod_fh, fh.nombre nom_fh,"
                     + " ch.cod_clase_hallazgo cod_ch, ch.nombre nom_ch,"
                     + " ta.cod_tipo_accion cod_ta, ta.nombre nom_ta,"
                     + " mc.cod_motivo_correccion cod_mc, mc.nombre nom_mc,"
@@ -265,7 +260,7 @@ public class EvaluacionPlanAccionDAO {
                     + " JOIN gestor.seccion_detalle SD USING (cod_seccion, cod_ciclo, cod_detalle)"
                     + " JOIN gestor.seccion S USING (cod_seccion, cod_ciclo)"
                     + " JOIN gestor.ciclo C USING (cod_ciclo)"
-                    + " JOIN public.plan_trabajo_programa p USING (cod_programa)"
+                    + " JOIN gestor.fuente_hallazgo fh USING (cod_fuente_hallazgo)"                                    
                     + " JOIN gestor.clase_hallazgo ch USING (cod_clase_hallazgo)"                            
                     + " JOIN gestor.tipo_accion ta USING (cod_tipo_accion)"
                     + " JOIN gestor.motivo_correccion mc USING (cod_motivo_correccion)"
@@ -280,16 +275,16 @@ public class EvaluacionPlanAccionDAO {
             Collection<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles = new ArrayList<EvaluacionPlanAccionDetalle>();            
             
             while (rs.next()) {
-                EvaluacionPlanAccionDetalle epad = new EvaluacionPlanAccionDetalle(new EvaluacionPlanAccionDetallePK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento"), rs.getLong("cod_plan"), rs.getLong("cod_plan_detalle"), rs.getInt("cod_plan_detalle")),
-                        rs.getInt("cod_objetivo"), rs.getInt("cod_programa"),rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("epad_nombre"), rs.getString("descripcion"), rs.getString("estado"),
+                EvaluacionPlanAccionDetalle epad = new EvaluacionPlanAccionDetalle(new EvaluacionPlanAccionDetallePK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento"), rs.getLong("cod_plan"), rs.getLong("cod_plan_detalle")),
+                       rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("epad_nombre"), rs.getString("descripcion"), rs.getString("estado"),
                         new Usuarios(
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
                         ), rs.getDate("fecha_registro"
                         ), rs.getDate("fecha_plazo"),rs.getDate("fecha_finalizado"), rs.getString("descripcion_hallazgo"),
-                        rs.getString("observaciones"), rs.getBoolean("registro"), rs.getBoolean("eficacia"), rs.getString("tipo")
+                        rs.getString("observaciones"), rs.getBoolean("registro"), rs.getBoolean("eficacia")
                 );
-                epad.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));
-                epad.setPrograma(new PlanTrabajoPrograma(0,0,0,rs.getInt("cod_p"),0, rs.getString("nom_p")));
+                epad.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));                
+                epad.setFuentehallazgo(new FuenteHallazgo(rs.getInt("cod_fh"), rs.getString("nom_fh")));
                 epad.setClasehallazgo(new ClaseHallazgo(rs.getInt("cod_ch"), rs.getString("nom_ch")));
                 epad.setTipoaccion(new TipoAccion(rs.getInt("cod_ta"), rs.getString("nom_ta")));
                 epad.setMotivocorreccion(new MotivoCorreccion(rs.getInt("cod_mc"), rs.getString("nom_mc")));
@@ -348,9 +343,9 @@ public class EvaluacionPlanAccionDAO {
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO gestor.evaluacion_plan_accion_detalle_notas("
                     + " cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle, "
-                    + " cod_nota, cod_plan_trabajo, documento_usuario, estado, nombre, descripcion, fecha_registro)"
+                    + " cod_nota, documento_usuario, estado, nombre, descripcion, fecha_registro)"
                     + " VALUES (" + pk.getCodEvaluacion() + ", " + pk.getCodigoEstablecimiento() + ", " + pk.getCodPlan() + ", " + pk.getCodPlanDetalle()+",  "
-                    + " DEFAULT, "+pk.getCodPlantrabajo()+", '" + epadn.getDocumentoUsuario() + "', '" + epadn.getEstado() + "', '" + epadn.getNombre() + "', '" + epadn.getDescripcion() + "', NOW());"
+                    + " DEFAULT, '" + epadn.getDocumentoUsuario() + "', '" + epadn.getEstado() + "', '" + epadn.getNombre() + "', '" + epadn.getDescripcion() + "', NOW());"
             );
             consulta.actualizar(sql);
         } finally {
@@ -366,7 +361,7 @@ public class EvaluacionPlanAccionDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle, cod_plan_trabajo,"
+                    "SELECT cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle,"
                     + " cod_nota, documento_usuario, U.nombre as nombreus, U.apellido as apellidous, estado, epadn.nombre as nombrepa, descripcion, fecha_registro"
                     + " FROM gestor.evaluacion_plan_accion_detalle_notas epadn"
                     + " JOIN public.usuarios U USING (documento_usuario)"
@@ -379,7 +374,7 @@ public class EvaluacionPlanAccionDAO {
             while (rs.next()) {
                 pk.setCodNota(rs.getLong("cod_nota"));
                 EvaluacionPlanAccionDetalleNotas epadn = new EvaluacionPlanAccionDetalleNotas(
-                        new EvaluacionPlanAccionDetalleNotasPK(pk.getCodEvaluacion(), pk.getCodigoEstablecimiento(), pk.getCodPlan(), pk.getCodPlanDetalle(), rs.getLong("cod_nota"), rs.getInt("cod_plan_trabajo")),
+                        new EvaluacionPlanAccionDetalleNotasPK(pk.getCodEvaluacion(), pk.getCodigoEstablecimiento(), pk.getCodPlan(), pk.getCodPlanDetalle()),
                         rs.getString("documento_usuario"), rs.getString("estado"), rs.getString("nombrepa"), rs.getString("descripcion"),
                         new Usuarios(null, rs.getString("nombreus"), rs.getString("apellidous"))
                 );

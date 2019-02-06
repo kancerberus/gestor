@@ -10,11 +10,13 @@ import com.gestor.gestor.Evaluacion;
 import com.gestor.gestor.EvaluacionPK;
 import com.gestor.gestor.EvaluacionPuntajes;
 import com.gestor.gestor.EvaluacionPuntajesPK;
+import com.gestor.gestor.Recursos;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.ListaDetalle;
 import com.gestor.publico.ListaDetallePK;
 import com.gestor.publico.PlanTrabajoObjetivo;
 import com.gestor.publico.PlanTrabajoPrograma;
+import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.UsuariosPK;
 import com.gestor.seguimiento.PlanTrabajo;
@@ -85,14 +87,18 @@ public class PlanTrabajoDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT pta.cod_plan_trabajo , pta.cod_actividad, pta.actividad , pta.fecha_reg, pta.fecha_venc, pta.estado, e.codigo_establecimiento code, "
-                        + "e.nombre nome, obj.cod_objetivo codobj, obj.nombre nomobj, pr.cod_programa codpr, pr.nombre nompr "                        
+                        + "e.nombre nome, obj.cod_objetivo codobj, obj.nombre nomobj, pr.cod_programa codpr, pr.nombre nompr, "                        
+                        + " rec.cod_recursos cod_rec, rec.nombre nom_rec,"
+                        + " res.cedula cedula, res.nombres nom_resp"
                         + " FROM seguimiento.plan_trabajo_actividad pta "                        
+                        + " INNER JOIN gestor.recursos rec USING (cod_recursos)"
+                        + " INNER JOIN public.responsable res USING (codigo_establecimiento, cedula)"
                         + " INNER JOIN public.plan_trabajo_objetivo obj USING (codigo_establecimiento, cod_objetivo, cod_plan_trabajo)"
                         + " INNER JOIN public.plan_trabajo_programa pr using (codigo_establecimiento, cod_plan_trabajo, cod_objetivo, cod_programa)  "
                         + " INNER JOIN public.establecimiento e using (codigo_establecimiento)    "
                         + " WHERE pta.codigo_establecimiento='"+plantrabajo.getCodEstablecimiento()+"' AND pta.cod_plan_trabajo='"+plantrabajo.getCodPlantrabajo()+"' "
                         + " GROUP BY pta.cod_plan_trabajo, pta.cod_actividad, pta.actividad, pta.fecha_reg, pta.fecha_venc, pta.estado, pta.peso,  e.codigo_establecimiento, " 
-                        + " e.nombre, obj.cod_objetivo, obj.nombre, pr.cod_programa, pr.nombre"
+                        + " e.nombre, obj.cod_objetivo, obj.nombre, pr.cod_programa, pr.nombre, rec.cod_recursos, res.cedula"
                         + " ORDER BY pta.cod_actividad"
                     
             );
@@ -100,16 +106,18 @@ public class PlanTrabajoDAO {
             List<PlanTrabajoActividad> planestrabajoactividad = new ArrayList<>();
             while (rs.next()) {
                 PlanTrabajoActividad pta= new PlanTrabajoActividad(rs.getInt("code"), rs.getInt("cod_plan_trabajo"), rs.getInt("cod_actividad"),rs.getInt("codobj"),
-                        rs.getInt("codpr"), rs.getString("actividad"), rs.getDate("fecha_venc"), rs.getString("estado"), rs.getDate("fecha_reg"));
+                        rs.getInt("codpr"),rs.getString("cedula"), rs.getInt("cod_rec"), rs.getString("actividad"), rs.getDate("fecha_venc"), rs.getString("estado"), rs.getDate("fecha_reg"));
                 pta.setCodEstablecimiento(rs.getInt("code"));
                 pta.setCodPlantrabajo(rs.getInt("cod_plan_trabajo"));
-                pta.setCodObjetivo(rs.getInt("codobj"));
+                pta.setCodObjetivo(rs.getInt("codobj"));                
                 pta.setCodPrograma(rs.getInt("codpr"));                
                 pta.setDescripcion(rs.getString("actividad"));
                 pta.setFechaRegistro(rs.getDate("fecha_reg"));
                 pta.setEstado(rs.getString("estado"));
                 pta.setFechaVenc(rs.getDate("fecha_venc"));                
                 pta.setEstablecimiento(new Establecimiento(rs.getInt("code"), rs.getString("nome")));
+                pta.setRecursos(new Recursos(rs.getInt("cod_rec"), rs.getString("nom_rec")));
+                pta.setResponsable(new Responsable(rs.getString("cedula"), rs.getString("nom_resp")));
                 pta.setObjetivo(new PlanTrabajoObjetivo(rs.getInt("code"), rs.getInt("cod_plan_trabajo"), rs.getInt("codobj"), rs.getString("nomobj")));
                 pta.setPrograma(new PlanTrabajoPrograma(0, 0, 0, rs.getInt("codpr"), 0, rs.getString("nompr")));
                 planestrabajoactividad.add(pta);                
@@ -196,11 +204,11 @@ public class PlanTrabajoDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO seguimiento.plan_trabajo_actividad "
-                    + " ( codigo_establecimiento, cod_plan_trabajo, cod_actividad, cod_objetivo, cod_programa, actividad, fecha_venc, estado, fecha_reg )"
+                    + " ( codigo_establecimiento, cod_plan_trabajo, cod_actividad, cod_objetivo, cod_programa, cedula, cod_recursos, actividad, fecha_venc, estado, fecha_reg )"
                     + " VALUES ( "+plantrabajoactividad.getCodEstablecimiento()+", '"+plantrabajoactividad.getCodPlantrabajo()+"', '"+plantrabajoactividad.getCodActividad()+"', '"+plantrabajoactividad.getCodObjetivo()+"', '"+plantrabajoactividad.getCodPrograma()+"',"
-                    + " '"+plantrabajoactividad.getDescripcion()+"', '"+plantrabajoactividad.getFechaVenc()+"', '"+plantrabajoactividad.getEstado()+"', NOW() ) "
+                    + " '"+plantrabajoactividad.getCedula()+"', '"+plantrabajoactividad.getCodRecursos()+"', '"+plantrabajoactividad.getDescripcion()+"', '"+plantrabajoactividad.getFechaVenc()+"', '"+plantrabajoactividad.getEstado()+"', NOW() ) "
                     + " ON CONFLICT ( codigo_establecimiento, cod_plan_trabajo, cod_actividad ) DO UPDATE "
-                    + " SET cod_objetivo=EXCLUDED.cod_objetivo, cod_programa=EXCLUDED.cod_programa, actividad=EXCLUDED.actividad, estado=EXCLUDED.estado"                    
+                    + " SET cod_objetivo=EXCLUDED.cod_objetivo, cod_programa=EXCLUDED.cod_programa, cedula= EXCLUDED.cedula, cod_recursos=EXCLUDED.cod_recursos, actividad=EXCLUDED.actividad, estado=EXCLUDED.estado"                    
             );
             consulta.actualizar(sql);            
         } finally {
