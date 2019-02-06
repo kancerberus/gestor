@@ -23,6 +23,7 @@ import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorResponsable;
 import com.gestor.gestor.controlador.GestorClaseHallazgo;
 import com.gestor.gestor.controlador.GestorEvaluacion;
+import com.gestor.gestor.controlador.GestorFuenteHallazgo;
 import com.gestor.gestor.controlador.GestorMotivoCorreccion;
 import com.gestor.gestor.controlador.GestorTipoAccion;
 import com.gestor.publico.CentroTrabajo;
@@ -87,6 +88,7 @@ public class UIPlanAccion {
     private List<PlanTrabajoPrograma> programas = new ArrayList<>();
     private List<PlanTrabajoObjetivo> objetivos = new ArrayList<>();
     private List<ClaseHallazgo> clasehallazgos = new ArrayList<>();
+    private List<FuenteHallazgo> fuentehallazgos = new ArrayList<>();
     private List<TipoAccion> tipoacciones = new ArrayList<>();
     private List<MotivoCorreccion> motivocorrecciones  = new ArrayList<>();
     private List<CentroTrabajo> centrostrabajo = new ArrayList<>();    
@@ -126,8 +128,7 @@ public class UIPlanAccion {
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodEvaluacion(),
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento(),
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlan(),
-                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle(),
-                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlantrabajo()
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()                   
             );
             evaluacionPlanAccionDetalle.setEvaluacionPlanAccionDetalleNotasList(gestorEvaluacionPlanAccion.cargarEvaluacionPlanAccionDetalleNotasList(pk));
 
@@ -159,10 +160,7 @@ public class UIPlanAccion {
                         pk.getCodEvaluacion(),
                         pk.getCodigoEstablecimiento(),
                         pk.getCodPlan(),
-                        pk.getCodPlanDetalle(),                                                
-                        gestorGeneral.nextval(GestorGeneral.GESTOR_EVALUACION_PLAN_ACCION_DETALLE_NOTAS_COD_NOTA_SEQ),
-                        pk.getCodPlantrabajo()
-                        
+                        pk.getCodPlanDetalle()                                                
                 ));
             }
 
@@ -175,8 +173,8 @@ public class UIPlanAccion {
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodEvaluacion(),
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento(),
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlan(),
-                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle(),
-                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlantrabajo()
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()                    
+                    
             );
             evaluacionPlanAccionDetalle.setEvaluacionPlanAccionDetalleNotasList(new ArrayList<EvaluacionPlanAccionDetalleNotas>());
             evaluacionPlanAccionDetalle.setEvaluacionPlanAccionDetalleNotasList(gestorEvaluacionPlanAccion.cargarEvaluacionPlanAccionDetalleNotasList(pk));
@@ -200,8 +198,8 @@ public class UIPlanAccion {
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodEvaluacion(),
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento(),
                     evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlan(),
-                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle(),
-                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlantrabajo()
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()
+                    
             );
             evaluacionPlanAccionDetalle.setEvaluacionPlanAccionDetalleNotasList(gestorEvaluacionPlanAccion.cargarEvaluacionPlanAccionDetalleNotasList(pk));
 
@@ -247,7 +245,7 @@ public class UIPlanAccion {
         }*/
         
         if(establecimiento == null){   
-            String cadena = "0";         
+            String cadena;         
             cadena = Integer.toString(establecimiento.getCodigoEstablecimiento());
             
             condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena));
@@ -470,15 +468,11 @@ public class UIPlanAccion {
             epd.setCodItem(sdiSeleccionado.getSeccionDetalleItemsPK().getCodItem());
             epd.setDocumentoUsuario(documentoUsuario);            
             epd.getEvaluacionPlanAccionDetallePK().setCodPlanDetalle(codPlan);
-            epd.getEvaluacionPlanAccionDetallePK().setCodPlanDetalle(gestorGeneral.nextval(GestorGeneral.GESTOR_EVALUACION_PLAN_ACCION_DETALLE_COD_PLAN_DETALLE_SEQ));
-            epd.getEvaluacionPlanAccionDetallePK().setCodPlantrabajo(9999);            
-            if(epd.getEvaluacionPlanAccionDetallePK().getCodPlantrabajo() == 9999){
-                epd.setTipo("EV");
-            }                        
+            epd.getEvaluacionPlanAccionDetallePK().setCodPlanDetalle(gestorGeneral.nextval(GestorGeneral.GESTOR_EVALUACION_PLAN_ACCION_DETALLE_COD_PLAN_DETALLE_SEQ));            
 
             EvaluacionPlanAccionDetalleNotas epadn = new EvaluacionPlanAccionDetalleNotas(
                     new EvaluacionPlanAccionDetalleNotasPK(ep.getEvaluacionPlanAccionPK().getCodEvaluacion(), ep.getEvaluacionPlanAccionPK().getCodigoEstablecimiento(),
-                            codPlan, epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle(), epd.getEvaluacionPlanAccionDetallePK().getCodPlantrabajo()),
+                            codPlan, epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()),
                     documentoUsuario, epd.getEstado(), "REGISTRO INICIAL", "Inicia registro de plan acción, responsable: " + UtilTexto.capitalizarCadena(responsable), usuariosSeleccionado);
             epd.setEvaluacionPlanAccionDetalleNotas(epadn);
 
@@ -635,27 +629,8 @@ public class UIPlanAccion {
         }
     }
     
-    public void cargarObjetivo() {
-        try {       
-            evaluacionPlanAccionDetalle = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("evaluacionPlanAccionDetalle");
-            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
-                this.objetivos = new ArrayList<>();
-                GestorObjetivo gestorObjetivo = new GestorObjetivo();            
-                this.objetivos.addAll((Collection<? extends PlanTrabajoObjetivo>) gestorObjetivo.cargarListaObjetivoplanaccion(e.getEvaluacionPK().getCodigoEstablecimiento()));                                        
-            
-                if( evaluacionPlanAccionDetalle.getObjetivo().getCodObjetivo() !=  null){
-                    this.programas = new ArrayList<>();
-                    GestorPrograma gestorPrograma = new GestorPrograma();
-                    this.programas.addAll((Collection<? extends PlanTrabajoPrograma>) gestorPrograma.cargarListaProgramasplanaccion(e.getEvaluacionPK().getCodigoEstablecimiento(), evaluacionPlanAccionDetalle.getObjetivo().getCodObjetivo()));
-                }
-        } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
-        }
-    }
-    
     public void mostrarDialogoPlanAccion() {
-        try {         
-            this.cargarObjetivo();
+        try {                     
             Sesion sesion = (Sesion) UtilJSF.getBean("sesion");
             this.sdiSeleccionado = (SeccionDetalleItems) UtilJSF.getBean("varSeccionDetalleItems");                        
                     
@@ -687,6 +662,9 @@ public class UIPlanAccion {
             
             
             if(clasehallazgos.isEmpty()){
+                
+                GestorFuenteHallazgo gestorFuentehallazgo = new GestorFuenteHallazgo();
+                fuentehallazgos.addAll((Collection<? extends FuenteHallazgo>) gestorFuentehallazgo.cargarListaFuentehallazgo());
                 
                 GestorClaseHallazgo gestorClasehallazgo = new GestorClaseHallazgo();            
                 clasehallazgos.addAll((Collection<? extends ClaseHallazgo>) gestorClasehallazgo.cargarListaClasehallazgo());
@@ -730,6 +708,14 @@ public class UIPlanAccion {
                 UtilLog.generarLog(this.getClass(), e);
             }
         }
+    }
+
+    public List<FuenteHallazgo> getFuentehallazgos() {
+        return fuentehallazgos;
+    }
+
+    public void setFuentehallazgos(List<FuenteHallazgo> fuentehallazgos) {
+        this.fuentehallazgos = fuentehallazgos;
     }
 
     public PlanTrabajoObjetivo getObjetivoSeleccionado() {

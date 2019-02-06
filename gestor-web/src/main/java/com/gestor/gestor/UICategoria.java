@@ -146,9 +146,9 @@ public class UICategoria implements Serializable{
             AdjuntosCategoriaTipo tip= new AdjuntosCategoriaTipo(new AdjuntosCategoriaTipoPK(categoria.getCodCategoria(), tipo.getAdjuntosCategoriaTipoPK().getCodCategoriaTipo())  , tipo.getNombre(), tipo.getDescripcion());            
             gestorAdjuntosCategoria.validarTipo(tip); 
             gestorAdjuntosCategoria.almacenarTipo(tip); 
-            
+            tipo= new AdjuntosCategoriaTipo();
             UtilMSG.addSuccessMsg("Tipo almacenado correctamente.");
-            UtilJSF.setBean("tipo", new AdjuntosCategoriaTipo(), UtilJSF.SESSION_SCOPE);            
+            UtilJSF.setBean("tipo", new AdjuntosCategoriaTipoPK(), UtilJSF.SESSION_SCOPE);            
             this.cargarTipoList();
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
@@ -230,12 +230,11 @@ public class UICategoria implements Serializable{
         try {
             tipo= (AdjuntosCategoriaTipo) UtilJSF.getBean("varTipo");            
             gestorAdjuntosCategoria.eliminarTipo(tipo);
-            
-            
             UtilMSG.addSuccessMsg("Tipo eliminado.");
             this.cargarCategoriaList();
             this.cargarTipoList();
         } catch (Exception ex) {
+            UtilMSG.addSuccessMsg("Tipo en Uso.");
             UtilLog.generarLog(this.getClass(), ex);
         }
     }

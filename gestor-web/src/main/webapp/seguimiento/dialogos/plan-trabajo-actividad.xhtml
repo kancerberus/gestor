@@ -33,7 +33,24 @@
                         <h:outputLabel style="font-weight: bold;" value="Fecha Vencimiento:" />
                         <p:calendar  style="margin-left: 3%; text-align: center; width: 200px " value="#{uiPlantrabajo.plantrabajoActividad.fechaVenc}" pattern="dd-MM-yyyy" mask="true" />
                         
-                    </h:panelGrid>                                   
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="Responsable " style="font-weight: bold;"/>
+                        <p:selectOneMenu value="#{uiPlantrabajo.plantrabajoActividad.responsable}" converter="convertidorGenerico"
+                                         style=" margin-left: 10%; text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlantrabajo.responsables}" var="res" itemValue="#{res}" itemLabel="#{res.nombres}" />                            
+                            <p:ajax event="change" process="@this"/>
+                        </p:selectOneMenu>
+                        
+                        <h:outputLabel value="Recursos " style="font-weight: bold;"/>
+                        <p:selectOneMenu value="#{uiPlantrabajo.plantrabajoActividad.recursos}" converter="convertidorGenerico"
+                                         style=" margin-left: 10%; text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlantrabajo.recursos}" var="rec" itemValue="#{rec}" itemLabel="#{rec.nombre}" />                            
+                            <p:ajax event="change" process="@this"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
             </h:panelGrid>            
             
             <h:panelGrid>
@@ -49,6 +66,8 @@
                             <p:column  headerText="Objetivo" filterBy="#{varPlantrabajoactividad.objetivo.nombre}"/>
                             <p:column  headerText="Programa" filterBy="#{varPlantrabajoactividad.programa.nombre}"/>
                             <p:column  headerText="Actividad" filterBy="#{varPlantrabajoactividad.descripcion}"/>                                                                                                               
+                            <p:column  headerText="Responsable" filterBy="#{varPlantrabajoactividad.responsable.nombres}"/>                                                                                                               
+                            <p:column  headerText="Recursos" filterBy="#{varPlantrabajoactividad.recursos.nombre}"/>                                                                                                               
                             <p:column  headerText="Fecha Creacion" sortBy="#{varPlantrabajoactividad.fechaRegistro}" />                            
                             <p:column  headerText="Fecha vencicmiento" sortBy="#{varPlantrabajoactividad.fechaVenc}" />
                             
@@ -80,6 +99,12 @@
                     <p:column>
                         <h:outputText value="#{varPlantrabajoactividad.descripcion}"/>
                     </p:column>                                                                               
+                    <p:column>
+                        <h:outputText value="#{varPlantrabajoactividad.responsable.nombres}"/>
+                    </p:column>                                         
+                    <p:column>
+                        <h:outputText value="#{varPlantrabajoactividad.recursos.nombre}"/>
+                    </p:column>                                         
                     <p:column>
                         <h:outputText value="#{varPlantrabajoactividad.fechaRegistro}">
                             <f:convertDateTime pattern="dd/MM/yyyy" />

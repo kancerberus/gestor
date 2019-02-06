@@ -11,20 +11,26 @@ import com.gestor.entity.Dialogo;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
+import com.gestor.entity.UtilTexto;
 import com.gestor.gestor.Evaluacion;
 import com.gestor.gestor.EvaluacionPlanAccion;
 import com.gestor.gestor.EvaluacionPlanAccionDetalle;
 import com.gestor.gestor.EvaluacionPlanAccionDetallePK;
 import com.gestor.gestor.EvaluacionPlanAccionPK;
+import com.gestor.gestor.Recursos;
 import com.gestor.gestor.controlador.GestorEvaluacion;
+import com.gestor.gestor.controlador.GestorEvaluacionCapacitacion;
 import com.gestor.gestor.controlador.GestorEvaluacionPlanAccion;
 import com.gestor.modelo.Sesion;
 import com.gestor.publico.ListaDetalle;
 import com.gestor.publico.PlanTrabajoObjetivo;
 import com.gestor.publico.PlanTrabajoPrograma;
+import com.gestor.publico.Responsable;
+import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorLista;
 import com.gestor.publico.controlador.GestorObjetivo;
 import com.gestor.publico.controlador.GestorPrograma;
+import com.gestor.publico.controlador.GestorResponsable;
 import com.gestor.seguimiento.controlador.GestorPlanTrabajo;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -47,7 +53,9 @@ public class UIPlanTrabajo implements Serializable{
     private PlanTrabajo plantrabajo;     
     private PlanTrabajoActividad plantrabajoActividad;     
     private PlanTrabajoObjetivo objetivo;
-    private PlanTrabajoPrograma programa;    
+    private PlanTrabajoPrograma programa;  
+    private List<Responsable> responsables = new ArrayList<>();
+    private List<Recursos> recursos = new ArrayList<>();
     private ListaDetalle listadetalle= new ListaDetalle();
     
     
@@ -286,8 +294,7 @@ public class UIPlanTrabajo implements Serializable{
             this.programaList = new ArrayList<>();
             gestorPrograma = new GestorPrograma();
             this.programaList.addAll((Collection<? extends PlanTrabajoPrograma>) gestorPrograma.cargarListaProgramas(objetivo.getCodEstablecimiento(),objetivo.getCodObjetivo(), objetivo.getCodPlantrabajo()));                                    
-        } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
+        } catch (Exception ex) {            
         }
     }
     
@@ -374,6 +381,20 @@ public class UIPlanTrabajo implements Serializable{
     public void dialogoActividad() {
         try {
             
+            plantrabajo= (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");
+            GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion= new GestorEvaluacionCapacitacion();
+            GestorResponsable gestorResponsable= new GestorResponsable();
+            recursos= new ArrayList<>();
+            recursos.addAll((Collection<? extends Recursos>) gestorEvaluacionCapacitacion.cargarListaRecursos());
+                                   
+            responsables = new ArrayList<>();
+            List<String> condicionesConsulta = new ArrayList<>();
+            condicionesConsulta.add(App.CONDICION_WHERE);
+            condicionesConsulta.add(Responsable.RESPONSABLE_CONDICION_CODIGO_ESTABLECIMIENTO.replace("?", String.valueOf(plantrabajo.getCodEstablecimiento())));
+            responsables.addAll(gestorResponsable.cargarListaResponsable(
+                    UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO) 
+            ));
+            
             Dialogo dialogo = new Dialogo ("dialogos/plan-trabajo-actividad.xhtml", "Crear Actividad", "clip", Dialogo.WIDTH_80);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
             UtilJSF.execute("PF('dialog').show();");            
@@ -392,7 +413,7 @@ public class UIPlanTrabajo implements Serializable{
             
             PlanTrabajoActividad pta = new PlanTrabajoActividad(plantrabajoActividad.getCodEstablecimiento(),
                     plantrabajoActividad.getCodPlantrabajo(), plantrabajoActividad.getCodActividad(), plantrabajoActividad.getCodObjetivo(), 
-                    plantrabajoActividad.getCodPrograma(), 
+                    plantrabajoActividad.getCodPrograma(), plantrabajoActividad.getCedula(), plantrabajoActividad.getCodRecursos(),
                     plantrabajoActividad.getDescripcion(), plantrabajoActividad.getFechaVenc(), plantrabajoActividad.getEstado(), 
                     null
             );
@@ -424,7 +445,7 @@ public class UIPlanTrabajo implements Serializable{
             
             plantrabajoActividad.setEstado("A");
             PlanTrabajoActividad pta= new PlanTrabajoActividad(plantrabajo.getCodEstablecimiento(), plantrabajo.getCodPlantrabajo(), plantrabajoActividad.getCodActividad(),
-                    objetivo.getCodObjetivo(), plantrabajoActividad.getPrograma().getCodPrograma(), plantrabajoActividad.getDescripcion(), plantrabajoActividad.getFechaVenc(),
+                    objetivo.getCodObjetivo(), plantrabajoActividad.getPrograma().getCodPrograma(), plantrabajoActividad.getResponsable().getCedula(), plantrabajoActividad.getRecursos().getCodRecursos(), plantrabajoActividad.getDescripcion(), plantrabajoActividad.getFechaVenc(),
                     plantrabajoActividad.getEstado(), null);
             
             GestorPlanTrabajo gestorPlantrabajo= new GestorPlanTrabajo();
@@ -454,6 +475,22 @@ public class UIPlanTrabajo implements Serializable{
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
+    }
+
+    public List<Responsable> getResponsables() {
+        return responsables;
+    }
+
+    public void setResponsables(List<Responsable> responsables) {
+        this.responsables = responsables;
+    }
+
+    public List<Recursos> getRecursos() {
+        return recursos;
+    }
+
+    public void setRecursos(List<Recursos> recursos) {
+        this.recursos = recursos;
     }
 
     public List<PlanTrabajoActividad> getPlantrabajoActividadList() {

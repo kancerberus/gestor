@@ -83,7 +83,7 @@
                         
                         <p:column >        
                             <p:outputLabel value="Meta "/>
-                            <p:outputLabel value="#{uiPlanAccion}%" />                
+                            <p:outputLabel value="%" />                
                         </p:column>
                         <p:column  >
                             <h:outputLabel value="#{uiPlanAccion.avancePlanAccion}%"  style="#{uiPlanAccion.stylePorcentaje} color: #FFFFFF"/>
@@ -134,13 +134,12 @@
                 <p:column headerText="Nombre" filterBy="#{varPlanAccionDetalle.nombre}" >
                     <h:outputText value="#{varPlanAccionDetalle.nombre}" />
                 </p:column>
-                <p:column headerText="Programa" filterBy="#{varPlanAccionDetalle.programa.nombre}" >
-                    <h:outputText value="#{varPlanAccionDetalle.programa.nombre}" />
-                </p:column>
-                
                 <p:column headerText="Descripcion Hallazgo" filterBy="#{varPlanAccionDetalle.descripcionhallazgo}" >
                     <h:outputText value="#{varPlanAccionDetalle.descripcionhallazgo}" />
                 </p:column>                
+                <p:column headerText="Fuente Hallazgo" filterBy="#{varPlanAccionDetalle.fuentehallazgo.nombre}" >
+                    <h:outputText value="#{varPlanAccionDetalle.fuentehallazgo.nombre}" />
+                </p:column>
                 <p:column headerText="Clase Hallazgo" filterBy="#{varPlanAccionDetalle.clasehallazgo.nombre}" >
                     <h:outputText value="#{varPlanAccionDetalle.clasehallazgo.nombre}" />
                 </p:column>                

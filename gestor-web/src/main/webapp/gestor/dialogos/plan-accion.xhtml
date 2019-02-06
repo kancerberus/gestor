@@ -18,24 +18,7 @@
                     <h:panelGrid columns="2">
                         <h:outputLabel value="Nombre Plan Accion: " style="font-weight: bold;"/>
                         <p:inputText value="#{evaluacionPlanAccionDetalle.nombre}" placeholder="Nombre del plan de accción"
-                                     />
-                        
-                        <h:outputLabel value="Objetivo: " style="font-weight: bold;"/>
-                        <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.objetivo}" converter="convertidorGenerico"
-                                         style="text-align: center;width: 180px;">  
-                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
-                            <f:selectItems value="#{uiPlanAccion.objetivos}" var="obj" itemValue="#{obj}" itemLabel="#{obj.nombre}" />
-                            <p:ajax  update="prog" listener="#{uiPlanAccion.cargarObjetivo()}" />                            
-                        </p:selectOneMenu>
-
-                        <h:outputLabel value="Programa: " style="font-weight: bold;"/>
-                        <p:selectOneMenu  id="prog" value="#{evaluacionPlanAccionDetalle.programa}" converter="convertidorGenerico"
-                                         style="text-align: center;width: 180px;">  
-                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
-                            <f:selectItems value="#{uiPlanAccion.programas}" var="p" itemValue="#{p}" itemLabel="#{p.nombre}" />
-                            <p:ajax event="change" process="@this"/>
-                        </p:selectOneMenu>
-                        
+                                     />                        
                         
                         <h:outputLabel value="Centro De Trabajo: " style="font-weight: bold;"/>
                         <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.centrotrabajo}" converter="convertidorGenerico"
@@ -47,9 +30,14 @@
 
                         <h:outputLabel value="Descripción Del Hallazgo: " style="font-weight: bold;"/>
                         <p:inputTextarea value="#{evaluacionPlanAccionDetalle.descripcionhallazgo}" placeholder="Registra la descripción del hallazgo"/>
-
-
                         
+                        <h:outputLabel value="Fuente Hallazgo: " style="font-weight: bold;"/>
+                        <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.fuentehallazgo}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlanAccion.fuentehallazgos}" var="fh" itemValue="#{fh}" itemLabel="#{fh.nombre}" />
+                            <p:ajax event="change" process="@this"/>
+                        </p:selectOneMenu>
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <h:outputLabel value="Clase Del Hallazgo: " style="font-weight: bold;"/>
@@ -114,10 +102,10 @@
                     <p:columnGroup type="header">  
                         <p:row>  
                             <p:column  headerText="Opciones" />
-                            <p:column headerText="Nombre" filterBy="#{varPlanAccionDetalle.nombre}" sortBy="#{varPlanAccionDetalle.nombre}"/>
-                            <p:column headerText="Programa" filterBy="#{varPlanAccionDetalle.programa}" />
+                            <p:column headerText="Nombre" filterBy="#{varPlanAccionDetalle.nombre}" sortBy="#{varPlanAccionDetalle.nombre}"/>                            
                             <p:column headerText="Centro Trabajo" filterBy="#{varPlanAccionDetalle.centrotrabajo}" />
                             <p:column  headerText="Descripción Hallazgo"/>        
+                            <p:column headerText="Fuente Hallazgo" filterBy="#{varPlanAccionDetalle.fuentehallazgo}" />                            
                             <p:column headerText="Clase Hallazgo" filterBy="#{varPlanAccionDetalle.clasehallazgo}" />                            
                             <p:column  headerText="Descripción Accion"/>        
                             <p:column headerText="Tipo Accion" filterBy="#{varPlanAccionDetalle.tipoaccion}" />                            
@@ -144,16 +132,16 @@
                     </p:column>
                     <p:column >
                         <h:outputText value="#{varPlanAccionDetalle.nombre}"/>
-                    </p:column>                    
-                    <p:column>
-                        <h:outputText value="#{varPlanAccionDetalle.programa.nombre}"/>
-                    </p:column>
+                    </p:column>                                        
                     <p:column>
                         <h:outputText value="#{varPlanAccionDetalle.centrotrabajo.nombre}"/>
                     </p:column>
                     <p:column>
                         <p:commandButton style="margin-right:20px;" icon="ui-icon-comment" title="#{varPlanAccionDetalle.descripcionhallazgo}" />
                     </p:column>                    
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.fuentehallazgo.nombre}"/>
+                    </p:column>
                     <p:column>
                         <h:outputText value="#{varPlanAccionDetalle.clasehallazgo.nombre}"/>
                     </p:column>
