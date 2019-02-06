@@ -7,8 +7,6 @@ package com.gestor.gestor;
 
 import com.gestor.publico.CentroTrabajo;
 import com.gestor.publico.Establecimiento;
-import com.gestor.publico.PlanTrabajoObjetivo;
-import com.gestor.publico.PlanTrabajoPrograma;
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import com.gestor.seguimiento.PlanTrabajoActividad;
@@ -54,11 +52,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    protected EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK;
-    @Column(name = "cod_objetivo")
-    private Integer codObjetivo;
-    @Column(name = "cod_program")
-    private Integer codPrograma;
+    protected EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK;    
     @Column(name = "cod_ciclo")
     private String codCiclo;
     @Column(name = "cod_seccion")
@@ -81,9 +75,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     @Column(name = "descripcion_hallazgo")
     private String descripcionhallazgo;
     @Column(name = "observaciones")
-    private String observaciones;
-    @Column(name = "tipo_plan_accion")
-    private String tipo;
+    private String observaciones;    
     @Column(name = "eficacia")
     private Boolean eficacia;
     @Column(name = "registro")
@@ -91,9 +83,8 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     
     private String documentoUsuario;
     
-    private Responsable responsable = new Responsable();
-    private PlanTrabajoPrograma programa= new PlanTrabajoPrograma();
-    private PlanTrabajoObjetivo objetivo= new PlanTrabajoObjetivo();
+    private Responsable responsable = new Responsable();    
+    private FuenteHallazgo fuentehallazgo = new FuenteHallazgo();
     private ClaseHallazgo clasehallazgo = new ClaseHallazgo();
     private TipoAccion tipoaccion = new TipoAccion();
     private MotivoCorreccion motivocorreccion = new MotivoCorreccion();
@@ -122,14 +113,12 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.estado = estado;
     }
 
-    public EvaluacionPlanAccionDetalle(Long codEvaluacion, int codigoEstablecimiento, Long codPlan, Long codPlanDetalle, Integer codPlantrabajo) {
-        this.evaluacionPlanAccionDetallePK = new EvaluacionPlanAccionDetallePK(codEvaluacion, codigoEstablecimiento, codPlan, codPlanDetalle, codPlantrabajo);
+    public EvaluacionPlanAccionDetalle(Long codEvaluacion, int codigoEstablecimiento, Long codPlan, Long codPlanDetalle) {
+        this.evaluacionPlanAccionDetallePK = new EvaluacionPlanAccionDetallePK(codEvaluacion, codigoEstablecimiento, codPlan, codPlanDetalle);
     }
 
-    public EvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK, Integer codObjetivo, Integer codPrograma, String codCiclo, Integer codSeccion, Integer codDetalle, Integer codItem, String nombre, String descripcion, String estado, Usuarios usuarios, Date fechaRegistro, Date fechaPlazo, Date fechaFinalizado, String descripcionhallazgo, String observaciones, Boolean registro, Boolean eficacia, String tipo) {
-        this.evaluacionPlanAccionDetallePK = evaluacionPlanAccionDetallePK;
-        this.codObjetivo = codObjetivo;
-        this.codPrograma = codPrograma;
+    public EvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK, String codCiclo, Integer codSeccion, Integer codDetalle, Integer codItem, String nombre, String descripcion, String estado, Usuarios usuarios, Date fechaRegistro, Date fechaPlazo, Date fechaFinalizado, String descripcionhallazgo, String observaciones, Boolean registro, Boolean eficacia) {
+        this.evaluacionPlanAccionDetallePK = evaluacionPlanAccionDetallePK;        
         this.codCiclo = codCiclo;
         this.codSeccion = codSeccion;
         this.codDetalle = codDetalle;
@@ -145,39 +134,15 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.observaciones = observaciones;
         this.registro = registro;
         this.eficacia = eficacia;
-        this.tipo = tipo;
+        
     }
 
-    public String getTipo() {
-        return tipo;
+    public FuenteHallazgo getFuentehallazgo() {
+        return fuentehallazgo;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public Integer getCodObjetivo() {
-        return codObjetivo;
-    }
-
-    public void setCodObjetivo(Integer codObjetivo) {
-        this.codObjetivo = codObjetivo;
-    }
-
-    public Integer getCodPrograma() {
-        return codPrograma;
-    }
-
-    public void setCodPrograma(Integer codPrograma) {
-        this.codPrograma = codPrograma;
-    }
-
-    public PlanTrabajoObjetivo getObjetivo() {
-        return objetivo;
-    }
-
-    public void setObjetivo(PlanTrabajoObjetivo objetivo) {
-        this.objetivo = objetivo;
+    public void setFuentehallazgo(FuenteHallazgo fuentehallazgo) {
+        this.fuentehallazgo = fuentehallazgo;
     }
 
     public PlanTrabajoActividad getPlantrabajoactividad() {
@@ -235,15 +200,6 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     public void setMotivocorreccion(MotivoCorreccion motivocorreccion) {
         this.motivocorreccion = motivocorreccion;
     }
-
-    public PlanTrabajoPrograma getPrograma() {
-        return programa;
-    }
-
-    public void setPrograma(PlanTrabajoPrograma programa) {
-        this.programa = programa;
-    }
-
 
     public String getDescripcionhallazgo() {
         return descripcionhallazgo;

@@ -5,9 +5,11 @@
  */
 package com.gestor.seguimiento;
 
+import com.gestor.gestor.Recursos;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.PlanTrabajoObjetivo;
 import com.gestor.publico.PlanTrabajoPrograma;
+import com.gestor.publico.Responsable;
 import java.io.Serializable;
 import java.util.Date;
 import javax.faces.bean.ManagedBean;
@@ -44,7 +46,11 @@ public class PlanTrabajoActividad implements Serializable {
     @Column(name = "cod_objetivo")
     private Integer codObjetivo;    
     @Column(name = "cod_programa")
-    private Integer codPrograma;        
+    private Integer codPrograma;  
+    @Column(name = "cedula")
+    private String cedula;
+    @Column(name = "cod_recursos")
+    private Integer codRecursos;  
     @Column(name = "descripcion")
     private String descripcion;
     @Column(name = "fecha_venc")
@@ -58,22 +64,57 @@ public class PlanTrabajoActividad implements Serializable {
     private Establecimiento establecimiento = new Establecimiento();
     private PlanTrabajoObjetivo objetivo = new PlanTrabajoObjetivo();
     private PlanTrabajoPrograma programa= new PlanTrabajoPrograma();
+    private Responsable responsable= new Responsable();
+    private Recursos recursos = new Recursos();
     
     
     public PlanTrabajoActividad() {
     }
 
-    public PlanTrabajoActividad(Integer codEstablecimiento, Integer codPlantrabajo, Integer codActividad, Integer codObjetivo, Integer codPrograma, String descripcion, Date fechaVenc, String estado, Date fechaRegistro) {
+    public PlanTrabajoActividad(Integer codEstablecimiento, Integer codPlantrabajo, Integer codActividad, Integer codObjetivo, Integer codPrograma, String cedula, Integer codRecurso, String descripcion, Date fechaVenc, String estado, Date fechaRegistro) {
         this.codEstablecimiento = codEstablecimiento;
         this.codPlantrabajo = codPlantrabajo;
         this.codActividad = codActividad;
         this.codObjetivo = codObjetivo;
-        this.codPrograma = codPrograma;        
+        this.codPrograma = codPrograma;  
+        this.codRecursos = codRecurso;
+        this.cedula = cedula;
         this.descripcion = descripcion;
         this.fechaVenc = fechaVenc;
         this.estado = estado;
-        this.fechaRegistro = fechaRegistro;        
+        this.fechaRegistro = fechaRegistro;             
     }   
+
+    public String getCedula() {
+        return cedula;
+    }
+
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
+    }
+
+    public Integer getCodRecursos() {
+        return codRecursos;
+    }
+
+    public void setCodRecursos(Integer codRecursos) {
+        this.codRecursos = codRecursos;
+    }
+
+    public Recursos getRecursos() {
+        return recursos;
+    }
+    public void setRecursos(Recursos recursos) {
+        this.recursos = recursos;
+    }
+
+    public Responsable getResponsable() {
+        return responsable;
+    }
+
+    public void setResponsable(Responsable responsable) {
+        this.responsable = responsable;
+    }
 
     public Integer getCodActividad() {
         return codActividad;
