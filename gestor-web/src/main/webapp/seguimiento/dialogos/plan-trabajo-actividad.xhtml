@@ -132,7 +132,7 @@
                     <p:commandButton value="Generar Actividad" icon="ui-icon-disk" action="#{uiPlantrabajo.guardarPlantrabajoactividad()}" process="@parent pgPlanTrabajoActividad" update="pgPlanTrabajoActividad dtPlantrabajoactividad"
                                      />
                     <p:commandButton value="Limpiar" action="#{uiPlantrabajo.limpiarPlantrabajoactividad()}"
-                                     icon="ui-icon-cancel"
+                                     icon="ui-icon-cancel"  disabled="#{empty varPlantrabajoactividad}"
                                      update="pgPlanTrabajoActividad dtPlantrabajoactividad"/>
                 </h:panelGrid>
             </p:toolbarGroup>

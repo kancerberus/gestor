@@ -95,11 +95,7 @@ public class UIPlanTrabajo implements Serializable{
     
     private void cargarPlantrabajo() {
         try {        
-            evaluacion= (Evaluacion) UtilJSF.getBean("varEvaluacion"); 
-            if(evaluacion==null){
-                plantrabajo= (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");
-                evaluacion.getEstablecimiento().setCodigoEstablecimiento(plantrabajo.getCodEstablecimiento());
-            }
+            evaluacion= (Evaluacion) UtilJSF.getBean("varEvaluacion");             
             this.plantrabajoList = new ArrayList<>();
             GestorPlanTrabajo gestorPlantrabajo= new GestorPlanTrabajo();
             this.plantrabajoList.addAll((Collection<? extends PlanTrabajo>) gestorPlantrabajo.cargarPlantrabajoList(evaluacion.getEstablecimiento().getCodigoEstablecimiento()));
@@ -146,8 +142,9 @@ public class UIPlanTrabajo implements Serializable{
             PlanTrabajoObjetivo obj= new PlanTrabajoObjetivo(evaluacion.getEvaluacionPK().getCodigoEstablecimiento(), plantrabajo.getCodPlantrabajo(), objetivo.getCodObjetivo(), objetivo.getNombre());
             gestorObjetivo.validarObjetivo(obj);
             gestorObjetivo.almacenarObjetivo(obj);                        
+            cargarObjetivo();
             UtilMSG.addSuccessMsg("Objetivo almacenado correctamente.");                 
-            this.cargarObjetivo();
+            
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());
@@ -162,7 +159,7 @@ public class UIPlanTrabajo implements Serializable{
         try {            
             plantrabajo = (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");            
             
-            if(plantrabajo.getCodPlantrabajo() == null){
+            if(plantrabajo == null){
                 plantrabajo = (PlanTrabajo) UtilJSF.getBean("planTrabajo");                
             }
             this.objetivoList = new ArrayList<>();
@@ -194,12 +191,12 @@ public class UIPlanTrabajo implements Serializable{
     }
     
     
-    public void limpiarObjetivo(){
-        objetivo = new PlanTrabajoObjetivo();
-        this.cargarObjetivo();
+    public void limpiarObjetivo(){        
+        this.objetivo.equals(0);
+        
     }
     
-    public void subirItemObjetivo() {
+    public void subirItemObjetivo() {        
         objetivo = (PlanTrabajoObjetivo) UtilJSF.getBean("varObjetivo");
         objetivoList.remove(objetivo);
     }
@@ -374,6 +371,7 @@ public class UIPlanTrabajo implements Serializable{
     }
     
     public void limpiarPrograma() {
+        UtilJSF.setBean("varPrograma", programa=null, UtilJSF.SESSION_SCOPE);                    
         programa=new PlanTrabajoPrograma();
         objetivo = (PlanTrabajoObjetivo) UtilJSF.getBean("objetivo");                                             
     }
@@ -422,7 +420,7 @@ public class UIPlanTrabajo implements Serializable{
             UtilMSG.addSuccessMsg("Actividad cerrada correctamente.");
             UtilJSF.setBean("varPlantrabajoactividad", plantrabajoActividad, UtilJSF.SESSION_SCOPE);
             this.cargarPlantrabajoactividad();
-            //this.limpiarPlantrabajoactividad();
+            this.limpiarPlantrabajoactividad();
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());
@@ -464,18 +462,6 @@ public class UIPlanTrabajo implements Serializable{
         }
 
     }   
-    
-    
-    private void cargarListadetalles() {
-        try {
-            gestorLista = new GestorLista();
-            if(listadetalles.isEmpty()){
-            listadetalles.addAll((Collection<? extends ListaDetalle>) gestorLista.cargarListadetalles());
-            }
-        } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
-        }
-    }
 
     public List<Responsable> getResponsables() {
         return responsables;
@@ -510,8 +496,13 @@ public class UIPlanTrabajo implements Serializable{
     }
         
     public void limpiarPlantrabajo() throws Exception {
-        this.cargarPlantrabajo();        
-        plantrabajo= new PlanTrabajo();
+        UtilJSF.setBean("varPlantrabajo", plantrabajo=null, UtilJSF.SESSION_SCOPE);            
+        plantrabajo= new PlanTrabajo();                        
+    }
+    
+    public void limpiarPlantrabajoactividad() throws Exception {
+        UtilJSF.setBean("varPlantrabajoactividad", plantrabajoActividad=null, UtilJSF.SESSION_SCOPE);                    
+        plantrabajoActividad= new PlanTrabajoActividad();
         
     }
 

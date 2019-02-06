@@ -29,7 +29,7 @@
                         
                     </p:commandButton>
                     <p:commandButton value="Limpiar" action="#{uiPlantrabajo.limpiarPlantrabajo()}"
-                                     icon="ui-icon-cancel" 
+                                     icon="ui-icon-cancel"  disabled="#{empty varPlantrabajo}"
                                      update="formPlantrabajo"/>
                 </h:panelGrid>
                 <p:dataTable value="#{uiPlantrabajo.plantrabajoList}" var="varPlantrabajo" emptyMessage="No hay planes trabajo"
