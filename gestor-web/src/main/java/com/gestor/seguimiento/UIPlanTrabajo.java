@@ -249,7 +249,7 @@ public class UIPlanTrabajo implements Serializable{
             gestorPlantrabajo.almacenarPlantrabajo(pltrabajo);            
             this.cargarPlantrabajo();
             UtilMSG.addSuccessMsg("Plan Trabajo almacenado correctamente.");
-            UtilJSF.setBean("varPlantrabajo", plantrabajo, UtilJSF.SESSION_SCOPE);
+            UtilJSF.setBean("varPlantrabajo", plantrabajo=null, UtilJSF.SESSION_SCOPE);
             
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
