@@ -5,7 +5,7 @@
  */
 package com.gestor.seguimiento;
 
-import com.gestor.controller.GestorGeneral;
+
 import com.gestor.entity.App;
 import com.gestor.entity.Dialogo;
 import com.gestor.entity.UtilJSF;
@@ -13,20 +13,14 @@ import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
 import com.gestor.entity.UtilTexto;
 import com.gestor.gestor.Evaluacion;
-import com.gestor.gestor.EvaluacionPlanAccion;
-import com.gestor.gestor.EvaluacionPlanAccionDetalle;
-import com.gestor.gestor.EvaluacionPlanAccionDetallePK;
-import com.gestor.gestor.EvaluacionPlanAccionPK;
 import com.gestor.gestor.Recursos;
 import com.gestor.gestor.controlador.GestorEvaluacion;
 import com.gestor.gestor.controlador.GestorEvaluacionCapacitacion;
-import com.gestor.gestor.controlador.GestorEvaluacionPlanAccion;
 import com.gestor.modelo.Sesion;
 import com.gestor.publico.ListaDetalle;
 import com.gestor.publico.PlanTrabajoObjetivo;
 import com.gestor.publico.PlanTrabajoPrograma;
 import com.gestor.publico.Responsable;
-import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorLista;
 import com.gestor.publico.controlador.GestorObjetivo;
 import com.gestor.publico.controlador.GestorPrograma;
@@ -130,19 +124,20 @@ public class UIPlanTrabajo implements Serializable{
     }
     
     public void guardarObjetivo() {
-        try {              
-            evaluacion = (Evaluacion) UtilJSF.getBean("evaluacion");              
-            UtilJSF.setBean("planTrabajo", plantrabajo, UtilJSF.SESSION_SCOPE); 
+        try {                                
+            PlanTrabajo pt = (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");     
+            UtilJSF.setBean("varPlantrabajo", pt, UtilJSF.SESSION_SCOPE);
+            
             if(objetivoList.isEmpty()){
                 objetivo.setCodObjetivo(1);
             }else{
                 objetivo.setCodObjetivo(objetivoList.size()+1);
-            }     
+            }          
             
-            PlanTrabajoObjetivo obj= new PlanTrabajoObjetivo(evaluacion.getEvaluacionPK().getCodigoEstablecimiento(), plantrabajo.getCodPlantrabajo(), objetivo.getCodObjetivo(), objetivo.getNombre());
+            PlanTrabajoObjetivo obj= new PlanTrabajoObjetivo(pt.getCodEstablecimiento(), pt.getCodPlantrabajo(), objetivo.getCodObjetivo(), objetivo.getNombre());
             gestorObjetivo.validarObjetivo(obj);
             gestorObjetivo.almacenarObjetivo(obj);                        
-            cargarObjetivo();
+            this.cargarObjetivo();
             UtilMSG.addSuccessMsg("Objetivo almacenado correctamente.");                 
             
         } catch (Exception e) {
@@ -157,7 +152,8 @@ public class UIPlanTrabajo implements Serializable{
     
     public void cargarObjetivo() {
         try {            
-            PlanTrabajo pt = (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");  
+            PlanTrabajo pt= (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");                                           
+            UtilJSF.setBean("varPlantrabajo", pt, UtilJSF.SESSION_SCOPE);
             this.objetivoList = new ArrayList<>();
             gestorObjetivo = new GestorObjetivo();
             this.objetivoList.addAll((Collection<? extends PlanTrabajoObjetivo>) gestorObjetivo.cargarListaObjetivo(pt.getCodEstablecimiento(),pt.getCodPlantrabajo()));            
@@ -188,7 +184,7 @@ public class UIPlanTrabajo implements Serializable{
     
     
     public void limpiarObjetivo(){        
-        this.objetivo.equals(0);
+        objetivo=new PlanTrabajoObjetivo();
         
     }
     
@@ -245,7 +241,8 @@ public class UIPlanTrabajo implements Serializable{
             gestorPlantrabajo.almacenarPlantrabajo(pltrabajo);            
             this.cargarPlantrabajo();
             UtilMSG.addSuccessMsg("Plan Trabajo almacenado correctamente.");
-            UtilJSF.setBean("varPlantrabajo", plantrabajo=null, UtilJSF.SESSION_SCOPE);
+            UtilJSF.setBean("varPlantrabajo", plantrabajo, UtilJSF.SESSION_SCOPE);
+            
             
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
