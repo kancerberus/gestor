@@ -130,7 +130,7 @@ public class UIPlanTrabajo implements Serializable{
             
             if(objetivoList.isEmpty()){
                 objetivo.setCodObjetivo(1);
-            }else{
+            }if(objetivo.getCodObjetivo()==null){
                 objetivo.setCodObjetivo(objetivoList.size()+1);
             }          
             
@@ -189,21 +189,19 @@ public class UIPlanTrabajo implements Serializable{
     }
     
     public void subirItemObjetivo() {        
-        objetivo = (PlanTrabajoObjetivo) UtilJSF.getBean("varObjetivo");
-        objetivoList.remove(objetivo);
+        objetivo = (PlanTrabajoObjetivo) UtilJSF.getBean("varObjetivo");        
     }
     
     public void subirItemPlantrabajo() {
         plantrabajo = (PlanTrabajo) UtilJSF.getBean("varPlantrabajo");
-        UtilJSF.setBean("planTrabajo", plantrabajo, UtilJSF.SESSION_SCOPE); 
-        plantrabajoList.remove(plantrabajo);        
+        UtilJSF.setBean("planTrabajo", plantrabajo, UtilJSF.SESSION_SCOPE);         
     }
     
     public void subirItemPlantrabajoactividad() {        
         plantrabajoActividad = (PlanTrabajoActividad) UtilJSF.getBean("varPlantrabajoactividad");   
         this.cargarPrograma();
-        UtilJSF.setBean("planTrabajoactividad", plantrabajoActividad, UtilJSF.SESSION_SCOPE); 
-        plantrabajoActividadList.remove(plantrabajoActividad);        
+        this.cargarObjetivoactividad();
+        UtilJSF.setBean("planTrabajoactividad", plantrabajoActividad, UtilJSF.SESSION_SCOPE);         
     }
 
     
@@ -227,13 +225,13 @@ public class UIPlanTrabajo implements Serializable{
             UtilJSF.setBean("varEvaluacion", evaluacion, UtilJSF.APPLICATION_SCOPE);                                     
             if(plantrabajoList.isEmpty()){
                 plantrabajo.setCodPlantrabajo(1);
-            }else{
+            }if(plantrabajo.getCodPlantrabajo()==null){
                 plantrabajo.setCodPlantrabajo(plantrabajoList.size()+1);
             }                       
             plantrabajo.setPeso(100);
             plantrabajo.setEstado("A");
             
-            PlanTrabajo pltrabajo = new PlanTrabajo( evaluacion.getEvaluacionPK().getCodigoEstablecimiento(), plantrabajo.getCodPlantrabajo(), plantrabajo.getDescripcion(), plantrabajo.getFechaVenc(), plantrabajo.getMeta(), plantrabajo.getPeso(), 
+            PlanTrabajo pltrabajo = new PlanTrabajo( evaluacion.getEvaluacionPK().getCodigoEstablecimiento(), plantrabajo.getCodPlantrabajo(), plantrabajo.getDescripcion(), plantrabajo.getFechaVenc(), plantrabajo.getPeso(), plantrabajo.getMeta(), 
                     plantrabajo.getEstado(), null
             );            
             
@@ -269,8 +267,7 @@ public class UIPlanTrabajo implements Serializable{
     }
     
     public void subirItemPrograma() {                        
-        programa = (PlanTrabajoPrograma)  UtilJSF.getBean("varPrograma");
-        programaList.remove(programa);                     
+        programa = (PlanTrabajoPrograma)  UtilJSF.getBean("varPrograma");                          
     }
     
     public void cargarPrograma() {
@@ -325,7 +322,7 @@ public class UIPlanTrabajo implements Serializable{
             if(programaList.isEmpty()){
                 programa.setCodPrograma(1);
                 programa.setPeso(100);
-            }else{
+            }if(programa.getCodPrograma()==null){
                 programa.setCodPrograma(programaList.size()+1);
                 Integer pr= programaList.size()+1;
                 programa.setPeso(100/pr);
@@ -435,7 +432,7 @@ public class UIPlanTrabajo implements Serializable{
             
             if(plantrabajoActividadList.isEmpty()){
                 plantrabajoActividad.setCodActividad(1);
-            }else{
+            }if(plantrabajoActividad.getCodActividad()==null){
                 plantrabajoActividad.setCodActividad(plantrabajoActividadList.size()+1);
             }
             
@@ -449,7 +446,7 @@ public class UIPlanTrabajo implements Serializable{
             
             UtilMSG.addSuccessMsg("Actividad almacenada correctamente.");
             UtilJSF.setBean("varPlantrabajoactividad", plantrabajoActividad, UtilJSF.SESSION_SCOPE);            
-            this.cargarPlantrabajoactividad();
+            this.cargarPlantrabajoactividad();            
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());
@@ -499,7 +496,7 @@ public class UIPlanTrabajo implements Serializable{
     }
     
     public void limpiarPlantrabajoactividad() throws Exception {
-        UtilJSF.setBean("varPlantrabajoactividad", plantrabajoActividad=null, UtilJSF.SESSION_SCOPE);                    
+        this.cargarPlantrabajoactividad();
         plantrabajoActividad= new PlanTrabajoActividad();
         
     }
