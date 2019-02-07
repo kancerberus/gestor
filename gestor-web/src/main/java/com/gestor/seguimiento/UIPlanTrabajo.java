@@ -240,7 +240,7 @@ public class UIPlanTrabajo implements Serializable{
             this.cargarPlantrabajo();
             UtilMSG.addSuccessMsg("Plan Trabajo almacenado correctamente.");
             UtilJSF.setBean("varPlantrabajo", plantrabajo, UtilJSF.SESSION_SCOPE);
-            
+            this.limpiarPlantrabajo();
             
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
@@ -447,6 +447,7 @@ public class UIPlanTrabajo implements Serializable{
             UtilMSG.addSuccessMsg("Actividad almacenada correctamente.");
             UtilJSF.setBean("varPlantrabajoactividad", plantrabajoActividad, UtilJSF.SESSION_SCOPE);            
             this.cargarPlantrabajoactividad();            
+            this.limpiarPlantrabajoactividad();
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addWarningMsg(e.getMessage());
