@@ -66,6 +66,7 @@ public class UIPlanAccion {
     private Boolean modificarActivo = Boolean.FALSE;
     private Boolean filtroActivo = Boolean.TRUE;
     private Establecimiento establecimiento = new Establecimiento();
+    private Integer tipoSeleccionado;
     //filtros
     private List<Establecimiento> establecimientoList = new ArrayList<>();
     private List<Establecimiento> establecimientoListSeleccionado = new ArrayList<>();
@@ -230,7 +231,7 @@ public class UIPlanAccion {
         }
     }
 
-    private List<String> filtrarOpcionesSeleccionadas() {
+    private List<String> filtrarOpcionesSeleccionadas() throws Exception {
         List<String> condicionesConsulta = new ArrayList<>();
         condicionesConsulta.add(App.CONDICION_WHERE);
 
@@ -242,6 +243,13 @@ public class UIPlanAccion {
             condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena));
         } else {
             condicionesConsulta.add(Boolean.TRUE.toString());
+        }*/
+        
+        /*if(tipoSeleccionado!=0){
+         evaluacionPlanAccionDetalles = new ArrayList<>();
+            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
+            
+            evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(tipoSeleccionado));
         }*/
         
         if(establecimiento == null){   
@@ -708,6 +716,14 @@ public class UIPlanAccion {
                 UtilLog.generarLog(this.getClass(), e);
             }
         }
+    }
+
+    public Integer getTipoSeleccionado() {
+        return tipoSeleccionado;
+    }
+
+    public void setTipoSeleccionado(Integer tipoSeleccionado) {
+        this.tipoSeleccionado = tipoSeleccionado;
     }
 
     public List<FuenteHallazgo> getFuentehallazgos() {

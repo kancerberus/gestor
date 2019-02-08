@@ -271,8 +271,9 @@ public class UIPlanTrabajo implements Serializable{
     }
     
     public void cargarPrograma() {
-        try {                          
-            objetivo = (PlanTrabajoObjetivo) UtilJSF.getBean("objetivo");          
+        try {                                      
+            objetivo = (PlanTrabajoObjetivo)  UtilJSF.getBean("varObjetivo");   
+            UtilJSF.setBean("objetivo", this.objetivo , UtilJSF.SESSION_SCOPE);                            
             if (objetivo==null){
                 objetivo = new PlanTrabajoObjetivo();
                 objetivo.setCodEstablecimiento(plantrabajoActividad.getObjetivo().getCodEstablecimiento());
@@ -281,7 +282,17 @@ public class UIPlanTrabajo implements Serializable{
             }
             this.programaList = new ArrayList<>();
             gestorPrograma = new GestorPrograma();
-            this.programaList.addAll((Collection<? extends PlanTrabajoPrograma>) gestorPrograma.cargarListaProgramas(objetivo.getCodEstablecimiento(),objetivo.getCodObjetivo(), objetivo.getCodPlantrabajo()));                                    
+            this.programaList.addAll((Collection<? extends PlanTrabajoPrograma>) gestorPrograma.cargarListaProgramas(objetivo.getCodEstablecimiento(),objetivo.getCodObjetivo(), objetivo.getCodPlantrabajo()));                                                
+        } catch (Exception ex) {            
+        }
+    }
+    
+    public void cargarProgramaList() {
+        try {                          
+            programa = (PlanTrabajoPrograma) UtilJSF.getBean("varPrograma");                      
+            this.programaList = new ArrayList<>();
+            gestorPrograma = new GestorPrograma();
+            this.programaList.addAll((Collection<? extends PlanTrabajoPrograma>) gestorPrograma.cargarListaProgramas(programa.getCodEstablecimiento(),programa.getCodObjetivo(), programa.getCodPlantrabajo()));                                    
         } catch (Exception ex) {            
         }
     }
@@ -313,10 +324,7 @@ public class UIPlanTrabajo implements Serializable{
     }
     
     public void guardarPrograma() {
-        try {            
-            
-            objetivo = (PlanTrabajoObjetivo) UtilJSF.getBean("objetivo");                
-            UtilJSF.setBean("varObjetivo", objetivo, UtilJSF.SESSION_SCOPE);  
+        try {                        
             GestorPrograma gestorPrograma= new GestorPrograma();                     
             
             if(programaList.isEmpty()){
@@ -332,10 +340,11 @@ public class UIPlanTrabajo implements Serializable{
             gestorPrograma.validarPrograma(pro);
             gestorPrograma.almacenarPrograma(pro);
             
-            this.cargarPrograma();  
-            this.limpiarPrograma();
+            
             UtilMSG.addSuccessMsg("Programa almacenado correctamente.");
-            UtilJSF.setBean("programa", new PlanTrabajoPrograma(), UtilJSF.SESSION_SCOPE);            
+            UtilJSF.setBean("varPrograma", pro, UtilJSF.SESSION_SCOPE);            
+            this.cargarProgramaList();
+            this.limpiarPrograma();
 
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
@@ -347,14 +356,12 @@ public class UIPlanTrabajo implements Serializable{
         }
     }
     
-    public void dialogoPrograma() {
+     public void dialogoPrograma() {
         try {        
             programa = new PlanTrabajoPrograma();
             Dialogo dialogo = new Dialogo("dialogos/programa.xhtml", "Crear Programa", "60%", "top: 0px;");
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
-            UtilJSF.execute("PF('dialog').show();");
-            objetivo = (PlanTrabajoObjetivo) UtilJSF.getBean("varObjetivo");                
-            UtilJSF.setBean("objetivo", objetivo, UtilJSF.SESSION_SCOPE);                        
+            UtilJSF.execute("PF('dialog').show();");            
             this.cargarPrograma();
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);

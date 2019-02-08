@@ -30,7 +30,11 @@
                                 <f:selectItem itemLabel="Seleccione Evaluador" noSelectionOption="true"/>
                                 <f:selectItems value="#{uiPlanAccion.usuariosList}" var="varUsuarios" itemLabel="#{varUsuarios.nombreApellido}" itemValue="#{varUsuarios}"/>
                         </p:selectOneMenu>
-
+                        <h:outputLabel value="Tipo Actividad"/>
+                        <p:selectManyMenu id="basic" value="#{uiPlanAccion.tipoSeleccionado}" filterMatchMode="contains" styleClass="Centro">                            
+                                <f:selectItem itemLabel="Plan Trabajo" itemValue="1" />
+                                <f:selectItem itemLabel="Evaluacion" itemValue="0" />
+                        </p:selectManyMenu>                        
                         <h:outputLabel value="Empresas"/>
                         <p:selectOneListbox  value="#{uiPlanAccion.establecimiento}" converter="convertidorGenerico" var="t" filter="true" filterMatchMode="contains" style="width: 90%; margin-bottom: 30%;font-family: bolder" styleClass="Centro"
                                                                                         >
@@ -189,11 +193,10 @@
                     </f:facet>
                     <h:outputText value="#{varPlanAccionDetalle.estado}" />
                 </p:column>
-
-
+                <p:column headerText="Nombre" filterBy="#{varPlanAccionDetalle.plantrabajoactividad.nombre}" >
+                    <h:outputText value="#{varPlanAccionDetalle.plantrabajoactividad.descripcion}"/>
+                </p:column>
             </p:dataTable>
-
-
             <p:separator/>
             <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}" width="#{dialogo.width}"
                       onHide="limpiarModal()">
