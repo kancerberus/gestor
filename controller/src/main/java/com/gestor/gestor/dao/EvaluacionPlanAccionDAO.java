@@ -30,6 +30,7 @@ import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.UsuariosPK;
+import com.gestor.seguimiento.PlanTrabajoActividad;
 
 import conexion.Consulta;
 import java.sql.Connection;
@@ -159,6 +160,45 @@ public class EvaluacionPlanAccionDAO {
             }
         }
     }
+    
+    
+            
+    /*public Collection<? extends EvaluacionPlanAccionDetalle> cargarListaEvaluacionPlanAcciones(int tipo) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT actividad"
+                    + " FROM gestor.evaluacion_plan_accion_detalle EPAD"                    
+                    + " JOIN seguimiento.plan_trabajo_actividad pta USING (codigo_establecimiento)"
+                    
+            );
+            rs = consulta.ejecutar(sql);
+            Collection<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles = new ArrayList<EvaluacionPlanAccionDetalle>();
+            while (rs.next()) {
+                EvaluacionPlanAccionDetalle epad = new EvaluacionPlanAccionDetalle(new EvaluacionPlanAccionDetallePK(codEvaluacion, codigoEstablecimiento, rs.getLong("cod_plan"), rs.getLong("cod_plan_detalle")),
+                        rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("nombre"), rs.getString("descripcion"), rs.getString("estado"),
+                        new Usuarios(
+                                new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
+                        ), rs.getDate("fecha_registro"), rs.getDate("fecha_plazo"), rs.getDate("fecha_actualiza"), rs.getString("descripcion_hallazgo"),
+                        rs.getString("observaciones"), rs.getBoolean("registro"), rs.getBoolean("eficacia")
+                );                
+                epad.setPlantrabajoactividad(new PlanTrabajoActividad(tipo, tipo, tipo, tipo, tipo, cedula, tipo, descripcion, fechaVenc, estado, fechaRegistro));
+
+                evaluacionPlanAccionDetalles.add(epad);
+
+            }
+            return evaluacionPlanAccionDetalles;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }*/
 
     public Long consultarEvaluacionPlanAccion(Long codEvaluacion, int codigoEstablecimiento, String estado) throws SQLException {
         ResultSet rs = null;

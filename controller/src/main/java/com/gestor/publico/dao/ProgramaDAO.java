@@ -35,6 +35,7 @@ public class ProgramaDAO {
                     "SELECT codigo_establecimiento, cod_plan_trabajo, cod_programa, cod_objetivo, nombre, peso "                    
                     + " FROM plan_trabajo_programa "    
                     + " WHERE codigo_establecimiento='"+codEstablecimiento+"' AND cod_objetivo = '"+codObjetivo+"' AND cod_plan_trabajo='"+codPlantrabajo+"' "
+                    + " ORDER BY cod_programa"
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {

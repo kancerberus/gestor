@@ -95,6 +95,16 @@ public class GestorEvaluacionPlanAccion extends Gestor {
             this.cerrarConexion();
         }
     }
+    
+    /*public Collection<? extends EvaluacionPlanAccionDetalle> cargarListaEvaluacionPlanAccion(Integer tipo) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionPlanAccionDAO evaluacionPlanAccionDAO = new EvaluacionPlanAccionDAO(conexion);
+            return evaluacionPlanAccionDAO.cargarListaEvaluacionPlanAcciones(tipo);
+        } finally {
+            this.cerrarConexion();
+        }
+    }*/
 
     public Collection<? extends EvaluacionPlanAccionDetalle> cargarListaEvaluacionPlanAccion(String condicion) throws Exception {
         try {
