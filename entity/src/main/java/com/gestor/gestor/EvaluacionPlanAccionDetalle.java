@@ -91,6 +91,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private CentroTrabajo centrotrabajo = new CentroTrabajo();    
     private PlanTrabajoActividad plantrabajoactividad = new PlanTrabajoActividad();
     
+    
     private Usuarios usuarios;
 
     private Date fechaRegistro;    
