@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <div style="margin-top: 2%; margin-bottom: 5%">
+        <p:outputPanel id="opCerrarplanaccion">             
+            <h2>                
+                <p class="letraBlueBackgroundWhite">PlanAccion #{uiPlanAccion.evaluacionPlanAccionDetalle.nombre}</p>
+            </h2>
+            <h:panelGrid columns="2" >
+                <h:outputLabel  style="font-weight: bold;" value="Registro" />
+                <p:selectBooleanCheckbox value="#{uiPlanAccion.evaluacionPlanAccionDetalle.registro}" />
+
+                <h:outputLabel  style="font-weight: bold;" value="Evaluacion eficacia" />
+                <p:selectBooleanCheckbox value="#{uiPlanAccion.evaluacionPlanAccionDetalle.eficacia}"/>
+                    
+            </h:panelGrid>
+            
+            <h:panelGrid columns="2">
+                <p:commandButton value="Finalizar" action="#{uiPlanAccion.cerrarPlanAccionDetalle()}"
+                                     icon="ui-icon-disk"
+                                     update=":formPlanesAccion:opCerrarplanaccion"/>
+                <p:commandButton value="Cancelar" action="#{uiPlanAccion}"
+                                     icon="ui-icon-cancel"
+                                     update=":formPlanesAccion:opCerrarplanaccion"/>
+            </h:panelGrid>           
+        </p:outputPanel>            
+    </div>
+</ui:composition>
+
+

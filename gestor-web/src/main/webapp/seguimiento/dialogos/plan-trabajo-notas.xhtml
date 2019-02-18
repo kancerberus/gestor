@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <div style="margin-top: 10px; text-align: center;">
+        <p:outputPanel id="opPlanTrabajoNota">
+            <h3>                
+                <h:outputText value="Nota de Actividad"/>
+                #{uiPlantrabajo.plantrabajoActividad.descripcion}
+            </h3>
+
+            <br/>
+            <h:panelGrid columns="2" cellspacing="10">
+                <h:panelGrid id="pgPlanTrabajoActividadNota" columns="2" cellspacing="10">
+
+                    <h:outputLabel value="Descripción: " style="font-weight: bold;"/>
+                    <p:inputTextarea value="#{uiPlantrabajo.plantrabajoActividadnota.descripcion}" placeholder="Registra la nota de seguimiento de la actividad"/>
+
+                </h:panelGrid>  
+
+                <p:dataTable id="dtPlanTrabajoActividadNota"  value="#{uiPlantrabajo.plantrabajoActividad.planTrabajoactividadNotasList}" var="varPlanTrabajoActividadNota" emptyMessage="No se tienen notas de seguimiento registradas."
+                             rowStyleClass="letra-xx-small-centro" widgetVar="plantrabajoactividadnotasTable"
+                             rowHover="true">
+                    <f:facet name="header">
+                        Notas de Seguimiento
+                    </f:facet>
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column  headerText="Opciones" />
+                            <p:column headerText="Nombre" filterBy="#{varPlanTrabajoActividadNota.nombre}" sortBy="#{varPlanTrabajoActividadNota.nombre}"/>
+                            <p:column  headerText="Descripción"/>
+                            <p:column  headerText="Fecha" sortBy="#{varPlanTrabajoActividadNota.fechaRegistro}"/>                            
+                            <p:column  headerText="Estado" filterBy="#{varPlanTrabajoActividadNota.estado}"/>
+                        </p:row> 
+                    </p:columnGroup>
+
+                    <p:column>
+                        <p:panelGrid columns="3">
+                            <p:commandButton icon="ui-icon-pencil" title="Modificar Actividad Nota"
+                                             action="#{uiPlantrabajo.modificarNotaSeguimiento()}"
+                                             disabled="#{varPlanTrabajoActividadNota.nombre eq 'REGISTRO INICIAL'}"
+                                             update="formPlanesTrabajo:opPlanTrabajoNota"/>
+                            
+                            <p:commandButton icon="ui-icon-trash" title="Eliminar Nota de Actividad"
+                                             disabled="true"
+                                             update="formPlanesTrabajo:opPlanTrabajoNota">
+                                <p:confirm header="Eliminar Nota" message="Desea eliminar la nota ?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:panelGrid>
+                    </p:column>
+                    <p:column >
+                        <h:outputText value="#{varPlanTrabajoActividadNota.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanTrabajoActividadNota.descripcion}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanTrabajoActividadNota.fechaRegistro}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>                    
+                    <p:column>
+                        <h:outputText value="#{varPlanTrabajoActividadNota.estado}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:panelGrid>
+        </p:outputPanel>
+        <br/>
+        <p:toolbar id="opcionesMenuPlantrabajoActividadNota" style="height: 45px;">
+            <p:toolbarGroup align="center" style="margin: auto auto;  align-content: center">
+                <h:panelGrid columns="3" cellspacing="10" style="align-content: center; display: inline-block;">
+                    <p:commandButton value="Generar Nota" icon="ui-icon-disk" action="#{uiPlantrabajo.procesarPlanTrabajoActividadNota()}"
+                                    process="@parent pgPlanTrabajoActividadNota" update="pgPlanTrabajoActividadNota dtPlanTrabajoActividadNota"
+                                     />
+                    <p:commandButton value="Limpiar" action="#{uiPlantrabajo.limpiarPlantrabajoactividad()}"
+                                     icon="ui-icon-cancel"  
+                                     update="pgPlanTrabajoActividadNota dtPlanTrabajoActividadNota"/>
+                </h:panelGrid>
+            </p:toolbarGroup>
+        </p:toolbar>
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+</ui:composition>

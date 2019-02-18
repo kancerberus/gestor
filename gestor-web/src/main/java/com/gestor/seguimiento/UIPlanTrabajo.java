@@ -6,30 +6,39 @@
 package com.gestor.seguimiento;
 
 
+import com.gestor.controller.GestorGeneral;
 import com.gestor.entity.App;
 import com.gestor.entity.Dialogo;
+import com.gestor.entity.UtilFecha;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
 import com.gestor.entity.UtilTexto;
 import com.gestor.gestor.Evaluacion;
+import com.gestor.gestor.FuenteHallazgo;
 import com.gestor.gestor.Recursos;
 import com.gestor.gestor.controlador.GestorEvaluacion;
 import com.gestor.gestor.controlador.GestorEvaluacionCapacitacion;
+import com.gestor.gestor.controlador.GestorFuenteHallazgo;
 import com.gestor.modelo.Sesion;
+import com.gestor.publico.Establecimiento;
 import com.gestor.publico.ListaDetalle;
 import com.gestor.publico.PlanTrabajoObjetivo;
 import com.gestor.publico.PlanTrabajoPrograma;
 import com.gestor.publico.Responsable;
-import com.gestor.publico.controlador.GestorLista;
+import com.gestor.publico.Usuarios;
 import com.gestor.publico.controlador.GestorObjetivo;
 import com.gestor.publico.controlador.GestorPrograma;
 import com.gestor.publico.controlador.GestorResponsable;
+import com.gestor.publico.controlador.GestorUsuario;
 import com.gestor.seguimiento.controlador.GestorPlanTrabajo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -44,12 +53,26 @@ public class UIPlanTrabajo implements Serializable{
 
     private List<PlanTrabajo> plantrabajoList = new ArrayList<>();    
     private List<PlanTrabajoActividad> plantrabajoActividadList = new ArrayList<>();
+    private List<Responsable> responsables = new ArrayList<>();
+    private List<FuenteHallazgo> fuenteHallazgos = new ArrayList<>();
+    private List<Recursos> recursos = new ArrayList<>();
+    private List<String> actividadEstadoSeleccionado = new ArrayList<>();    
+    
+    private Date fechaPlanInicio;
+    private Date fechaPlanFin;
+    
     private PlanTrabajo plantrabajo;     
     private PlanTrabajoActividad plantrabajoActividad;     
+    private PlanTrabajoActividadNota plantrabajoActividadnota;
     private PlanTrabajoObjetivo objetivo;
     private PlanTrabajoPrograma programa;  
-    private List<Responsable> responsables = new ArrayList<>();
-    private List<Recursos> recursos = new ArrayList<>();
+    private Establecimiento establecimiento = new Establecimiento();
+    private Usuarios usuariosSeleccionado;
+    private PlanTrabajo planTrabajoSeleccionado;
+    private String responsable;
+    
+    private List<Usuarios> usuariosList = new ArrayList<>();
+    private List<PlanTrabajo> planesTrabajoList = new ArrayList<>();
     private ListaDetalle listadetalle= new ListaDetalle();
     
     
@@ -58,12 +81,16 @@ public class UIPlanTrabajo implements Serializable{
     private GestorObjetivo gestorObjetivo;
     private GestorPrograma gestorPrograma;
     private GestorPlanTrabajo gestorPlanTrabajo;    
-    private GestorLista gestorLista;
         
     private List<PlanTrabajoObjetivo> objetivos = new ArrayList<>();    
     private List<PlanTrabajoObjetivo> objetivoList= new ArrayList<>();    
     private List<PlanTrabajoPrograma> programaList= new ArrayList<>();            
     private List<ListaDetalle> listadetalles= new ArrayList<>();
+    
+    private List<Establecimiento> establecimientoList = new ArrayList<>();
+    private List<Establecimiento> establecimientoListSeleccionado = new ArrayList<>();
+    
+    private Map<String, String> actividadEstado = new HashMap<>();
     
     private boolean guardarActivo = false;
     private boolean nuevoActivo = true;
@@ -73,18 +100,38 @@ public class UIPlanTrabajo implements Serializable{
     private Boolean filtroActivo = Boolean.TRUE;
     
     private Evaluacion evaluacion = new Evaluacion();
-    
+    private Integer cons=0;
     
     private List<Evaluacion> evaluacionList = new ArrayList<>();   
     
-    public UIPlanTrabajo(){  
-        
+    public UIPlanTrabajo(){ 
+        try {
+            Sesion s = (Sesion) UtilJSF.getBean("sesion");
+            GestorUsuario gestorUsuario = new GestorUsuario();
+
+            establecimientoList = new ArrayList<>();
+            establecimientoList.addAll(s.getEstablecimientoList());
+
+            actividadEstado = new HashMap<>();
+            actividadEstado.put(App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ELIMINADO_TEXTO, App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ELIMINADO);
+            actividadEstado.put(App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_CERRADO_TEXTO, App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_CERRADO);
+            actividadEstado.put(App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO_TEXTO, App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO);            
+
+            usuariosList = new ArrayList<>();
+            usuariosList.addAll(gestorUsuario.cargarListaUsuarios());
+            cons=0;
+            
+
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
     }    
     
     @PostConstruct
     public void init() {                   
         plantrabajo = new PlanTrabajo();        
         plantrabajoActividad = new PlanTrabajoActividad();        
+        plantrabajoActividadnota = new PlanTrabajoActividadNota();
     }
     
     private void cargarPlantrabajo() {
@@ -110,6 +157,8 @@ public class UIPlanTrabajo implements Serializable{
         }
 
     }
+    
+    
     
     public void dialogoObjetivo() {
         try {
@@ -227,11 +276,10 @@ public class UIPlanTrabajo implements Serializable{
                 plantrabajo.setCodPlantrabajo(1);
             }if(plantrabajo.getCodPlantrabajo()==null){
                 plantrabajo.setCodPlantrabajo(plantrabajoList.size()+1);
-            }                       
-            plantrabajo.setPeso(100);
+            }                                   
             plantrabajo.setEstado("A");
             
-            PlanTrabajo pltrabajo = new PlanTrabajo( evaluacion.getEvaluacionPK().getCodigoEstablecimiento(), plantrabajo.getCodPlantrabajo(), plantrabajo.getDescripcion(), plantrabajo.getFechaVenc(), plantrabajo.getPeso(), plantrabajo.getMeta(), 
+            PlanTrabajo pltrabajo = new PlanTrabajo( evaluacion.getEvaluacionPK().getCodigoEstablecimiento(), plantrabajo.getCodPlantrabajo(), plantrabajo.getDescripcion(), plantrabajo.getFechaVenc(), plantrabajo.getMeta(), 
                     plantrabajo.getEstado(), null
             );            
             
@@ -393,6 +441,10 @@ public class UIPlanTrabajo implements Serializable{
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO) 
             ));
             
+            GestorFuenteHallazgo gestorFuentehallazgo =new GestorFuenteHallazgo();
+            fuenteHallazgos = new ArrayList<>();
+            fuenteHallazgos.addAll((Collection<? extends FuenteHallazgo>) gestorFuentehallazgo.cargarListaFuentehallazgo());
+            
             Dialogo dialogo = new Dialogo ("dialogos/plan-trabajo-actividad.xhtml", "Crear Actividad", "clip", Dialogo.WIDTH_80);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
             
@@ -407,29 +459,17 @@ public class UIPlanTrabajo implements Serializable{
     }
     
     public void cerrarPlantrabajoactividad() {
-        try {
-            plantrabajoActividad = (PlanTrabajoActividad) UtilJSF.getBean("varPlantrabajoactividad");
-            plantrabajoActividad.setEstado("C");
-            
-            PlanTrabajoActividad pta = new PlanTrabajoActividad(plantrabajoActividad.getCodEstablecimiento(),
-                    plantrabajoActividad.getCodPlantrabajo(), plantrabajoActividad.getCodActividad(), plantrabajoActividad.getCodObjetivo(), 
-                    plantrabajoActividad.getCodPrograma(), plantrabajoActividad.getCedula(), plantrabajoActividad.getCodRecursos(),
-                    plantrabajoActividad.getDescripcion(), plantrabajoActividad.getFechaVenc(), plantrabajoActividad.getEstado(), 
-                    null
-            );
-            gestorPlanTrabajo=new GestorPlanTrabajo();
-            gestorPlanTrabajo.almacenarPlantrabajoactividad(pta);
-            UtilMSG.addSuccessMsg("Actividad cerrada correctamente.");
-            UtilJSF.setBean("varPlantrabajoactividad", plantrabajoActividad, UtilJSF.SESSION_SCOPE);
-            this.cargarPlantrabajoactividad();
-            this.limpiarPlantrabajoactividad();
+        try {            
+            Sesion s = (Sesion) UtilJSF.getBean("sesion");
+            gestorPlanTrabajo= new GestorPlanTrabajo();           
+            plantrabajoActividad = (PlanTrabajoActividad) UtilJSF.getBean("varPlanTrabajoactividad");                       
+            plantrabajoActividad.setEstado(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_ESTADO_CERRADO);
+            gestorPlanTrabajo.almacenarPlantrabajoactividad(plantrabajoActividad);            
+            UtilJSF.update("formPlanesTrabajo");
+            UtilMSG.addSuccessMsg("Actividad Finalizada", "Se finalizo Actividad # " + plantrabajoActividad.getCodActividad());
+            this.cargarPlanTrabajoactividadEstablecimiento();
         } catch (Exception e) {
-            if (UtilLog.causaControlada(e)) {
-                UtilMSG.addWarningMsg(e.getMessage());
-            } else {    
-                UtilMSG.addSupportMsg();
-                UtilLog.generarLog(this.getClass(), e);
-            }
+            UtilLog.generarLog(this.getClass(), e);
         }
     }
     
@@ -445,8 +485,13 @@ public class UIPlanTrabajo implements Serializable{
             
             plantrabajoActividad.setEstado("A");
             PlanTrabajoActividad pta= new PlanTrabajoActividad(plantrabajo.getCodEstablecimiento(), plantrabajo.getCodPlantrabajo(), plantrabajoActividad.getCodActividad(),
-                    objetivo.getCodObjetivo(), plantrabajoActividad.getPrograma().getCodPrograma(), plantrabajoActividad.getResponsable().getCedula(), plantrabajoActividad.getRecursos().getCodRecursos(), plantrabajoActividad.getDescripcion(), plantrabajoActividad.getFechaVenc(),
-                    plantrabajoActividad.getEstado(), null);
+                objetivo.getCodObjetivo(), plantrabajoActividad.getPrograma().getCodPrograma(), plantrabajoActividad.getFuenteHallazgo().getCodFuentehallazgo(), plantrabajoActividad.getResponsable().getCedula(), plantrabajoActividad.getRecursos().getCodRecursos(), plantrabajoActividad.getDescripcion(), plantrabajoActividad.getFechaVenc(),
+                plantrabajoActividad.getEstado(), null);
+            
+            PlanTrabajoActividadNota ptan= new PlanTrabajoActividadNota(plantrabajo.getCodEstablecimiento(),  plantrabajo.getCodPlantrabajo(),  plantrabajoActividad.getCodActividad(),
+                objetivo.getCodObjetivo(), plantrabajoActividad.getPrograma().getCodPrograma(), 0, "REGISTRO INICIAL", "Inicia registro de actividad ", plantrabajoActividad.getEstado(), null);
+            
+            pta.setPlanTrabajoActividadNota(ptan);
             
             GestorPlanTrabajo gestorPlantrabajo= new GestorPlanTrabajo();
             gestorPlantrabajo.almacenarPlantrabajoactividad(pta);
@@ -464,7 +509,373 @@ public class UIPlanTrabajo implements Serializable{
             }
         }
 
-    }   
+    } 
+    
+    public void cargarPlanesTrabajoList(){
+
+        try {            
+            if(establecimiento!=null){
+                gestorPlanTrabajo= new GestorPlanTrabajo();
+                planesTrabajoList= new ArrayList<>();
+                planesTrabajoList.addAll(gestorPlanTrabajo.cargarPlantrabajoAbiertosList(establecimiento.getCodigoEstablecimiento()));
+            }
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+    }
+    
+    private List<String> filtrarOpcionesSeleccionadas() throws Exception {
+        List<String> condicionesConsulta = new ArrayList<>();
+        condicionesConsulta.add(App.CONDICION_WHERE);
+        
+        if(establecimiento == null){   
+            String cadena;         
+            cadena = Integer.toString(establecimiento.getCodigoEstablecimiento());
+            
+            condicionesConsulta.add(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena));
+            
+        }
+        
+        if(establecimiento!=null){            
+            String cadena="";
+            cadena = Integer.toString(establecimiento.getCodigoEstablecimiento());
+            condicionesConsulta.add(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena ));             
+        }
+        
+        if(planTrabajoSeleccionado != null){
+            UtilJSF.setBean("varPlantrabajo", planTrabajoSeleccionado, UtilJSF.SESSION_SCOPE);            
+            String codpt= Integer.toString(planTrabajoSeleccionado.getCodPlantrabajo());
+            condicionesConsulta.add(App.CONDICION_AND);            
+            condicionesConsulta.add(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_CONDICION_COD_PlAN_TRABAJO.replace("?", codpt ));
+        }
+        
+
+        if (usuariosSeleccionado != null && usuariosSeleccionado.getUsuariosPK() != null
+                && usuariosSeleccionado.getUsuariosPK().getDocumentoUsuario() != null && !usuariosSeleccionado.getUsuariosPK().getDocumentoUsuario().equalsIgnoreCase("")) {
+            condicionesConsulta.add(App.CONDICION_AND);
+            condicionesConsulta.add(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_CONDICION_DOCUMENTO_USUARIO.replace("?", UtilTexto.CARACTER_COMILLA + usuariosSeleccionado.getUsuariosPK().getDocumentoUsuario() + UtilTexto.CARACTER_COMILLA));
+        }        
+
+        if (actividadEstadoSeleccionado != null && !actividadEstadoSeleccionado.isEmpty()) {
+            condicionesConsulta.add(App.CONDICION_AND);
+            String cadena = UtilTexto.CARACTER_COMILLA + "0" + UtilTexto.CARACTER_COMILLA;
+            for (String s : actividadEstadoSeleccionado) {
+                cadena += "," + UtilTexto.CARACTER_COMILLA + s + UtilTexto.CARACTER_COMILLA;
+            }
+            condicionesConsulta.add(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_CONDICION_ESTADO.replace("?", cadena));
+        }
+
+        if (fechaPlanInicio != null) {
+            condicionesConsulta.add(App.CONDICION_AND);
+            condicionesConsulta.add(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_CONDICION_FECHA_REGISTRO_GTE.replace("?", UtilFecha.formatoFecha(fechaPlanInicio, null, UtilFecha.PATRON_FECHA_YYYYMMDD, UtilFecha.CARACTER_COMILLA)));
+        }
+
+        if (fechaPlanFin != null) {
+            condicionesConsulta.add(App.CONDICION_AND);
+            condicionesConsulta.add(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_CONDICION_FECHA_REGISTRO_LTE.replace("?", UtilFecha.formatoFecha(fechaPlanFin, null, UtilFecha.PATRON_FECHA_YYYYMMDD, UtilFecha.CARACTER_COMILLA)));
+        }            
+        return condicionesConsulta;
+        
+    }
+    
+    public String cargarPlanTrabajoactividadGeneral() {
+        try {            
+            UtilJSF.setBean("dialogo", new Dialogo(), UtilJSF.SESSION_SCOPE);                        
+            Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
+            plantrabajoActividadList = new ArrayList<>();
+            GestorPlanTrabajo gestorPlanTrabajo = new GestorPlanTrabajo();
+                    
+            
+                List<String> condicionesConsulta = new ArrayList<>();
+                condicionesConsulta.add(App.CONDICION_WHERE);
+                condicionesConsulta.add(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_CONDICION_COD_ESTABLECIMIENTO.replace("?", "2" ));
+                establecimiento.setCodigoEstablecimiento(2);
+                plantrabajoActividadList.addAll(gestorPlanTrabajo.cargarListaEvaluacionPlanAccion(
+                        UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
+                )
+                );
+                if(!plantrabajoActividadList.isEmpty()){
+                UtilJSF.setBean("varPlantrabajoactividad", plantrabajoActividadList.get(0), UtilJSF.SESSION_SCOPE);                
+                }
+                //this.getAvancePlanAccion();
+            UtilJSF.setBean("varPlantrabajoactividad", new PlanTrabajoActividad(), UtilJSF.SESSION_SCOPE);
+            return ("/seguimiento/planes-trabajo.xhtml?faces-redirect=true");
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+        return null;
+    }
+    
+    public String cargarPlanTrabajoactividadEstablecimiento() {
+        try {            
+            UtilJSF.setBean("dialogo", new Dialogo(), UtilJSF.SESSION_SCOPE);                        
+            Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
+            plantrabajoActividadList = new ArrayList<>();
+            GestorPlanTrabajo gestorPlanTrabajo = new GestorPlanTrabajo();
+                    
+            establecimiento=new Establecimiento();
+                String codE = Integer.toString(plantrabajoActividad.getCodEstablecimiento());
+                List<String> condicionesConsulta = new ArrayList<>();
+                condicionesConsulta.add(App.CONDICION_WHERE);
+                condicionesConsulta.add(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_CONDICION_COD_ESTABLECIMIENTO.replace("?", codE ));
+                establecimiento.setCodigoEstablecimiento(plantrabajoActividad.getCodEstablecimiento());
+                plantrabajoActividadList.addAll(gestorPlanTrabajo.cargarListaEvaluacionPlanAccion(
+                        UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
+                ));
+                
+                if(!plantrabajoActividadList.isEmpty()){
+                UtilJSF.setBean("varPlantrabajoactividad", plantrabajoActividadList.get(0), UtilJSF.SESSION_SCOPE);                
+                }
+                //this.getAvancePlanAccion();
+            UtilJSF.setBean("varPlantrabajoactividad", new PlanTrabajoActividad(), UtilJSF.SESSION_SCOPE);
+            return ("/seguimiento/planes-trabajo.xhtml?faces-redirect=true");
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+        return null;
+    }
+    
+    /*public Integer getAvancePlanTrabajo() {
+        try {                          
+            long codEv=0;
+            if(!plantrabajoActividadList.isEmpty()){
+            codEv=plantrabajoActividadList.get(0).getEvaluacion().getEvaluacionPK().getCodEvaluacion();
+            }
+            GestorEvaluacion gestorEvaluacion = new GestorEvaluacion();
+            return gestorEvaluacion.avancePlanaccion(codEv);
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }        
+        return null;
+    }*/
+    
+    public void consultarSeguimientoPlanTrabajo() {
+        try {
+            plantrabajoActividadList = new ArrayList<>();            
+            List<String> condicionesConsulta = this.filtrarOpcionesSeleccionadas();
+            gestorPlanTrabajo = new GestorPlanTrabajo();
+            
+            
+            if(planTrabajoSeleccionado!=null){
+                plantrabajoActividadList.addAll(gestorPlanTrabajo.cargarListaEvaluacionPlanAccionpt(
+                UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)                
+                )); 
+            }else{
+                plantrabajoActividadList.addAll(gestorPlanTrabajo.cargarListaEvaluacionPlanAccion(
+                    UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)                
+                ));            
+            }
+            int cont=0;
+            int acum=0;
+            int peso=0;
+            cons=0;
+            for(int i=0;i<plantrabajoActividadList.size();i++){
+                if(plantrabajoActividadList.get(i).getEstado().equals("A")){
+                    cont++;
+                    peso = plantrabajoActividadList.get(i).getPrograma().getPeso();                    
+                    acum+=peso;
+                }
+                
+                cons=(100-(acum/cont));
+            }
+            
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+    }
+    
+    public void mostrarNotaSeguimiento() {
+        try {
+            
+            plantrabajoActividadnota= new PlanTrabajoActividadNota();
+            gestorPlanTrabajo = new GestorPlanTrabajo(); 
+            if(plantrabajoActividad.getCodActividad()==null){
+            plantrabajoActividad= (PlanTrabajoActividad) UtilJSF.getBean("varPlanTrabajoactividad");                
+            }
+            plantrabajoActividad.setPlanTrabajoactividadNotasList(gestorPlanTrabajo.cargarEvaluacionPlanTrabajoNotasList(plantrabajoActividad));
+            Dialogo dialogo = new Dialogo("dialogos/plan-trabajo-notas.xhtml", "Seguimiento Plan Trabajo", "clip", Dialogo.WIDTH_80);
+            UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
+            UtilJSF.execute("PF('dialog').show();");
+            UtilJSF.setBean("varPlanTrabajoActividadNota", new PlanTrabajoActividadNota(), UtilJSF.SESSION_SCOPE);
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+
+    }    
+    
+    
+    public void procesarPlanTrabajoActividadNota() {
+        try {            
+            gestorPlanTrabajo = new GestorPlanTrabajo();   
+            UtilJSF.setBean("varPlanTrabajoActividad", plantrabajoActividad, UtilJSF.SESSION_SCOPE);
+            
+            
+            PlanTrabajoActividadNota ptan= (PlanTrabajoActividadNota) UtilJSF.getBean("planTrabajoActividadNota");
+            
+            if( ptan==null ){
+                ptan=(PlanTrabajoActividadNota) UtilJSF.getBean("varPlanTrabajoActividadNota");
+            }
+            
+            ptan.setEstado(plantrabajoActividad.getEstado());            
+            ptan.setCodEstablecimiento(plantrabajoActividad.getCodEstablecimiento());
+            ptan.setCodPlantrabajo(plantrabajoActividad.getCodPlantrabajo());
+            ptan.setCodActividad(plantrabajoActividad.getCodActividad());
+            ptan.setCodObjetivo(plantrabajoActividad.getCodObjetivo());
+            ptan.setCodPrograma(plantrabajoActividad.getCodPrograma());
+            if(ptan.getCodNota()==null || ptan.getCodNota()==0){
+                ptan.setDescripcion(plantrabajoActividadnota.getDescripcion());
+                ptan.setEstado(plantrabajoActividad.getEstado());            
+                ptan.setNombre(plantrabajoActividadnota.getNombre());
+                ptan.setCodNota(0);
+            }          
+            
+            plantrabajoActividadnota = gestorPlanTrabajo.validarPlanTrabajoActividadNota(ptan);
+            gestorPlanTrabajo.procesarPlanTrabajoActividadNota(ptan);            
+            
+            UtilMSG.addSuccessMsg("Seguimiento Guardado", "Se almaceno el seguimiento a la actividad satisfactoriamente.");
+            UtilJSF.setBean("varPlanTrabajoActividadNota", new PlanTrabajoActividadNota(), UtilJSF.SESSION_SCOPE);
+            this.mostrarNotaSeguimiento();
+            
+        } catch (Exception e) {
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getCause().getMessage(), e.getMessage());
+            } else {
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }
+        }
+    }
+    
+    public void modificarNotaSeguimiento() {
+        plantrabajoActividadnota = (PlanTrabajoActividadNota) UtilJSF.getBean("varPlanTrabajoActividadNota");        
+        UtilJSF.setBean("varPlanTrabajoActividadNota", plantrabajoActividadnota, UtilJSF.SESSION_SCOPE);
+    }
+    
+    public String getStylePorcentaje() {
+        String style = "padding: 6px;"
+                + "opacity: 0.83;"
+                + "transition: opacity 0.6s;";          
+        if(cons >= 0 && cons < 50  ){
+            style += "background-color: #f44336;";
+        }if(cons >= 50 && cons<=71){
+                style += "background-color: #fbaa36;";
+        }if(cons>71){
+            style += "background-color: #008000;";
+        }
+        return style;
+    }
+
+    public Integer getCons() {
+        return cons;
+    }
+
+    public void setCons(Integer cons) {
+        this.cons = cons;
+    }
+
+    public List<PlanTrabajo> getPlanesTrabajoList() {
+        return planesTrabajoList;
+    }
+
+    public void setPlanesTrabajoList(List<PlanTrabajo> planesTrabajoList) {
+        this.planesTrabajoList = planesTrabajoList;
+    }
+
+    public PlanTrabajo getPlanTrabajoSeleccionado() {
+        return planTrabajoSeleccionado;
+    }
+
+    public void setPlanTrabajoSeleccionado(PlanTrabajo planTrabajoSeleccionado) {
+        this.planTrabajoSeleccionado = planTrabajoSeleccionado;
+    }
+    
+    public PlanTrabajoActividadNota getPlantrabajoActividadnota() {
+        return plantrabajoActividadnota;
+    }
+
+    public void setPlantrabajoActividadnota(PlanTrabajoActividadNota plantrabajoActividadnota) {
+        this.plantrabajoActividadnota = plantrabajoActividadnota;
+    }
+
+    public List<Usuarios> getUsuariosList() {
+        return usuariosList;
+    }
+
+    public void setUsuariosList(List<Usuarios> usuariosList) {
+        this.usuariosList = usuariosList;
+    }
+
+    public List<Establecimiento> getEstablecimientoList() {
+        return establecimientoList;
+    }
+
+    public void setEstablecimientoList(List<Establecimiento> establecimientoList) {
+        this.establecimientoList = establecimientoList;
+    }
+
+    public List<Establecimiento> getEstablecimientoListSeleccionado() {
+        return establecimientoListSeleccionado;
+    }
+
+    public void setEstablecimientoListSeleccionado(List<Establecimiento> establecimientoListSeleccionado) {
+        this.establecimientoListSeleccionado = establecimientoListSeleccionado;
+    }
+
+    public Map<String, String> getActividadEstado() {
+        return actividadEstado;
+    }
+
+    public void setActividadEstado(Map<String, String> actividadEstado) {
+        this.actividadEstado = actividadEstado;
+    }
+
+    public Date getFechaPlanInicio() {
+        return fechaPlanInicio;
+    }
+
+    public void setFechaPlanInicio(Date fechaPlanInicio) {
+        this.fechaPlanInicio = fechaPlanInicio;
+    }
+
+    public Date getFechaPlanFin() {
+        return fechaPlanFin;
+    }
+
+    public void setFechaPlanFin(Date fechaPlanFin) {
+        this.fechaPlanFin = fechaPlanFin;
+    }
+
+    public List<String> getActividadEstadoSeleccionado() {
+        return actividadEstadoSeleccionado;
+    }
+
+    public void setActividadEstadoSeleccionado(List<String> actividadEstadoSeleccionado) {
+        this.actividadEstadoSeleccionado = actividadEstadoSeleccionado;
+    }
+
+    public Establecimiento getEstablecimiento() {
+        return establecimiento;
+    }
+
+    public void setEstablecimiento(Establecimiento establecimiento) {
+        this.establecimiento = establecimiento;
+    }
+
+    public Usuarios getUsuariosSeleccionado() {
+        return usuariosSeleccionado;
+    }
+
+    public void setUsuariosSeleccionado(Usuarios usuariosSeleccionado) {
+        this.usuariosSeleccionado = usuariosSeleccionado;
+    }
+
+    public String getResponsable() {
+        return responsable;
+    }
+
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
+    }
 
     public List<Responsable> getResponsables() {
         return responsables;
@@ -531,6 +942,14 @@ public class UIPlanTrabajo implements Serializable{
 
     public void setListadetalles(List<ListaDetalle> listadetalles) {
         this.listadetalles = listadetalles;
+    }
+
+    public List<FuenteHallazgo> getFuenteHallazgos() {
+        return fuenteHallazgos;
+    }
+
+    public void setFuenteHallazgos(List<FuenteHallazgo> fuenteHallazgos) {
+        this.fuenteHallazgos = fuenteHallazgos;
     }
 
     public List<PlanTrabajoPrograma> getProgramaList() {

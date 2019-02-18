@@ -179,6 +179,7 @@ public class UIEstablecimiento implements Serializable {
             UtilMSG.addSuccessMsg("Centro De trabajo almacenado correctamente.");
             UtilJSF.setBean("centro", new CentroTrabajo(), UtilJSF.SESSION_SCOPE);            
             this.cargarCentroList();
+            this.limpiarcentro();
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }

@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml">
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formPlanesTrabajo" style="font-size: small;">
+
+            <h2>SEGUIMIENTO BANCO DE PLANES DE TRABAJO</h2>
+            <h:panelGrid columns="2">
+                <h:outputText value="Filtro Busqueda: " />
+                <p:inputSwitch label="Filtro" onLabel="SI" offLabel="NO" value="#{uiPlantrabajo.filtroActivo}" styleClass="letra-xx-small-centro">
+                    <p:ajax update="formPlanesTrabajo"  />
+                </p:inputSwitch>
+            </h:panelGrid>
+            <h:panelGroup rendered="#{uiPlantrabajo.filtroActivo}">
+                <p:separator style="height: 3px"/>
+                <p:panelGrid columns="3" styleClass="letra-xx-small-centro" style="font-size: xx-small">
+                    <f:facet name="header">
+                        Filtros de Búsqueda
+                    </f:facet>
+
+                    <h:panelGrid  >
+
+                        <h:outputLabel value="Evaluador"/>
+                        <p:selectOneMenu value="#{uiPlantrabajo.usuariosSeleccionado}" converter="convertidorGenerico"
+                                                         style="text-align: center;width: 180px;">  
+                                <f:selectItem itemLabel="Seleccione Evaluador" noSelectionOption="true"/>
+                                <f:selectItems value="#{uiPlantrabajo.usuariosList}" var="varUsuarios" itemLabel="#{varUsuarios.nombreApellido}" itemValue="#{varUsuarios}"/>
+                        </p:selectOneMenu>
+                         
+                        <h:outputLabel value="Empresas"/>
+                        <p:selectOneListbox  value="#{uiPlantrabajo.establecimiento}" converter="convertidorGenerico" var="t" filter="true" filterMatchMode="contains" style="width: 90%; margin-bottom: 30%;font-family: bolder" styleClass="Centro"
+                                                                                        >
+                            <f:selectItems value="#{uiPlantrabajo.establecimientoList}" var="varEmpresa" itemLabel="#{varEmpresa.nombre}" itemValue="#{varEmpresa}" />
+                            <p:ajax  update="pt" listener="#{uiPlantrabajo.cargarPlanesTrabajoList()}" />                            
+                            <p:column >
+                                    <p:graphicImage value="#{t.logo}" cache="false" width="40" />
+                                    <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" width="20" 
+                                       title="#{t.nombre}" rendered="#{empty t.logo}" />
+                                
+                            </p:column>
+                            <p:column >
+                                <h:outputText value="#{t.nombre}" />
+                                </p:column>                                
+                        </p:selectOneListbox>
+                        
+                        
+                        <h:outputLabel value="Planes De Trabajo"/>
+                        <p:selectOneMenu id="pt" value="#{uiPlantrabajo.planTrabajoSeleccionado}" converter="convertidorGenerico"
+                                                         style="text-align: center;width: 180px;">  
+                                <f:selectItem itemLabel="Seleccione Plan De Trabajo" noSelectionOption="true"/>
+                                <f:selectItems value="#{uiPlantrabajo.planesTrabajoList}" var="varPt" itemLabel="#{varPt.descripcion}" itemValue="#{varPt}"/>
+                                <p:ajax  update="formPlanesTrabajo:meta" listener="#{uiPlantrabajo.planTrabajoSeleccionado}" />                            
+                        </p:selectOneMenu>
+                        
+                </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <h:outputText value="Estado Plan Trabajo" />
+                        <p:selectManyButton value="#{uiPlantrabajo.actividadEstadoSeleccionado}" >
+                            <f:selectItems value="#{uiPlantrabajo.actividadEstado}"/>
+                        </p:selectManyButton>
+
+                        <h:outputText value="Fecha Inicio" />
+                        <p:calendar value="#{uiPlantrabajo.fechaPlanInicio}" pattern="dd/MM/yyyy" placeholder="Fecha Plan Trabajo"/>
+
+                        <h:outputText value="Fecha Fin" />
+                        <p:calendar value="#{uiPlantrabajo.fechaPlanFin}" pattern="dd/MM/yyyy" placeholder="Fecha Plan Trabajo"/>
+
+                    </h:panelGrid>
+                </p:panelGrid>
+                <p:panel style="margin-right: 15%; margin-left: 70%;">
+                    <f:facet name="header" >
+                       Consolidado
+                    </f:facet> 
+                    <p:panelGrid columns="2" >
+                        
+                        <p:column >        
+                            <p:outputLabel id="meta" value="Meta #{uiPlantrabajo.planTrabajoSeleccionado.meta}"/>
+                            <p:outputLabel value="%" />                
+                        </p:column>
+                        <p:column  >
+                            <h:outputLabel value="#{uiPlantrabajo.cons}%"  style="#{uiPlantrabajo.stylePorcentaje}" />
+                        </p:column>
+                        
+                    </p:panelGrid>
+                </p:panel>
+                <p:commandButton value="Consultar" style="margin: auto auto;width: 210px;height: 30px; border-radius: 10px;"
+                                 action="#{uiPlantrabajo.consultarSeguimientoPlanTrabajo()}" update="formPlanesTrabajo"/>
+                <br/>
+                <p:separator style="height: 3px;width: 100%" />                
+            </h:panelGroup>
+            <br/>
+            <br/>
+            <p:dataTable var="varPlanTrabajoactividad" value="#{uiPlantrabajo.plantrabajoActividadList}"
+                         widgetVar="planTrabajoactividadTable" rowStyleClass="letra-xx-small-centro" style="font-size: 10px;" 
+                         emptyMessage="No tiene planes de trabajo abiertos." scrollable="true" 
+                         rowHover="true"
+                         >
+                <p:column headerText="Opciones" width="3%" >
+                    <p:panelGrid>
+                        <p:commandButton icon="ui-icon-clipboard" title="Notas" action="#{uiPlantrabajo.mostrarNotaSeguimiento()}" update=":formPlanesTrabajo:dialog"/>
+                        <p:commandButton icon="ui-icon-disk" title="Finalizar" rendered="#{varPlanTrabajoactividad.estado eq 'A'}"
+                                         action="#{uiPlantrabajo.cerrarPlantrabajoactividad()}"/>
+                    </p:panelGrid>
+                </p:column>                
+                <p:column headerText="Nombre" filterBy="#{varPlanTrabajoactividad.descripcion}" >
+                    <h:outputText value="#{varPlanTrabajoactividad.descripcion}"/>
+                </p:column>
+                <p:column headerText="Plan Trabajo" filterBy="#{varPlanTrabajoactividad.plantrabajo.descripcion}" >
+                    <h:outputText value="#{varPlanTrabajoactividad.plantrabajo.descripcion}"/>
+                </p:column>
+                <p:column headerText="Objetivo" filterBy="#{varPlanTrabajoactividad.objetivo.nombre}" >
+                    <h:outputText value="#{varPlanTrabajoactividad.objetivo.nombre}"/>
+                </p:column>
+                <p:column headerText="Programa" filterBy="#{varPlanTrabajoactividad.programa.nombre}" >
+                    <h:outputText value="#{varPlanTrabajoactividad.programa.nombre}"/>
+                </p:column>
+                <p:column headerText="Recursos" filterBy="#{varPlanTrabajoactividad.recursos.nombre}" >
+                    <h:outputText value="#{varPlanTrabajoactividad.recursos.nombre}"/>
+                </p:column>
+                <p:column headerText="Fuente Hallazgo" filterBy="#{varPlanAccionDetalle.fuentehallazgo.nombre}" >
+                    <h:outputText value="#{varPlanTrabajoactividad.fuenteHallazgo.nombre}"/>
+                </p:column>                
+                <p:column headerText="Responsable" filterBy="#{varPlanTrabajoactividad.responsable.nombresApellidos}" >
+                    <h:outputText value="#{varPlanTrabajoactividad.responsable.nombresApellidos}"/>
+                </p:column>
+                <p:column headerText="Fecha Creacion" >
+                    <h:outputText value="#{varPlanTrabajoactividad.fechaRegistro}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Fecha Vencimiento">
+                    <h:outputText value="#{varPlanTrabajoactividad.fechaVenc}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Dias Restantes">
+                    <h:outputText value="#{varPlanTrabajoactividad.fechaVenc}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Estado" filterBy="#{varPlanTrabajoactividad.estado}"
+                          filterMatchMode="equals">
+                    <f:facet name="filter">
+                        <p:selectOneButton onchange="PF('planTrabajoactividadTable').filter()"
+                                           style="font-size: 8px;">
+                            <f:selectItem itemLabel="ABIERTO" itemValue="A" />
+                            <f:selectItem itemLabel="CERRADO" itemValue="C" />
+                            <f:selectItem itemLabel="ELIMINADO" itemValue="E" />
+                        </p:selectOneButton>
+                    </f:facet>
+                    <h:outputText value="#{varPlanTrabajoactividad.estado}" />
+                </p:column>
+            </p:dataTable>
+            <p:separator/>
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}" width="#{dialogo.width}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}"  update="dialog" />
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

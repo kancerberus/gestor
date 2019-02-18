@@ -35,6 +35,15 @@
                         
                     </h:panelGrid>
                     <h:panelGrid columns="2">
+                        
+                        <h:outputLabel value="Fuente Hallazgo " style="font-weight: bold;"/>
+                        <p:selectOneMenu value="#{uiPlantrabajo.plantrabajoActividad.fuenteHallazgo}" converter="convertidorGenerico"
+                                         style=" margin-left: 10%; text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlantrabajo.fuenteHallazgos}" var="fh" itemValue="#{fh}" itemLabel="#{fh.nombre}" />                            
+                            <p:ajax event="change" process="@this"/>
+                        </p:selectOneMenu>
+                        
                         <h:outputLabel value="Responsable " style="font-weight: bold;"/>
                         <p:selectOneMenu value="#{uiPlantrabajo.plantrabajoActividad.responsable}" converter="convertidorGenerico"
                                          style=" margin-left: 10%; text-align: center;width: 180px;">  
@@ -65,6 +74,7 @@
                             <p:column  headerText="Opciones" />
                             <p:column  headerText="Objetivo" filterBy="#{varPlantrabajoactividad.objetivo.nombre}"/>
                             <p:column  headerText="Programa" filterBy="#{varPlantrabajoactividad.programa.nombre}"/>
+                            <p:column  headerText="Fuente Hallazgo" filterBy="#{varPlantrabajoactividad.fuenteHallazgo.nombre}"/>
                             <p:column  headerText="Actividad" filterBy="#{varPlantrabajoactividad.descripcion}"/>                                                                                                               
                             <p:column  headerText="Responsable" filterBy="#{varPlantrabajoactividad.responsable.nombres}"/>                                                                                                               
                             <p:column  headerText="Recursos" filterBy="#{varPlantrabajoactividad.recursos.nombre}"/>                                                                                                               
@@ -86,15 +96,16 @@
                     </p:columnGroup> 
                     <p:column >
                         <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Trabajo Actividad" update="formPlantrabajo:opActividad"
-                                         action="#{uiPlantrabajo.subirItemPlantrabajoactividad()}"/>
-                        <p:commandButton icon="ui-icon-disk" title="Cerrar Plan Trabajo Actividad" update="formPlantrabajo:opActividad"
-                                         action="#{uiPlantrabajo.cerrarPlantrabajoactividad()}"/>
+                                         action="#{uiPlantrabajo.subirItemPlantrabajoactividad()}"/>                        
                     </p:column>
                     <p:column >
                         <h:outputText value="#{varPlantrabajoactividad.objetivo.nombre}"/>
                     </p:column>                    
                     <p:column>
                         <h:outputText value="#{varPlantrabajoactividad.programa.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlantrabajoactividad.fuenteHallazgo.nombre}"/>
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varPlantrabajoactividad.descripcion}"/>

@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.mail.Message;
@@ -63,10 +64,11 @@ public class UIPlanAccion {
     private PlanTrabajoObjetivo objetivoSeleccionado;
     private List<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles = new ArrayList<>();
     private EvaluacionPlanAccionDetalle evaluacionPlanAccionDetalle = new EvaluacionPlanAccionDetalle();
+    private EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK = new EvaluacionPlanAccionDetallePK();
     private Boolean modificarActivo = Boolean.FALSE;
     private Boolean filtroActivo = Boolean.TRUE;
     private Establecimiento establecimiento = new Establecimiento();
-    private Integer tipoSeleccionado;
+    private List<String> selectedOptions;
     //filtros
     private List<Establecimiento> establecimientoList = new ArrayList<>();
     private List<Establecimiento> establecimientoListSeleccionado = new ArrayList<>();
@@ -213,19 +215,42 @@ public class UIPlanAccion {
         }
 
     }
+    
+    
+    public void dialogoCerrarPlanAccion() {
+        try {                        
+            Dialogo dialogo = new Dialogo("dialogos/cerrar-plan-accion.xhtml", "Finalizar Plan Accion", "clip", Dialogo.WIDTH_AUTO);
+            UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
+            UtilJSF.execute("PF('dialog').show();"); 
+            evaluacionPlanAccionDetalle= (EvaluacionPlanAccionDetalle) UtilJSF.getBean("varPlanAccionDetalle");            
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
 
     public void cerrarPlanAccionDetalle() {
         try {
             Sesion s = (Sesion) UtilJSF.getBean("sesion");
-            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
+            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();           
+            
+            EvaluacionPlanAccionDetallePK pk=new EvaluacionPlanAccionDetallePK(
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodEvaluacion(),
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento(),
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlan(),
+                    evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()
+            );
+            
             evaluacionPlanAccionDetalle = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("varPlanAccionDetalle");
             evaluacionPlanAccionDetalle.setDocumentoUsuario(s.getUsuarios().getUsuariosPK().getDocumentoUsuario());
-            evaluacionPlanAccionDetalle.setEstado(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_CERRADO);
-            
-            gestorEvaluacionPlanAccion.cerrarPlanAccionDetalle(evaluacionPlanAccionDetalle);
-            this.cargarPlanAccionGeneral();
+            evaluacionPlanAccionDetalle.setEstado(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_CERRADO);             
+                       
+            evaluacionPlanAccionDetalle.setEvaluacionPlanAccionDetallePK(pk);
+            gestorEvaluacionPlanAccion.cerrarPlanAccionDetalle(evaluacionPlanAccionDetalle);            
+            this.cargarPlanAccionActual();
             UtilJSF.update("formPlanesAccion");
             UtilMSG.addSuccessMsg("Plan Acción Finalizado", "Se finalizo el Plan Acción # " + evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle());
+            
+            
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }
@@ -245,12 +270,7 @@ public class UIPlanAccion {
             condicionesConsulta.add(Boolean.TRUE.toString());
         }*/
         
-        /*if(tipoSeleccionado!=0){
-         evaluacionPlanAccionDetalles = new ArrayList<>();
-            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
-            
-            evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(tipoSeleccionado));
-        }*/
+        
         
         if(establecimiento == null){   
             String cadena;         
@@ -312,9 +332,9 @@ public class UIPlanAccion {
         if (fechaPlanFin != null) {
             condicionesConsulta.add(App.CONDICION_AND);
             condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_FECHA_REGISTRO_LTE.replace("?", UtilFecha.formatoFecha(fechaPlanFin, null, UtilFecha.PATRON_FECHA_YYYYMMDD, UtilFecha.CARACTER_COMILLA)));
-        }
-
+        }            
         return condicionesConsulta;
+        
     }
 
     public void consultarSeguimientoPlanAccion() {
@@ -323,13 +343,11 @@ public class UIPlanAccion {
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             List<String> condicionesConsulta = this.filtrarOpcionesSeleccionadas();
             evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
-                    UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
-            )
-            );
+                UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)                
+            ));                                      
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }
-
     }
 
     public String cargarPlanAccionGeneral() {
@@ -339,18 +357,48 @@ public class UIPlanAccion {
             evaluacionPlanAccionDetalles = new ArrayList<>();
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             
-            List<String> condicionesConsulta = new ArrayList<>();
-            condicionesConsulta.add(App.CONDICION_WHERE);
-            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", "2" ));
-            establecimiento.setCodigoEstablecimiento(2);
-            evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
-                    UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
-            )
-            );
-            if(!evaluacionPlanAccionDetalles.isEmpty()){
-            UtilJSF.setBean("varPlanAccionDetalle", evaluacionPlanAccionDetalles.get(0), UtilJSF.SESSION_SCOPE);
-            }
-            this.getAvancePlanAccion();
+                List<String> condicionesConsulta = new ArrayList<>();
+                condicionesConsulta.add(App.CONDICION_WHERE);
+                condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", "2" ));
+                establecimiento.setCodigoEstablecimiento(2);
+                evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
+                        UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
+                )
+                );
+                if(!evaluacionPlanAccionDetalles.isEmpty()){
+                UtilJSF.setBean("varPlanAccionDetalle", evaluacionPlanAccionDetalles.get(0), UtilJSF.SESSION_SCOPE);                
+                }
+                this.getAvancePlanAccion();
+            UtilJSF.setBean("varPlanAccionDetalle", new EvaluacionPlanAccionDetalle(), UtilJSF.SESSION_SCOPE);                        
+            return ("/seguimiento/planes-accion.xhtml?faces-redirect=true");
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+        return null;
+    }
+    
+    public String cargarPlanAccionActual() {
+        try {            
+            UtilJSF.setBean("dialogo", new Dialogo(), UtilJSF.SESSION_SCOPE);
+            Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();            
+            evaluacionPlanAccionDetalles = new ArrayList<>();
+            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
+                
+                List<String> condicionesConsulta = new ArrayList<>();
+                String codE=Integer.toString(evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento());
+                establecimiento=new Establecimiento();                
+                condicionesConsulta.add(App.CONDICION_WHERE);
+                condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", codE ));
+                establecimiento.setCodigoEstablecimiento(evaluacionPlanAccionDetalle.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento());
+                evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
+                        UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
+                )
+                );
+                if(!evaluacionPlanAccionDetalles.isEmpty()){
+                UtilJSF.setBean("varPlanAccionDetalle", evaluacionPlanAccionDetalles.get(0), UtilJSF.SESSION_SCOPE);
+                }
+                this.getAvancePlanAccion();
+            
             return ("/seguimiento/planes-accion.xhtml?faces-redirect=true");
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
@@ -507,23 +555,6 @@ public class UIPlanAccion {
                 UtilLog.generarLog(this.getClass(), ex);
             }
         }
-    }
-    
-
-    
-    public String getStylePorcentaje() {
-        String style = "padding: 6px;"
-                + "opacity: 0.83;"
-                + "transition: opacity 0.6s;";
-        this.getAvancePlanAccion();
-        if(getAvancePlanAccion() >= 0 && getAvancePlanAccion() < 50 ){
-            style += "background-color: #f44336;";
-        }if(getAvancePlanAccion() >= 50 && getAvancePlanAccion()<=71)                {
-                style += "background-color: #fbaa36;";
-        }if(getAvancePlanAccion()>71){
-            style += "background-color: #008000;";
-        }
-        return style;
     }
         
     public Integer getAvancePlanAccion() {
@@ -718,14 +749,22 @@ public class UIPlanAccion {
         }
     }
 
-    public Integer getTipoSeleccionado() {
-        return tipoSeleccionado;
+    public EvaluacionPlanAccionDetallePK getEvaluacionPlanAccionDetallePK() {
+        return evaluacionPlanAccionDetallePK;
     }
 
-    public void setTipoSeleccionado(Integer tipoSeleccionado) {
-        this.tipoSeleccionado = tipoSeleccionado;
+    public void setEvaluacionPlanAccionDetallePK(EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK) {
+        this.evaluacionPlanAccionDetallePK = evaluacionPlanAccionDetallePK;
     }
 
+    public List<String> getSelectedOptions() {
+        return selectedOptions;
+    }
+
+    public void setSelectedOptions(List<String> selectedOptions) {
+        this.selectedOptions = selectedOptions;
+    }
+    
     public List<FuenteHallazgo> getFuentehallazgos() {
         return fuentehallazgos;
     }
