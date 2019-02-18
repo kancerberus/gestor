@@ -13,7 +13,6 @@ import com.gestor.publico.PlanTrabajoPrograma;
 import com.gestor.publico.Responsable;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.persistence.Basic;
@@ -29,23 +28,13 @@ import javax.persistence.Table;
  * @author fjvc
  */
 @Entity
-@Table(name = "plan_trabajo_actividad")
+@Table(name = "plan_trabajo_actividad_nota")
 @NamedQueries({
-    @NamedQuery(name = "PlanTrabajoActividad.findAll", query = "SELECT pta FROM PlanTrabajoActividad pta")
+    @NamedQuery(name = "PlanTrabajoActividadNota.findAll", query = "SELECT ptanota FROM PlanTrabajoActividadNota ptanota")
 })
 @ManagedBean
 @SessionScoped
-public class PlanTrabajoActividad implements Serializable {   
-    
-    public static String PLAN_TRABAJO_ACTIVIDAD_CONDICION_DOCUMENTO_USUARIO = "U.DOCUMENTO_USUARIO IN (?)";
-    public static String PLAN_TRABAJO_ACTIVIDAD_CONDICION_COD_ESTABLECIMIENTO = "PTA.codigo_establecimiento IN (?)";
-    public static String PLAN_TRABAJO_ACTIVIDAD_CONDICION_COD_PlAN_TRABAJO = "PTA.cod_plan_trabajo IN (?)";
-    public static String PLAN_TRABAJO_ACTIVIDAD_CONDICION_RESPONSABLE = "PTA.responsable ILIKE (?)";
-    public static String PLAN_TRABAJO_ACTIVIDAD_CONDICION_ESTADO = "PTA.ESTADO IN (?)";
-    public static String PLAN_TRABAJO_ACTIVIDAD_CONDICION_FECHA_REGISTRO_GTE = "PTA.fecha_reg::DATE >= ?";
-    public static String PLAN_TRABAJO_ACTIVIDAD_CONDICION_FECHA_REGISTRO_LTE = "PTA.fecha_reg::DATE <= ?";
-    
-    public static String PLAN_TRABAJO_ACTIVIDAD_ESTADO_CERRADO = "C";
+public class PlanTrabajoActividadNota implements Serializable {   
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId     
@@ -58,18 +47,14 @@ public class PlanTrabajoActividad implements Serializable {
     @Column(name = "cod_objetivo")
     private Integer codObjetivo;    
     @Column(name = "cod_programa")
-    private Integer codPrograma;      
-    @Column(name = "cod_fuente_hallazgo")
-    private Integer codFuentehallazgo;      
-    @Column(name = "cedula")
-    private String cedula;
-    @Column(name = "cod_recursos")
-    private Integer codRecursos;  
-    @Column(name = "descripcion")
-    private String descripcion;
-    @Column(name = "fecha_venc")
-    private Date fechaVenc;              
+    private Integer codPrograma;    
     @Basic(optional = false)
+    @Column(name = "cod_nota")
+    private Integer codNota;
+    @Column(name = "nombre")
+    private String nombre;                
+    @Column(name = "descripcion")
+    private String descripcion;                
     @Column(name = "estado")
     private String estado; 
 
@@ -83,43 +68,32 @@ public class PlanTrabajoActividad implements Serializable {
     private Responsable responsable= new Responsable();
     private Recursos recursos = new Recursos();
     
-    private List<PlanTrabajoActividadNota> planTrabajoactividadNotasList;
-    private PlanTrabajoActividadNota planTrabajoActividadNota;
     
-    public PlanTrabajoActividad() {
+    public PlanTrabajoActividadNota() {
     }
 
-    public PlanTrabajoActividad(Integer codEstablecimiento, Integer codPlantrabajo, Integer codActividad, Integer codObjetivo, Integer codPrograma, Integer codFuentehallazgo, String cedula, Integer codRecurso, String descripcion, Date fechaVenc, String estado, Date fechaRegistro) {
+    public PlanTrabajoActividadNota(Integer codEstablecimiento, Integer codPlantrabajo, Integer codActividad, Integer codObjetivo, Integer codPrograma, Integer codNota, String nombre, String descripcion, String estado, Date fechaRegistro) {
         this.codEstablecimiento = codEstablecimiento;
         this.codPlantrabajo = codPlantrabajo;
         this.codActividad = codActividad;
         this.codObjetivo = codObjetivo;
-        this.codPrograma = codPrograma;  
-        this.codFuentehallazgo = codFuentehallazgo;
-        this.codRecursos = codRecurso;
-        this.cedula = cedula;
+        this.codPrograma = codPrograma;
+        this.codNota = codNota;
+        this.nombre = nombre;
         this.descripcion = descripcion;
-        this.fechaVenc = fechaVenc;
         this.estado = estado;
-        this.fechaRegistro = fechaRegistro;             
-    }   
-
-    public PlanTrabajoActividadNota getPlanTrabajoActividadNota() {
-        return planTrabajoActividadNota;
+        this.fechaRegistro = fechaRegistro;
     }
 
-    public void setPlanTrabajoActividadNota(PlanTrabajoActividadNota planTrabajoActividadNota) {
-        this.planTrabajoActividadNota = planTrabajoActividadNota;
+
+
+    public String getNombre() {
+        return nombre;
     }
 
-    public List<PlanTrabajoActividadNota> getPlanTrabajoactividadNotasList() {
-        return planTrabajoactividadNotasList;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
-
-    public void setPlanTrabajoactividadNotasList(List<PlanTrabajoActividadNota> planTrabajoactividadNotasList) {
-        this.planTrabajoactividadNotasList = planTrabajoactividadNotasList;
-    }
-
 
     public PlanTrabajo getPlantrabajo() {
         return plantrabajo;
@@ -129,37 +103,13 @@ public class PlanTrabajoActividad implements Serializable {
         this.plantrabajo = plantrabajo;
     }
 
-    public Integer getCodFuentehallazgo() {
-        return codFuentehallazgo;
-    }
-
-    public void setCodFuentehallazgo(Integer codFuentehallazgo) {
-        this.codFuentehallazgo = codFuentehallazgo;
-    }
-
     public FuenteHallazgo getFuenteHallazgo() {
         return fuenteHallazgo;
     }
 
     public void setFuenteHallazgo(FuenteHallazgo fuenteHallazgo) {
         this.fuenteHallazgo = fuenteHallazgo;
-    }
-
-    public String getCedula() {
-        return cedula;
-    }
-
-    public void setCedula(String cedula) {
-        this.cedula = cedula;
-    }
-
-    public Integer getCodRecursos() {
-        return codRecursos;
-    }
-
-    public void setCodRecursos(Integer codRecursos) {
-        this.codRecursos = codRecursos;
-    }
+    }    
 
     public Recursos getRecursos() {
         return recursos;
@@ -241,16 +191,6 @@ public class PlanTrabajoActividad implements Serializable {
         this.descripcion = descripcion;
     }
 
-    
-
-    public Date getFechaVenc() {
-        return fechaVenc;
-    }
-
-    public void setFechaVenc(Date fechaVenc) {
-        this.fechaVenc = fechaVenc;
-    }
-
     public String getEstado() {
         return estado;
     }
@@ -267,9 +207,17 @@ public class PlanTrabajoActividad implements Serializable {
         this.establecimiento = establecimiento;
     }
 
+    public Integer getCodNota() {
+        return codNota;
+    }
+
+    public void setCodNota(Integer codNota) {
+        this.codNota = codNota;
+    }
+
     @Override
     public String toString() {
-        return "com.gestor.gestor.PlanTrabajo[ " + codPlantrabajo + " ]";
+        return "com.gestor.gestor.PlanTrabajoActividadNota[ " + codNota + " ]";
     }
 
     /**

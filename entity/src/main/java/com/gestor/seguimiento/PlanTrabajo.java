@@ -41,9 +41,7 @@ public class PlanTrabajo implements Serializable {
     @Column(name = "fecha_venc")
     private Date fechaVenc;      
     @Column(name = "meta")
-    private Integer meta;     
-    @Column(name = "peso")
-    private Integer peso; 
+    private Integer meta;         
     @Basic(optional = false)
     @Column(name = "estado")
     private String estado;            
@@ -53,24 +51,15 @@ public class PlanTrabajo implements Serializable {
     public PlanTrabajo() {
     }
 
-    public PlanTrabajo( Integer codEstablecimiento, Integer codPlantrabajo, String descripcion, Date fechaVenc, Integer peso, Integer meta, String estado, Date fechaRegistro) {          
+    public PlanTrabajo( Integer codEstablecimiento, Integer codPlantrabajo, String descripcion, Date fechaVenc, Integer meta, String estado, Date fechaRegistro) {          
         this.codEstablecimiento = codEstablecimiento;
         this.codPlantrabajo = codPlantrabajo;
         this.descripcion = descripcion;
-        this.fechaVenc = fechaVenc;
-        this.peso = peso;
+        this.fechaVenc = fechaVenc;        
         this.meta = meta;        
         this.estado = estado;
         this.fechaRegistro = fechaRegistro;
     }       
-
-    public Integer getPeso() {
-        return peso;
-    }
-
-    public void setPeso(Integer peso) {
-        this.peso = peso;
-    }
 
     public Integer getCodEstablecimiento() {
         return codEstablecimiento;

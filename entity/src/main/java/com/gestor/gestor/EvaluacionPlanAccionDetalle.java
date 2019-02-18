@@ -9,6 +9,7 @@ import com.gestor.publico.CentroTrabajo;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
+import com.gestor.seguimiento.PlanTrabajo;
 import com.gestor.seguimiento.PlanTrabajoActividad;
 import java.io.Serializable;
 import java.util.Date;
@@ -90,6 +91,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private MotivoCorreccion motivocorreccion = new MotivoCorreccion();
     private CentroTrabajo centrotrabajo = new CentroTrabajo();    
     private PlanTrabajoActividad plantrabajoactividad = new PlanTrabajoActividad();
+    private PlanTrabajo plantrabajo =new PlanTrabajo();
     
     
     private Usuarios usuarios;
@@ -136,6 +138,14 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.registro = registro;
         this.eficacia = eficacia;
         
+    }
+
+    public PlanTrabajo getPlantrabajo() {
+        return plantrabajo;
+    }
+
+    public void setPlantrabajo(PlanTrabajo plantrabajo) {
+        this.plantrabajo = plantrabajo;
     }
 
     public FuenteHallazgo getFuentehallazgo() {
