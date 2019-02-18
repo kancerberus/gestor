@@ -589,7 +589,8 @@ public class UIPlanTrabajo implements Serializable{
                 List<String> condicionesConsulta = new ArrayList<>();
                 condicionesConsulta.add(App.CONDICION_WHERE);
                 condicionesConsulta.add(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_CONDICION_COD_ESTABLECIMIENTO.replace("?", "2" ));
-                establecimiento.setCodigoEstablecimiento(2);
+                establecimiento.setCodigoEstablecimiento(2);           
+                this.cargarPlanesTrabajoList();
                 plantrabajoActividadList.addAll(gestorPlanTrabajo.cargarListaEvaluacionPlanAccion(
                         UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
                 )
@@ -675,8 +676,11 @@ public class UIPlanTrabajo implements Serializable{
                     peso = plantrabajoActividadList.get(i).getPrograma().getPeso();                    
                     acum+=peso;
                 }
-                
-                cons=(100-(acum/cont));
+                if(cont==0){
+                    cons=100;
+                }else{
+                    cons=(100-(acum/cont));
+                }
             }
             
         } catch (Exception e) {
