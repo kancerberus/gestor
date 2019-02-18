@@ -17,6 +17,7 @@ import com.gestor.gestor.EvaluacionPlanAccionDetalleNotasPK;
 import com.gestor.gestor.EvaluacionPlanAccionDetallePK;
 import com.gestor.gestor.FuenteHallazgo;
 import com.gestor.gestor.MotivoCorreccion;
+import com.gestor.gestor.Recursos;
 import com.gestor.gestor.Seccion;
 import com.gestor.gestor.SeccionDetalle;
 import com.gestor.gestor.SeccionDetalleItems;
@@ -26,10 +27,13 @@ import com.gestor.gestor.SeccionPK;
 import com.gestor.gestor.TipoAccion;
 import com.gestor.publico.CentroTrabajo;
 import com.gestor.publico.Establecimiento;
+import com.gestor.publico.PlanTrabajoObjetivo;
+import com.gestor.publico.PlanTrabajoPrograma;
 
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.UsuariosPK;
+import com.gestor.seguimiento.PlanTrabajo;
 import com.gestor.seguimiento.PlanTrabajoActividad;
 
 import conexion.Consulta;
@@ -91,7 +95,7 @@ public class EvaluacionPlanAccionDAO {
                     + " ," + epd.getCodItem() + ", '" + epd.getNombre() + "', '" + epd.getDescripcion() + "', '" + epd.getEstado() + "','" + epd.getDocumentoUsuario()+"', " 
                     + " NOW(), '" + epd.getResponsable().getCedula() + "','" + epd.getFechaPlazo() + "', "+epd.getFuentehallazgo().getCodFuentehallazgo()+", "+epd.getClasehallazgo().getCodClasehallazgo()
                     + " ," + epd.getTipoaccion().getCodTipoaccion()+", "+epd.getMotivocorreccion().getCodMotivocorreccion()+" "
-                    + ",'" + epd.getDescripcionhallazgo()+"','"+epd.getObservaciones()+"', "+epd.getCentrotrabajo().getCodCentrotrabajo()+", "+epd.getRegistro()+", "+epd.getEficacia()+" )" 
+                    + ",'" + epd.getDescripcionhallazgo()+"','"+epd.getObservaciones()+"', "+epd.getCentrotrabajo().getCodCentrotrabajo()+",null, null )" 
             );            
             consulta.actualizar(sql);
         } finally {
@@ -163,29 +167,48 @@ public class EvaluacionPlanAccionDAO {
     
     
             
-    /*public Collection<? extends EvaluacionPlanAccionDetalle> cargarListaEvaluacionPlanAcciones(int tipo) throws SQLException {
+    /*public Collection<? extends EvaluacionPlanAccionDetalle> cargarListaEvaluacionPlanAcciones(int codEstablecimiento) throws SQLException {
         ResultSet rs = null;
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT actividad"
-                    + " FROM gestor.evaluacion_plan_accion_detalle EPAD"                    
-                    + " JOIN seguimiento.plan_trabajo_actividad pta USING (codigo_establecimiento)"
+                    "SELECT pta.codigo_establecimiento, pta.actividad act, pta.cod_actividad cod_act, pta.fecha_reg fr, pta.fecha_venc fv, pta.estado edo"+
+                    ", pt.cod_plan_trabajo codpt, pt.descripcion descpt, " +
+                    "obj.cod_objetivo codobj, obj.nombre nomobj," +
+                    "pr.cod_programa codpr, pr.nombre nompr, " +
+                    "rec.cod_recursos codrec, rec.nombre nomrec, "+
+                    "res.cedula ced, res.nombres noms, res.apellidos apes, "+
+                    "fh.cod_fuente_hallazgo codfh, fh.nombre nomfh "+                            
+                    "FROM seguimiento.plan_trabajo_actividad pta " +
+                    "JOIN seguimiento.plan_trabajo pt USING (cod_plan_trabajo, codigo_establecimiento) " +
+                    "JOIN public.responsable res USING (cedula) " +
+                    "JOIN gestor.recursos rec USING (cod_recursos) " +
+                    "JOIN gestor.fuente_hallazgo fh USING (cod_fuente_hallazgo) " +
+                    "JOIN public.plan_trabajo_programa pr USING (cod_programa, cod_objetivo, cod_plan_trabajo) " +
+                    "JOIN public.plan_trabajo_objetivo obj USING (cod_objetivo, cod_plan_trabajo) " +
+                    "WHERE pta.codigo_establecimiento='"+codEstablecimiento+"' " +
+                    "GROUP BY pta.codigo_establecimiento, pta.actividad, pta.cod_actividad, pt.cod_plan_trabajo, pta.fecha_reg, pta.fecha_venc, pta.estado, pt.descripcion, " +
+                    "obj.cod_objetivo, obj.nombre, pr.nombre, pr.cod_programa, res.cedula, res.nombres, res.apellidos, fh.cod_fuente_hallazgo, fh.nombre, "+
+                    "rec.cod_recursos, rec.nombre "+
+                    "ORDER BY pt.cod_plan_trabajo"
                     
             );
             rs = consulta.ejecutar(sql);
             Collection<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles = new ArrayList<EvaluacionPlanAccionDetalle>();
             while (rs.next()) {
-                EvaluacionPlanAccionDetalle epad = new EvaluacionPlanAccionDetalle(new EvaluacionPlanAccionDetallePK(codEvaluacion, codigoEstablecimiento, rs.getLong("cod_plan"), rs.getLong("cod_plan_detalle")),
-                        rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("nombre"), rs.getString("descripcion"), rs.getString("estado"),
-                        new Usuarios(
-                                new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
-                        ), rs.getDate("fecha_registro"), rs.getDate("fecha_plazo"), rs.getDate("fecha_actualiza"), rs.getString("descripcion_hallazgo"),
-                        rs.getString("observaciones"), rs.getBoolean("registro"), rs.getBoolean("eficacia")
-                );                
-                epad.setPlantrabajoactividad(new PlanTrabajoActividad(tipo, tipo, tipo, tipo, tipo, cedula, tipo, descripcion, fechaVenc, estado, fechaRegistro));
-
+                EvaluacionPlanAccionDetalle epad = new EvaluacionPlanAccionDetalle(new EvaluacionPlanAccionDetallePK(null, 0, null), "", 0, 0, 0, "", "", "", null, null, null, null, "", "", null, null);
+                epad.setPlantrabajoactividad(new PlanTrabajoActividad(0, 0,rs.getInt("cod_act"), 0, 0, 0,"", 0, rs.getString("ACT"), rs.getDate("fv"), rs.getString("edo"), rs.getDate("fr")));
+                epad.setPlantrabajo(new PlanTrabajo(0, rs.getInt("codpt"), rs.getString("descpt"), null, 0, 0, "", null));
+                epad.getPlantrabajoactividad().setObjetivo(new PlanTrabajoObjetivo(0, 0, rs.getInt("codobj"), rs.getString("nomobj")));
+                epad.getPlantrabajoactividad().setPrograma(new PlanTrabajoPrograma(0, 0, 0, rs.getInt("codpr"), 0, rs.getString("nompr")));
+                epad.setResponsable(new Responsable("", "", "", "", ""));
+                epad.getPlantrabajoactividad().setResponsable(new Responsable(rs.getString("ced"), rs.getString("noms"), rs.getString("apes"), "", ""));                
+                epad.getPlantrabajoactividad().setFuenteHallazgo(new FuenteHallazgo(rs.getInt("codfh"), rs.getString("nomfh")));
+                epad.getPlantrabajoactividad().setRecursos(new Recursos(rs.getInt("codrec"), rs.getString("nomrec")));
+                
+                epad.setRegistro(null);
+                epad.setEficacia(null);
                 evaluacionPlanAccionDetalles.add(epad);
 
             }
@@ -234,7 +257,8 @@ public class EvaluacionPlanAccionDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "UPDATE gestor.evaluacion_plan_accion_detalle"
-                    + " SET estado='" + epad.getEstado() + "', documento_usuario='" + epad.getDocumentoUsuario() + "', fecha_actualiza=NOW(), fecha_finalizado=NOW()"
+                    + " SET estado='" + epad.getEstado() + "', documento_usuario='" + epad.getDocumentoUsuario() + "', fecha_actualiza=NOW(), fecha_finalizado=NOW(), "
+                    + " registro= '"+epad.getRegistro()+"', eficacia='"+epad.getEficacia()+"'"
                     + " WHERE cod_evaluacion=" + epad.getEvaluacionPlanAccionDetallePK().getCodEvaluacion() + " AND codigo_establecimiento=" + epad.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento()
                     + " AND cod_plan=" + epad.getEvaluacionPlanAccionDetallePK().getCodPlan() + " AND cod_plan_detalle=" + epad.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()
             );
@@ -324,6 +348,7 @@ public class EvaluacionPlanAccionDAO {
                         rs.getString("observaciones"), rs.getBoolean("registro"), rs.getBoolean("eficacia")
                 );
                 epad.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));                
+                epad.getPlantrabajoactividad().setResponsable(new Responsable("", "", "", "", ""));
                 epad.setFuentehallazgo(new FuenteHallazgo(rs.getInt("cod_fh"), rs.getString("nom_fh")));
                 epad.setClasehallazgo(new ClaseHallazgo(rs.getInt("cod_ch"), rs.getString("nom_ch")));
                 epad.setTipoaccion(new TipoAccion(rs.getInt("cod_ta"), rs.getString("nom_ta")));
@@ -442,7 +467,7 @@ public class EvaluacionPlanAccionDAO {
                     + " cod_evaluacion, codigo_establecimiento, cod_plan,  cod_plan_detalle, "
                     + " cod_nota, documento_usuario, estado, nombre, descripcion, fecha_registro)"
                     + " VALUES (" + pk.getCodEvaluacion() + ", " + pk.getCodigoEstablecimiento() + ", " + pk.getCodPlan() + ", " + pk.getCodPlanDetalle()
-                    + " , " + pk.getCodNota() + ", '" + epadn.getDocumentoUsuario() + "', '" + epadn.getEstado() + "', '" + epadn.getNombre() + "', '" + epadn.getDescripcion() + "', NOW())"
+                    + " , DEFAULT, '" + epadn.getDocumentoUsuario() + "', '" + epadn.getEstado() + "', '" + epadn.getNombre() + "', '" + epadn.getDescripcion() + "', NOW())"
                     + " ON CONFLICT (cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle, cod_nota)"
                     + " DO UPDATE SET documento_usuario=excluded.documento_usuario, descripcion=excluded.descripcion"
             );

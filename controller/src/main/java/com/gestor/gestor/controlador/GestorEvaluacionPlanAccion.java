@@ -12,6 +12,7 @@ import com.gestor.gestor.EvaluacionPlanAccionDetalle;
 import com.gestor.gestor.EvaluacionPlanAccionDetalleNotas;
 import com.gestor.gestor.EvaluacionPlanAccionDetalleNotasPK;
 import com.gestor.gestor.dao.EvaluacionPlanAccionDAO;
+import com.gestor.publico.Establecimiento;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -96,16 +97,6 @@ public class GestorEvaluacionPlanAccion extends Gestor {
         }
     }
     
-    /*public Collection<? extends EvaluacionPlanAccionDetalle> cargarListaEvaluacionPlanAccion(Integer tipo) throws Exception {
-        try {
-            this.abrirConexion();
-            EvaluacionPlanAccionDAO evaluacionPlanAccionDAO = new EvaluacionPlanAccionDAO(conexion);
-            return evaluacionPlanAccionDAO.cargarListaEvaluacionPlanAcciones(tipo);
-        } finally {
-            this.cerrarConexion();
-        }
-    }*/
-
     public Collection<? extends EvaluacionPlanAccionDetalle> cargarListaEvaluacionPlanAccion(String condicion) throws Exception {
         try {
             this.abrirConexion();
