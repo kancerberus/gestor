@@ -36,6 +36,8 @@ public class CentroTrabajo implements Serializable, Cloneable {
     private String nombre;
     @Column(name = "nit")
     private String nit;
+    @Column(name="estado")
+    private Boolean estado;
     
        
     public CentroTrabajo() {        
@@ -50,15 +52,24 @@ public class CentroTrabajo implements Serializable, Cloneable {
         this.nombre = nombre;        
     }
 
-    public CentroTrabajo(Integer codigoEstablecimiento, Integer codCentrotrabajo, String nombre, String nit ) {
+    public CentroTrabajo(Integer codigoEstablecimiento, Integer codCentrotrabajo, String nombre, String nit, Boolean estado) {
         this.codigoEstablecimiento = codigoEstablecimiento;
         this.codCentrotrabajo = codCentrotrabajo;
         this.nombre = nombre;  
         this.nit = nit;
+        this.estado = estado;
     }
 
     public Integer getCodCentrotrabajo() {
         return codCentrotrabajo;
+    }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
     }
 
     public void setCodCentrotrabajo(Integer codCentrotrabajo) {
