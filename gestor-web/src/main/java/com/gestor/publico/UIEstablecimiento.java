@@ -151,7 +151,7 @@ public class UIEstablecimiento implements Serializable {
     public void dialogoCentro() {
         try {            
             centro=new CentroTrabajo();
-            Dialogo dialogo = new Dialogo("dialogos/centros.xhtml", "Crear Centro De Trabajo", "clip", Dialogo.WIDTH_80);
+            Dialogo dialogo = new Dialogo("dialogos/centros.xhtml", "Crear Centro De Trabajo", "clip", Dialogo.WIDTH_AUTO);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
             UtilJSF.execute("PF('dialog').show();");
             establecimiento = (Establecimiento) UtilJSF.getBean("varEstablecimiento");
@@ -172,7 +172,7 @@ public class UIEstablecimiento implements Serializable {
                 centro.setCodCentrotrabajo(centrostrabajo.size()+1); 
             }
             
-            CentroTrabajo ct= new CentroTrabajo(establecimiento.getCodigoEstablecimiento(), centro.getCodCentrotrabajo(), centro.getNombre(), centro.getNit());
+            CentroTrabajo ct= new CentroTrabajo(establecimiento.getCodigoEstablecimiento(), centro.getCodCentrotrabajo(), centro.getNombre(), centro.getNit(), centro.getEstado());
             gestorCentrotrabajo.validarCentro(ct);
             gestorCentrotrabajo.almacenarCentro(ct);   
             

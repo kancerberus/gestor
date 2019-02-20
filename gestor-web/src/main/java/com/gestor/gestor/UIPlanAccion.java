@@ -720,7 +720,7 @@ public class UIPlanAccion {
             
             GestorCentroTrabajo gestorCentrotrabajo = new GestorCentroTrabajo();
             centrostrabajo= new ArrayList<>();
-            centrostrabajo.addAll((Collection<? extends CentroTrabajo>) gestorCentrotrabajo.cargarListaCentrosTrabajo(e.getEstablecimiento().getCodigoEstablecimiento()));
+            centrostrabajo.addAll((Collection<? extends CentroTrabajo>) gestorCentrotrabajo.cargarListaCentrosTrabajoactivos(e.getEstablecimiento().getCodigoEstablecimiento()));
             
 
             List<Responsable> responsablesSisgapp = new ArrayList<>();

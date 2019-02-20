@@ -495,7 +495,7 @@ public class UICapacitacion {
             Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
             GestorCentroTrabajo gestorCentrotrabajo = new GestorCentroTrabajo();
             centrostrabajo= new ArrayList<>();
-            centrostrabajo.addAll((Collection<? extends CentroTrabajo>) gestorCentrotrabajo.cargarListaCentrosTrabajo(e.getEstablecimiento().getCodigoEstablecimiento()));
+            centrostrabajo.addAll((Collection<? extends CentroTrabajo>) gestorCentrotrabajo.cargarListaCentrosTrabajoactivos(e.getEstablecimiento().getCodigoEstablecimiento()));
             
             evaluacionCapacitacionDetalles = new ArrayList<>();
             evaluacionCapacitacionDetalles.addAll(gestorEvaluacionCapacitacion.cargarListaEvaluacionCapacitacionDetalle(

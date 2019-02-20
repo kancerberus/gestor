@@ -11,13 +11,14 @@
              <h2>                
                  <p class="letraBlueBackgroundWhite">Establecimiento: #{uiEstablecimiento.establecimiento.nombre}</p>
             </h2>
-            <h:panelGrid columns="2" >
+            <h:panelGrid columns="3" >
                     <h:outputText value="Nit"/>                                        
-                    <h:outputText value="Nombre Centro Trabajo"/>                                        
+                    <h:outputText value="Nombre Centro Trabajo"/>                                                            
+                    <h:outputText value="Estado"/>                                                            
                     
                     <p:inputText value="#{uiEstablecimiento.centro.nit}" placeholder="Nit"/>
                     <p:inputText value="#{uiEstablecimiento.centro.nombre}" placeholder="Nombre"/>
-                    
+                    <p:selectBooleanCheckbox value="#{uiEstablecimiento.centro.estado}" itemLabel="Activo/Inactivo"/>                    
                     
             </h:panelGrid>
             
@@ -38,6 +39,7 @@
                             <p:column headerText="Opciones" />                            
                             <p:column headerText="Nit"/>
                             <p:column headerText="Nombre"/>
+                            <p:column headerText="Estado"/>
                         </p:row> 
                     </p:columnGroup>
 
@@ -52,6 +54,10 @@
                     </p:column>                                   
                     <p:column>
                         <h:outputText value="#{varCentro.nombre}"/>
+                    </p:column>
+                    <p:column>                        
+                        <p:selectBooleanCheckbox value="#{varCentro.estado}" disabled="true" />                    
+                        <h:outputText value="    #{varCentro.estado? 'Activo' : 'Inactivo'}"/>
                     </p:column>
             </p:dataTable>
         </p:outputPanel>            

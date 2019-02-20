@@ -83,7 +83,7 @@ public class UIPlanMaestro {
     @PostConstruct
     public void init() {        
         
-        try {
+        try {            
             Sesion s = (Sesion) UtilJSF.getBean("sesion");
             establecimientoList = new ArrayList<>();
             establecimientoList.addAll(s.getEstablecimientoList());
@@ -150,8 +150,7 @@ public class UIPlanMaestro {
         try {
             GestorEvaluacion gestorEvaluacion = new GestorEvaluacion();
             this.establecimiento = (Establecimiento) UtilJSF.getBean("varEstablecimientoPm");
-            this.evaluacionList = new ArrayList<>();
-
+            this.evaluacionList = new ArrayList<>();            
             List<String> condicionesConsulta = new ArrayList<>();
             condicionesConsulta.add(App.CONDICION_WHERE);
             condicionesConsulta.add(Evaluacion.EVALUACION_CONDICION_COD_ESTABLECIMIENTO.replace("?", String.valueOf(establecimiento.getCodigoEstablecimiento())));

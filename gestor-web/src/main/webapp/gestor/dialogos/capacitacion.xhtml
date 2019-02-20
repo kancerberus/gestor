@@ -91,7 +91,7 @@
             </h:panelGrid>
             <h:panelGrid>
                 <p:dataTable id="dtCapacitacionDetalle"  value="#{uiCapacitacion.evaluacionCapacitacionDetalles}" var="varCapacitacionDetalle" emptyMessage="El ítem no tiene capacitaciones registradas."
-                              rowStyleClass="letra-xx-small-centro" 
+                              rowStyleClass="letra-xx-small-centro" scrollable="true" scrollWidth="1920" scrollHeight="100"
                               rowHover="true">
                     <f:facet name="header">
                         Planes de Acción
@@ -146,8 +146,7 @@
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varCapacitacionDetalle.recursos.nombre}"/>
-                    </p:column>
-                    
+                    </p:column>                    
                     <p:column>
                         <h:outputText value="#{varCapacitacionDetalle.usuarios.usuario}"/>
                     </p:column>
