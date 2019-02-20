@@ -34,6 +34,16 @@ public class GestorCentroTrabajo extends Gestor implements Serializable{
         }
     }
     
+    public List<?> cargarListaCentrosTrabajoactivos(int codEstablecimiento) throws Exception {
+        try {
+            this.abrirConexion();
+            CentroTrabajoDAO centrotrabajoDAO = new CentroTrabajoDAO(conexion);
+            return centrotrabajoDAO.cargarListaCentrostrabajoactivos(codEstablecimiento);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
 
     
     public void validarCentro(CentroTrabajo centro) throws Exception {        

@@ -41,16 +41,17 @@ public class CentroTrabajoDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT codigo_establecimiento, cod_centrotrabajo, nombre, nit "                    
+                    "SELECT codigo_establecimiento, cod_centrotrabajo, nombre, nit, estado "                    
                     + " FROM centro_trabajo"
                     + " WHERE codigo_establecimiento= '"+codEstablecimiento+"'"
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
-                CentroTrabajo ct= new CentroTrabajo(rs.getInt("codigo_establecimiento"), rs.getInt("cod_centrotrabajo"), rs.getString("nombre") , rs.getString("nit"));                
+                CentroTrabajo ct= new CentroTrabajo(rs.getInt("codigo_establecimiento"), rs.getInt("cod_centrotrabajo"), rs.getString("nombre") , rs.getString("nit"), rs.getBoolean("estado"));                
                 ct.setCodCentrotrabajo(rs.getInt("cod_centrotrabajo"));
                 ct.setNombre(rs.getString("nombre")); 
                 ct.setNit(rs.getString("nit"));
+                ct.setEstado(rs.getBoolean("estado"));
                 listaCentrosTrabajo.add(ct);
             }
             
@@ -65,16 +66,49 @@ public class CentroTrabajoDAO {
         }
     }      
     
+    public List<?> cargarListaCentrostrabajoactivos(int codEstablecimiento) throws SQLException {        
+        ResultSet rs = null;
+        
+        Consulta consulta = null;        
+        List<CentroTrabajo> listaCentrosTrabajo = new ArrayList<>();
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT codigo_establecimiento, cod_centrotrabajo, nombre, nit, estado "                    
+                    + " FROM centro_trabajo"
+                    + " WHERE codigo_establecimiento= '"+codEstablecimiento+"' AND estado='true'"
+            );
+            rs = consulta.ejecutar(sql);
+            while (rs.next()) {
+                CentroTrabajo ct= new CentroTrabajo(rs.getInt("codigo_establecimiento"), rs.getInt("cod_centrotrabajo"), rs.getString("nombre") , rs.getString("nit"), rs.getBoolean("estado"));                
+                ct.setCodCentrotrabajo(rs.getInt("cod_centrotrabajo"));
+                ct.setNombre(rs.getString("nombre")); 
+                ct.setNit(rs.getString("nit"));
+                ct.setEstado(rs.getBoolean("estado"));
+                listaCentrosTrabajo.add(ct);
+            }
+            
+            return listaCentrosTrabajo;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
     public void insertarCentro(CentroTrabajo centro) throws SQLException {
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO public.centro_trabajo "
-                    + " ( cod_centrotrabajo, codigo_establecimiento, nombre, nit )"
-                    + " VALUES ('" + centro.getCodCentrotrabajo() + "', '" + centro.getCodigoEstablecimiento() + "', '"+centro.getNombre()+"', '" + centro.getNit() + "') "                    
+                    + " ( cod_centrotrabajo, codigo_establecimiento, nombre, nit, estado )"
+                    + " VALUES ('" + centro.getCodCentrotrabajo() + "', '" + centro.getCodigoEstablecimiento() + "', '"+centro.getNombre()+"', '" + centro.getNit() + "','"+centro.getEstado()+"') "                    
                     + " ON CONFLICT (cod_centrotrabajo, codigo_establecimiento) DO UPDATE "
-                    + " SET nombre=EXCLUDED.nombre, nit=EXCLUDED.nit"
+                    + " SET nombre=EXCLUDED.nombre, nit=EXCLUDED.nit, estado=EXCLUDED.estado"
             );
             consulta.actualizar(sql);
         } finally {
