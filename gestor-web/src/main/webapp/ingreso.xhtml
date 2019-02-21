@@ -29,23 +29,25 @@
                                 <p:focus  for="inTxtUsuario"/>
                                 <h:panelGrid id="grid" style="margin: auto auto;" columns="1" >
                                     <p:spacer height="10"/>
-                                    <p:inputText id="inTxtUsuario" value="#{uiUsuario.usuario}" 
-                                                 placeholder="Usuario"
-                                                 style="width: 200px; border-radius: 10px;">
+                                    <p:inputText id="inTxtUsuario" value="#{uiUsuario.usuario}" placeholder="Usuario"                                                
+                                                                                                style="width: 200px; border-radius: 10px;">
                                     </p:inputText>
 
                                     <p:password id="pwClave" value="#{uiUsuario.clave}" feedback="true" placeholder="Contraseña" 
-                                                promptLabel="Digite Clave" weakLabel="Insegura"
-                                                goodLabel="Segura" strongLabel="Segura" style="width: 200px; border-radius: 10px;"/>
+                                                                                                promptLabel="Digite Clave" weakLabel="Insegura"
+                                                                                                goodLabel="Segura" strongLabel="Segura" style="width: 200px; border-radius: 10px;"/>
 
                                     <p:commandButton value="Ingresar" style="margin: auto auto;width: 210px;height: 40px; border-radius: 10px;" 
-                                                     action="#{uiUsuario.validarUsuario()}"/>
+                                                                                                        action="#{uiUsuario.validarUsuario()}"/>
 
                                     <p:spacer height="10"/>
                                 </h:panelGrid>
                                 <p:spacer height="40"/>
                                 <div align="left">
-                                    <p:outputLabel value="18.12.2.0" styleClass="letraBlanca" style="font-family: Open Sans; font-weight: 900;"/>
+                                    <p:outputLabel value="Fecha Actualización: 21/02/2019" styleClass="letraBlanca" style="font-family: Open Sans; font-weight: 900;"/>
+                                </div>
+                                <div align="left">
+                                    <p:outputLabel value="Versión: 1.0.0" styleClass="letraBlanca" style="font-family: Open Sans; font-weight: 900;"/>                                                                        
                                 </div>
                             </p:panel> 
 
