@@ -27,6 +27,7 @@ import com.gestor.publico.PlanTrabajoObjetivo;
 import com.gestor.publico.PlanTrabajoPrograma;
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
+import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorObjetivo;
 import com.gestor.publico.controlador.GestorPrograma;
 import com.gestor.publico.controlador.GestorResponsable;
@@ -433,10 +434,13 @@ public class UIPlanTrabajo implements Serializable{
             recursos= new ArrayList<>();
             recursos.addAll((Collection<? extends Recursos>) gestorEvaluacionCapacitacion.cargarListaRecursos());
                                    
+            GestorEstablecimiento gestorEstablecimiento= new GestorEstablecimiento();
+            Integer sisgapp = gestorEstablecimiento.buscarSisgapp();
+            
             responsables = new ArrayList<>();
             List<String> condicionesConsulta = new ArrayList<>();
             condicionesConsulta.add(App.CONDICION_WHERE);
-            condicionesConsulta.add(Responsable.RESPONSABLE_CONDICION_CODIGO_ESTABLECIMIENTO.replace("?", String.valueOf(p.getCodEstablecimiento())));
+            condicionesConsulta.add(Responsable.RESPONSABLE_CONDICION_CODIGO_ESTABLECIMIENTO.replace("?", String.valueOf(p.getCodEstablecimiento())+","+sisgapp));
             responsables.addAll(gestorResponsable.cargarListaResponsable(
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO) 
             ));
