@@ -29,8 +29,10 @@ import conexion.Consulta;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -328,6 +330,9 @@ public class PlanTrabajoDAO {
                pta.setRecursos(new Recursos(rs.getInt("codrec"), rs.getString("nomrec")));
                pta.setResponsable(new Responsable(rs.getString("ced"), rs.getString("noms"), rs.getString("apes"), "", ""));
                pta.setFuenteHallazgo(new FuenteHallazgo(rs.getInt("codfh"), rs.getString("nomfh")));
+               
+              
+               
                planesTrabajoactividad.add(pta);
             }            
             return planesTrabajoactividad;
@@ -384,7 +389,7 @@ public class PlanTrabajoDAO {
                pta.setRecursos(new Recursos(rs.getInt("codrec"), rs.getString("nomrec")));
                pta.setResponsable(new Responsable(rs.getString("ced"), rs.getString("noms"), rs.getString("apes"), "", ""));
                pta.setFuenteHallazgo(new FuenteHallazgo(rs.getInt("codfh"), rs.getString("nomfh")));
-               planesTrabajoactividad.add(pta);
+             
             }            
             return planesTrabajoactividad;
             

@@ -40,8 +40,10 @@ import conexion.Consulta;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -128,7 +130,7 @@ public class EvaluacionPlanAccionDAO {
                     + " JOIN gestor.clase_hallazgo ch USING (cod_clase_hallazgo)"                            
                     + " JOIN gestor.tipo_accion ta USING (cod_tipo_accion)"
                     + " JOIN gestor.motivo_correccion mc USING (cod_motivo_correccion)"
-                    + " JOIN public.centro_trabajo ct USING (cod_centrotrabajo)"
+                    + " JOIN public.centro_trabajo ct USING (cod_centrotrabajo, codigo_establecimiento)"
                     + " JOIN public.responsable R USING (cedula)"
                     + " WHERE cod_evaluacion=" + codEvaluacion + " AND EPAD.codigo_establecimiento=" + codigoEstablecimiento 
                     + " AND cod_ciclo='" + codCiclo + "' AND cod_seccion=" + codSeccion + " AND cod_detalle=" + codDetalle + " AND cod_item=" + codItem
@@ -328,7 +330,7 @@ public class EvaluacionPlanAccionDAO {
                     + " JOIN gestor.clase_hallazgo ch USING (cod_clase_hallazgo)"                            
                     + " JOIN gestor.tipo_accion ta USING (cod_tipo_accion)"
                     + " JOIN gestor.motivo_correccion mc USING (cod_motivo_correccion)"
-                    + " JOIN public.centro_trabajo ct USING (cod_centrotrabajo)"
+                    + " JOIN public.centro_trabajo ct USING (cod_centrotrabajo, codigo_establecimiento)"
                     + " JOIN public.responsable R ON (R.cedula=EPAD.cedula)"                    
                     + condicion
                     + " ORDER BY C.numeral, S.numeral, SD.numeral, SDI.numeral"
@@ -383,7 +385,16 @@ public class EvaluacionPlanAccionDAO {
                 s.setCiclo(c);
                 sd.setSeccion(s);
                 sdi.setSeccionDetalle(sd);
-                epad.setSeccionDetalleItems(sdi);
+                epad.setSeccionDetalleItems(sdi); 
+                
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                dateFormat.format(epad.getFechaPlazo());
+                Date fechaac= new Date();
+                dateFormat.format(fechaac);
+
+                int dias=(int) (epad.getFechaPlazo().getTime()-fechaac.getTime())/86400000;
+                epad.setDiasRestantes(dias);
+                    
 
                 evaluacionPlanAccionDetalles.add(epad);
             }            
