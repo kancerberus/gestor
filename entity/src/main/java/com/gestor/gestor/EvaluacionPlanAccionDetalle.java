@@ -81,6 +81,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private Boolean eficacia;
     @Column(name = "registro")
     private Boolean registro;
+    private Integer diasRestantes;
     
     private String documentoUsuario;
     
@@ -92,6 +93,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private CentroTrabajo centrotrabajo = new CentroTrabajo();    
     private PlanTrabajoActividad plantrabajoactividad = new PlanTrabajoActividad();
     private PlanTrabajo plantrabajo =new PlanTrabajo();
+    
     
     
     private Usuarios usuarios;
@@ -140,6 +142,14 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         
     }
 
+    public Integer getDiasRestantes() {
+        return diasRestantes;
+    }
+
+    public void setDiasRestantes(Integer diasRestantes) {
+        this.diasRestantes = diasRestantes;
+    }
+    
     public PlanTrabajo getPlantrabajo() {
         return plantrabajo;
     }
