@@ -86,7 +86,8 @@ public class UIPlanAccion {
     private String responsable;
     private Date fechaPlanInicio;
     private Date fechaPlanFin;
-
+    int dias=0;
+    
     private List<Responsable> responsables = new ArrayList<>();
     private List<PlanTrabajoPrograma> programas = new ArrayList<>();
     private List<PlanTrabajoObjetivo> objetivos = new ArrayList<>();
@@ -103,7 +104,8 @@ public class UIPlanAccion {
 
             establecimientoList = new ArrayList<>();
             establecimientoList.addAll(s.getEstablecimientoList());
-
+            
+            
             ciclosString = new ArrayList<>();
             for (Ciclo c : s.getCiclos()) {
                 ciclosString.add(c.getCodCiclo());
@@ -365,6 +367,7 @@ public class UIPlanAccion {
                         UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
                 )
                 );
+                
                 if(!evaluacionPlanAccionDetalles.isEmpty()){
                 UtilJSF.setBean("varPlanAccionDetalle", evaluacionPlanAccionDetalles.get(0), UtilJSF.SESSION_SCOPE);                
                 }
@@ -747,6 +750,14 @@ public class UIPlanAccion {
                 UtilLog.generarLog(this.getClass(), e);
             }
         }
+    }
+
+    public int getDias() {
+        return dias;
+    }
+
+    public void setDias(int dias) {
+        this.dias = dias;
     }
 
     public EvaluacionPlanAccionDetallePK getEvaluacionPlanAccionDetallePK() {

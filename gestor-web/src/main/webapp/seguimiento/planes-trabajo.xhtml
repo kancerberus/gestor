@@ -136,12 +136,7 @@
                     <h:outputText value="#{varPlanTrabajoactividad.fechaVenc}">
                         <f:convertDateTime pattern="dd/MM/yyyy" />
                     </h:outputText>
-                </p:column>
-                <p:column headerText="Dias Restantes">
-                    <h:outputText value="#{varPlanTrabajoactividad.fechaVenc}">
-                        <f:convertDateTime pattern="dd/MM/yyyy" />
-                    </h:outputText>
-                </p:column>
+                </p:column>                
                 <p:column headerText="Estado" filterBy="#{varPlanTrabajoactividad.estado}"
                           filterMatchMode="equals">
                     <f:facet name="filter">

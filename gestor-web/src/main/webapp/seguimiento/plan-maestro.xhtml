@@ -8,9 +8,20 @@
     <ui:define name="content">
 
 
-        <h:form enctype="multipart/form-data" id="formPlanMaestro" style="font-size: small;">
-            <h2>PLAN MAESTRO: <p:outputLabel value="#{planMaestro.establecimiento.nombre}"/></h2>
-
+        <h:form enctype="multipart/form-data" id="formPlanMaestro" >
+            
+            <h1>
+                PLAN MAESTRO  
+            </h1>
+            <div align="left">
+                <p:graphicImage  value="#{planMaestro.establecimiento.logo}" cache="false" width="80"/>
+                <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" width="40" 
+                    rendered="#{empty planMaestro.establecimiento.logo}"/>                                                                        
+                <p:outputLabel style="font-size: 25px; font-family: bolder"  value="#{planMaestro.establecimiento.nombre}"/>                                     
+            </div>
+                <p:progressBar style="margin-left: 80%; margin: 0% 1% 1% 80%;" value="#{uiPlanMaestro.avanceEvaluacion}" labelTemplate="Avance Evaluación {value}%" displayOnly="true" interval="10"/>
+            
+            
             <p:tabView value="#{planMaestro.planTituloList}" var="varPlanTitulo" >
                 <p:tab title="#{varPlanTitulo.numeral}. #{varPlanTitulo.nombre}">
 

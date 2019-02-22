@@ -44,7 +44,7 @@
                             <p:column >
                                 <h:outputText value="#{t.nombre}" />
                                 </p:column>                                
-                        </p:selectOneListbox>
+                        </p:selectOneListbox>                        
                 </h:panelGrid>
                     <h:panelGrid columns="2">
                         <h:outputLabel value="Cod Evaluación"/>
@@ -71,6 +71,8 @@
 
                         <h:outputText value="Fecha Fin" />
                         <p:calendar value="#{uiPlanAccion.fechaPlanFin}" pattern="dd/MM/yyyy" placeholder="Fecha Plan Acción"/>
+                        
+                        
 
                     </h:panelGrid>
                 </p:panelGrid>     
@@ -81,7 +83,7 @@
             </h:panelGroup>
             <br/>
             <br/>
-            <p:dataTable var="varPlanAccionDetalle" value="#{uiPlanAccion.evaluacionPlanAccionDetalles}"
+            <p:dataTable id="tblPlanesAccion" var="varPlanAccionDetalle" value="#{uiPlanAccion.evaluacionPlanAccionDetalles}"
                          widgetVar="planAccionDetalleTable" rowStyleClass="letra-xx-small-centro" style="font-size: 10px;" 
                          emptyMessage="No tiene planes de acción abiertos." scrollable="true" scrollWidth="1900"
                          rowHover="true"
@@ -153,12 +155,7 @@
                     <h:outputText value="#{varPlanAccionDetalle.fechaPlazo}">
                         <f:convertDateTime pattern="dd/MM/yyyy" />
                     </h:outputText>
-                </p:column>
-                <p:column headerText="Dias Restantes">
-                    <h:outputText value="#{varPlanAccionDetalle.fechaPlazo}">
-                        <f:convertDateTime pattern="dd/MM/yyyy" />
-                    </h:outputText>
-                </p:column>
+                </p:column>                
                 <p:column headerText="Fecha Fin" filterBy="#{varPlanAccionDetalle.fechaFinalizado}">
                     <h:outputText value="#{varPlanAccionDetalle.fechaFinalizado}">
                         <f:convertDateTime pattern="dd/MM/yyyy" />

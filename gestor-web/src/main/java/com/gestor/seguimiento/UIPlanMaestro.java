@@ -205,6 +205,17 @@ public class UIPlanMaestro {
 
     }
     
+    public Integer getAvanceEvaluacion() {
+        try {
+            PlanMaestro pm = (PlanMaestro) UtilJSF.getBean("planMaestro");
+            GestorEvaluacion gestorEvaluacion = new GestorEvaluacion();
+            return gestorEvaluacion.avanceEvaluacion(pm.getEvaluacion().getEvaluacionPK().getCodigoEstablecimiento(), pm.getEvaluacion().getEvaluacionPK().getCodEvaluacion());
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+        return Integer.MIN_VALUE;
+    }
+    
     public void consultarEvaluacionesLista() {
         try {
             evaluacionList = new ArrayList<>();
