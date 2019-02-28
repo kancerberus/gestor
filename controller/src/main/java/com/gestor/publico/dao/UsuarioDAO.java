@@ -106,7 +106,7 @@ public class UsuarioDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT documento_usuario, nombre, apellido, usuario, clave, activo, correo"
-                    + " FROM usuarios"
+                    + " FROM usuarios"                    
             );
 
             //  public static final String FILTRO_USUARIO = "USUARIO";
@@ -131,7 +131,7 @@ public class UsuarioDAO {
                 usuario.setCorreo(rs.getString("correo"));
                 usuario.setUsuario(rs.getString("usuario"));
                 usuario.setClave(rs.getString("clave"));
-                usuario.setClaveMd5(rs.getString("clave"));
+                usuario.setClaveMd5(rs.getString("clave"));                
 //                Establecimiento establecimientoUsuario = new Establecimiento(rs.getInt("codigo_establecimiento"));
 //                usuario.setEstablecimiento(establecimientoUsuario);
             }
@@ -162,6 +162,33 @@ public class UsuarioDAO {
             if (rs.next()) {
                 rol.setCodigoRol(rs.getInt("codigo_rol"));
                 rol.setNombre(rs.getString("nombre"));
+            }
+            usuario.setRoles(rol);
+            return usuario;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    public Usuarios cargarRolUsuario(Usuarios usuario) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT RU.codigo_rol"
+                    + " FROM roles_usuarios RU "                    
+                    + " WHERE documento_usuario = '" + usuario.getUsuariosPK().getDocumentoUsuario() + "'"
+            );
+            rs = consulta.ejecutar(sql);
+            Roles rol = new Roles();
+            if (rs.next()) {
+                rol.setCodigoRol(rs.getInt("codigo_rol"));             
             }
             usuario.setRoles(rol);
             return usuario;

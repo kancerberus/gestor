@@ -21,6 +21,7 @@ import com.gestor.publico.PlanTrabajoPrograma;
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.UsuariosPK;
+import com.gestor.seguimiento.PlanCapacitacion;
 import com.gestor.seguimiento.PlanTrabajo;
 import com.gestor.seguimiento.PlanTrabajoActividad;
 import com.gestor.seguimiento.PlanTrabajoActividadNota;
@@ -40,42 +41,42 @@ import java.util.List;
  *
  * @author juliano
  */
-public class PlanTrabajoDAO {
+public class PlanCapacitacionDAO {
 
     private Connection conexion;
 
-    public PlanTrabajoDAO(Connection conexion) {
+    public PlanCapacitacionDAO(Connection conexion) {
         this.conexion = conexion;
     }
 
-    public List<PlanTrabajo> cargarPlanTrabajoList(int codEstablecimiento) throws SQLException {
+    public List<PlanCapacitacion> cargarPlanCapacitacionList(int codEstablecimiento) throws SQLException {
         ResultSet rs = null;
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT pt.codigo_establecimiento,pt.cod_plan_trabajo codpt, pt.meta metapt, descripcion descpt, "
-                    + " estado espt, fecha_venc fvpt, fecha_reg frpt "                    
-                    + " FROM seguimiento.plan_trabajo pt "
+                    "SELECT pc.codigo_establecimiento,pc.cod_plan_capacitacion codpc, descripcion descpc, meta metapc,"
+                    + " estado espc, fecha_venc fvpc, fecha_reg frpc "                    
+                    + " FROM seguimiento.plan_capacitacion pc "
                     + " WHERE codigo_establecimiento= '"+codEstablecimiento+"'"
-                    + " ORDER BY pt.cod_plan_trabajo"
+                    + " ORDER BY pc.cod_plan_capacitacion"
                     
             );
             rs = consulta.ejecutar(sql);
-            List<PlanTrabajo> planestrabajo = new ArrayList<>();
+            List<PlanCapacitacion> planescapacitacion = new ArrayList<>();
             while (rs.next()) {
-                PlanTrabajo pt= new PlanTrabajo( rs.getInt("codigo_establecimiento"),rs.getInt("codpt"), rs.getString("descpt"),
-                        rs.getDate("fvpt"), rs.getInt("metapt"), rs.getString("espt"), rs.getDate("frpt"));                
-                pt.setCodEstablecimiento(rs.getInt("codigo_establecimiento"));
-                pt.setCodPlantrabajo(rs.getInt("codpt"));                
-                pt.setDescripcion(rs.getString("descpt"));
-                pt.setFechaVenc(rs.getDate("fvpt"));
-                pt.setMeta(rs.getInt("metapt"));                            
-                pt.setEstado(rs.getString("espt"));
-                pt.setFechaRegistro(rs.getDate("frpt"));
-                planestrabajo.add(pt);
+                PlanCapacitacion pc= new PlanCapacitacion( rs.getInt("codigo_establecimiento"),rs.getInt("codpc"), rs.getString("descpc"),
+                        rs.getDate("fvpc"), rs.getString("espc"), rs.getDate("frpc"), rs.getInt("metapc"));                
+                pc.setCodEstablecimiento(rs.getInt("codigo_establecimiento"));
+                pc.setCodPlancapacitacion(rs.getInt("codpc"));                
+                pc.setDescripcion(rs.getString("descpc"));
+                pc.setFechaVenc(rs.getDate("fvpc"));                                        
+                pc.setEstado(rs.getString("espc"));
+                pc.setFechaRegistro(rs.getDate("frpc"));
+                pc.setMeta(rs.getInt("metapc"));
+                planescapacitacion.add(pc);
             }
-            return planestrabajo;
+            return planescapacitacion;
         } finally {
             if (rs != null) {
                 rs.close();
@@ -122,54 +123,37 @@ public class PlanTrabajoDAO {
                 consulta.desconectar();
             }
         }
-    }
+    }    
     
-    public List<PlanTrabajoActividad> cargarPlanTrabajoactividadList(PlanTrabajo plantrabajo) throws SQLException {
+    
+    public List<PlanCapacitacion> cargarPlanCapacitacionAbirtosList(int codEstablecimiento) throws SQLException {
         ResultSet rs = null;
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT pta.cod_plan_trabajo , pta.cod_actividad, pta.actividad , pta.fecha_reg, pta.fecha_venc, pta.estado, e.codigo_establecimiento code, "
-                        + "e.nombre nome, obj.cod_objetivo codobj, obj.nombre nomobj, pr.cod_programa codpr, pr.nombre nompr, "                        
-                        + " rec.cod_recursos cod_rec, rec.nombre nom_rec,"
-                        + " fh.cod_fuente_hallazgo cod_fh, fh.nombre nom_fh,"
-                        + " res.cedula cedula, res.nombres nom_resp"
-                        + " FROM seguimiento.plan_trabajo_actividad pta "                        
-                        + " INNER JOIN gestor.fuente_hallazgo fh USING (cod_fuente_hallazgo)"
-                        + " INNER JOIN gestor.recursos rec USING (cod_recursos)"
-                        + " INNER JOIN public.responsable res USING (cedula)"
-                        + " INNER JOIN public.plan_trabajo_objetivo obj on (obj.codigo_establecimiento=pta.codigo_establecimiento and obj.cod_objetivo=pta.cod_objetivo and obj.cod_plan_trabajo=pta.cod_objetivo) "
-                        + " INNER JOIN public.plan_trabajo_programa pr on (pr.codigo_establecimiento=pta.codigo_establecimiento and pr.cod_plan_trabajo=pta.cod_plan_trabajo and pr.cod_objetivo=pta.cod_objetivo and pr.cod_programa=pta.cod_programa)     "
-                        + " INNER JOIN public.establecimiento e on (e.codigo_establecimiento=pta.codigo_establecimiento)         "
-                        + " WHERE pta.codigo_establecimiento='"+plantrabajo.getCodEstablecimiento()+"' AND pta.cod_plan_trabajo='"+plantrabajo.getCodPlantrabajo()+"' "
-                        + " GROUP BY pta.cod_plan_trabajo, pta.cod_actividad, pta.actividad, pta.fecha_reg, pta.fecha_venc, pta.estado, pta.peso,  e.codigo_establecimiento, " 
-                        + " e.nombre, obj.cod_objetivo, obj.nombre, pr.cod_programa, pr.nombre, rec.cod_recursos, res.cedula, fh.cod_fuente_hallazgo"
-                        + " ORDER BY pta.cod_actividad"
+                    "SELECT pc.codigo_establecimiento,pc.cod_plan_capacitacion codpc, pc.meta metapc, descripcion descpc, "
+                    + " estado espc, fecha_venc fvpc, fecha_reg frpc "                    
+                    + " FROM seguimiento.plan_capacitacion pc "
+                    + " WHERE codigo_establecimiento= '"+codEstablecimiento+"' AND estado='A'"
+                    + " ORDER BY pc.cod_plan_capacitacion"
                     
             );
             rs = consulta.ejecutar(sql);
-            List<PlanTrabajoActividad> planestrabajoactividad = new ArrayList<>();
+            List<PlanCapacitacion> planescapacitacion = new ArrayList<>();
             while (rs.next()) {
-                PlanTrabajoActividad pta= new PlanTrabajoActividad(rs.getInt("code"), rs.getInt("cod_plan_trabajo"), rs.getInt("cod_actividad"),rs.getInt("codobj"),
-                        rs.getInt("codpr"), rs.getInt("cod_fh"),rs.getString("cedula"), rs.getInt("cod_rec"), rs.getString("actividad"), rs.getDate("fecha_venc"), rs.getString("estado"), rs.getDate("fecha_reg"));
-                pta.setCodEstablecimiento(rs.getInt("code"));
-                pta.setCodPlantrabajo(rs.getInt("cod_plan_trabajo"));
-                pta.setCodObjetivo(rs.getInt("codobj"));                
-                pta.setCodPrograma(rs.getInt("codpr"));                
-                pta.setDescripcion(rs.getString("actividad"));
-                pta.setFechaRegistro(rs.getDate("fecha_reg"));
-                pta.setEstado(rs.getString("estado"));
-                pta.setFechaVenc(rs.getDate("fecha_venc"));                
-                pta.setEstablecimiento(new Establecimiento(rs.getInt("code"), rs.getString("nome")));
-                pta.setFuenteHallazgo(new FuenteHallazgo(rs.getInt("cod_fh"), rs.getString("nom_fh")));
-                pta.setRecursos(new Recursos(rs.getInt("cod_rec"), rs.getString("nom_rec")));
-                pta.setResponsable(new Responsable(rs.getString("cedula"), rs.getString("nom_resp")));
-                pta.setObjetivo(new PlanTrabajoObjetivo(rs.getInt("code"), rs.getInt("cod_plan_trabajo"), rs.getInt("codobj"), rs.getString("nomobj")));
-                pta.setPrograma(new PlanTrabajoPrograma(0, 0, 0, rs.getInt("codpr"), 0, rs.getString("nompr")));
-                planestrabajoactividad.add(pta);                
+                PlanCapacitacion pc= new PlanCapacitacion(rs.getInt("codigo_establecimiento"),rs.getInt("codpc"), rs.getString("descpc"),
+                        rs.getDate("fvpc"), rs.getString("espc"), rs.getDate("frpc"), rs.getInt("metapc"));                
+                pc.setCodEstablecimiento(rs.getInt("codigo_establecimiento"));
+                pc.setCodPlancapacitacion(rs.getInt("codpc"));                
+                pc.setDescripcion(rs.getString("descpc"));
+                pc.setFechaVenc(rs.getDate("fvpc"));
+                pc.setMeta(rs.getInt("metapc"));                              
+                pc.setEstado(rs.getString("espc"));
+                pc.setFechaRegistro(rs.getDate("frpc"));
+                planescapacitacion.add(pc);
             }
-            return planestrabajoactividad;
+            return planescapacitacion;
         } finally {
             if (rs != null) {
                 rs.close();
@@ -220,19 +204,18 @@ public class PlanTrabajoDAO {
         }
     }
 
-    public void insertarPlantrabajo(PlanTrabajo plantrabajo) throws SQLException {
-        Consulta consulta = null;           
-        
+    public void insertarPlancapacitacion(PlanCapacitacion plancapacitacion) throws SQLException {
+        Consulta consulta = null;    
         try {                                      
         
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "INSERT INTO seguimiento.plan_trabajo "
-                    + " ( codigo_establecimiento, cod_plan_trabajo, descripcion, fecha_venc, meta, estado, fecha_reg )"
-                    + " VALUES ( "+plantrabajo.getCodEstablecimiento()+", '"+plantrabajo.getCodPlantrabajo()+"', '"+plantrabajo.getDescripcion()+"', '"+plantrabajo.getFechaVenc()+"', '"+plantrabajo.getMeta()+"', "
-                    + " '"+plantrabajo.getEstado()+"', NOW() ) "
-                    + " ON CONFLICT ( codigo_establecimiento, cod_plan_trabajo  ) DO UPDATE "
-                    + " SET descripcion=EXCLUDED.descripcion, fecha_venc=EXCLUDED.fecha_venc, meta=EXCLUDED.meta, estado=EXCLUDED.estado "
+                    "INSERT INTO seguimiento.plan_capacitacion "
+                    + " ( codigo_establecimiento, cod_plan_capacitacion, descripcion, fecha_venc,estado, fecha_reg, meta )"
+                    + " VALUES ( "+plancapacitacion.getCodEstablecimiento()+", '"+plancapacitacion.getCodPlancapacitacion()+"', '"+plancapacitacion.getDescripcion()+"', '"+plancapacitacion.getFechaVenc()+"', "
+                    + " '"+plancapacitacion.getEstado()+"', NOW(), '"+plancapacitacion.getMeta()+"' ) "
+                    + " ON CONFLICT ( codigo_establecimiento, cod_plan_capacitacion  ) DO UPDATE "
+                    + " SET descripcion=EXCLUDED.descripcion, fecha_venc=EXCLUDED.fecha_venc, estado=EXCLUDED.estado , meta=EXCLUDED.meta"
                     
             );
             consulta.actualizar(sql);            
@@ -339,9 +322,6 @@ public class PlanTrabajoDAO {
                 Date fac= new Date();
                 long fp=pta.getFechaVenc().getTime();
                 long fa=fac.getTime(); 
-                if(fa>fp && pta.getEstado().equals("A")){
-                    dias=(int) ((fp-fa)/86400000);
-                }
                 if(fa<fp){                    
                     do{       
                         calendar = Calendar.getInstance();           

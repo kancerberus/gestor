@@ -72,6 +72,7 @@ public class PlanTrabajoActividad implements Serializable {
     @Basic(optional = false)
     @Column(name = "estado")
     private String estado;
+    private Integer diasRestantes;
 
     private Date fechaRegistro;       
     
@@ -103,6 +104,14 @@ public class PlanTrabajoActividad implements Serializable {
         this.estado = estado;
         this.fechaRegistro = fechaRegistro;             
     }   
+
+    public Integer getDiasRestantes() {
+        return diasRestantes;
+    }
+
+    public void setDiasRestantes(Integer diasRestantes) {
+        this.diasRestantes = diasRestantes;
+    }
 
 
     public PlanTrabajoActividadNota getPlanTrabajoActividadNota() {

@@ -17,7 +17,7 @@ import com.gestor.gestor.EvaluacionPlanAccionDetalleNotasPK;
 import com.gestor.gestor.EvaluacionPlanAccionDetallePK;
 import com.gestor.gestor.FuenteHallazgo;
 import com.gestor.gestor.MotivoCorreccion;
-import com.gestor.gestor.Recursos;
+import java.util.Calendar;
 import com.gestor.gestor.Seccion;
 import com.gestor.gestor.SeccionDetalle;
 import com.gestor.gestor.SeccionDetalleItems;
@@ -330,7 +330,7 @@ public class EvaluacionPlanAccionDAO {
                     + " JOIN gestor.clase_hallazgo ch USING (cod_clase_hallazgo)"                            
                     + " JOIN gestor.tipo_accion ta USING (cod_tipo_accion)"
                     + " JOIN gestor.motivo_correccion mc USING (cod_motivo_correccion)"
-                    + " JOIN public.centro_trabajo ct USING (cod_centrotrabajo, codigo_establecimiento)"
+                    + " JOIN public.centro_trabajo ct USING (cod_centrotrabajo)"
                     + " JOIN public.responsable R ON (R.cedula=EPAD.cedula)"                    
                     + condicion
                     + " ORDER BY C.numeral, S.numeral, SD.numeral, SDI.numeral"
@@ -387,19 +387,33 @@ public class EvaluacionPlanAccionDAO {
                 sdi.setSeccionDetalle(sd);
                 epad.setSeccionDetalleItems(sdi); 
                 
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                dateFormat.format(epad.getFechaPlazo());
-                Date fechaac= new Date();
-                dateFormat.format(fechaac);
+                SimpleDateFormat dd = new SimpleDateFormat("dd/MM/yyyy");       
+                int dias = 0; boolean activo = false;
+                Calendar calendar; Date aux;
+                
+                Date fac= new Date();
+                long fp=epad.getFechaPlazo().getTime();
+                long fa=fac.getTime(); 
+                if(fa>fp && epad.getEstado().equals("A")){
+                    dias=(int) ((fp-fa)/86400000);
+                }
+                if(fa<fp){                    
+                    do{       
+                        calendar = Calendar.getInstance();           
+                        calendar.add(Calendar.DAY_OF_YEAR, dias);
+                        aux = calendar.getTime();
 
-                int dias=(int) (epad.getFechaPlazo().getTime()-fechaac.getTime())/86400000;
-                epad.setDiasRestantes(dias);
+                        if(dd.format(aux).equals(dd.format(epad.getFechaPlazo())))
+                            activo = true; 
+                        else
+                            dias++;
+                    }while(activo != true);
                     
-
-                evaluacionPlanAccionDetalles.add(epad);
-            }            
-            return evaluacionPlanAccionDetalles;
-            
+                }
+                epad.setDiasRestantes(dias);                                    
+                evaluacionPlanAccionDetalles.add(epad);               
+            }                
+            return evaluacionPlanAccionDetalles;            
             
         } finally {
             if (rs != null) {

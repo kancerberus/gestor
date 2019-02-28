@@ -70,7 +70,8 @@ public class GestorUsuario extends Gestor {
         try {
             this.abrirConexion();
             UsuarioDAO usuarioDAO = new UsuarioDAO(conexion);
-            usuario = usuarioDAO.cargarDatosUsuario(usuario, filtro);
+            usuario = usuarioDAO.cargarDatosUsuario(usuario, filtro);                        
+            usuario = usuarioDAO.cargarRolUsuario(usuario);
             return usuario;
         } finally {
             this.cerrarConexion();

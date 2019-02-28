@@ -109,6 +109,16 @@ public class GestorEvaluacionCapacitacion extends Gestor {
             this.cerrarConexion();
         }
     }
+       
+    public Collection<? extends EvaluacionCapacitacionDetalle> cargarListaEvaluacionCapacitacionDetallepc(String condicion) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionCapacitacionDAO evaluacionCapacitacionDAO = new EvaluacionCapacitacionDAO(conexion);
+            return evaluacionCapacitacionDAO.cargarListaEvaluacionCapacitacionDetallepc(condicion);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
 
     public List<EvaluacionCapacitacionDetalleNotas> cargarCapacitacionDetalleNotasList(EvaluacionCapacitacionDetalleNotasPK evaluacionCapacitacionDetalleNotasPK) throws Exception {
         try {

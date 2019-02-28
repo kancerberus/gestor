@@ -20,7 +20,7 @@ public class UtilTexto {
 
     public static String CARACTER_COMILLA = "'";
     public static String CARACTER_PORCENTAJE = "%";
-    public static String SEPARADOR_ESPACIO = " ";
+    public static String SEPARADOR_ESPACIO = " ";    
 
     /*
      * Toma una cadena y la transforma reemplazando todos los caracteres especiales como tildes, ñ, etc.

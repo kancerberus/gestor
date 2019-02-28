@@ -9,6 +9,7 @@ import com.gestor.publico.CentroTrabajo;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Responsable;
 import com.gestor.publico.Usuarios;
+import com.gestor.seguimiento.PlanCapacitacion;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -75,6 +76,8 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
     private Date fechaFinalizado;  
     @Column(name = "fecha_plazo")
     private Date fechaPlazo;  
+    
+    private Integer diasRestantes;
 
     
     @JoinColumns({
@@ -92,6 +95,7 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
     private Facilitador facilitador = new Facilitador();
     private Dirigida dirigida = new Dirigida();
     private Recursos recursos = new Recursos();
+    private PlanCapacitacion plancapacitacion= new PlanCapacitacion();
     
     private Usuarios usuarios = new Usuarios();
 
@@ -102,6 +106,7 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
     private Establecimiento establecimiento;
     private List<EvaluacionCapacitacionDetalleNotas> evaluacionCapacitacionDetalleNotasList;
     private EvaluacionCapacitacionDetalleNotas evaluacionCapacitacionDetalleNotas;
+    
 
     public EvaluacionCapacitacionDetalle() {
     }
@@ -132,8 +137,24 @@ public class EvaluacionCapacitacionDetalle implements Serializable {
         this.usuarios = usuarios;
         this.fechaRegistro = fechaRegistro;
         this.fechaPlazo = fechaPlazo; 
-        this.fechaFinalizado = fechaFinalizado;        
+        this.fechaFinalizado = fechaFinalizado;         
         
+    }
+
+    public Integer getDiasRestantes() {
+        return diasRestantes;
+    }
+
+    public void setDiasRestantes(Integer diasRestantes) {
+        this.diasRestantes = diasRestantes;
+    }
+    
+    public PlanCapacitacion getPlancapacitacion() {
+        return plancapacitacion;
+    }
+
+    public void setPlancapacitacion(PlanCapacitacion plancapacitacion) {
+        this.plancapacitacion = plancapacitacion;
     }
 
     public CentroTrabajo getCentrotrabajo() {

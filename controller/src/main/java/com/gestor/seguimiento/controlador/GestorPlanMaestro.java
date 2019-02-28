@@ -34,6 +34,18 @@ public class GestorPlanMaestro extends Gestor {
             this.cerrarConexion();
         }
     }
+    
+    public Collection<? extends PlanMaestro> cargarListaPlanMaestrogerente(String condicion) throws Exception {
+        try {
+            this.abrirConexion();
+
+            PlanMaestroDAO planMaestroDAO = new PlanMaestroDAO(conexion);
+            return planMaestroDAO.cargarListaPlanMaestro(condicion);
+
+        } finally {
+            this.cerrarConexion();
+        }
+    }
 
     public void procesarPlanMaestro(PlanMaestro pm) throws Exception {
         try {
