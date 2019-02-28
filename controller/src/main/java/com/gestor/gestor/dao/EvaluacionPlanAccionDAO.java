@@ -130,7 +130,7 @@ public class EvaluacionPlanAccionDAO {
                     + " JOIN gestor.clase_hallazgo ch USING (cod_clase_hallazgo)"                            
                     + " JOIN gestor.tipo_accion ta USING (cod_tipo_accion)"
                     + " JOIN gestor.motivo_correccion mc USING (cod_motivo_correccion)"
-                    + " JOIN public.centro_trabajo ct USING (cod_centrotrabajo, codigo_establecimiento)"
+                    + " JOIN public.centro_trabajo ct USING (cod_centrotrabajo)"
                     + " JOIN public.responsable R USING (cedula)"
                     + " WHERE cod_evaluacion=" + codEvaluacion + " AND EPAD.codigo_establecimiento=" + codigoEstablecimiento 
                     + " AND cod_ciclo='" + codCiclo + "' AND cod_seccion=" + codSeccion + " AND cod_detalle=" + codDetalle + " AND cod_item=" + codItem
