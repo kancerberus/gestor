@@ -138,7 +138,7 @@ public class UIUsuario {
 
                 usuarios = gestorUsuario.cargarDatosUsuario(usuarios, App.USUARIOS_FILTRO_USUARIO);
                 usuarios.setListaEstablecimientos((List<Establecimiento>) gestorEstablecimiento.cargarListaEstablecimientosUsuario(usuarios.getUsuariosPK().getDocumentoUsuario()));
-
+                if(usuarios.getRoles().getCodigoRol()!=4){
                 for (Establecimiento i : usuarios.getListaEstablecimientos()) {
                     usuarios.setEstablecimiento(i);
                     break;
@@ -159,9 +159,33 @@ public class UIUsuario {
 
                 UtilJSF.setBean("dialogo", new Dialogo(), UtilJSF.SESSION_SCOPE);
                 UtilJSF.setBean("evaluacion", new Evaluacion(), UtilJSF.SESSION_SCOPE);
-
+                
                 return ("/inicio/principal.xhtml?faces-redirect=true");
-            } else {
+                }
+            } if(usuarios.getRoles().getCodigoRol()==4) {
+                for (Establecimiento i : usuarios.getListaEstablecimientos()) {
+                    usuarios.setEstablecimiento(i);
+                    break;
+                }
+                e = this.cargarEstablecimiento(usuarios.getEstablecimiento().getCodigoEstablecimiento());
+
+                sesion.setUsuarios((Usuarios) usuarios.clone());
+                sesion.setEstablecimiento(e);
+                sesion.setConfiguracion(gestorConfiguracion.cargarConfiguracion());
+                sesion.setCiclos(gestorGeneral.cargarCiclosEvaluacion());
+                sesion.setPuntajesList(gestorPuntajes.cargarPuntajes(e.getCodigoEstablecimiento()));
+                sesion.setEstablecimientoList(usuarios.getListaEstablecimientos());
+                sesion.setListaVigenciaArchivos(gestorLista.cargarLista(App.LISTA_VIGENCIA_ARCHIVOS));
+                
+                usuarios = new Usuarios();
+                UtilJSF.setBean("usuarios", usuarios, UtilJSF.SESSION_SCOPE);
+                UtilJSF.setBean("sesion", sesion, UtilJSF.SESSION_SCOPE);
+
+                UtilJSF.setBean("dialogo", new Dialogo(), UtilJSF.SESSION_SCOPE);
+                UtilJSF.setBean("evaluacion", new Evaluacion(), UtilJSF.SESSION_SCOPE);
+                
+                return ("/inicio/principal_1.xhtml?faces-redirect=true");                            
+            }else{
                 UtilMSG.addWarningMsg("Usuario o clave invalida.");
             }
         } catch (Exception ex) {

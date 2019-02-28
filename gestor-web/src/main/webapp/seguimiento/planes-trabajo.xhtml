@@ -112,7 +112,7 @@
                 <p:column headerText="Plan Trabajo" filterBy="#{varPlanTrabajoactividad.plantrabajo.descripcion}" >
                     <h:outputText value="#{varPlanTrabajoactividad.plantrabajo.descripcion}"/>
                 </p:column>
-                <p:column headerText="Objetivo" filterBy="#{varPlanTrabajoactividad.objetivo.nombre}" >
+                <p:column headerText="Objetivo" style="width: 15%" filterBy="#{varPlanTrabajoactividad.objetivo.nombre}" >
                     <h:outputText value="#{varPlanTrabajoactividad.objetivo.nombre}"/>
                 </p:column>
                 <p:column headerText="Programa" filterBy="#{varPlanTrabajoactividad.programa.nombre}" >
@@ -127,16 +127,19 @@
                 <p:column headerText="Responsable" filterBy="#{varPlanTrabajoactividad.responsable.nombresApellidos}" >
                     <h:outputText value="#{varPlanTrabajoactividad.responsable.nombresApellidos}"/>
                 </p:column>
-                <p:column headerText="Fecha Creacion" >
+                <p:column style="width: 4%" headerText="Fecha Creacion" >
                     <h:outputText value="#{varPlanTrabajoactividad.fechaRegistro}">
                         <f:convertDateTime pattern="dd/MM/yyyy" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="Fecha Vencimiento">
+                <p:column style="width: 4%" headerText="Fecha Vencimiento">
                     <h:outputText value="#{varPlanTrabajoactividad.fechaVenc}">
                         <f:convertDateTime pattern="dd/MM/yyyy" />
                     </h:outputText>
-                </p:column>                
+                </p:column>  
+                <p:column headerText="Dias Restantes" style="width: 3%" filterBy="#{varPlanTrabajoactividad.diasRestantes}" >
+                    <h:outputText value="#{varPlanTrabajoactividad.diasRestantes}" style="#{uiPlantrabajo.styleDias}"/>
+                </p:column>
                 <p:column headerText="Estado" filterBy="#{varPlanTrabajoactividad.estado}"
                           filterMatchMode="equals">
                     <f:facet name="filter">

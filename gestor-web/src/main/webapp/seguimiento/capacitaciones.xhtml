@@ -33,26 +33,26 @@
                             <f:selectItems value="#{uiCapacitacion.usuariosList}" var="varUsuarios" itemLabel="#{varUsuarios.nombreApellido}" itemValue="#{varUsuarios}"/>
                         </p:selectOneMenu>
 
-                        <h:outputLabel value="Empresas"/>
-                        <p:selectManyMenu value="#{uiCapacitacion.establecimientoListSeleccionado}" converter="establecimientoConverter"    
-                                          var="t" filter="true" filterMatchMode="contains" showCheckbox="true" styleClass="Centro" >
+                        <p:selectOneListbox  value="#{uiCapacitacion.establecimiento}" converter="convertidorGenerico" var="t" filter="true" filterMatchMode="contains" style="width: 90%; margin-bottom: 30%;font-family: bolder" styleClass="Centro"
+                                                                                        >
                             <f:selectItems value="#{uiCapacitacion.establecimientoList}" var="varEmpresa" itemLabel="#{varEmpresa.nombre}" itemValue="#{varEmpresa}" />
-                            <p:column>
-                                <p:column>
-                                 <p:column>                        
-                                    <p:graphicImage value="#{t.logo}" cache="false" width="40"/>
+                            <p:ajax  update="pc" listener="#{uiCapacitacion.cargarPlanesCapacitacionList()}" />                            
+                            <p:column >
+                                    <p:graphicImage value="#{t.logo}" cache="false" width="40" />
                                     <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" width="20" 
-                                                title="#{t.nombre}" rendered="#{empty t.logo}"/>
-                            </p:column>  
-                            </p:column>
-                            </p:column>
-                            <p:column>
+                                       title="#{t.nombre}" rendered="#{empty t.logo}" />
+                                
+                                </p:column>
+                            <p:column >
                                 <h:outputText value="#{t.nombre}" />
-                            </p:column>
-                            <p:column>
-                                <h:outputText styleClass="ui-icon ui-icon-grip-dotted-horizontal" style="margin:0 auto;" />
-                            </p:column>
-                        </p:selectManyMenu>
+                                </p:column>                                
+                        </p:selectOneListbox>
+                        <h:outputLabel value="Planes De Capacitacion"/>
+                        <p:selectOneMenu id="pc" value="#{uiCapacitacion.planCapacitaiconSeleccionado}" converter="convertidorGenerico"
+                                                         style="text-align: center;width: 180px;">  
+                                <f:selectItem itemLabel="Seleccione Plan De Trabajo" noSelectionOption="true"/>
+                                <f:selectItems value="#{uiCapacitacion.planCapacitacionList}" var="varPc" itemLabel="#{varPc.descripcion}" itemValue="#{varPc}"/>                                
+                        </p:selectOneMenu>
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <h:outputLabel value="Cod Evaluación"/>
@@ -100,7 +100,7 @@
                         <p:commandButton icon="ui-icon-disk" title="Finalizar" rendered="#{varCapacitacionDetalle.estado eq 'A'}" action="#{uiCapacitacion.cerrarEvaluacionCapacitacionDetalle()}"/>
                     </p:panelGrid>
                 </p:column>
-                <p:column headerText="Código" filterBy="#{varCapacitacionDetalle.evaluacionCapacitacionDetallePK.codCapacitacionDetalle}">
+                <p:column style="width: 2%" headerText="Código" filterBy="#{varCapacitacionDetalle.evaluacionCapacitacionDetallePK.codCapacitacionDetalle}">
                     <h:outputText value="#{varCapacitacionDetalle.evaluacionCapacitacionDetallePK.codCapacitacionDetalle}" />    
                 </p:column>
                 <p:column headerText="Tema" filterBy="#{varCapacitacionDetalle.nombre}" >
@@ -111,6 +111,9 @@
                 </p:column>               
                 <p:column headerText="Centro De Trabajo" filterBy="#{varCapacitacionDetalle.centrotrabajo}">
                     <h:outputText value="#{varCapacitacionDetalle.centrotrabajo.nombre}" />
+                </p:column>
+                <p:column headerText="Plan Capacitacion" filterBy="#{varCapacitacionDetalle.plancapacitacion.descripcion}">
+                    <h:outputText value="#{varCapacitacionDetalle.plancapacitacion.descripcion}" />
                 </p:column>
                 <p:column headerText="Evaluador" filterBy="#{varCapacitacionDetalle.usuarios.nombreApellido}">
                     <h:outputText value="#{varCapacitacionDetalle.usuarios.nombreApellido}" />
@@ -133,34 +136,33 @@
                 <p:column headerText="Recursos" filterBy="#{varCapacitacionDetalle.recursos}">
                     <h:outputText value="#{varCapacitacionDetalle.recursos.nombre}" />
                 </p:column>
-                <p:column headerText="Numeral" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.numeral}">
+                <p:column style="width: 2%" headerText="Numeral" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.numeral}">
                     <h:outputText value="#{varCapacitacionDetalle.seccionDetalleItems.numeral}" />
                 </p:column>                
-                <p:column headerText="Item Detalle" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.detalle}" >
+                <p:column headerText="Item Detalle" style="width: 6%" filterBy="#{varCapacitacionDetalle.seccionDetalleItems.detalle}" >
                     <h:outputText value="#{varCapacitacionDetalle.seccionDetalleItems.detalle}" />
                 </p:column>
-                <p:column headerText="Descripción" filterBy="#{varCapacitacionDetalle.descripcion}" >
+                <p:column headerText="Descripción" style="width: 12%" filterBy="#{varCapacitacionDetalle.descripcion}" >
                     <h:outputText value="#{varCapacitacionDetalle.descripcion}" />
                 </p:column>
-                 <p:column headerText="Fecha Creacion" filterBy="#{varCapacitacionDetalle.fechaRegistro}">
+                 <p:column style="width: 4%" headerText="Fecha Creacion" filterBy="#{varCapacitacionDetalle.fechaRegistro}">
                     <h:outputText value="#{varCapacitacionDetalle.fechaRegistro}">
                         <f:convertDateTime pattern="dd/MM/yyyy" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="Fecha Vencimiento" filterBy="#{varCapacitacionDetalle.fechaPlazo}">
+                <p:column style="width: 4%" headerText="Fecha Vencimiento" filterBy="#{varCapacitacionDetalle.fechaPlazo}">
                     <h:outputText value="#{varCapacitacionDetalle.fechaPlazo}">
                         <f:convertDateTime pattern="dd/MM/yyyy" />
                     </h:outputText>
+                </p:column>
+                <p:column style="width: 2%" headerText="Dias Restantes" filterBy="#{varCapacitacionDetalle.diasRestantes}" >
+                    <h:outputText value="#{varCapacitacionDetalle.diasRestantes}" style="#{uiCapacitacion.styleDias}" />
                 </p:column>
                 <p:column headerText="Fecha Fin" filterBy="#{varCapacitacionDetalle.fechaFinalizado}">
                     <h:outputText value="#{varCapacitacionDetalle.fechaFinalizado}">
                         <f:convertDateTime pattern="dd/MM/yyyy" />
                     </h:outputText>
                 </p:column>
-                
-                
-                
-
                 <p:column headerText="Estado"
                           filterBy="#{varCapacitacionDetalle.estado}"
                           filterMatchMode="equals">
@@ -174,8 +176,6 @@
                     </f:facet>
                     <h:outputText value="#{varCapacitacionDetalle.estado}" />
                 </p:column>
-
-
             </p:dataTable>
 
 

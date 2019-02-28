@@ -19,6 +19,7 @@ import com.gestor.gestor.controlador.GestorEvaluacion;
 import com.gestor.modelo.Sesion;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.EvaluacionAdjuntos;
+import com.gestor.publico.Usuarios;
 import com.gestor.seguimiento.controlador.GestorPlanMaestro;
 import com.gestor.seguimiento.controlador.GestorPlanTitulo;
 import java.io.File;
@@ -94,11 +95,16 @@ public class UIPlanMaestro {
 
     public String consultarPlanMaestro() {
         try {
+            Sesion s = (Sesion) UtilJSF.getBean("sesion");            
             GestorPlanTitulo gestorPlanTitulo = new GestorPlanTitulo();
             PlanMaestro pm = (PlanMaestro) UtilJSF.getBean("varPlanMaestro");
             pm.setPlanTituloList((List<PlanTitulo>) gestorPlanTitulo.cargarPlanTituloList(pm.getPlanMaestroPK().getCodigoEstablecimiento(), pm.getPlanMaestroPK().getCodEvaluacion()));
             UtilJSF.setBean("planMaestro", pm, UtilJSF.SESSION_SCOPE);
-            return ("/seguimiento/plan-maestro.xhtml?faces-redirect=true");
+            if(s.getUsuarios().getRoles().getCodigoRol()==4){
+            return ("/seguimiento/plan-maestro_1.xhtml?faces-redirect=true");
+            }else{
+                return ("/seguimiento/plan-maestro.xhtml?faces-redirect=true");
+            }
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }
@@ -194,11 +200,28 @@ public class UIPlanMaestro {
         try {
             planMaestroList = new ArrayList<>();
             GestorPlanMaestro gestorPlanMaestro = new GestorPlanMaestro();
-            List<String> condicionesConsulta = this.filtrarOpcionesSeleccionadas();
-            planMaestroList.addAll(gestorPlanMaestro.cargarListaPlanMaestro(
+            Sesion s = (Sesion) UtilJSF.getBean("sesion");
+            List<String> condicionesConsulta = this.filtrarOpcionesSeleccionadas();            
+            
+            String cadena="0";            
+            for (Establecimiento e : s.getUsuarios().getListaEstablecimientos()) {
+                cadena += "," + e.getCodigoEstablecimiento();
+            }            
+            condicionesConsulta.add("AND");
+            condicionesConsulta.add(PlanMaestro.PLAN_MAESTRO_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena));
+            
+            
+            if(s.getUsuarios().getRoles().getCodigoRol()==4){
+                planMaestroList.addAll(gestorPlanMaestro.cargarListaPlanMaestrogerente(
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
-            )
-            );
+                    )
+                );
+            }if(s.getUsuarios().getRoles().getCodigoRol() != 4){
+                planMaestroList.addAll(gestorPlanMaestro.cargarListaPlanMaestro(
+                        UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
+                )
+                );
+            }
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }
@@ -246,6 +269,7 @@ public class UIPlanMaestro {
 
     public String cargarPlanMaestro() {
         try {
+            Sesion s = (Sesion) UtilJSF.getBean("sesion");            
             UtilJSF.setBean("dialogo", new Dialogo(), UtilJSF.SESSION_SCOPE);
 //            Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
             planMaestroList = new ArrayList<>();
@@ -257,15 +281,30 @@ public class UIPlanMaestro {
             gc.setTime(gestorGeneral.now());
             gc.add(Calendar.DAY_OF_MONTH, -30);
             this.fechaActualizaInicio = gc.getTime();
-
+            String cadena="0";            
+            for (Establecimiento e : s.getUsuarios().getListaEstablecimientos()) {
+                cadena += "," + e.getCodigoEstablecimiento();
+            }
+            
             condicionesConsulta.add(App.CONDICION_WHERE);
-            condicionesConsulta.add(PlanMaestro.PLAN_MAESTRO_CONDICION_FECHA_ACTUALIZA_GTE.replace("?", UtilFecha.formatoFecha(fechaActualizaInicio, null, UtilFecha.PATRON_FECHA_YYYYMMDD, UtilFecha.CARACTER_COMILLA)));
-
-            planMaestroList.addAll(gestorPlanMaestro.cargarListaPlanMaestro(
+            condicionesConsulta.add(PlanMaestro.PLAN_MAESTRO_CONDICION_FECHA_ACTUALIZA_GTE.replace("?", UtilFecha.formatoFecha(fechaActualizaInicio, null, UtilFecha.PATRON_FECHA_YYYYMMDD, UtilFecha.CARACTER_COMILLA)));            
+            condicionesConsulta.add("AND");
+            condicionesConsulta.add(PlanMaestro.PLAN_MAESTRO_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena));
+            
+            
+            if(s.getUsuarios().getRoles().getCodigoRol()==4){
+                planMaestroList.addAll(gestorPlanMaestro.cargarListaPlanMaestrogerente(
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
-            )
-            );
-            return ("/seguimiento/planes-maestros.xhtml?faces-redirect=true");
+                    )
+                );
+            return ("/seguimiento/planes-maestros_1.xhtml?faces-redirect=true");
+            }else{
+                planMaestroList.addAll(gestorPlanMaestro.cargarListaPlanMaestro(
+                    UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
+                    )
+                );
+                return ("/seguimiento/planes-maestros.xhtml?faces-redirect=true");
+            }
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }

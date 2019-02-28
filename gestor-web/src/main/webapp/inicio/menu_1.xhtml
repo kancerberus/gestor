@@ -95,44 +95,8 @@
 
 
     <p:megaMenu orientation="Horizontal" style="margin-top:20px" >
-        <p:submenu label="Configuracion" icon="ui-icon-check" style="margin-left: 2%">
-            <p:column>
-                <p:submenu label="Configuración">                    
-                    <p:menuitem  value="Administrar Usuarios" style="font-size: 11px;"
-                                 action="/usuario/usuarios.xhtml"/>
-                    <p:menuitem  value="Administrar Empresas"  style="font-size: 11px;"
-                                 action="/configuracion/establecimientos.xhtml"/>                    
-                    <p:menuitem  value="Administrar Responsables"  style="font-size: 11px;"
-                                 action="/configuracion/responsables.xhtml"/>
-                    <p:menuitem  value="Administrar Categoria y Tipo"  style="font-size: 11px;"
-                                 action="/configuracion/categorias.xhtml"/>
-                    <p:menuitem  value="Administrar Definicion Estandares"  style="font-size: 11px;"
-                                 action="/configuracion/estandares.xhtml"/>
-                    <p:menuitem  value="Administrar Plan Maestro"  style="font-size: 11px;"
-                                 action="/seguimiento/administrar-plan-maestro-evaluaciones.xhtml"/>
-                </p:submenu>
-            </p:column>
-        </p:submenu>
-        <p:submenu label="Estandares" icon="ui-icon-pencil" style="margin-left: 2%">
-            <p:column>
-                <p:submenu label="Evaluación" >
-                    <p:menuitem  value="Evaluación Estandares Mínimos"  style="font-size: 11px;"
-                                 action="/gestor/evaluaciones.xhtml"/>
-                    <p:menuitem  value="Resumen Evaluaciones"  action="/seguimiento/evaluacion-resumen-consultar.xhtml"
-                                 style="font-size: 11px;"/>
-                    <p:menuitem  value="Crear Plan de Trabajo"  action="/seguimiento/administrar-plan-trabajo-evaluaciones.xhtml"
-                                 style="font-size: 11px;"/>
-                    <p:menuitem  value="Crear Plan de Capacitacion"  action="/seguimiento/administrar-plan-capacitaciones.xhtml"
-                                 style="font-size: 11px;"/>
-                </p:submenu>
-                <p:submenu label="Seguimiento" >
-                    <p:menuitem  value="Gestión Capacitaciones"  style="font-size: 11px;"
-                                 action="#{uiCapacitacion.cargarCapacitacionGeneral()}"/>
-                    <p:menuitem  value="Banco De Acciones"  style="font-size: 11px;"
-                                 action="#{uiPlanAccion.cargarPlanAccionGeneral()}"/>                    
-                    <p:menuitem  value="Gestión Planes de Trabajo"  style="font-size: 11px;"
-                                 action="#{uiPlantrabajo.cargarPlanTrabajoactividadGeneral()}"/>                    
-                </p:submenu>
+        <p:submenu label="Analisis" icon="ui-icon-check" style="margin-left: 2%">
+            <p:column>                
                 <p:submenu label="Análisis" >
                     <p:menuitem  value="Plan Maestro"  style="font-size: 11px;"
                                  action="#{uiPlanMaestro.cargarPlanMaestro()}"/>                    

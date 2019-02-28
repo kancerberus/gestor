@@ -25,6 +25,9 @@ import com.gestor.publico.controlador.GestorConfiguracion;
 import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorResponsable;
 import com.gestor.publico.controlador.GestorUsuario;
+import com.gestor.seguimiento.PlanCapacitacion;
+import com.gestor.seguimiento.controlador.GestorPlanCapacitacion;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -61,10 +64,14 @@ public class UICapacitacion {
 
     //filtros
     private List<Establecimiento> establecimientoList = new ArrayList<>();
-    private List<Establecimiento> establecimientoListSeleccionado = new ArrayList<>();
+    private List<Establecimiento> establecimientoListSeleccionado = new ArrayList<>();    
 
     private List<Usuarios> usuariosList = new ArrayList<>();
+    private List<PlanCapacitacion> planCapacitaciones = new ArrayList<>();
+    private List<PlanCapacitacion> planCapacitacionList = new ArrayList<>();
     private Usuarios usuariosSeleccionado;
+    private Establecimiento establecimiento = new Establecimiento();
+    
 
     private List<String> ciclosString = new ArrayList<>();
     private List<String> ciclosStringSeleccionado = new ArrayList<>();
@@ -88,6 +95,9 @@ public class UICapacitacion {
     private List<ClaseHallazgo> clasehallazgos = new ArrayList<>();
     private List<TipoAccion> tipoacciones = new ArrayList<>();
     private List<MotivoCorreccion> motivocorrecciones  = new ArrayList<>();
+    
+    private PlanCapacitacion planCapacitaiconSeleccionado;
+    private Integer cons=0;
 
     public UICapacitacion() {
         try {
@@ -228,14 +238,25 @@ public class UICapacitacion {
         List<String> condicionesConsulta = new ArrayList<>();
         condicionesConsulta.add(App.CONDICION_WHERE);
 
-        if (establecimientoListSeleccionado != null && !establecimientoListSeleccionado.isEmpty()) {
-            String cadena = "0";
-            for (Establecimiento e : establecimientoListSeleccionado) {
-                cadena += "," + e.getCodigoEstablecimiento();
-            }
-            condicionesConsulta.add(EvaluacionCapacitacionDetalle.EVALUACION_CAPACITACION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena));
-        } else {
-            condicionesConsulta.add(Boolean.TRUE.toString());
+        if(establecimiento == null){   
+            String cadena;         
+            cadena = Integer.toString(establecimiento.getCodigoEstablecimiento());
+            
+            condicionesConsulta.add(EvaluacionCapacitacionDetalle.EVALUACION_CAPACITACION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena));            
+        }
+        
+        if(establecimiento!=null){            
+            String cadena="";
+            cadena = Integer.toString(establecimiento.getCodigoEstablecimiento());
+            condicionesConsulta.add(EvaluacionCapacitacionDetalle.EVALUACION_CAPACITACION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena )); 
+            establecimiento= new Establecimiento();
+        }
+        
+        if(planCapacitaiconSeleccionado != null){
+            UtilJSF.setBean("varPlanCapacitacion", planCapacitaiconSeleccionado, UtilJSF.SESSION_SCOPE);            
+            String codpc= Integer.toString(planCapacitaiconSeleccionado.getCodPlancapacitacion());
+            condicionesConsulta.add(App.CONDICION_AND);            
+            condicionesConsulta.add(PlanCapacitacion.PLAN_CAPACITACION_CONDICION_COD_PlAN_CAPACITACION.replace("?", codpc ));
         }
 
         if (usuariosSeleccionado != null && usuariosSeleccionado.getUsuariosPK() != null
@@ -284,16 +305,37 @@ public class UICapacitacion {
 
         return condicionesConsulta;
     }
+    
+    public void cargarPlanesCapacitacionList(){
+
+        try {            
+            if(establecimiento!=null){
+                GestorPlanCapacitacion gestorPlanCapacitacion= new GestorPlanCapacitacion();
+                planCapacitacionList= new ArrayList<>();
+                planCapacitacionList.addAll(gestorPlanCapacitacion.cargarPlancapacitacionAbiertosList(establecimiento.getCodigoEstablecimiento()));
+            }
+        } catch (Exception e) {
+            UtilLog.generarLog(this.getClass(), e);
+        }
+    }
 
     public void consultarSeguimientoCapacitaciones() {
         try {
             evaluacionCapacitacionDetalles = new ArrayList<>();
             GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
             List<String> condicionesConsulta = this.filtrarOpcionesSeleccionadas();
-            evaluacionCapacitacionDetalles.addAll(gestorEvaluacionCapacitacion.cargarListaEvaluacionCapacitacionDetalle(
-                    UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
-            )
-            );
+            
+            
+            if(planCapacitaiconSeleccionado!=null){
+                evaluacionCapacitacionDetalles.addAll(gestorEvaluacionCapacitacion.cargarListaEvaluacionCapacitacionDetallepc(
+                UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)                
+                )); 
+            }else{
+                evaluacionCapacitacionDetalles.addAll(gestorEvaluacionCapacitacion.cargarListaEvaluacionCapacitacionDetalle(
+                        UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
+                )
+                );
+            }
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }
@@ -309,8 +351,8 @@ public class UICapacitacion {
 
             List<String> condicionesConsulta = new ArrayList<>();
             condicionesConsulta.add(App.CONDICION_WHERE);
-            condicionesConsulta.add(EvaluacionCapacitacionDetalle.EVALUACION_CAPACITACION_DETALLE_CONDICION_DOCUMENTO_USUARIO.replace("?", UtilTexto.CARACTER_COMILLA + usuarios.getUsuariosPK().getDocumentoUsuario() + UtilTexto.CARACTER_COMILLA));
-            condicionesConsulta.add(App.CONDICION_AND);
+            //condicionesConsulta.add(EvaluacionCapacitacionDetalle.EVALUACION_CAPACITACION_DETALLE_CONDICION_DOCUMENTO_USUARIO.replace("?", UtilTexto.CARACTER_COMILLA + usuarios.getUsuariosPK().getDocumentoUsuario() + UtilTexto.CARACTER_COMILLA));
+            //condicionesConsulta.add(App.CONDICION_AND);
             condicionesConsulta.add(EvaluacionCapacitacionDetalle.EVALUACION_CAPACITACION_DETALLE_CONDICION_ESTADO.replace("?", UtilTexto.CARACTER_COMILLA + App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO + UtilTexto.CARACTER_COMILLA));
 
             evaluacionCapacitacionDetalles.addAll(gestorEvaluacionCapacitacion.cargarListaEvaluacionCapacitacionDetalle(
@@ -379,7 +421,7 @@ public class UICapacitacion {
 
     public void procesarCapacitacionModificar() {
         try {
-            EvaluacionCapacitacionDetalle ecd = (EvaluacionCapacitacionDetalle) UtilJSF.getBean("evaluacionCapacitacionDetalle");;
+            EvaluacionCapacitacionDetalle ecd = (EvaluacionCapacitacionDetalle) UtilJSF.getBean("evaluacionCapacitacionDetalle");
             GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
             ecd = gestorEvaluacionCapacitacion.validarEvaluacionCapacitacionDetalle(ecd);
             gestorEvaluacionCapacitacion.actualizarEvaluacionCapacitacionDetalle(ecd);
@@ -482,6 +524,7 @@ public class UICapacitacion {
             this.sdiSeleccionado = (SeccionDetalleItems) UtilJSF.getBean("varSeccionDetalleItems");
             
             GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
+            
             GestorResponsable gestorResponsable = new GestorResponsable();
             
             if(modalidades.isEmpty()){
@@ -490,12 +533,17 @@ public class UICapacitacion {
             facilitadores.addAll((Collection<? extends Facilitador>) gestorEvaluacionCapacitacion.cargarListaFacilitadores());
             dirigidas.addAll((Collection<? extends Dirigida>) gestorEvaluacionCapacitacion.cargarListaDirigidas());
             recursos.addAll((Collection<? extends Recursos>) gestorEvaluacionCapacitacion.cargarListaRecursos());
+            
             }
             
             Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
             GestorCentroTrabajo gestorCentrotrabajo = new GestorCentroTrabajo();
             centrostrabajo= new ArrayList<>();
             centrostrabajo.addAll((Collection<? extends CentroTrabajo>) gestorCentrotrabajo.cargarListaCentrosTrabajoactivos(e.getEstablecimiento().getCodigoEstablecimiento()));
+            
+            GestorPlanCapacitacion gestorPlanCapacitacion= new GestorPlanCapacitacion();
+            planCapacitaciones= new ArrayList<>();
+            planCapacitaciones.addAll((Collection<? extends PlanCapacitacion>) gestorPlanCapacitacion.cargarPlancapacitacionList(e.getEstablecimiento().getCodigoEstablecimiento()));
             
             evaluacionCapacitacionDetalles = new ArrayList<>();
             evaluacionCapacitacionDetalles.addAll(gestorEvaluacionCapacitacion.cargarListaEvaluacionCapacitacionDetalle(
@@ -640,8 +688,55 @@ public class UICapacitacion {
                 UtilLog.generarLog(this.getClass(), e);
             }            
         }
-            
-        
+    }
+    
+    public String getStyleDias() {
+        evaluacionCapacitacionDetalle = (EvaluacionCapacitacionDetalle) UtilJSF.getBean("varCapacitacionDetalle");
+        String style = "";          
+        if(evaluacionCapacitacionDetalle.getDiasRestantes() != null && evaluacionCapacitacionDetalle.getDiasRestantes() <= 0 ){
+            style += "color: #FF0000";
+        }
+        return style;
+    }
+
+    public List<PlanCapacitacion> getPlanCapacitacionList() {
+        return planCapacitacionList;
+    }
+
+    public void setPlanCapacitacionList(List<PlanCapacitacion> planCapacitacionList) {
+        this.planCapacitacionList = planCapacitacionList;
+    }
+
+    public Integer getCons() {
+        return cons;
+    }
+
+    public void setCons(Integer cons) {
+        this.cons = cons;
+    }
+
+    public PlanCapacitacion getPlanCapacitaiconSeleccionado() {
+        return planCapacitaiconSeleccionado;
+    }
+
+    public void setPlanCapacitaiconSeleccionado(PlanCapacitacion planCapacitaiconSeleccionado) {
+        this.planCapacitaiconSeleccionado = planCapacitaiconSeleccionado;
+    }
+
+    public Establecimiento getEstablecimiento() {
+        return establecimiento;
+    }
+
+    public void setEstablecimiento(Establecimiento establecimiento) {
+        this.establecimiento = establecimiento;
+    }
+
+    public List<PlanCapacitacion> getPlanCapacitaciones() {
+        return planCapacitaciones;
+    }
+
+    public void setPlanCapacitaciones(List<PlanCapacitacion> planCapacitaciones) {
+        this.planCapacitaciones = planCapacitaciones;
     }
 
     public List<CentroTrabajo> getCentrostrabajo() {

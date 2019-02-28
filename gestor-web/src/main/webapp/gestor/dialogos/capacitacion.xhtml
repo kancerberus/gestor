@@ -30,6 +30,13 @@
                             <p:ajax event="change" process="@this"/>
                     </p:selectOneMenu>
                     
+                    <h:outputLabel value="Plan Capacitacion: " style="font-weight: bold;"/>
+                    <p:selectOneMenu value="#{evaluacionCapacitacionDetalle.plancapacitacion}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiCapacitacion.planCapacitaciones}" var="pc" itemValue="#{pc}" itemLabel="#{pc.descripcion}" />
+                            <p:ajax event="change" process="@this"/>
+                    </p:selectOneMenu>
                 </h:panelGrid>
                 <h:panelGrid columns="2">
                     

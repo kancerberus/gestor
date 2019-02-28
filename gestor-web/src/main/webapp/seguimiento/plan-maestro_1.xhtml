@@ -1,0 +1,309 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template_1.xhtml">
+    <ui:define name="content">
+
+
+        <h:form enctype="multipart/form-data" id="formPlanMaestro" >
+            
+            <h1>
+                PLAN MAESTRO  
+            </h1>
+            <div align="left">
+                <p:graphicImage  value="#{planMaestro.establecimiento.logo}" cache="false" width="80"/>
+                <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" width="40" 
+                    rendered="#{empty planMaestro.establecimiento.logo}"/>                                                                        
+                <p:outputLabel style="font-size: 25px; font-family: bolder"  value="#{planMaestro.establecimiento.nombre}"/>                                     
+            </div>
+                <p:progressBar style="margin-left: 80%; margin: 0% 1% 1% 80%;" value="#{uiPlanMaestro.avanceEvaluacion}" labelTemplate="Avance Evaluación {value}%" displayOnly="true" interval="10"/>
+            
+            
+            <p:tabView value="#{planMaestro.planTituloList}" var="varPlanTitulo" >
+                <p:tab title="#{varPlanTitulo.numeral}. #{varPlanTitulo.nombre}">
+
+                    <!--titulo texto-->
+                    <div class="letraBackgroundWhite">
+                        <ui:repeat var="varPlanTituloTexto" value="#{varPlanTitulo.planTituloTextoList}">
+                            <p align="justify" style="font-weight: normal">
+                                <br/>
+                                #{varPlanTituloTexto.texto}
+                            </p>
+                        </ui:repeat>
+                        <br/>
+                    </div>
+
+                    <!--titulo adjuntos-->
+                    <h:panelGroup rendered="#{not empty varPlanTitulo.tituloAdjuntos}">
+                        <div>
+                            <h3>#{varPlanTitulo.tituloAdjuntos}</h3>
+                            <div class="letraBackgroundWhite">
+                                <p style="font-weight: normal;">
+                                    <br/>
+                                    #{varPlanTitulo.descripcionAdjuntos}
+                                </p>
+                                <p:separator/>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+
+                    <p:dataTable  value="#{varPlanTitulo.planTituloAdiuntosList}" var="varPlanTituloAdjuntos" 
+                                  rendered="#{not empty varPlanTitulo.planTituloAdiuntosList}"
+                                  rowStyleClass="letra-xx-small-centro"
+                                  rowHover="true">
+
+                        <p:column headerText="Documento">
+                            <h:outputText value="#{varPlanTituloAdjuntos.documento}"/>
+                        </p:column>
+                        <p:column headerText="Ver Documento" width="30%">
+                            <div>
+                                <p:commandButton icon="ui-icon-document" title="Ver Adjunto" ajax="false">    
+                                    <p:fileDownload value="#{uiPlanMaestro.fileDownload}" />
+                                </p:commandButton>
+                                <h:outputText value="  "/>
+                                <h:outputText value="#{varPlanTituloAdjuntos.evaluacionAdjuntos.archivoSimple}"/>
+                            </div>
+                        </p:column>
+
+                    </p:dataTable>
+
+                    <!--seccion-->
+                    <h:panelGroup rendered="#{not empty varPlanTitulo.planSeccionList}">
+                        <p:tabView value="#{varPlanTitulo.planSeccionList}" var="varPlanSeccion" style="font-size: x-small">
+                            <p:tab title="#{varPlanSeccion.numeral}. #{varPlanSeccion.nombre}">
+
+                                <!--seccion texto-->
+                                <h:panelGroup rendered="#{not empty varPlanSeccion.planSeccionTextoList}">
+                                    <div class="letraBackgroundWhite">
+                                        <ui:repeat var="varPlanSeccionTituloTexto" value="#{varPlanSeccion.planSeccionTextoList}"
+                                                   >
+                                            <p align="justify" style="font-weight: normal">
+                                                #{varPlanSeccionTituloTexto.texto}
+                                            </p>
+                                        </ui:repeat>
+                                        <br/>
+                                    </div>
+                                </h:panelGroup>
+
+                                <!--seccion matriz-->
+                                <h:panelGroup rendered="#{not empty varPlanSeccion.planSeccionMatriz}">
+                                    <div>
+                                        <h3>#{varPlanSeccion.planSeccionMatriz.titulo}</h3>
+                                        <div class="letraBackgroundWhite">
+                                            <p:spacer/>
+                                            <p class="letraBackgroundWhite" style="font-weight: normal;">
+                                                #{varPlanSeccion.planSeccionMatriz.descripcion}
+                                            </p>
+                                            <p:separator/>
+                                        </div>
+                                    </div>
+                                </h:panelGroup>
+
+                                <p:dataTable var="varPlanMatrizDetalle" value="#{varPlanSeccion.planSeccionMatriz.planSeccionMatrizDetalleList}"
+                                             widgetVar="planPlanMatrizDetalleTable" rowStyleClass="letra-xx-small-centro" style="font-size: 10px;"
+                                             rowHover="true" rendered="#{not empty varPlanSeccion.planSeccionMatriz.planSeccionMatrizDetalleList}"
+                                             >
+                                    <p:column headerText="Directriz">
+                                        <p class="letraBackgroundWhite" align="justify" style="font-weight: normal">
+                                            #{varPlanMatrizDetalle.directriz}
+                                        </p>
+                                    </p:column>
+                                    <p:column headerText="Objetivos">
+                                        <p class="letraBackgroundWhite" align="justify" style="font-weight: normal">
+                                            #{varPlanMatrizDetalle.objetivos}
+                                        </p>
+                                    </p:column>
+                                    <p:column headerText="Metas">
+                                        <p class="letraBackgroundWhite" align="justify" style="font-weight: normal">
+                                            #{varPlanMatrizDetalle.metas}
+                                        </p>
+                                    </p:column>
+                                    <p:column headerText="Indicadores">
+                                        <p class="letraBackgroundWhite" align="justify" style="font-weight: normal">
+                                            #{varPlanMatrizDetalle.indicadores}
+                                        </p>
+                                    </p:column>
+                                </p:dataTable>
+
+                                <!--seccion adjuntos-->
+                                <h:panelGroup rendered="#{not empty varPlanSeccion.tituloAdjuntos}">
+                                    <div>
+                                        <h3>#{varPlanSeccion.tituloAdjuntos}</h3>
+                                        <div class="letraBackgroundWhite">
+                                            <p style="font-weight: normal;">
+                                                #{varPlanSeccion.descripcionAdjuntos}
+                                            </p>
+                                            <p:separator/>
+                                        </div>
+                                    </div>
+                                </h:panelGroup>
+                                <p:dataTable  value="#{varPlanSeccion.planSeccionAdjuntosList}" var="varPlanSeccionAdjuntos" 
+                                              rendered="#{not empty varPlanSeccion.planSeccionAdjuntosList}"
+                                              rowStyleClass="letra-xx-small-centro"
+                                              rowHover="true">
+
+                                    <p:column headerText="Documento">
+                                        <h:outputText value="#{varPlanSeccionAdjuntos.documento}"/>
+                                    </p:column>
+                                    <p:column headerText="Ver Documento" width="30%">
+                                        <div>
+                                            <p:commandButton icon="ui-icon-document" title="Ver Adjunto" ajax="false">    
+                                                <p:fileDownload value="#{uiPlanMaestro.fileDownloadSeccion}" />
+                                            </p:commandButton>
+                                            <h:outputText value="  "/>
+                                            <h:outputText value="#{varPlanSeccionAdjuntos.evaluacionAdjuntos.archivoSimple}"/>
+                                        </div>
+                                    </p:column>
+
+                                </p:dataTable>
+
+
+                                <!--seccion detalle-->
+                                <h:panelGroup rendered="#{not empty varPlanSeccion.planSeccionDetalleList}">
+                                    <p:tabView value="#{varPlanSeccion.planSeccionDetalleList}" var="varPlanSeccionDetalle" style="font-size: x-small">
+                                        <p:tab title="#{varPlanSeccionDetalle.numeral}. #{varPlanSeccionDetalle.nombre}">
+
+                                            <!--seccion detalle texto-->
+                                            <h:panelGroup rendered="#{not empty varPlanSeccionDetalle.planSeccionDetalleTextoList}">
+                                                <div class="letraBackgroundWhite">
+                                                    <br/>
+                                                    <ui:repeat var="varPlanSeccionDetalleTexto" value="#{varPlanSeccionDetalle.planSeccionDetalleTextoList}"
+                                                               >
+                                                        <p align="justify" style="font-weight: normal">
+                                                            #{varPlanSeccionDetalleTexto.texto}
+                                                        </p>
+                                                    </ui:repeat>
+                                                    <br/>
+                                                </div>
+                                            </h:panelGroup>
+
+                                            <!--seccion detalle adjuntos-->
+                                            <h:panelGroup rendered="#{not empty varPlanSeccionDetalle.tituloAdjuntos}">
+                                                <div>
+                                                    <h3>#{varPlanSeccionDetalle.tituloAdjuntos}</h3>
+                                                    <div class="letraBackgroundWhite">
+                                                        <p style="font-weight: normal;">
+                                                            <br/>
+                                                            #{varPlanSeccionDetalle.descripcionAdjuntos}
+                                                        </p>
+                                                        <p:separator/>
+                                                    </div>
+                                                </div>
+                                            </h:panelGroup>
+                                            <p:dataTable  value="#{varPlanSeccionDetalle.planSeccionDetalleAdjuntosList}" var="varPlanSeccionDetalleAdjuntos" 
+                                                          rendered="#{not empty varPlanSeccionDetalle.planSeccionDetalleAdjuntosList}"
+                                                          rowStyleClass="letra-xx-small-centro"
+                                                          rowHover="true">
+
+                                                <p:column headerText="Documento">
+                                                    <h:outputText value="#{varPlanSeccionDetalleAdjuntos.documento}"/>
+                                                </p:column>
+                                                <p:column headerText="Ver Documento" width="30%">
+                                                    <div>
+                                                        <p:commandButton icon="ui-icon-document" title="Ver Adjunto" ajax="false">    
+                                                            <p:fileDownload value="#{uiPlanMaestro.fileDownloadSeccionDetalle}" />
+                                                        </p:commandButton>
+                                                        <h:outputText value="  "/>
+                                                        <h:outputText value="#{varPlanSeccionDetalleAdjuntos.evaluacionAdjuntos.archivoSimple}"/>
+                                                    </div>
+                                                </p:column>
+
+                                            </p:dataTable>
+
+                                            <!--seccion detalle item-->
+                                            <h:panelGroup rendered="#{not empty varPlanSeccionDetalle.planSeccionDetalleItemList}">
+                                                <p:tabView value="#{varPlanSeccionDetalle.planSeccionDetalleItemList}" var="varPlanSeccionDetalleItem" style="font-size: x-small">
+                                                    <p:tab title="#{varPlanSeccionDetalleItem.numeral}. #{varPlanSeccionDetalleItem.nombre}">
+
+                                                        <!--seccion detalle item texto-->
+                                                        <h:panelGroup rendered="#{not empty varPlanSeccionDetalleItem.planSeccionDetalleItemTextoList}">
+                                                            <div class="letraBackgroundWhite">
+                                                                <br/>
+                                                                <ui:repeat var="varPlanSeccionDetalleItemTexto" value="#{varPlanSeccionDetalleItem.planSeccionDetalleItemTextoList}"
+                                                                           >
+                                                                    <p align="justify" style="font-weight: normal">
+                                                                        #{varPlanSeccionDetalleItemTexto.texto}
+                                                                    </p>
+                                                                </ui:repeat>
+                                                                <br/>
+                                                            </div>
+                                                        </h:panelGroup>
+
+                                                        <!--seccion detalle item adjuntos-->
+                                                        <h:panelGroup rendered="#{not empty varPlanSeccionDetalleItem.tituloAdjuntos}">
+                                                            <div>
+                                                                <h3>#{varPlanSeccionDetalleItem.tituloAdjuntos}</h3>
+                                                                <div class="letraBackgroundWhite">
+                                                                    <p style="font-weight: normal;">
+                                                                        <br/>
+                                                                        #{varPlanSeccionDetalleItem.descripcionAdjuntos}
+                                                                    </p>
+                                                                    <p:separator/>
+                                                                </div>
+                                                            </div>
+                                                        </h:panelGroup>
+
+                                                        <p:dataTable  value="#{varPlanSeccionDetalleItem.planSeccionDetalleItemAdjuntosList}" var="varPlanSeccionDetalleItemAdjuntos" 
+                                                                      rendered="#{not empty varPlanSeccionDetalleItem.planSeccionDetalleItemAdjuntosList}"
+                                                                      rowStyleClass="letra-xx-small-centro"
+                                                                      rowHover="true">
+
+                                                            <p:column headerText="Actividad">
+                                                                <h:outputText value="#{varPlanSeccionDetalleItemAdjuntos.actividad}"/>
+                                                            </p:column>
+                                                            <p:column headerText="Descripcion General">
+                                                                <h:outputText value="#{varPlanSeccionDetalleItemAdjuntos.descripcionGeneral}"/>
+                                                            </p:column>
+                                                            <p:column headerText="Documento">
+                                                                <h:outputText value="#{varPlanSeccionDetalleItemAdjuntos.documento}"/>
+                                                            </p:column>
+                                                            <p:column headerText="Ver Documento" width="30%">
+                                                                <div>
+                                                                    <p:commandButton icon="ui-icon-document" title="Ver Adjunto" ajax="false">    
+                                                                        <p:fileDownload value="#{uiPlanMaestro.fileDownloadSeccionDetalleItem}" />
+                                                                    </p:commandButton>
+                                                                    <h:outputText value="  "/>
+                                                                    <h:outputText value="#{varPlanSeccionDetalleItemAdjuntos.evaluacionAdjuntos.archivoSimple}"/>
+                                                                </div>
+                                                            </p:column>
+
+                                                        </p:dataTable>
+
+
+                                                    </p:tab>
+                                                </p:tabView>
+                                            </h:panelGroup>
+
+
+
+
+                                        </p:tab>
+                                    </p:tabView>
+                                </h:panelGroup>
+
+                            </p:tab>
+                        </p:tabView>
+                    </h:panelGroup>
+
+
+                </p:tab>
+            </p:tabView>
+
+
+
+
+            <p:separator/>
+
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}" width="#{dialogo.width}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}"  update="dialog" />            
+        </h:form>
+
+    </ui:define>
+</ui:composition>

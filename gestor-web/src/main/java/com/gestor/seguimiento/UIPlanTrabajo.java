@@ -269,7 +269,7 @@ public class UIPlanTrabajo implements Serializable{
         }
     }
     
-    public void guardarPlantrabajo(){
+     public void guardarPlantrabajo(){
         try {
             evaluacion = (Evaluacion) UtilJSF.getBean("evaluacion");     
             UtilJSF.setBean("varEvaluacion", evaluacion, UtilJSF.APPLICATION_SCOPE);                                     
@@ -303,8 +303,7 @@ public class UIPlanTrabajo implements Serializable{
     
     
     public String subirItemevaluacion() {
-        try{     
-            
+        try{  
             Evaluacion ev = (Evaluacion) UtilJSF.getBean("varEvaluacion");      
             UtilJSF.setBean("evaluacion", ev , UtilJSF.SESSION_SCOPE);                            
             this.cargarPlantrabajo();            
@@ -592,8 +591,8 @@ public class UIPlanTrabajo implements Serializable{
             
                 List<String> condicionesConsulta = new ArrayList<>();
                 condicionesConsulta.add(App.CONDICION_WHERE);
-                condicionesConsulta.add(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_CONDICION_COD_ESTABLECIMIENTO.replace("?", "2" ));
-                establecimiento.setCodigoEstablecimiento(2);           
+                condicionesConsulta.add(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_CONDICION_COD_ESTABLECIMIENTO.replace("?", "3" ));
+                establecimiento.setCodigoEstablecimiento(3);           
                 this.cargarPlanesTrabajoList();
                 plantrabajoActividadList.addAll(gestorPlanTrabajo.cargarListaEvaluacionPlanAccion(
                         UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
@@ -769,6 +768,15 @@ public class UIPlanTrabajo implements Serializable{
                 style += "background-color: #fbaa36;";
         }if(cons>71){
             style += "background-color: #008000;";
+        }
+        return style;
+    }
+    
+    public String getStyleDias() {
+        plantrabajoActividad = (PlanTrabajoActividad) UtilJSF.getBean("varPlanTrabajoactividad");
+        String style = "";          
+        if(plantrabajoActividad.getDiasRestantes() != null && plantrabajoActividad.getDiasRestantes() <= 0 ){
+            style += "color: #FF0000";
         }
         return style;
     }

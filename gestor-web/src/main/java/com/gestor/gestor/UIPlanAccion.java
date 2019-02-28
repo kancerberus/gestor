@@ -361,8 +361,8 @@ public class UIPlanAccion {
             
                 List<String> condicionesConsulta = new ArrayList<>();
                 condicionesConsulta.add(App.CONDICION_WHERE);
-                condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", "2" ));
-                establecimiento.setCodigoEstablecimiento(2);
+                condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", "3" ));
+                establecimiento.setCodigoEstablecimiento(3);
                 evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
                         UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
                 )
@@ -750,6 +750,15 @@ public class UIPlanAccion {
                 UtilLog.generarLog(this.getClass(), e);
             }
         }
+    }
+    
+    public String getStyleDias() {
+        evaluacionPlanAccionDetalle = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("varPlanAccionDetalle");
+        String style = "";          
+        if(evaluacionPlanAccionDetalle.getDiasRestantes() != null && evaluacionPlanAccionDetalle.getDiasRestantes() <= 0 ){
+            style += "color: #FF0000";
+        }
+        return style;
     }
 
     public int getDias() {

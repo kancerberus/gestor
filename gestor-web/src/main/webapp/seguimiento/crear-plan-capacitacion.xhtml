@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml"
+                >
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formCrearPlanCapacitacion" style="font-size: small;">
+            <p:panel id="panelCrearPlanCapacitacion"  header="Administrar Plan Capacitacion #{evaluacion.establecimiento.nombre}"  >
+                <h:panelGrid columns="3" >
+                    
+                    <h:outputText style="font-weight: bold;" value="Descripcion"/>
+                    <h:outputLabel style="font-weight: bold;" value="Fecha Vencimiento"/>
+                    <h:outputText style="font-weight: bold;" value="Meta"/>
+                    
+                    <p:inputText value="#{uiPlanCapacitacion.planCapacitacion.descripcion}" placeholder="Descripcion" />
+                    <p:calendar  value="#{uiPlanCapacitacion.planCapacitacion.fechaVenc}" pattern="dd-MM-yyyy" mask="true" />                    
+                    <p:inputText value="#{uiPlanCapacitacion.planCapacitacion.meta}" placeholder="Meta" />
+                </h:panelGrid>
+
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Crear / Modificar" action="#{uiPlanCapacitacion.guardarPlancapacitacion()}"
+                                     icon="ui-icon-disk"
+                                     update="formCrearPlanCapacitacion">                        
+                        
+                    </p:commandButton>
+                    <p:commandButton value="Limpiar" action="#{uiPlanCapacitacion.limpiarPlanCapacitacion()}"
+                                     icon="ui-icon-cancel"  
+                                     update="formCrearPlanCapacitacion"/>
+                </h:panelGrid>
+                <p:dataTable value="#{uiPlanCapacitacion.planCapacitacionList}" var="varPlanCapacitacion" emptyMessage="No hay planes capacitacion"
+                              widgetVar="planCrearCapacitacionTable" rowStyleClass="letra-x-small-centro"
+                              rowHover="true">
+
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column width="20%" headerText="Opciones" />                                                                                    
+                            <p:column  headerText="Descripcion" />
+                            <p:column  headerText="Fecha Creacion" />
+                            <p:column  headerText="Fecha Vencimiento" />
+                            <p:column  headerText="Meta" />                            
+                            <p:column width="10%" headerText="Estado" filterBy="#{varPlancapacitacion.estado}"
+                                    filterMatchMode="equals">
+                                  <f:facet name="filter">
+                                      <p:selectOneButton onchange="PF('planCrearCapacitacionTable').filter()"
+                                                     style="font-size: 8px;">
+                                          <f:selectItem itemLabel="ABIERTO" itemValue="A" />
+                                          <f:selectItem itemLabel="CERRADO" itemValue="C" />
+                                          <f:selectItem itemLabel="ELIMINADO" itemValue="E" />
+                                      </p:selectOneButton>
+                                  </f:facet>                                
+                            </p:column>
+                            
+                        </p:row> 
+                    </p:columnGroup>
+
+                    <p:column >
+                        <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Trabajo" update="formCrearPlanCapacitacion"
+                                         action="#{uiPlanCapacitacion.subirItemPlancapacitacion()}"/>              
+                    </p:column>                                                            
+                    <p:column>
+                        <h:outputText value="#{varPlanCapacitacion.descripcion}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanCapacitacion.fechaRegistro}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column> 
+                    <p:column>
+                        <h:outputText value="#{varPlanCapacitacion.fechaVenc}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>                    
+                    <p:column>
+                        <h:outputText value="#{varPlanCapacitacion.meta}" />                            
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanCapacitacion.estado}" />                            
+                    </p:column> 
+                </p:dataTable>
+
+            </p:panel>
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}" update="dialog" />
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
