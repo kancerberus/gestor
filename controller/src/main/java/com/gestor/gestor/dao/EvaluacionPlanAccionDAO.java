@@ -130,7 +130,7 @@ public class EvaluacionPlanAccionDAO {
                     + " JOIN gestor.clase_hallazgo ch USING (cod_clase_hallazgo)"                            
                     + " JOIN gestor.tipo_accion ta USING (cod_tipo_accion)"
                     + " JOIN gestor.motivo_correccion mc USING (cod_motivo_correccion)"
-                    + " JOIN public.centro_trabajo ct USING (cod_centrotrabajo)"
+                    + " JOIN public.centro_trabajo ct on (ct.cod_centrotrabajo=EPAD.cod_centrotrabajo and ct.codigo_establecimiento=EPAD.codigo_establecimiento)"
                     + " JOIN public.responsable R USING (cedula)"
                     + " WHERE cod_evaluacion=" + codEvaluacion + " AND EPAD.codigo_establecimiento=" + codigoEstablecimiento 
                     + " AND cod_ciclo='" + codCiclo + "' AND cod_seccion=" + codSeccion + " AND cod_detalle=" + codDetalle + " AND cod_item=" + codItem
@@ -330,7 +330,7 @@ public class EvaluacionPlanAccionDAO {
                     + " JOIN gestor.clase_hallazgo ch USING (cod_clase_hallazgo)"                            
                     + " JOIN gestor.tipo_accion ta USING (cod_tipo_accion)"
                     + " JOIN gestor.motivo_correccion mc USING (cod_motivo_correccion)"
-                    + " JOIN public.centro_trabajo ct USING (cod_centrotrabajo)"
+                    + " JOIN public.centro_trabajo ct USING (codigo_establecimiento,cod_centrotrabajo)"
                     + " JOIN public.responsable R ON (R.cedula=EPAD.cedula)"                    
                     + condicion
                     + " ORDER BY C.numeral, S.numeral, SD.numeral, SDI.numeral"

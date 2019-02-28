@@ -75,7 +75,7 @@ public class EvaluacionCapacitacionDAO {
                     + " FROM gestor.evaluacion_capacitacion_detalle ECD"
                     + " JOIN public.usuarios U USING (documento_usuario)"
                     + " INNER JOIN public.responsable R on (R.cedula=ECD.cedula) "
-                    + " INNER JOIN public.centro_trabajo ct ON (ct.cod_centrotrabajo=ECD.cod_centrotrabajo)"
+                    + " INNER JOIN public.centro_trabajo ct ON (ct.cod_centrotrabajo=ECD.cod_centrotrabajo and ct.codigo_establecimiento=ECD.codigo_establecimiento)"
                     + " JOIN gestor.modalidad mo USING (cod_modalidad)"
                     + " JOIN gestor.tecnica_capacitacion tec USING (cod_tecnica)"
                     + " JOIN gestor.facilitador f USING (cod_facilitador)"
@@ -265,7 +265,8 @@ public class EvaluacionCapacitacionDAO {
                     + " tec.cod_tecnica cod_tec, tec.nombre nom_tec,"
                     + " f.cod_facilitador cod_f, f.nombre nom_f,"                    
                     + " da.cod_dirigida cod_da, da.nombre nom_da,"
-                    + " re.cod_recursos cod_re, re.nombre nom_re"
+                    + " re.cod_recursos cod_re, re.nombre nom_re,"
+                    + " pc.cod_plan_capacitacion codpc, pc.descripcion descpc "
                     + " FROM gestor.evaluacion_capacitacion_detalle ECD"
                     + " JOIN public.usuarios U USING (documento_usuario)"
                     + " JOIN gestor.evaluacion_capacitacion EC USING (cod_evaluacion, codigo_establecimiento, cod_capacitacion)"
@@ -276,7 +277,7 @@ public class EvaluacionCapacitacionDAO {
                     + " JOIN gestor.seccion S USING (cod_seccion, cod_ciclo)"
                     + " JOIN gestor.ciclo C USING (cod_ciclo)"
                     + " INNER JOIN public.responsable R on (R.cedula=ECD.cedula)    "
-                    + " INNER JOIN public.centro_trabajo ct ON (ct.cod_centrotrabajo=ECD.cod_centrotrabajo )"
+                    + " INNER JOIN public.centro_trabajo ct ON (ct.cod_centrotrabajo=ECD.cod_centrotrabajo and ct.codigo_establecimiento=ECD.codigo_establecimiento )"
                     + " JOIN gestor.modalidad mo USING (cod_modalidad)"
                     + " JOIN gestor.tecnica_capacitacion tec USING (cod_tecnica)"
                     + " JOIN gestor.facilitador f USING (cod_facilitador)"
@@ -304,7 +305,7 @@ public class EvaluacionCapacitacionDAO {
                 ecd.setDirigida(new Dirigida(rs.getInt("cod_da"), rs.getString("nom_da")));
                 ecd.setRecursos(new Recursos(rs.getInt("cod_re"), rs.getString("nom_re")));
                 ecd.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));
-
+                ecd.setPlancapacitacion(new PlanCapacitacion(0, rs.getInt("codpc"), rs.getString("descpc"), null, "", null, 0));
                 //evaluacion
                 Evaluacion e = new Evaluacion(new EvaluacionPK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento")), rs.getString("documento_usuario"),
                         rs.getDate("e_fecha"), rs.getDate("e_fecha_registro"), rs.getString("e_estado"));
@@ -336,7 +337,7 @@ public class EvaluacionCapacitacionDAO {
                 sdi.setSeccionDetalle(sd);
                 ecd.setSeccionDetalleItems(sdi);
                 
-                                SimpleDateFormat dd = new SimpleDateFormat("dd/MM/yyyy");       
+                SimpleDateFormat dd = new SimpleDateFormat("dd/MM/yyyy");       
                 int dias = 0; boolean activo = false;
                 Calendar calendar; Date aux;
                 
@@ -409,7 +410,7 @@ public class EvaluacionCapacitacionDAO {
                     + " JOIN gestor.seccion S USING (cod_seccion, cod_ciclo)"
                     + " JOIN gestor.ciclo C USING (cod_ciclo)"
                     + " INNER JOIN public.responsable R on (R.cedula=ECD.cedula) "
-                    + " INNER JOIN public.centro_trabajo ct ON (ct.cod_centrotrabajo=ECD.cod_centrotrabajo)"
+                    + " INNER JOIN public.centro_trabajo ct ON (ct.cod_centrotrabajo=ECD.cod_centrotrabajo and ct.codigo_establecimiento=ECD.codigo_establecimiento)"
                     + " JOIN gestor.modalidad mo USING (cod_modalidad)"
                     + " JOIN gestor.tecnica_capacitacion tec USING (cod_tecnica)"
                     + " JOIN gestor.facilitador f USING (cod_facilitador)"
