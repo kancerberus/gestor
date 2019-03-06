@@ -6,7 +6,7 @@
 package com.gestor.seguimiento;
 
 
-import com.gestor.controller.GestorGeneral;
+import net.sf.jasperreports.engine.JRException;
 import com.gestor.entity.App;
 import com.gestor.entity.Dialogo;
 import com.gestor.entity.UtilFecha;
@@ -33,16 +33,38 @@ import com.gestor.publico.controlador.GestorPrograma;
 import com.gestor.publico.controlador.GestorResponsable;
 import com.gestor.publico.controlador.GestorUsuario;
 import com.gestor.seguimiento.controlador.GestorPlanTrabajo;
+import java.io.ByteArrayInputStream;
+import com.gestor.web.ConeccionBD;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.activation.DataSource;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.primefaces.model.DefaultStreamedContent;
 
 /**
  *
@@ -71,6 +93,7 @@ public class UIPlanTrabajo implements Serializable{
     private Usuarios usuariosSeleccionado;
     private PlanTrabajo planTrabajoSeleccionado;
     private String responsable;
+    String ptaPdf="";
     
     private List<Usuarios> usuariosList = new ArrayList<>();
     private List<PlanTrabajo> planesTrabajoList = new ArrayList<>();
@@ -639,20 +662,6 @@ public class UIPlanTrabajo implements Serializable{
         return null;
     }
     
-    /*public Integer getAvancePlanTrabajo() {
-        try {                          
-            long codEv=0;
-            if(!plantrabajoActividadList.isEmpty()){
-            codEv=plantrabajoActividadList.get(0).getEvaluacion().getEvaluacionPK().getCodEvaluacion();
-            }
-            GestorEvaluacion gestorEvaluacion = new GestorEvaluacion();
-            return gestorEvaluacion.avancePlanaccion(codEv);
-        } catch (Exception e) {
-            UtilLog.generarLog(this.getClass(), e);
-        }        
-        return null;
-    }*/
-    
     public void consultarSeguimientoPlanTrabajo() {
         try {
             plantrabajoActividadList = new ArrayList<>();            
@@ -668,6 +677,7 @@ public class UIPlanTrabajo implements Serializable{
                 plantrabajoActividadList.addAll(gestorPlanTrabajo.cargarListaEvaluacionPlanAccion(
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)                
                 ));            
+                
             }
             int cont=0;
             int acum=0;
@@ -690,6 +700,8 @@ public class UIPlanTrabajo implements Serializable{
             UtilLog.generarLog(this.getClass(), e);
         }
     }
+    
+    
     
     public void mostrarNotaSeguimiento() {
         try {
@@ -779,8 +791,24 @@ public class UIPlanTrabajo implements Serializable{
             style += "color: #FF0000";
         }
         return style;
+    }   
+    
+    public void planTrabajoPDF(){
+        Integer codPta=plantrabajoActividad.getCodPlantrabajo();
+        ptaPdf=("window.open('.././exportar?nomReporte=Actividades&parametros=codigo_establecimiento,cod_plan_trabajo&valores=" + establecimiento.getCodigoEstablecimiento() +","+codPta+ "&tipos=I,I');");        
+                
     }
 
+    public String getPtaPdf() {
+        return ptaPdf;
+    }
+
+    public void setPtaPdf(String ptaPdf) {
+        this.ptaPdf = ptaPdf;
+    }
+
+
+    
     public Integer getCons() {
         return cons;
     }

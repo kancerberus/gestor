@@ -308,8 +308,8 @@ public class PlanTrabajoDAO {
                     "JOIN public.responsable res USING (cedula) " +
                     "JOIN gestor.recursos rec USING (cod_recursos) " +
                     "JOIN gestor.fuente_hallazgo fh USING (cod_fuente_hallazgo) " +
-                    "JOIN public.plan_trabajo_programa pr USING (cod_programa, cod_objetivo, cod_plan_trabajo) " +
-                    "JOIN public.plan_trabajo_objetivo obj USING (cod_objetivo, cod_plan_trabajo) " +
+                    "JOIN public.plan_trabajo_programa pr on (pr.codigo_establecimiento=pta.codigo_establecimiento and pr.cod_programa=pta.cod_programa and pr.cod_objetivo=pta.cod_objetivo and pr.cod_plan_trabajo=pta.cod_plan_trabajo) " +
+                    "JOIN public.plan_trabajo_objetivo obj on (obj.codigo_establecimiento=pta.codigo_establecimiento and obj.cod_objetivo=pta.cod_objetivo and obj.cod_plan_trabajo=obj.cod_plan_trabajo) " +
                     condicion+
                     "GROUP BY pta.codigo_establecimiento, pta.actividad, pta.cod_actividad, pt.cod_plan_trabajo, pta.fecha_reg, pta.fecha_venc, pta.estado, pt.descripcion, " +
                     "obj.cod_objetivo, obj.nombre, pr.nombre, pr.cod_programa, res.cedula, res.nombres, res.apellidos, fh.cod_fuente_hallazgo, fh.nombre, "+
@@ -390,8 +390,8 @@ public class PlanTrabajoDAO {
                     "JOIN public.responsable res USING (cedula) " +
                     "JOIN gestor.recursos rec USING (cod_recursos) " +
                     "JOIN gestor.fuente_hallazgo fh USING (cod_fuente_hallazgo) " +
-                    "JOIN public.plan_trabajo_programa pr USING (cod_programa, cod_objetivo, cod_plan_trabajo) " +
-                    "JOIN public.plan_trabajo_objetivo obj USING (cod_objetivo, cod_plan_trabajo) " +
+                    "JOIN public.plan_trabajo_programa pr on (pr.codigo_establecimiento=pta.codigo_establecimiento and pr.cod_programa=pta.cod_programa and pr.cod_objetivo=pta.cod_objetivo and pr.cod_plan_trabajo=pta.cod_plan_trabajo) " +
+                    "JOIN public.plan_trabajo_objetivo obj on (obj.codigo_establecimiento=pta.codigo_establecimiento and obj.cod_objetivo=pta.cod_objetivo and obj.cod_plan_trabajo=obj.cod_plan_trabajo) " +
                     condicion+
                     "GROUP BY pta.codigo_establecimiento, pta.actividad, pta.cod_actividad, pt.cod_plan_trabajo, pta.fecha_reg, pta.fecha_venc, pta.estado, pt.descripcion, " +
                     "obj.cod_objetivo, obj.nombre, pr.nombre, pr.cod_programa, res.cedula, res.nombres, res.apellidos, fh.cod_fuente_hallazgo, fh.nombre, "+

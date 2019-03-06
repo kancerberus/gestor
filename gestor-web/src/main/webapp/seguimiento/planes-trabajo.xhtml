@@ -87,8 +87,16 @@
                         
                     </p:panelGrid>
                 </p:panel>
+                <p:commandButton icon="ui-icon-print" rendered="true" action="#{uiPlantrabajo.planTrabajoPDF()}"  oncomplete="PF('dialogoExportarW').show()" update="formPlanesTrabajo"/>
+                
+                <p:dialog  id="dialogoExportar" header="Exportando" widgetVar="dialogoExportarW" onShow="#{uiPlantrabajo.ptaPdf} PF('dialogoExportarW').hide();" >
+</p:dialog>
+                     
+                
                 <p:commandButton value="Consultar" style="margin: auto auto;width: 210px;height: 30px; border-radius: 10px;"
-                                 action="#{uiPlantrabajo.consultarSeguimientoPlanTrabajo()}" update="formPlanesTrabajo"/>
+                                 action="#{uiPlantrabajo.consultarSeguimientoPlanTrabajo()}" update="formPlanesTrabajo">                
+                </p:commandButton>
+                
                 <br/>
                 <p:separator style="height: 3px;width: 100%" />                
             </h:panelGroup>
