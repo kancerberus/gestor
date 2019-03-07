@@ -48,6 +48,10 @@ public class GestorEvaluacionCapacitacion extends Gestor {
         if (ecd.getResponsable() == null || ecd.getResponsable().getCedula() == null || ecd.getResponsable().getCedula().equalsIgnoreCase("")) {
             throw new Exception("Ingrese el responsable de la capacitación.", UtilLog.TW_VALIDACION);
         }
+        if(ecd.getPlancapacitacion()==null ){
+            throw new Exception("Seleccione Un Plan de Capacitacion.", UtilLog.TW_VALIDACION);
+        }
+        
         ecd.setNombre(ecd.getNombre().toUpperCase().trim());
         ecd.setDescripcion(ecd.getDescripcion().toUpperCase().trim());
 //        ecd.setResponsable(ecd.getResponsable().toUpperCase().trim());

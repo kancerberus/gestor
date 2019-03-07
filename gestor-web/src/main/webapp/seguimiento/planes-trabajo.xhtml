@@ -23,13 +23,6 @@
                     </f:facet>
 
                     <h:panelGrid  >
-
-                        <h:outputLabel value="Evaluador"/>
-                        <p:selectOneMenu value="#{uiPlantrabajo.usuariosSeleccionado}" converter="convertidorGenerico"
-                                                         style="text-align: center;width: 180px;">  
-                                <f:selectItem itemLabel="Seleccione Evaluador" noSelectionOption="true"/>
-                                <f:selectItems value="#{uiPlantrabajo.usuariosList}" var="varUsuarios" itemLabel="#{varUsuarios.nombreApellido}" itemValue="#{varUsuarios}"/>
-                        </p:selectOneMenu>
                          
                         <h:outputLabel value="Empresas"/>
                         <p:selectOneListbox  value="#{uiPlantrabajo.establecimiento}" converter="convertidorGenerico" var="t" filter="true" filterMatchMode="contains" style="width: 90%; margin-bottom: 30%;font-family: bolder" styleClass="Centro"
@@ -52,8 +45,7 @@
                         <p:selectOneMenu id="pt" value="#{uiPlantrabajo.planTrabajoSeleccionado}" converter="convertidorGenerico"
                                                          style="text-align: center;width: 180px;">  
                                 <f:selectItem itemLabel="Seleccione Plan De Trabajo" noSelectionOption="true"/>
-                                <f:selectItems value="#{uiPlantrabajo.planesTrabajoList}" var="varPt" itemLabel="#{varPt.descripcion}" itemValue="#{varPt}"/>
-                                <p:ajax  update="formPlanesTrabajo:meta" listener="#{uiPlantrabajo.planTrabajoSeleccionado}" />                            
+                                <f:selectItems value="#{uiPlantrabajo.planesTrabajoList}" var="varPt" itemLabel="#{varPt.descripcion}" itemValue="#{varPt}"/>                                
                         </p:selectOneMenu>
                         
                 </h:panelGrid>
@@ -63,10 +55,10 @@
                             <f:selectItems value="#{uiPlantrabajo.actividadEstado}"/>
                         </p:selectManyButton>
 
-                        <h:outputText value="Fecha Inicio" />
+                        <h:outputText value="Fecha Creado Desde" />
                         <p:calendar value="#{uiPlantrabajo.fechaPlanInicio}" pattern="dd/MM/yyyy" placeholder="Fecha Plan Trabajo"/>
 
-                        <h:outputText value="Fecha Fin" />
+                        <h:outputText value="Fecha Finalizado Hasta" />
                         <p:calendar value="#{uiPlantrabajo.fechaPlanFin}" pattern="dd/MM/yyyy" placeholder="Fecha Plan Trabajo"/>
 
                     </h:panelGrid>
@@ -147,6 +139,11 @@
                 </p:column>  
                 <p:column headerText="Dias Restantes" style="width: 3%" filterBy="#{varPlanTrabajoactividad.diasRestantes}" >
                     <h:outputText value="#{varPlanTrabajoactividad.diasRestantes}" style="#{uiPlantrabajo.styleDias}"/>
+                </p:column>
+                <p:column style="width: 4%" headerText="Fecha Finalizado">
+                    <h:outputText value="#{varPlanTrabajoactividad.fechaFinalizado}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
                 </p:column>
                 <p:column headerText="Estado" filterBy="#{varPlanTrabajoactividad.estado}"
                           filterMatchMode="equals">

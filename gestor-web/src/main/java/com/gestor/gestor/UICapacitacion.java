@@ -300,7 +300,7 @@ public class UICapacitacion {
 
         if (fechaCapacitacionFin != null) {
             condicionesConsulta.add(App.CONDICION_AND);
-            condicionesConsulta.add(EvaluacionCapacitacionDetalle.EVALUACION_CAPACITACION_DETALLE_CONDICION_FECHA_REGISTRO_LTE.replace("?", UtilFecha.formatoFecha(fechaCapacitacionFin, null, UtilFecha.PATRON_FECHA_YYYYMMDD, UtilFecha.CARACTER_COMILLA)));
+            condicionesConsulta.add(EvaluacionCapacitacionDetalle.EVALUACION_CAPACITACION_DETALLE_CONDICION_FECHA_FINALIZADO_LTE.replace("?", UtilFecha.formatoFecha(fechaCapacitacionFin, null, UtilFecha.PATRON_FECHA_YYYYMMDD, UtilFecha.CARACTER_COMILLA)));
         }
 
         return condicionesConsulta;
@@ -513,7 +513,7 @@ public class UICapacitacion {
             if (UtilLog.causaControlada(e)) {
                 UtilMSG.addErrorMsg(e.getCause().getMessage(), e.getMessage());
             } else {
-                UtilLog.generarLog(this.getClass(), e);
+                UtilMSG.addErrorMsg(e.getCause().getMessage(), e.getMessage());
             }
         }
     }

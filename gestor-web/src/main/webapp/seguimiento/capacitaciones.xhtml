@@ -24,14 +24,7 @@
                         Filtros de Búsqueda
                     </f:facet>
 
-                    <h:panelGrid>
-
-                        <h:outputLabel value="Evaluador"/>
-                        <p:selectOneMenu value="#{uiCapacitacion.usuariosSeleccionado}" converter="convertidorGenerico"
-                                         style="text-align: center;width: 180px;">  
-                            <f:selectItem itemLabel="Seleccione Evaluador" noSelectionOption="true"/>
-                            <f:selectItems value="#{uiCapacitacion.usuariosList}" var="varUsuarios" itemLabel="#{varUsuarios.nombreApellido}" itemValue="#{varUsuarios}"/>
-                        </p:selectOneMenu>
+                    <h:panelGrid>                        
 
                         <p:selectOneListbox  value="#{uiCapacitacion.establecimiento}" converter="convertidorGenerico" var="t" filter="true" filterMatchMode="contains" style="width: 90%; margin-bottom: 30%;font-family: bolder" styleClass="Centro"
                                                                                         >
@@ -54,17 +47,12 @@
                                 <f:selectItems value="#{uiCapacitacion.planCapacitacionList}" var="varPc" itemLabel="#{varPc.descripcion}" itemValue="#{varPc}"/>                                
                         </p:selectOneMenu>
                     </h:panelGrid>
-                    <h:panelGrid columns="2">
-                        <h:outputLabel value="Cod Evaluación"/>
-                        <p:inputText placeholder="Cod Evaluación" value="#{uiCapacitacion.codEvaluacion}"/>
+                    <h:panelGrid columns="2">                        
 
                         <h:outputText value="Ciclos" />
                         <p:selectManyButton value="#{uiCapacitacion.ciclosStringSeleccionado}" >
                             <f:selectItems value="#{uiCapacitacion.ciclosString}"/>
                         </p:selectManyButton>
-
-                        <h:outputLabel value="Responsable"/>
-                        <p:inputText placeholder="Responsable" value="#{uiCapacitacion.responsable}"/>
 
                     </h:panelGrid>
 
@@ -74,10 +62,10 @@
                             <f:selectItems value="#{uiCapacitacion.capacitacionEstado}"/>
                         </p:selectManyButton>
 
-                        <h:outputText value="Fecha Inicio" />
+                        <h:outputText value="Fecha Cracdo Desde" />
                         <p:calendar value="#{uiCapacitacion.fechaCapacitacionInicio}" pattern="dd/MM/yyyy" placeholder="Fecha Capacitación"/>
                         
-                        <h:outputText value="Fecha Fin" />
+                        <h:outputText value="Fecha Finalizado Hasta" />
                         <p:calendar value="#{uiCapacitacion.fechaCapacitacionFin}" pattern="dd/MM/yyyy" placeholder="Fecha Capacitación"/>
                         
 

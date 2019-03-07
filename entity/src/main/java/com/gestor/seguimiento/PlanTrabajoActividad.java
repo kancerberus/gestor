@@ -43,7 +43,7 @@ public class PlanTrabajoActividad implements Serializable {
     public static String PLAN_TRABAJO_ACTIVIDAD_CONDICION_RESPONSABLE = "PTA.responsable ILIKE (?)";
     public static String PLAN_TRABAJO_ACTIVIDAD_CONDICION_ESTADO = "PTA.ESTADO IN (?)";
     public static String PLAN_TRABAJO_ACTIVIDAD_CONDICION_FECHA_REGISTRO_GTE = "PTA.fecha_reg::DATE >= ?";
-    public static String PLAN_TRABAJO_ACTIVIDAD_CONDICION_FECHA_REGISTRO_LTE = "PTA.fecha_reg::DATE <= ?";
+    public static String PLAN_TRABAJO_ACTIVIDAD_CONDICION_FECHA_FINALIZADO_LTE = "PTA.fecha_finalizado::DATE <= ?";
     
     public static String PLAN_TRABAJO_ACTIVIDAD_ESTADO_CERRADO = "C";
 
@@ -68,7 +68,9 @@ public class PlanTrabajoActividad implements Serializable {
     @Column(name = "descripcion")
     private String descripcion;
     @Column(name = "fecha_venc")
-    private Date fechaVenc;              
+    private Date fechaVenc;     
+    @Column(name = "fecha_finalizado")
+    private Date fechaFinalizado;  
     @Basic(optional = false)
     @Column(name = "estado")
     private String estado;
@@ -90,7 +92,7 @@ public class PlanTrabajoActividad implements Serializable {
     public PlanTrabajoActividad() {
     }
 
-    public PlanTrabajoActividad(Integer codEstablecimiento, Integer codPlantrabajo, Integer codActividad, Integer codObjetivo, Integer codPrograma, Integer codFuentehallazgo, String cedula, Integer codRecurso, String descripcion, Date fechaVenc, String estado, Date fechaRegistro) {
+    public PlanTrabajoActividad(Integer codEstablecimiento, Integer codPlantrabajo, Integer codActividad, Integer codObjetivo, Integer codPrograma, Integer codFuentehallazgo, String cedula, Integer codRecurso, String descripcion, Date fechaVenc, String estado, Date fechaRegistro, Date fechaFinalizado) {
         this.codEstablecimiento = codEstablecimiento;
         this.codPlantrabajo = codPlantrabajo;
         this.codActividad = codActividad;
@@ -102,8 +104,17 @@ public class PlanTrabajoActividad implements Serializable {
         this.descripcion = descripcion;
         this.fechaVenc = fechaVenc;
         this.estado = estado;
-        this.fechaRegistro = fechaRegistro;             
+        this.fechaRegistro = fechaRegistro;     
+        this.fechaFinalizado = fechaFinalizado;
     }   
+
+    public Date getFechaFinalizado() {
+        return fechaFinalizado;
+    }
+
+    public void setFechaFinalizado(Date fechaFinalizado) {
+        this.fechaFinalizado = fechaFinalizado;
+    }
 
     public Integer getDiasRestantes() {
         return diasRestantes;

@@ -157,4 +157,14 @@ public class GestorPlanTrabajo extends Gestor implements Serializable{
             this.cerrarConexion();
         }
     }
+    
+    public void cerrarPlantrabajoactividad(PlanTrabajoActividad pta) throws Exception {
+        try {
+            this.abrirConexion();
+            PlanTrabajoDAO planTrabajoDAO= new PlanTrabajoDAO(conexion);
+            planTrabajoDAO.actualizarEstadoPlanTrabajoActividad(pta);            
+        } finally {
+            this.cerrarConexion();
+        }
+    }
 }

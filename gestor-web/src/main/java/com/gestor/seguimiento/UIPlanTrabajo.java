@@ -490,7 +490,7 @@ public class UIPlanTrabajo implements Serializable{
             gestorPlanTrabajo= new GestorPlanTrabajo();           
             plantrabajoActividad = (PlanTrabajoActividad) UtilJSF.getBean("varPlanTrabajoactividad");                       
             plantrabajoActividad.setEstado(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_ESTADO_CERRADO);
-            gestorPlanTrabajo.almacenarPlantrabajoactividad(plantrabajoActividad);            
+            gestorPlanTrabajo.cerrarPlantrabajoactividad(plantrabajoActividad);            
             UtilJSF.update("formPlanesTrabajo");
             UtilMSG.addSuccessMsg("Actividad Finalizada", "Se finalizo Actividad # " + plantrabajoActividad.getCodActividad());
             this.cargarPlanTrabajoactividadEstablecimiento();
@@ -512,7 +512,7 @@ public class UIPlanTrabajo implements Serializable{
             plantrabajoActividad.setEstado("A");
             PlanTrabajoActividad pta= new PlanTrabajoActividad(plantrabajo.getCodEstablecimiento(), plantrabajo.getCodPlantrabajo(), plantrabajoActividad.getCodActividad(),
                 objetivo.getCodObjetivo(), plantrabajoActividad.getPrograma().getCodPrograma(), plantrabajoActividad.getFuenteHallazgo().getCodFuentehallazgo(), plantrabajoActividad.getResponsable().getCedula(), plantrabajoActividad.getRecursos().getCodRecursos(), plantrabajoActividad.getDescripcion(), plantrabajoActividad.getFechaVenc(),
-                plantrabajoActividad.getEstado(), null);
+                plantrabajoActividad.getEstado(), null, null);
             
             PlanTrabajoActividadNota ptan= new PlanTrabajoActividadNota(plantrabajo.getCodEstablecimiento(),  plantrabajo.getCodPlantrabajo(),  plantrabajoActividad.getCodActividad(),
                 objetivo.getCodObjetivo(), plantrabajoActividad.getPrograma().getCodPrograma(), 0, "REGISTRO INICIAL", "Inicia registro de actividad ", plantrabajoActividad.getEstado(), null);
@@ -598,7 +598,7 @@ public class UIPlanTrabajo implements Serializable{
 
         if (fechaPlanFin != null) {
             condicionesConsulta.add(App.CONDICION_AND);
-            condicionesConsulta.add(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_CONDICION_FECHA_REGISTRO_LTE.replace("?", UtilFecha.formatoFecha(fechaPlanFin, null, UtilFecha.PATRON_FECHA_YYYYMMDD, UtilFecha.CARACTER_COMILLA)));
+            condicionesConsulta.add(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_CONDICION_FECHA_FINALIZADO_LTE.replace("?", UtilFecha.formatoFecha(fechaPlanFin, null, UtilFecha.PATRON_FECHA_YYYYMMDD, UtilFecha.CARACTER_COMILLA)));
         }            
         return condicionesConsulta;
         

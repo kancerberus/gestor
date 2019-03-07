@@ -130,7 +130,7 @@ public class PlanTrabajoDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT pta.cod_plan_trabajo , pta.cod_actividad, pta.actividad , pta.fecha_reg, pta.fecha_venc, pta.estado, e.codigo_establecimiento code, "
+                    "SELECT pta.cod_plan_trabajo , pta.cod_actividad, pta.actividad , pta.fecha_reg, pta.fecha_venc, pta.fecha_finalizado, pta.estado, e.codigo_establecimiento code, "
                         + "e.nombre nome, obj.cod_objetivo codobj, obj.nombre nomobj, pr.cod_programa codpr, pr.nombre nompr, "                        
                         + " rec.cod_recursos cod_rec, rec.nombre nom_rec,"
                         + " fh.cod_fuente_hallazgo cod_fh, fh.nombre nom_fh,"
@@ -143,7 +143,7 @@ public class PlanTrabajoDAO {
                         + " INNER JOIN public.plan_trabajo_programa pr on (pr.codigo_establecimiento=pta.codigo_establecimiento and pr.cod_plan_trabajo=pta.cod_plan_trabajo and pr.cod_objetivo=pta.cod_objetivo and pr.cod_programa=pta.cod_programa)     "
                         + " INNER JOIN public.establecimiento e on (e.codigo_establecimiento=pta.codigo_establecimiento)         "
                         + " WHERE pta.codigo_establecimiento='"+plantrabajo.getCodEstablecimiento()+"' AND pta.cod_plan_trabajo='"+plantrabajo.getCodPlantrabajo()+"' "
-                        + " GROUP BY pta.cod_plan_trabajo, pta.cod_actividad, pta.actividad, pta.fecha_reg, pta.fecha_venc, pta.estado, pta.peso,  e.codigo_establecimiento, " 
+                        + " GROUP BY pta.cod_plan_trabajo, pta.cod_actividad, pta.actividad, pta.fecha_reg, pta.fecha_venc, pta.fecha_finalizado, pta.estado, pta.peso,  e.codigo_establecimiento, " 
                         + " e.nombre, obj.cod_objetivo, obj.nombre, pr.cod_programa, pr.nombre, rec.cod_recursos, res.cedula, fh.cod_fuente_hallazgo"
                         + " ORDER BY pta.cod_actividad"
                     
@@ -152,7 +152,7 @@ public class PlanTrabajoDAO {
             List<PlanTrabajoActividad> planestrabajoactividad = new ArrayList<>();
             while (rs.next()) {
                 PlanTrabajoActividad pta= new PlanTrabajoActividad(rs.getInt("code"), rs.getInt("cod_plan_trabajo"), rs.getInt("cod_actividad"),rs.getInt("codobj"),
-                        rs.getInt("codpr"), rs.getInt("cod_fh"),rs.getString("cedula"), rs.getInt("cod_rec"), rs.getString("actividad"), rs.getDate("fecha_venc"), rs.getString("estado"), rs.getDate("fecha_reg"));
+                        rs.getInt("codpr"), rs.getInt("cod_fh"),rs.getString("cedula"), rs.getInt("cod_rec"), rs.getString("actividad"), rs.getDate("fecha_venc"), rs.getString("estado"), rs.getDate("fecha_reg"), rs.getDate("fecha_finalizado"));
                 pta.setCodEstablecimiento(rs.getInt("code"));
                 pta.setCodPlantrabajo(rs.getInt("cod_plan_trabajo"));
                 pta.setCodObjetivo(rs.getInt("codobj"));                
@@ -296,7 +296,7 @@ public class PlanTrabajoDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    " SELECT pta.codigo_establecimiento code, pta.actividad act, pta.cod_actividad cod_act, pta.fecha_reg fr, pta.fecha_venc fv, pta.estado edo"+
+                    " SELECT pta.codigo_establecimiento code, pta.actividad act, pta.cod_actividad cod_act, pta.fecha_reg fr, pta.fecha_venc fv, pta.fecha_finalizado ff,pta.estado edo"+
                     ", pt.cod_plan_trabajo codpt, pt.descripcion descpt, " +
                     "obj.cod_objetivo codobj, obj.nombre nomobj," +
                     "pr.cod_programa codpr, pr.nombre nompr, " +
@@ -311,7 +311,7 @@ public class PlanTrabajoDAO {
                     "JOIN public.plan_trabajo_programa pr on (pr.codigo_establecimiento=pta.codigo_establecimiento and pr.cod_programa=pta.cod_programa and pr.cod_objetivo=pta.cod_objetivo and pr.cod_plan_trabajo=pta.cod_plan_trabajo) " +
                     "JOIN public.plan_trabajo_objetivo obj on (obj.codigo_establecimiento=pta.codigo_establecimiento and obj.cod_objetivo=pta.cod_objetivo and obj.cod_plan_trabajo=obj.cod_plan_trabajo) " +
                     condicion+
-                    "GROUP BY pta.codigo_establecimiento, pta.actividad, pta.cod_actividad, pt.cod_plan_trabajo, pta.fecha_reg, pta.fecha_venc, pta.estado, pt.descripcion, " +
+                    "GROUP BY pta.codigo_establecimiento, pta.actividad, pta.cod_actividad, pt.cod_plan_trabajo, pta.fecha_reg, pta.fecha_venc, pta.fecha_finalizado, pta.estado, pt.descripcion, " +
                     "obj.cod_objetivo, obj.nombre, pr.nombre, pr.cod_programa, res.cedula, res.nombres, res.apellidos, fh.cod_fuente_hallazgo, fh.nombre, "+
                     "rec.cod_recursos, rec.nombre "+
                     "ORDER BY pt.cod_plan_trabajo"
@@ -324,7 +324,7 @@ public class PlanTrabajoDAO {
             while (rs.next()) {
                 PlanTrabajoActividad pta = new PlanTrabajoActividad(rs.getInt("code"), rs.getInt("codpt"), rs.getInt("cod_act"),
                      rs.getInt("codobj"), rs.getInt("codpr"), rs.getInt("codfh"), rs.getString("ced"), rs.getInt("codrec"),
-                     rs.getString("act"), rs.getDate("fv"), rs.getString("edo"), rs.getDate("fr"));
+                     rs.getString("act"), rs.getDate("fv"), rs.getString("edo"), rs.getDate("fr"), rs.getDate("ff"));
                 pta.setPlantrabajo(new PlanTrabajo(0, rs.getInt("codpt"), rs.getString("descpt"), null, 0, "", null));
                 pta.setObjetivo(new PlanTrabajoObjetivo(0, 0, rs.getInt("codobj"), rs.getString("nomobj")));
                 pta.setPrograma(new PlanTrabajoPrograma(0, 0, 0, rs.getInt("codpr"), 0, rs.getString("nompr")));
@@ -378,7 +378,7 @@ public class PlanTrabajoDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    " SELECT pta.codigo_establecimiento code, pta.actividad act, pta.cod_actividad cod_act, pta.fecha_reg fr, pta.fecha_venc fv, pta.estado edo"+
+                    " SELECT pta.codigo_establecimiento code, pta.actividad act, pta.cod_actividad cod_act, pta.fecha_reg fr, pta.fecha_venc fv, pta.fecha_finalizado ff,pta.estado edo"+
                     ", pt.cod_plan_trabajo codpt, pt.descripcion descpt, " +
                     "obj.cod_objetivo codobj, obj.nombre nomobj," +
                     "pr.cod_programa codpr, pr.nombre nompr, pr.peso pesopr, " +
@@ -393,7 +393,7 @@ public class PlanTrabajoDAO {
                     "JOIN public.plan_trabajo_programa pr on (pr.codigo_establecimiento=pta.codigo_establecimiento and pr.cod_programa=pta.cod_programa and pr.cod_objetivo=pta.cod_objetivo and pr.cod_plan_trabajo=pta.cod_plan_trabajo) " +
                     "JOIN public.plan_trabajo_objetivo obj on (obj.codigo_establecimiento=pta.codigo_establecimiento and obj.cod_objetivo=pta.cod_objetivo and obj.cod_plan_trabajo=obj.cod_plan_trabajo) " +
                     condicion+
-                    "GROUP BY pta.codigo_establecimiento, pta.actividad, pta.cod_actividad, pt.cod_plan_trabajo, pta.fecha_reg, pta.fecha_venc, pta.estado, pt.descripcion, " +
+                    "GROUP BY pta.codigo_establecimiento, pta.actividad, pta.cod_actividad, pt.cod_plan_trabajo, pta.fecha_reg, pta.fecha_venc, pta.fecha_finalizado, pta.estado, pt.descripcion, " +
                     "obj.cod_objetivo, obj.nombre, pr.nombre, pr.cod_programa, res.cedula, res.nombres, res.apellidos, fh.cod_fuente_hallazgo, fh.nombre, "+
                     "rec.cod_recursos, rec.nombre, pr.peso "+
                     "ORDER BY pt.cod_plan_trabajo"
@@ -406,7 +406,7 @@ public class PlanTrabajoDAO {
             while (rs.next()) {
                 PlanTrabajoActividad pta = new PlanTrabajoActividad(rs.getInt("code"), rs.getInt("codpt"), rs.getInt("cod_act"),    
                     rs.getInt("codobj"), rs.getInt("codpr"), rs.getInt("codfh"), rs.getString("ced"), rs.getInt("codrec"),
-                    rs.getString("act"), rs.getDate("fv"), rs.getString("edo"), rs.getDate("fr"));
+                    rs.getString("act"), rs.getDate("fv"), rs.getString("edo"), rs.getDate("fr"), rs.getDate("ff"));
                     pta.setPlantrabajo(new PlanTrabajo(0, rs.getInt("codpt"), rs.getString("descpt"), null, 0, "", null));
                     pta.setObjetivo(new PlanTrabajoObjetivo(0, 0, rs.getInt("codobj"), rs.getString("nomobj")));
                     pta.setPrograma(new PlanTrabajoPrograma(0, 0, 0, rs.getInt("codpr"), rs.getInt("pesopr"), rs.getString("nompr")));
@@ -538,6 +538,25 @@ public class PlanTrabajoDAO {
             }
         }
     
+    }
+    
+    public int actualizarEstadoPlanTrabajoActividad(PlanTrabajoActividad pta) throws SQLException {
+
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "UPDATE seguimiento.plan_trabajo_actividad"
+                    + " SET estado='" + pta.getEstado() + "', fecha_finalizado=NOW()"
+                    + " WHERE codigo_establecimiento=" + pta.getCodEstablecimiento() + " AND cod_plan_trabajo=" + pta.getPlantrabajo().getCodPlantrabajo()+ " AND "
+                    + " cod_actividad=" + pta.getCodActividad()+" "
+            );
+            return consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
     }
 
 }
