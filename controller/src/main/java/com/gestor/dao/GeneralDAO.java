@@ -5,6 +5,7 @@
  */
 package com.gestor.dao;
 
+import com.gestor.publico.Establecimiento;
 import conexion.Consulta;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -42,6 +43,8 @@ public class GeneralDAO {
             }
         }
     }
+    
+    
     
     public int siguienteCodigoEntidad(String campo, String entidad) throws SQLException {
         ResultSet rs = null;

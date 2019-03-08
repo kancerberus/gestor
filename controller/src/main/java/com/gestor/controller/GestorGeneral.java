@@ -13,6 +13,7 @@ import com.gestor.gestor.dao.CicloDAO;
 import com.gestor.gestor.dao.SeccionDAO;
 import com.gestor.gestor.dao.SeccionDetalleDAO;
 import com.gestor.gestor.dao.SeccionDetalleItemsDAO;
+import com.gestor.publico.Establecimiento;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,6 +61,8 @@ public class GestorGeneral extends Gestor implements Serializable {
             this.cerrarConexion();
         }
     }
+    
+
 
     public List<Ciclo> cargarCiclosEvaluacion() throws Exception {
         try {

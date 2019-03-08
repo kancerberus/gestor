@@ -10,6 +10,8 @@ import com.gestor.gestor.EvaluacionPuntajeSeccionDetalleCombos;
 import com.gestor.gestor.EvaluacionPuntajeSeccionDetalleCombosPK;
 import com.gestor.gestor.dao.SeccionDetalleItemsDAO;
 import com.gestor.gestor.SeccionDetalleItems;
+import com.gestor.seguimiento.PlanSeccionDetalleItem;
+import com.gestor.seguimiento.dao.PlanSeccionDetalleItemDAO;
 import java.util.List;
 
 /**
@@ -50,6 +52,18 @@ public class GestorSeccionDetalleItems extends Gestor {
             this.abrirConexion();
             SeccionDetalleItemsDAO secciondetalleitemsDAO = new SeccionDetalleItemsDAO(conexion);                                                 
             return secciondetalleitemsDAO.buscarNumeral(numeral);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public void eliminarPlanSeccionDetalleItem(PlanSeccionDetalleItem psti) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            PlanSeccionDetalleItemDAO plansecciondetalleitemDAO = new PlanSeccionDetalleItemDAO(conexion);
+            plansecciondetalleitemDAO.eliminarPlansecciondetalleitem(psti);
+            this.finTransaccion();
         } finally {
             this.cerrarConexion();
         }

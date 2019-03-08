@@ -91,6 +91,23 @@ public class PlanSeccionDAO {
         }
     }
     
+    public void eliminarPlanseccion(PlanSeccion planseccion) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE "
+                    + " FROM seguimiento.plan_seccion "
+                    + " WHERE codigo_establecimiento='"+planseccion.getPlanSeccionPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+planseccion.getPlanSeccionPK().getCodTitulo()+"' AND  cod_seccion='"+planseccion.getPlanSeccionPK().getCodSeccion()+"'"                    
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
     
     public void modificarplanseccion(PlanSeccion planseccion) throws SQLException {
         Consulta consulta = null;

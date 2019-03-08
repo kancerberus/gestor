@@ -132,6 +132,18 @@ public class GestorPlanTitulo extends Gestor implements Serializable{
         }
     }
     
+    public void eliminarPlantitulo(PlanTitulo plantitulo) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            PlanTituloDAO plantituloDAO = new PlanTituloDAO(conexion);
+            plantituloDAO.eliminarPlantitulo(plantitulo);
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
     
     public void modificarTitulotexto(PlanTituloTexto plantitulotexto) throws Exception {
         try {

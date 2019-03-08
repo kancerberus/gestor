@@ -72,6 +72,18 @@ public class GestorPlanSeccion extends Gestor implements Serializable{
         }
     }
     
+    public void eliminarPlanseccion(PlanSeccion planseccion) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            PlanSeccionDAO planseccionDAO = new PlanSeccionDAO(conexion);
+            planseccionDAO.eliminarPlanseccion(planseccion);
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
     public Collection<? extends PlanSeccionDetalleAdjuntos> cargarPlanSecciondetalleadjuntoList(PlanSeccionDetalle plansecciondetalle) throws Exception {
         try {
             this.abrirConexion();

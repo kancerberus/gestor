@@ -86,6 +86,27 @@ public class PlanSeccionDetalleItemDAO {
             }
         }
     }
+        
+    public void eliminarPlansecciondetalleitem(PlanSeccionDetalleItem psdi) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE "
+                    + " FROM seguimiento.plan_seccion_detalle_item "
+                    + " WHERE codigo_establecimiento='"+psdi.getPlanSeccionDetalleItemPK().getCodTitulo()+"' AND cod_titulo='"+psdi.getPlanSeccionDetalleItemPK().getCodigoEstablecimiento()+"'"
+                    + " AND cod_seccion='"+psdi.getPlanSeccionDetalleItemPK().getCodSeccion()+"' AND cod_seccion_detalle='"+psdi.getPlanSeccionDetalleItemPK().getCodSeccionDetalle()+"' "
+                    + " AND cod_seccion_detalle_item='"+psdi.getPlanSeccionDetalleItemPK().getCodSeccionDetalleItem()+"'"
+                    
+                    
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
     
     public List<PlanSeccionDetalleItem> cargarPlanSecciondetalleitemList(PlanSeccionDetalle psd) throws SQLException {
         ResultSet rs = null;

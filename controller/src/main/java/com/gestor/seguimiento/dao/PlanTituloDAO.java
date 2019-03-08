@@ -59,7 +59,7 @@ public class PlanTituloDAO {
                     "SELECT codigo_establecimiento, cod_titulo, nombre, numeral"
                     + " FROM seguimiento.plan_titulo"
                     + " WHERE codigo_establecimiento='"+codEstablecimiento+"'"
-                    + " ORDER BY numeral"  
+                    + " ORDER BY cod_titulo"  
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
@@ -129,7 +129,22 @@ public class PlanTituloDAO {
         }
     }
     
-    
+    public void eliminarPlantitulo(PlanTitulo plantitulo) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE "
+                    + " FROM seguimiento.plan_titulo "
+                    + " WHERE codigo_establecimiento='"+plantitulo.getPlanTituloPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+plantitulo.getPlanTituloPK().getCodTitulo()+"'"                    
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
     
     
     public Collection<? extends PlanTitulo> cargarPlanTituloList() throws SQLException {

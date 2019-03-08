@@ -44,4 +44,16 @@ public class GestorPlanSeccionDetalle extends Gestor implements Serializable{
         }
     }
     
+    public void eliminarPlanSeccionDetalle(PlanSeccionDetalle plansecciondetalle) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            PlanSeccionDetalleDAO plansecciondetalleDAO = new PlanSeccionDetalleDAO(conexion);
+            plansecciondetalleDAO.eliminarPlanSeccionDetalle(plansecciondetalle);
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
 }

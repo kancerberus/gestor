@@ -210,5 +210,70 @@ public class EstablecimientoDAO {
         }
     }
     
+    public List<Establecimiento> establecimientoPermitido() throws SQLException{
+        ResultSet rs=null;
+        Consulta consulta=null;
+        List<Establecimiento> listaEstablecimientos = new ArrayList<>();
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT E.codigo_establecimiento, E.nombre, E.nit, E.direccion, E.telefono, E.correo, E.fecha_cierre_diario, E.tipo_establecimiento, "+
+                        " E.logo "+
+                        " FROM public.establecimiento E " +
+                        "WHERE e.codigo_establecimiento NOT IN "+
+                        " (SELECT ev.codigo_establecimiento  " +
+                        " FROM gestor.evaluacion ev " +
+                        " JOIN public.establecimiento es using (codigo_establecimiento)) "
+                        
+            );
+            rs = consulta.ejecutar(sql);
+            while (rs.next()) {
+                listaEstablecimientos.add(new Establecimiento(rs.getInt("codigo_establecimiento"), rs.getString("nombre"), rs.getString("nit"), rs.getString("direccion"), rs.getString("telefono"), rs.getString("correo"), rs.getString("logo")));
+            }
+            return listaEstablecimientos;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+        
+    }
+    
+    public List<Establecimiento> establecimientosPlanMaestroPermitido() throws SQLException{
+        ResultSet rs=null;
+        Consulta consulta=null;
+        List<Establecimiento> listaEstablecimientos = new ArrayList<>();
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT E.codigo_establecimiento, E.nombre, E.nit, E.direccion, E.telefono, E.correo, E.fecha_cierre_diario, E.tipo_establecimiento, "+
+                        " E.logo "+
+                        " FROM public.establecimiento E " +
+                        " WHERE e.codigo_establecimiento NOT IN "+
+                        " ((SELECT pm.codigo_establecimiento "+
+                        " FROM seguimiento.plan_maestro pm JOIN public.establecimiento es using (codigo_establecimiento))) "
+                        
+            );
+            rs = consulta.ejecutar(sql);
+            while (rs.next()) {
+                listaEstablecimientos.add(new Establecimiento(rs.getInt("codigo_establecimiento"), rs.getString("nombre"), rs.getString("nit"), rs.getString("direccion"), rs.getString("telefono"), rs.getString("correo"), rs.getString("logo")));
+            }
+            return listaEstablecimientos;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+        
+    }
+    
+    
+    
     
 }

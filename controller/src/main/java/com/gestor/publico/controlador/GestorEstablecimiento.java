@@ -103,9 +103,27 @@ public class GestorEstablecimiento extends Gestor implements Serializable{
         }
     }
     
+    public List<Establecimiento> establecimientosPermitidos() throws Exception{
+        try {
+            this.abrirConexion();
+            EstablecimientoDAO establecimientoDAO = new EstablecimientoDAO(conexion);
+            return establecimientoDAO.establecimientoPermitido();
+        } finally {
+            this.cerrarConexion();
+        }        
+    }
     
-
-
+    
+    
+    public List<Establecimiento> establecimientosPlanMaestroPermitidos() throws Exception{
+        try {
+            this.abrirConexion();
+            EstablecimientoDAO establecimientoDAO = new EstablecimientoDAO(conexion);
+            return establecimientoDAO.establecimientosPlanMaestroPermitido();
+        } finally {
+            this.cerrarConexion();
+        }        
+    }
     
 
 
