@@ -20,6 +20,7 @@ import com.gestor.modelo.Sesion;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.EvaluacionAdjuntos;
 import com.gestor.publico.Usuarios;
+import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.seguimiento.controlador.GestorPlanMaestro;
 import com.gestor.seguimiento.controlador.GestorPlanTitulo;
 import java.io.File;
@@ -28,6 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -66,6 +68,7 @@ public class UIPlanMaestro {
 
     //filtros
     private List<Establecimiento> establecimientoList = new ArrayList<>();
+    private List<Establecimiento> establecimientosPermitidosList= new ArrayList<>();
     private List<Establecimiento> establecimientoListSeleccionado = new ArrayList<>();
 
 //    private List<Usuarios> usuariosList = new ArrayList<>();
@@ -82,14 +85,23 @@ public class UIPlanMaestro {
     private Date fechaActualizaFin;
 
     @PostConstruct
-    public void init() {        
-        
+    public void init() {
         try {            
             Sesion s = (Sesion) UtilJSF.getBean("sesion");
             establecimientoList = new ArrayList<>();
             establecimientoList.addAll(s.getEstablecimientoList());
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
+        }
+    }
+    
+    public void cargarEstablecimientos() {
+        try {                              
+            establecimientosPermitidosList = new ArrayList<>();
+            GestorEstablecimiento gestorEstablecimiento= new GestorEstablecimiento();
+            establecimientosPermitidosList.addAll((Collection<? extends Establecimiento>)gestorEstablecimiento.establecimientosPlanMaestroPermitidos());            
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
         }
     }
 
@@ -330,6 +342,7 @@ public class UIPlanMaestro {
     }
         
     public String nuevo() {
+        this.cargarEstablecimientos();
         return ("/seguimiento/plan-maestro-nuevo.xhtml?faces-redirect=true");
     }
 
@@ -347,6 +360,14 @@ public class UIPlanMaestro {
 
     public String getComponentesRefrescar() {
         return COMPONENTES_REFRESCAR;
+    }
+
+    public List<Establecimiento> getEstablecimientosPermitidosList() {
+        return establecimientosPermitidosList;
+    }
+
+    public void setEstablecimientosPermitidosList(List<Establecimiento> establecimientosPermitidosList) {
+        this.establecimientosPermitidosList = establecimientosPermitidosList;
     }
 
     /**

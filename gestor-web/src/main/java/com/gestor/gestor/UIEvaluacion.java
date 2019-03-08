@@ -21,8 +21,10 @@ import com.gestor.publico.Establecimiento;
 import com.gestor.publico.EvaluacionAdjuntos;
 import com.gestor.publico.Lista;
 import com.gestor.publico.Usuarios;
+import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorLista;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -42,6 +44,7 @@ public class UIEvaluacion {
     private List<Evaluacion> evaluacionList = new ArrayList<>();
     private List<SeccionDetalleItems> resumenEvaluacionList;
     private Establecimiento establecimiento;
+    private List<Establecimiento> establecimientosPermitidosList;
     private Lista seccionDetalleItemsOpcionesLista;
     private List<SeccionDetalleItemsAyuda> seccionDetalleItemsAyudas = new ArrayList<>();
 
@@ -83,8 +86,19 @@ public class UIEvaluacion {
             return ("/gestor/evaluacion.xhtml?faces-redirect=true");
         }
         return null;
+    }   
+    
+ 
+    public void cargarEstablecimientos() {
+        try {                              
+            establecimientosPermitidosList= new ArrayList<>();
+            GestorEstablecimiento gestorEstablecimiento= new GestorEstablecimiento();
+            establecimientosPermitidosList.addAll((Collection<? extends Establecimiento>)gestorEstablecimiento.establecimientosPermitidos());            
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
     }
-
+ 
     public void seleccionarEstablecimiento() {
         try {
             Sesion s = (Sesion) UtilJSF.getBean("sesion");
@@ -101,6 +115,7 @@ public class UIEvaluacion {
 
     public String nuevo() {
         try {
+            this.cargarEstablecimientos();
             Dialogo dialogo = new Dialogo("dialogos/nuevo.xhtml", "Nueva Evaluación", "clip", "80%", "top: 0px;");
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
             UtilJSF.update("formEvaluaciones:dialog");
@@ -114,12 +129,13 @@ public class UIEvaluacion {
     @PostConstruct
     public void init() {
         try {
+            this.cargarEstablecimientos();
             this.seccionDetalleItemsOpcionesLista = new GestorLista().cargarLista(App.LISTA_SECCION_DETALLE_ITEMS_OPCIONES);
             UtilJSF.setBean("evaluacion", new Evaluacion(), UtilJSF.SESSION_SCOPE);
             UtilJSF.setBean("evaluacionAdjuntos", new EvaluacionAdjuntos(), UtilJSF.SESSION_SCOPE);
             UtilJSF.setBean("evaluacionPlanAccionDetalle", new EvaluacionPlanAccionDetalle(), UtilJSF.SESSION_SCOPE);
             UtilJSF.setBean("evaluacionCapacitacionDetalle", new EvaluacionCapacitacionDetalle(), UtilJSF.SESSION_SCOPE);
-
+            
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -411,6 +427,14 @@ public class UIEvaluacion {
 
     public String volverEvaluacion() {
         return ("/gestor/evaluacion.xhtml?faces-redirect=true");
+    }
+
+    public List<Establecimiento> getEstablecimientosPermitidosList() {
+        return establecimientosPermitidosList;
+    }
+
+    public void setEstablecimientosPermitidosList(List<Establecimiento> establecimientosPermitidosList) {
+        this.establecimientosPermitidosList = establecimientosPermitidosList;
     }
 
     /**

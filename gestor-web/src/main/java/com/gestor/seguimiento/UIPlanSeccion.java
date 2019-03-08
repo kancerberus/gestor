@@ -67,11 +67,16 @@ public class UIPlanSeccion implements Serializable{
         }        
     }
     
-    public void subirItemPlanseccion() {       
-        
-        planseccion = (PlanSeccion) UtilJSF.getBean("varPlanseccion");                     
-        Integer codSeccion=Integer.parseInt(planseccion.getNumeral().substring(2, 3));
+    public void subirItemPlanseccion() {    
+        planseccion = (PlanSeccion) UtilJSF.getBean("varPlanseccion"); 
+        Integer codSeccion;
+        Integer pos;
+        pos = planseccion.getNumeral().indexOf(".")+1;
+        Integer tamaño= planseccion.getNumeral().length();
+        codSeccion=Integer.parseInt(planseccion.getNumeral().substring(pos, tamaño));       
         planseccionpk.setCodSeccion(codSeccion);   
+        
+        
         UtilJSF.setBean("planSeccion", planseccion, UtilJSF.SESSION_SCOPE);                
         this.cargarAdjuntosCategoriaTipo();
         this.cargarPlansecciontexto();
@@ -99,6 +104,19 @@ public class UIPlanSeccion implements Serializable{
             UtilLog.generarLog(this.getClass(), ex);
         }
     }    
+    
+    public void eliminarSeccion(){
+        try{
+            planseccion = (PlanSeccion) UtilJSF.getBean("varPlanseccion");     
+            gestorPlanSeccion= new GestorPlanSeccion();
+            
+            gestorPlanSeccion.eliminarPlanseccion(planseccion);
+            UtilMSG.addSuccessMsg("Seccion eliminado correctamente.");            
+            this.cargarPlanseccionList();
+        }catch (Exception e) {
+            UtilMSG.addSuccessMsg("Seccion en uso.");
+        }
+    }
     
     public void cargarPlanseccionList() {
         

@@ -12,6 +12,7 @@ import com.gestor.gestor.AdjuntosCategoria;
 import com.gestor.gestor.AdjuntosCategoriaTipo;
 import com.gestor.gestor.controlador.GestorAdjuntosCategoria;
 import com.gestor.seguimiento.controlador.GestorPlanSeccion;
+import com.gestor.seguimiento.controlador.GestorPlanSeccionDetalle;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,9 +70,27 @@ public class UIPlanDetalle implements Serializable{
 
     
     public void subirItemPlansecciondetalle() {    
-        plansecciondetalle = (PlanSeccionDetalle) UtilJSF.getBean("varPlandetalle");          
-        Integer coddetalle=Integer.parseInt(plansecciondetalle.getNumeral().substring(4, 5));
-        plansecciondetallepk.setCodSeccionDetalle(coddetalle);           
+        plansecciondetalle = (PlanSeccionDetalle) UtilJSF.getBean("varPlandetalle");                  
+        
+        Integer coddetalle;        
+        Integer pos=0;
+        Integer tam=0;
+        Integer punto;
+        
+        for(int i=0; i<=plansecciondetalle.getNumeral().length();i++){
+            punto = plansecciondetalle.getNumeral().indexOf(".", pos)+1;
+            tam= plansecciondetalle.getNumeral().length();            
+            
+            if(punto>0){
+                pos=punto;
+            }
+        }
+        coddetalle=Integer.parseInt(plansecciondetalle.getNumeral().substring(pos, tam));       
+        plansecciondetallepk.setCodSeccionDetalle(coddetalle);
+        
+        
+        
+        
         UtilJSF.setBean("planDetalle", plansecciondetalle, UtilJSF.SESSION_SCOPE);        
         this.cargarPlansecciondetalletexto();
         this.cargarPlansecciondetalleadjuntoList();        
@@ -138,6 +157,20 @@ public class UIPlanDetalle implements Serializable{
             this.plansecciondetalleList.addAll((Collection<? extends PlanSeccionDetalle>) gestorPlanSeccion.cargarListaSecciondetalle(ps));                     
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void eliminarPlandetalle(){
+        try{
+            plansecciondetalle = (PlanSeccionDetalle) UtilJSF.getBean("varPlandetalle");     
+            
+            GestorPlanSeccionDetalle gestorPlanSeccionDetalle= new GestorPlanSeccionDetalle();            
+            gestorPlanSeccionDetalle.eliminarPlanSeccionDetalle(plansecciondetalle);
+            
+            UtilMSG.addSuccessMsg("Detalle eliminado correctamente.");            
+            this.cargarPlansecciondetalleList();
+        }catch (Exception e) {
+            UtilMSG.addSuccessMsg("Detalle en uso.");
         }
     }
     

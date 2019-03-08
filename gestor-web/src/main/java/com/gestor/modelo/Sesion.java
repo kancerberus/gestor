@@ -5,6 +5,7 @@
  */
 package com.gestor.modelo;
 
+import com.gestor.controller.GestorGeneral;
 import com.gestor.gestor.Ciclo;
 import com.gestor.gestor.Puntajes;
 import com.gestor.publico.Establecimiento;
@@ -14,6 +15,7 @@ import com.gestor.publico.Usuarios;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -32,11 +34,10 @@ public class Sesion {
     private HashMap<Integer, Boolean> permisos = new HashMap<>();
     private List<Ciclo> ciclos;
     private List<Puntajes> puntajesList;
-    private List<Establecimiento> establecimientoList;
+    private List<Establecimiento> establecimientoList;       
     private Lista listaVigenciaArchivos;
     private List<Responsable> responsables = new ArrayList<>();
     
-  
     /**
      * @return the usuarios
      */

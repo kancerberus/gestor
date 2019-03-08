@@ -248,6 +248,22 @@ public class UIPlantitulo implements Serializable{
         }
     }
     
+    
+    public void eliminarPlantitulo(){
+        try{
+            plantitulo = (PlanTitulo) UtilJSF.getBean("varPlantitulo");     
+            
+            GestorPlanTitulo gestorPlantitulo = new GestorPlanTitulo();
+            
+            gestorPlantitulo.eliminarPlantitulo(plantitulo);
+            
+            UtilMSG.addSuccessMsg("Titulo eliminado correctamente.");            
+            this.cargarPlantitulo();
+        }catch (Exception e) {
+            UtilMSG.addSuccessMsg("Titulo en uso.");
+        }
+    }
+    
     public String regresar(){        
         try{
         plantitulo=new PlanTitulo();

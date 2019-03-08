@@ -46,6 +46,9 @@
                                         action="#{uiPlanseccion.subirItemPlanseccion()}" >                                                          
                             <f:actionListener binding="#{uiPlandetalle.cargarPlansecciondetalle()}"/>
                         </p:commandButton>                            
+                        <p:commandButton icon="ui-icon-trash" title="Eliminar Seccion" update="formSeccion" 
+                                         action="#{uiPlanseccion.eliminarSeccion()}" >                            
+                        </p:commandButton>                        
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varPlanseccion.numeral}"/>

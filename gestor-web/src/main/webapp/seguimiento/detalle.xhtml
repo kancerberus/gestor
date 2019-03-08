@@ -62,6 +62,9 @@
                                          action="#{uiPlandetalle.subirItemPlansecciondetalle()}" >                                                                                    
                             <f:actionListener binding= "#{uiPlanitem.cargarPlansecciondetalleitem()}"/>                            
                         </p:commandButton>
+                        <p:commandButton icon="ui-icon-trash" title="Eliminar Detalle" update="formDetalle" 
+                                         action="#{uiPlandetalle.eliminarPlandetalle()}" >                            
+                        </p:commandButton>   
                             
                     </p:column>
                     <p:column>

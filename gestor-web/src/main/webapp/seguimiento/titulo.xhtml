@@ -28,7 +28,9 @@
                                          action="#{uiPlantitulo.subirItemPlantitulo()}" >
                             <f:actionListener binding="#{uiPlanseccion.cargarPlanseccion()}"/>
                         </p:commandButton>
-                        
+                        <p:commandButton icon="ui-icon-trash" title="Eliminar Titulo" update="formTitulo" 
+                                         action="#{uiPlantitulo.eliminarPlantitulo()}" >                            
+                        </p:commandButton>                        
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varPlantitulo.numeral}"/>
