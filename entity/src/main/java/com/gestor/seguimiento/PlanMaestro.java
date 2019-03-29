@@ -28,7 +28,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "plan_maestro")
 @NamedQueries({
-    @NamedQuery(name = "PlanMaestro.findAll", query = "SELECT p FROM PlanMaestro p")
+    @NamedQuery(name = "PlanMaestro.findAll", query = "SELECT p FROM PlanMaestro p ORDER")
 })
 @ManagedBean (name="planMaestro")
 @SessionScoped

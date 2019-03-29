@@ -5,7 +5,10 @@
  */
 package com.gestor.publico.dao;
 
+import com.gestor.matriz.MatrizRiesgos;
+import com.gestor.publico.Cargos;
 import com.gestor.publico.Establecimiento;
+import com.gestor.publico.Funciones;
 import com.gestor.publico.Municipios;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -81,6 +84,39 @@ public class EstablecimientoDAO {
         }
     }
     
+    public void eliminarCargosEstablecimiento(Establecimiento estb) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE FROM rel_cargos_establecimiento"
+                    + " WHERE codigo_establecimiento='" + estb.getCodigoEstablecimiento() + "'"
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    public void agregarCargosEstablecimiento(Cargos cargos, Establecimiento establecimiento) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO rel_cargos_establecimiento("
+                    + " codigo_establecimiento, cod_cargo)"
+                    + " VALUES (" + establecimiento.getCodigoEstablecimiento() + ", '" + cargos.getCodCargo() + "')"
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
     
 
     public String cargarPrefijo(int codigoEstablecimiento) throws SQLException {
@@ -135,6 +171,7 @@ public class EstablecimientoDAO {
                     + " E.telefono, E.correo, M.nombre AS nom_municipio, E.logo"
                     + " FROM establecimiento E"
                     + " JOIN municipios M USING (codigo_municipio)"
+                    + " ORDER BY codigo_establecimiento"
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
@@ -158,6 +195,69 @@ public class EstablecimientoDAO {
             }
         }
     }  
+    
+    public List<?> cargarListaCargos() throws SQLException {        
+        ResultSet rs = null;
+        
+        Consulta consulta = null;        
+        List<Cargos> listaCargos = new ArrayList<>();
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT cod_cargo, nombre "                    
+                    + " FROM cargos car"                    
+                    + " ORDER BY cod_cargo"
+            );
+            rs = consulta.ejecutar(sql);
+            while (rs.next()) {
+                Cargos car= new Cargos(rs.getInt("cod_cargo"), rs.getString("nombre"));
+                car.setCodCargo(rs.getInt("cod_cargo"));                
+                car.setNombre(rs.getString("nombre"));                
+                listaCargos.add(car);                
+            }            
+            return listaCargos;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    public List<?> cargarListaFunciones(Integer codCargo) throws SQLException {        
+        ResultSet rs = null;
+        
+        Consulta consulta = null;        
+        List<Funciones> listaFunciones = new ArrayList<>();
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT cod_cargo, cod_funcion, nombre , diligenciado"                    
+                    + " FROM funciones fun"
+                    + " WHERE cod_cargo='"+codCargo+"'"                                
+                    + " ORDER BY cod_funcion"
+            );
+            rs = consulta.ejecutar(sql);
+            while (rs.next()) {
+                Funciones fun= new Funciones(rs.getInt("cod_cargo"), rs.getInt("cod_funcion"), rs.getString("nombre"), rs.getBoolean("diligenciado"));
+                fun.setCodCargo(rs.getInt("cod_cargo"));
+                fun.setCodFuncion(rs.getInt("cod_funcion"));
+                fun.setNombre(rs.getString("nombre"));                
+                listaFunciones.add(fun);                
+            }            
+            return listaFunciones;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+
     
     public List<?> cargarListaEstablecimientosUsuario(String documentoUsuario) throws SQLException {
         ResultSet rs = null;
@@ -186,6 +286,37 @@ public class EstablecimientoDAO {
             }
         }
     }
+    
+    public List<?> cargarListaCargosEstablecimiento(Integer codEstablecimiento) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        List<Cargos> listaCargos = new ArrayList<>();
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT C.cod_cargo, C.nombre"
+                    + " FROM rel_cargos_establecimiento"
+                    + " JOIN cargos C USING (cod_cargo)"
+                    + " WHERE codigo_establecimiento='" + codEstablecimiento + "'"
+            );
+            rs = consulta.ejecutar(sql);
+            while (rs.next()) {
+                listaCargos.add(new Cargos(rs.getInt("cod_cargo"), rs.getString("nombre")));
+            }
+            return listaCargos;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    
+    
+    
 
     public void insertarEstablecimiento(Establecimiento establecimiento) throws SQLException {
         Consulta consulta = null;
@@ -201,6 +332,44 @@ public class EstablecimientoDAO {
                     + " ON CONFLICT (codigo_establecimiento) DO UPDATE"
                     + " SET codigo_municipio=EXCLUDED.codigo_municipio, nombre=EXCLUDED.nombre, nit=EXCLUDED.nit, "
                     + " direccion=EXCLUDED.direccion, telefono=EXCLUDED.telefono, correo=EXCLUDED.correo, fecha_cierre_diario=EXCLUDED.fecha_cierre_diario, tipo_establecimiento=EXCLUDED.tipo_establecimiento, logo=EXCLUDED.logo"
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    public void insertarCargos(Cargos cargos) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO cargos("
+                    + " cod_cargo, nombre )"
+                    + " VALUES (" +cargos.getCodCargo()+",'"+cargos.getNombre()+"')"
+                    + " ON CONFLICT (cod_cargo) DO UPDATE"
+                    + " SET nombre=EXCLUDED.nombre "                    
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    public void insertarFuncion(Funciones funcion) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO funciones("
+                    + " cod_cargo, cod_funcion, nombre, diligenciado )"
+                    + " VALUES (" +funcion.getCodCargo()+","+funcion.getCodFuncion()+",'"+funcion.getNombre()+"', '"+funcion.getDiligenciado()+"')"
+                    + " ON CONFLICT (cod_cargo, cod_funcion) DO UPDATE"
+                    + " SET nombre=EXCLUDED.nombre "                    
             );
             consulta.actualizar(sql);
         } finally {

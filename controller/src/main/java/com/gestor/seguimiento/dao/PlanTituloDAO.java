@@ -91,7 +91,9 @@ public class PlanTituloDAO {
             StringBuilder sql = new StringBuilder(
                     "SELECT codigo_establecimiento, cod_titulo, nombre, numeral"
                     + " FROM seguimiento.plan_titulo"
-                    + " WHERE codigo_establecimiento=" + codigoEstablecimiento
+                    + " WHERE codigo_establecimiento=" + codigoEstablecimiento+" "
+                    + " ORDER BY cod_titulo"
+                    
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {

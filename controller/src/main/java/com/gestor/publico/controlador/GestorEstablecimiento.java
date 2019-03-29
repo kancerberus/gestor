@@ -8,7 +8,9 @@ package com.gestor.publico.controlador;
 
 import com.gestor.controller.Gestor;
 import com.gestor.entity.UtilLog;
+import com.gestor.publico.Cargos;
 import com.gestor.publico.Establecimiento;
+import com.gestor.publico.Funciones;
 import com.gestor.publico.dao.EstablecimientoDAO;
 import java.io.Serializable;
 import java.util.List;
@@ -57,6 +59,36 @@ public class GestorEstablecimiento extends Gestor implements Serializable{
             this.cerrarConexion();
         }
     }
+    
+    public List<?> cargarListaCargos() throws Exception {
+        try {
+            this.abrirConexion();
+            EstablecimientoDAO establecimientoDAO = new EstablecimientoDAO(conexion);
+            return establecimientoDAO.cargarListaCargos();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public List<?> cargarListaFunciones(Integer codCargo) throws Exception {
+        try {
+            this.abrirConexion();
+            EstablecimientoDAO establecimientoDAO = new EstablecimientoDAO(conexion);
+            return establecimientoDAO.cargarListaFunciones(codCargo);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+       
+    public List<?> cargarListaCargosEstablecimiento(Integer codEstablecimiento) throws Exception {
+        try {
+            this.abrirConexion();
+            EstablecimientoDAO establecimientoDAO = new EstablecimientoDAO(conexion);
+            return establecimientoDAO.cargarListaCargosEstablecimiento(codEstablecimiento);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
 
     public List<?> cargarListaEstablecimientosUsuario(String documentoUsuario) throws Exception {
         try {
@@ -66,6 +98,63 @@ public class GestorEstablecimiento extends Gestor implements Serializable{
         } finally {
             this.cerrarConexion();
         }
+    }
+    
+    public void almacenarCargosEstablecimiento(Establecimiento establecimiento) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            EstablecimientoDAO establecimientoDAO = new EstablecimientoDAO(conexion);            
+            establecimientoDAO.eliminarCargosEstablecimiento(establecimiento);
+            for (Cargos car : establecimiento.getListaCargosEstablecimientos()) {
+                establecimientoDAO.agregarCargosEstablecimiento(car, establecimiento);
+            }
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public void almacenarCargos(Cargos cargos) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            EstablecimientoDAO establecimientoDAO = new EstablecimientoDAO(conexion);                                    
+            establecimientoDAO.insertarCargos(cargos);
+            
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public void almacenarFuncion(Funciones funcion) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            EstablecimientoDAO establecimientoDAO = new EstablecimientoDAO(conexion);                                    
+            establecimientoDAO.insertarFuncion(funcion);
+            
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public void validarCargo(Cargos cargo) throws Exception {
+        if (cargo == null || cargo.getNombre() == null || cargo.getNombre().equalsIgnoreCase("")) {
+            throw new Exception("Ingresa el nombre del Cargo.", UtilLog.TW_VALIDACION);
+        }        
+        cargo.setNombre(cargo.getNombre().trim().toUpperCase());
+       
+    }
+    
+    public void validarFuncion(Funciones funcion) throws Exception {
+        if (funcion == null || funcion.getNombre() == null || funcion.getNombre().equalsIgnoreCase("")) {
+            throw new Exception("Ingresa el nombre de la actividad.", UtilLog.TW_VALIDACION);
+        }        
+        funcion.setNombre(funcion.getNombre().trim().toUpperCase());
+       
     }
 
     public void validarEstablecimiento(Establecimiento establecimiento) throws Exception {

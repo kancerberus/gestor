@@ -70,6 +70,7 @@ public class Establecimiento implements Serializable, Cloneable {
     private Municipios municipios;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "establecimiento")
     private List<RelUsuariosEstablecimiento> relUsuariosEstablecimientoList;
+    private List<Cargos> listaCargosEstablecimientos;
     
     public Establecimiento() {        
     }
@@ -102,9 +103,13 @@ public class Establecimiento implements Serializable, Cloneable {
         this.tipoEstablecimiento = tipoEstablecimiento;
     }    
 
-    
-    
-    
+    public List<Cargos> getListaCargosEstablecimientos() {
+        return listaCargosEstablecimientos;
+    }
+
+    public void setListaCargosEstablecimientos(List<Cargos> listaCargosEstablecimientos) {
+        this.listaCargosEstablecimientos = listaCargosEstablecimientos;
+    }
 
     public Integer getCodigoEstablecimiento() {
         return codigoEstablecimiento;
