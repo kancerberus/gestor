@@ -53,6 +53,7 @@ public class UIEvaluacion {
     private boolean eliminarActivo = false;
     private boolean consultarActivo = false;
     private boolean cancelarActivo = false;
+    private boolean volverActivo = false;
 
     private boolean finalizarActivo = false;
 
@@ -427,6 +428,14 @@ public class UIEvaluacion {
 
     public String volverEvaluacion() {
         return ("/gestor/evaluacion.xhtml?faces-redirect=true");
+    }
+
+    public boolean isVolverActivo() {
+        return volverActivo;
+    }
+
+    public void setVolverActivo(boolean volverActivo) {
+        this.volverActivo = volverActivo;
     }
 
     public List<Establecimiento> getEstablecimientosPermitidosList() {

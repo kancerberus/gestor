@@ -45,6 +45,7 @@ public class UIEvaluacionResumen {
     private boolean consultarActivo = Boolean.FALSE;
     private boolean cancelarActivo = Boolean.TRUE;
     private boolean eliminarActivo = Boolean.FALSE;
+    private boolean volverActivo = false;
 
     //filtros
     private List<Establecimiento> establecimientoList = new ArrayList<>();
@@ -410,6 +411,14 @@ public class UIEvaluacionResumen {
      */
     public List<Evaluacion> getEvaluacionList() {
         return evaluacionList;
+    }
+
+    public boolean isVolverActivo() {
+        return volverActivo;
+    }
+
+    public void setVolverActivo(boolean volverActivo) {
+        this.volverActivo = volverActivo;
     }
 
     /**

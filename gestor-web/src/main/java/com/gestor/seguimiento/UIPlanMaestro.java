@@ -53,8 +53,10 @@ public class UIPlanMaestro {
     private boolean guardarActivo = false;
     private boolean nuevoActivo = true;
     private boolean consultarActivo = false;
-    private boolean cancelarActivo = false;
+    private boolean cancelarActivo = false;    
     private boolean eliminarActivo = false;
+    private boolean volverActivo = false;
+
 
     private List<PlanMaestro> planMaestroList;
     private Establecimiento establecimiento;
@@ -551,6 +553,14 @@ public class UIPlanMaestro {
      */
     public void setEvaluacion(Evaluacion evaluacion) {
         this.evaluacion = evaluacion;
+    }
+
+    public boolean isVolverActivo() {
+        return volverActivo;
+    }
+
+    public void setVolverActivo(boolean volverActivo) {
+        this.volverActivo = volverActivo;
     }
 
     /**

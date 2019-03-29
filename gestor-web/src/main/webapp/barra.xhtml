@@ -21,6 +21,11 @@
             </p:commandButton>
             <p:spacer width="10"/>
             
+            <p:commandButton id="vovler" value="Volver" title="Volver" icon="ui-icon-back" disabled="#{not (uiSesion.volverActivo and bean.volverActivo)}"
+                             action="#{bean.volver()}" update="#{bean.componentesRefrescar}">
+            </p:commandButton>
+            <p:spacer width="10"/>
+            
             <p:commandButton id="cancelar" action="#{bean.cancelar()}" value="Cancelar" title="Cancelar" disabled="#{not (uiSesion.cancelarActivo and bean.cancelarActivo)}"
                              icon="ui-icon-newwin"  update="#{bean.componentesRefrescar}"/>  
             <p:spacer width="10"/>

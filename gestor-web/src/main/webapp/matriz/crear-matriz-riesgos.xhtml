@@ -1,0 +1,270 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml"
+                >
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formMatrizRiesgos" style="font-size: small">
+            <p:panel id="panelMatrizRiesgos" style="" header="Administrar Matriz de Riegos #{evaluacion.establecimiento.nombre}"  >
+                <h:panelGrid columns="2" width="30%" style="margin-left: 10%">
+                    <h:outputText style="font-weight: bold;" value="#{uiMatrizRiesgos.matrizRiesgos.cargos.nombre}"/>
+                    <h:outputText style="font-weight: bold;" value="#{uiMatrizRiesgos.matrizRiesgos.funciones.nombre}"/>                    
+                </h:panelGrid>
+                
+                <h:panelGrid columns="2" style="margin-left: 7%">
+                                                           
+                    <h:outputText style="font-weight: bold;margin-left: -70%" value="Tarea"/>  
+                    <h:outputText style="font-weight: bold;" value="Rutinaria"/>                     
+                    
+                    <p:inputText value="#{uiMatrizRiesgos.matrizRiesgos.tarea}" style="margin-left: -70%;width: 150%" placeholder="Tarea"/>
+                    <p:selectBooleanButton value="#{uiMatrizRiesgos.matrizRiesgos.rutinaria}" onLabel="Si" offLabel="No"  />                    
+                    
+                </h:panelGrid>
+            </p:panel>              
+                <p:panel style="width:83.9%; height: 135px;margin-right:  auto;float: left" id="panelPeligro" header="Peligro"  >
+                    <p:panelGrid  style="margin-right: 50%;width: 30%" columns="4"  >
+                        <h:outputText style="font-weight: bold;" value="Riesgo"/>     
+                        <p:selectOneMenu  value="#{uiMatrizRiesgos.matrizRiesgos.riesgo}" converter="convertidorGenerico"
+                                     style="text-align:center; width: 150px">  
+                        
+                            <f:selectItem itemLabel="Seleccionar..." itemValue="" /> 
+                            <f:selectItems value="#{uiMatrizRiesgos.riesgosList}" var="ri" itemLabel="#{ri.nombre}" itemValue="#{ri}"/>                                                                                                        
+                            <p:ajax  update="ex" listener="#{uiMatrizRiesgos.cargarExposiciones()}" />                            
+                        </p:selectOneMenu>
+                        
+                        <h:outputText  style="font-weight: bold;" value="CategoriaRiesgo"/>
+                        <p:selectOneMenu value="#{uiMatrizRiesgos.matrizRiesgos.categoriaRiesgo}" converter="convertidorGenerico"
+                                     style="text-align:center;width: 150px">
+                        
+                            <f:selectItem itemLabel="Seleccionar..." itemValue="" />
+                            <f:selectItems value="#{uiMatrizRiesgos.categoriaRiesgosList}" var="cri" itemLabel="#{cri.nombre}" itemValue="#{cri}"/>                                                                                                        
+                            <p:ajax  update="rpos, rposd" listener="#{uiMatrizRiesgos.cargarRiesgoPosibles()}" />                            
+                        </p:selectOneMenu>
+                        
+                        <h:outputText  style="font-weight: bold;" value="Exposicion Riesgo"/>     
+                        <p:selectOneMenu id="ex" value="#{uiMatrizRiesgos.matrizRiesgos.exposicion}" converter="convertidorGenerico"
+                                     style="text-align:center;width: 150px">  
+                        
+                            <f:selectItem itemLabel="Seleccionar..." itemValue="" /> 
+                            <f:selectItems value="#{uiMatrizRiesgos.exposicionList}" var="ex" itemLabel="#{ex.nombre}" itemValue="#{ex}"/>                                                                                                        
+                            
+                        </p:selectOneMenu>
+                        
+                        <h:outputText  style="font-weight: bold;" value="RiesgoPosible"/>
+                        <p:selectOneMenu id="rpos" value="#{uiMatrizRiesgos.matrizRiesgos.riesgoPosible}" converter="convertidorGenerico"
+                                     style="text-align:center;width: 150px ">                          
+                            <f:selectItem itemLabel="Seleccionar..." itemValue="" /> 
+                            <f:selectItems value="#{uiMatrizRiesgos.riesgoPosibleList}" var="rpo" itemLabel="#{rpo.nombre}" itemValue="#{rpo}"/>                                                                                                                                                               
+                            <p:ajax update="rposd" listener="#{uiMatrizRiesgos.cargarRiesgoPosibles()}"/>
+                        </p:selectOneMenu>                                                        
+                        
+                    </p:panelGrid>                    
+                    <p:panelGrid style="margin-left: 30%;margin-top: -6%" columns="1">                        
+                        <p:outputLabel  id="rposd"  style="float: right;width: 50%;background: #ccc;text-align: justify"  value="#{uiMatrizRiesgos.matrizRiesgos.riesgoPosible.descripcion}"/>                    
+                    </p:panelGrid>
+                    
+                </p:panel>
+                <p:panel   style="width: 15%;margin-left: auto;float: right"  id="panelControlesExistentes" header="Controles Existentes"  >                    
+                    <h:panelGrid columns="2" >
+                        <h:outputText style="font-weight: bold;" value="Fuente"/>
+                        <p:selectBooleanButton  value="#{uiMatrizRiesgos.matrizRiesgos.fuente}" onLabel="Si" offLabel="No"  />
+                        <h:outputText style="font-weight: bold;" value="Medio"/>
+                        <p:selectBooleanButton value="#{uiMatrizRiesgos.matrizRiesgos.medio}" onLabel="Si" offLabel="No"  />
+                        <h:outputText style="font-weight: bold;" value="Individuo"/>
+                        <p:selectBooleanButton  value="#{uiMatrizRiesgos.matrizRiesgos.individuo}" onLabel="Si" offLabel="No"  />
+                    </h:panelGrid>
+                </p:panel>
+            
+            <p:panel  style="width: 99.6%;float: right;" id="panelEvaluacionRiesgo" header="Evaluacion Del Riesgo">
+                <table border="1" width="99%" style="float: left;align-content: stretch;align-items: stretch">
+                    <tbody>
+                        <tr>
+                            <th><h:outputText  style="font-weight: bold;" value="Nivel Deficiencia"/></th>
+                            <th><h:outputText style="font-weight: bold;" value="Nivel Exposicion"/></th>
+                            <th></th> 
+                            <th></th>
+                            <th><h:outputText style="font-weight: bold;" value="NivelConsecuencia"/></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>                    
+                        <tr>
+                            <td>
+                                <p:selectOneMenu autoWidth="false" value="#{uiMatrizRiesgos.matrizRiesgos.nivelDeficiencia}" converter="convertidorGenerico"
+                                    style="width: 180px">                          
+                                    <f:selectItem itemLabel="Seleccionar..." itemValue="" /> 
+                                    <f:selectItems value="#{uiMatrizRiesgos.nivelDeficienciaList}" var="nd" itemLabel="#{nd.nombre}" itemValue="#{nd}"/>                                                                                                                                                                                           
+                                    <p:ajax update="ndef,nexp, nprob, inprob,inriesgo, acepta,nriesgo,nconsec,nconseca" listener="#{uiMatrizRiesgos.cargarNivelDeficiencia()}"/>                                
+                            </p:selectOneMenu>                                
+                            </td>
+                            <td>
+                                <p:selectOneMenu autoWidth="false" value="#{uiMatrizRiesgos.matrizRiesgos.nivelExposcion}" converter="convertidorGenerico"
+                                     style="text-align:center;width: 150px">                          
+                                <f:selectItem itemLabel="Seleccionar..." itemValue="" /> 
+                                <f:selectItems value="#{uiMatrizRiesgos.nvielExposcionList}" var="nex" itemLabel="#{nex.nombre}" itemValue="#{nex}"/>                                                                                                                                                                                                                       
+                                <p:ajax update="nexp, nprob, inprob,inriesgo, acepta,nriesgo,nconsec,nconseca" listener="#{uiMatrizRiesgos.cargarNivelExposicion()}"/>
+                                </p:selectOneMenu>
+                            </td>
+                            <th><h:outputText style="font-weight: bold;" value="Nivel Probabilidad:    "/></th> 
+                            <th><h:outputText id="nprob" style="font-weight: bold;color: #0078ae;" value="#{uiMatrizRiesgos.matrizRiesgos.nivelProbabilidad}"/></th>
+                            <td>
+                                
+                                <p:selectOneMenu id="nconseca" autoWidth="false" value="#{uiMatrizRiesgos.matrizRiesgos.nivelConsecuencia}" converter="convertidorGenerico"
+                                     style="text-align:center;width: 150px">                          
+                                <f:selectItem itemLabel="Seleccionar..." itemValue="" /> 
+                                <f:selectItems value="#{uiMatrizRiesgos.nivelConsecuenciaList}" var="ncons" itemLabel="#{ncons.nombre}" itemValue="#{ncons}"/>                                                                                                                                                                                                                       
+                                <p:ajax update="nconsec, nriesgo, inriesgo, acepta" listener="#{uiMatrizRiesgos.cargarNivelConsecuencia()}"/>
+                                </p:selectOneMenu>
+                            </td>
+                            <td><h:outputText style="font-weight: bold;" value="Nivel de Riesgo Intervencion:"/></td>
+                            <td><h:outputText id="nriesgo" style="font-weight: bold;color: #0078ae" value="#{uiMatrizRiesgos.matrizRiesgos.nivelRiesgo}"/></td>
+                            <th><h:outputText style="font-weight: bold;" value="Aceptabilidad del Riesgo:"/></th>
+                        </tr>
+                        <tr>
+                            <td><p:outputLabel  id="ndef" style="margin-top: 1%;width: 180px;background: #ccc;text-align: justify;float: left"  value="#{uiMatrizRiesgos.matrizRiesgos.nivelDeficiencia.descripcion}"/>                                                                    </td>
+                            <td><p:outputLabel  id="nexp"  style="margin-bottom: 10%;width: 180px;background: #ccc;float: left"  value="#{uiMatrizRiesgos.matrizRiesgos.nivelExposcion.descripcion}"/>                                                                            </td>
+                            <td><h:outputText style="font-weight: bold;" value="Interpretacion Nivel Probabilidad:    "/></td>
+                            <td><h:outputText id="inprob" style="font-weight: bold;color: #0078ae" value="#{uiMatrizRiesgos.matrizRiesgos.interpretacionProb}"/>                            </td>
+                            <td><p:outputLabel  id="nconsec"  style="margin-bottom: 17%;width: 180px;background: #ccc;text-align: justify;float: left"  value="#{uiMatrizRiesgos.matrizRiesgos.nivelConsecuencia.significado}"/>                                                                                                        </td>
+                            <td><h:outputText style="font-weight: bold;" value="Interpretacion Nivel de Riesgo:"/></td>
+                            <td><h:outputText id="inriesgo" style="margin-left: 5px;font-weight: bold; color: #0078ae;font-size: 20px" value="#{uiMatrizRiesgos.matrizRiesgos.interpretacionNr}"/></td>
+                            <th><h:outputText  id="acepta" style="#{uiMatrizRiesgos.styleAceptabilidad}" value="#{uiMatrizRiesgos.matrizRiesgos.aceptabilidadRiesgo}"/>                                                </th>
+                        </tr>                                              
+                    </tbody>
+                </table>
+            </p:panel>
+            
+            <p:panel id="panelCriteriosControles" style="width: 49.4%;height: 154px;margin-left: auto;margin-top: auto;float: left " header="Criterios Para Establecer Controles"  >
+                <h:panelGrid columns="2">
+                    <h:outputText style="font-weight: bold;" value="Numero de Expuestos"/>
+                    <p:inputText style="width: 15%" value="#{uiMatrizRiesgos.matrizRiesgos.numExpuestos}"/>
+                        
+                    <h:outputText style="font-weight: bold;" value="Peor Consecuencia"/>
+                    <p:inputText value="#{uiMatrizRiesgos.matrizRiesgos.peorConsecuencia}"/>
+                        
+                    <h:outputText style="font-weight: bold;" value="Requisito Legal Asociado"/>
+                    <p:selectBooleanButton  value="#{uiMatrizRiesgos.matrizRiesgos.reqLegal}" onLabel="Si" offLabel="No"  />
+                </h:panelGrid>
+            </p:panel>  
+            
+            
+            <p:panel id="panelMedidasIntervencion" style="float: right;width:49.4%;height: 154px;margin-right:  auto " header="Medidas De Intervencion"  >
+                <p:panelGrid columns="4">                    
+                    <h:outputText style="font-weight: bold;margin-left: -80%" value="Medidas Intervecion:"/>
+                    <p:selectOneRadio id="medidas" style="margin-left:-50%" value="#{uiMatrizRiesgos.matrizRiesgos.medidasIntervencion}" converter="convertidorGenerico" layout="grid" columns="1">
+                        <f:selectItems  value="#{uiMatrizRiesgos.medidasIntervecionList}" var="med" itemLabel="#{med.nombre}" itemValue="#{med}"/>
+                    </p:selectOneRadio>
+                </p:panelGrid>                    
+                <p:panelGrid style="margin-left: 60%; margin-top: -12%" columns="1">
+                    <h:outputText style="font-weight: bold;margin-top: 50%" value="Equipos De Proteccion"/>                                        
+                    <p:selectOneMenu value="#{uiMatrizRiesgos.matrizRiesgos.elementoProteccion}" converter="convertidorGenerico"
+                        style="text-align:center ">                          
+                        <f:selectItem itemLabel="Seleccionar..." itemValue="" /> 
+                        <f:selectItems value="#{uiMatrizRiesgos.elementosProteccionList}" var="ep" itemLabel="#{ep.nombre}" itemValue="#{ep}"/>                                                                                                                                                                                                                                               
+                    </p:selectOneMenu>                    
+                </p:panelGrid>
+            </p:panel>
+            
+            
+            
+            <p:panel id="panelEvidencias" style="width: 99.7%;height: 162px;margin-left: auto; float: right" header="Evidencias"  >
+                <p:panelGrid style="float: left; margin-left: 1%" columns="6">
+                    <p:column>
+                        <p:row>
+                            <h:outputText style="font-weight: bold;" value="Tarea 1:"/>
+                        </p:row>
+                        <br/>
+                        <p:row>
+                            <p:inputTextarea style="" rows="3" autoResize="false" minQueryLength="5" value="#{uiMatrizRiesgos.matrizRiesgos.descripcionMedida}"/>
+                        </p:row>
+                    </p:column>
+                    <p:column>
+                        <p:row>
+                    <p:selectOneMenu value="#{uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 150px">  
+                    <f:selectItem itemLabel="Seleccionar categoria" itemValue="" /> 
+                    <f:selectItems value="#{uiMatrizRiesgos.adjuntosCategorias}" var="mra" itemLabel="#{mra.nombre}" itemValue="#{mra}"/>
+                    <p:ajax  update="cattipo" listener="#{uiMatrizRiesgos.cargarAdjuntosCategoriaTipo()}" />                    
+                    </p:selectOneMenu>                    
+                            
+                    </p:row>
+                    <br/><br/>
+                    <p:row>
+                    <p:selectOneMenu id="cattipo" value="#{uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 150px" disabled="#{empty uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria}">                          
+                        <f:selectItem itemLabel="Seleccionar tipo" itemValue=""  /> 
+                        <f:selectItems value="#{uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria.adjuntosCategoriaTipoList}" var="mrca" itemLabel="#{mrca.nombre}" itemValue="#{mrca}"/>                        
+                        <p:ajax  update="cattipo,filename" listener="#{uiMatrizRiesgos.cargarAdjuntosCategoriaTipo()}" />                    
+                    </p:selectOneMenu>
+                    </p:row>
+                    </p:column>                    
+                    <p:column>
+                            <p:commandButton icon="ui-icon-document" title="Ver Adjunto" ajax="false">    
+                                <p:fileDownload value="#{uiMatrizRiesgos.fileDownloadMatriz}" />
+                            </p:commandButton>
+                            <h:outputText value=" "/>
+                            <h:outputText id="filename" value="#{uiMatrizRiesgos.nom}"/>
+                    </p:column>
+                </p:panelGrid>                    
+                <p:panelGrid style="position: relative; width: 10%" columns="6">
+                    <p:column>
+                        <p:row>
+                            <h:outputText style="font-weight: bold" value="Tarea 2:"/>           
+                        </p:row>
+                        <p:row>
+                            <p:inputTextarea  style="" rows="3" autoResize="false" minQueryLength="5" value="#{uiMatrizRiesgos.matrizRiesgos.descripcionMedida2}"/>       
+                        </p:row>
+                    </p:column>
+                    <br/>
+                    <p:column>
+                        <p:selectOneMenu value="#{uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria2}" converter="convertidorGenerico"
+                                     style="text-align: center;">  
+                    <f:selectItem itemLabel="Seleccionar categoria" itemValue="" /> 
+                    <f:selectItems value="#{uiMatrizRiesgos.adjuntosCategorias}" var="mra" itemLabel="#{mra.nombre}" itemValue="#{mra}"/>
+                    <p:ajax  update="cattipo2" listener="#{uiMatrizRiesgos.cargarAdjuntosCategoriaTipo2()}" />                    
+                    </p:selectOneMenu>
+                    <br/><br/>
+                    <p:selectOneMenu id="cattipo2" value="#{uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria2.adjuntosCategoriaTipo}" converter="convertidorGenerico"
+                                     style="text-align: center" disabled="#{empty uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria2}">                          
+                        <f:selectItem itemLabel="Seleccionar tipo" itemValue=""  /> 
+                        <f:selectItems value="#{uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria2.adjuntosCategoriaTipoList}" var="mrca" itemLabel="#{mrca.nombre}" itemValue="#{mrca}"/>
+                        <p:ajax  update="cattipo2,filename2" listener="#{uiMatrizRiesgos.cargarAdjuntosCategoriaTipo2()}" />                    
+                    </p:selectOneMenu>                        
+                    </p:column> 
+                    
+                    <p:column>
+                            <p:commandButton icon="ui-icon-document" title="Ver Adjunto" ajax="false">    
+                                <p:fileDownload value="#{uiMatrizRiesgos.fileDownloadMatriz2}" />
+                            </p:commandButton>
+                            <h:outputText value=" "/>
+                            <h:outputText id="filename2" value="#{uiMatrizRiesgos.nom2}"/>
+                    </p:column>
+                </p:panelGrid>
+            </p:panel>
+            
+            <p:panel style="margin: auto;float: left; width: 99.5%" id="panelObservacionesgenerales"  header="Observaciones Generales"  >
+                <p:panelGrid columns="1">
+                    <p:inputTextarea rows="5" cols="50" autoResize="false" minQueryLength="5" style="text-align: justify" value="#{uiMatrizRiesgos.matrizRiesgos.observaciones}"/>                 
+                </p:panelGrid>                    
+            </p:panel>
+            
+            
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}" update="dialog" />
+            <p:panel style="float: right;width: 100%">
+            <ui:include src="/barra.xhtml">
+                <ui:param name="bean" value="#{uiMatrizRiesgos}"/>
+            </ui:include>
+            </p:panel>
+            
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -84,6 +84,7 @@ public class UIPlanCapacitacion implements Serializable {
     private boolean consultarActivo = false;
     private boolean cancelarActivo = false;
     private boolean eliminarActivo = false;
+    private boolean volverActivo = false;
     private boolean filtroActivo = Boolean.TRUE;
     
     private Evaluacion evaluacion = new Evaluacion();
@@ -311,6 +312,14 @@ public class UIPlanCapacitacion implements Serializable {
 
     public List<Establecimiento> getEstablecimientoListSeleccionado() {
         return establecimientoListSeleccionado;
+    }
+
+    public boolean isVolverActivo() {
+        return volverActivo;
+    }
+
+    public void setVolverActivo(boolean volverActivo) {
+        this.volverActivo = volverActivo;
     }
 
     public void setEstablecimientoListSeleccionado(List<Establecimiento> establecimientoListSeleccionado) {

@@ -53,6 +53,8 @@ public class UIUsuario {
     private boolean eliminarActivo = false;
     private boolean cancelarActivo = false;
     private boolean consultarActivo = false;
+    private boolean volverActivo = false;
+
 
     public void cancelar() {
     }
@@ -455,6 +457,14 @@ public class UIUsuario {
      */
     public String getClave() {
         return clave;
+    }
+
+    public boolean isVolverActivo() {
+        return volverActivo;
+    }
+
+    public void setVolverActivo(boolean volverActivo) {
+        this.volverActivo = volverActivo;
     }
 
     /**

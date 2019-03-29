@@ -110,6 +110,8 @@
                                  action="/configuracion/estandares.xhtml"/>
                     <p:menuitem  value="Administrar Plan Maestro"  style="font-size: 11px;"
                                  action="/seguimiento/administrar-plan-maestro-evaluaciones.xhtml"/>
+                    <p:menuitem  value="Administrar Cargos"  style="font-size: 11px;"
+                                 action="/configuracion/cargos.xhtml"/>
                 </p:submenu>
             </p:column>
         </p:submenu>
@@ -123,7 +125,7 @@
                     <p:menuitem  value="Crear Plan de Trabajo"  action="/seguimiento/administrar-plan-trabajo-evaluaciones.xhtml"
                                  style="font-size: 11px;"/>
                     <p:menuitem  value="Crear Plan de Capacitacion"  action="/seguimiento/administrar-plan-capacitaciones.xhtml"
-                                 style="font-size: 11px;"/>
+                                 style="font-size: 11px;"/>                    
                 </p:submenu>
                 <p:submenu label="Seguimiento" >
                     <p:menuitem  value="Gestión Capacitaciones"  style="font-size: 11px;"
@@ -133,10 +135,15 @@
                     <p:menuitem  value="Gestión Planes de Trabajo"  style="font-size: 11px;"
                                  action="#{uiPlantrabajo.cargarPlanTrabajoactividadGeneral()}"/>                    
                 </p:submenu>
+                <p:submenu label="Matriz De Riesgos" >
+                    <p:menuitem  value="Crear Matriz De Riesgos"  action="/matriz/administrar-matriz-riesgos.xhtml"
+                                 style="font-size: 11px;"/>                    
+                </p:submenu>
                 <p:submenu label="Análisis" >
                     <p:menuitem  value="Plan Maestro"  style="font-size: 11px;"
                                  action="#{uiPlanMaestro.cargarPlanMaestro()}"/>                    
                 </p:submenu>
+
             </p:column>
         </p:submenu>
 

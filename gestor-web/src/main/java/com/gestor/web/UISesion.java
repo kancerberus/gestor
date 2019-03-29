@@ -45,6 +45,12 @@ public class UISesion {
 //        return (s.get(UtilBinario.PERMISO_CREAR) || s.get(UtilBinario.PERMISO_MODIFICAR));
         return true;
     }
+    
+    public boolean isVolverActivo() {
+//        HashMap<Integer, Boolean> s = ((Sesion) UtilJSF.getBean("sesion")).getPermisos();
+//        return (s.get(UtilBinario.PERMISO_CREAR) || s.get(UtilBinario.PERMISO_MODIFICAR));
+        return true;
+    }
 
     /**
      * @return the nuevoActivo

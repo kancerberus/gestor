@@ -66,8 +66,12 @@
                     <p:column >
                         <p:commandButton icon="ui-icon-pencil" title="Modificar Establecimiento" update="formEstablecimientos"
                                          action="#{uiEstablecimiento.subirItemEstablecimiento()}"/>
-                        <p:commandButton icon="ui-icon-plus" title="Crear Centro De trabajo" update="formEstablecimientos, formEstablecimientos"
+                        <p:commandButton label="Centro de Trabajo" icon="ui-icon-plus" title="Crear Centro De trabajo" update="formEstablecimientos, formEstablecimientos"
                                          action="#{uiEstablecimiento.dialogoCentro()}"/>                        
+                        <p:commandButton icon=" ui-icon-person" title="Cargos" update="formEstablecimientos, formEstablecimientos"
+                                         action="#{uiEstablecimiento.dialogoCargos()}">
+                            <f:actionListener binding="#{uiEstablecimiento.cargarCargosEstablecimiento()}"/>
+                        </p:commandButton>
                     </p:column>
                     <p:column>
                         <h:outputText value="#{varEstablecimiento.codigoEstablecimiento}"/>

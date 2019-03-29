@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml"
+                >
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formCargos" style="font-size: small;">
+            <p:panel id="panelCargos"  header="Administrar Cargos" >
+                <h:panelGrid columns="7" >
+                    <h:outputText value="Cargo"/>                    
+                    <p:inputText value="#{uiEstablecimiento.cargos.nombre}" placeholder="Nombre Cargo"/>
+                </h:panelGrid>
+
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Crear / Modificar" action="#{uiEstablecimiento.guardarCargos()}"
+                                     icon="ui-icon-disk"
+                                     update="formCargos">                        
+                        
+                    </p:commandButton>
+                    <p:commandButton value="Limpiar" action="#{uiEstablecimiento.limpiarCargos()}"
+                                     icon="ui-icon-cancel"
+                                     update="formCargos"/>
+                </h:panelGrid>
+                <p:dataTable value="#{uiEstablecimiento.cargosList}" var="varCargos" emptyMessage="No hay cargos"
+                             rowStyleClass="letra-x-small-centro" style="width: 30%"
+                              rowHover="true">
+
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column width="12%" headerText="Opciones" />                            
+                            <p:column  headerText="Cargo"/>                            
+                        </p:row> 
+                    </p:columnGroup>
+
+                    <p:column >
+                        <p:commandButton icon="ui-icon-pencil" title="Modificar Cargo" update="formCargos"
+                                         action="#{uiEstablecimiento.subirItemCargo()}"/>
+                        <p:commandButton icon="ui-icon-plus" title="Crear funciones del cargo" update="formCargos"
+                                         action="#{uiEstablecimiento.dialogoFunciones()}"/>
+                    </p:column>                    
+                    <p:column>
+                        <h:outputText value="#{varCargos.nombre}"/>
+                    </p:column>
+                </p:dataTable>
+
+            </p:panel>
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}" update="dialog" />
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

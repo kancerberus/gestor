@@ -121,6 +121,7 @@ public class UIPlanTrabajo implements Serializable{
     private boolean consultarActivo = false;
     private boolean cancelarActivo = false;
     private boolean eliminarActivo = false;
+    private boolean volverActivo = false;
     private Boolean filtroActivo = Boolean.TRUE;
     
     private Evaluacion evaluacion = new Evaluacion();
@@ -851,6 +852,14 @@ public class UIPlanTrabajo implements Serializable{
 
     public List<Establecimiento> getEstablecimientoList() {
         return establecimientoList;
+    }
+
+    public boolean isVolverActivo() {
+        return volverActivo;
+    }
+
+    public void setVolverActivo(boolean volverActivo) {
+        this.volverActivo = volverActivo;
     }
 
     public void setEstablecimientoList(List<Establecimiento> establecimientoList) {

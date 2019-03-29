@@ -18,6 +18,8 @@ public class UI {
     private boolean consultarActivo = false;
     private boolean cancelarActivo = false;
     private boolean eliminarActivo = false;
+    private boolean volverActivo = false;
+
 
     public void nuevo() {
     }
@@ -57,6 +59,14 @@ public class UI {
      */
     public boolean isNuevoActivo() {
         return nuevoActivo;
+    }
+
+    public boolean isVolverActivo() {
+        return volverActivo;
+    }
+
+    public void setVolverActivo(boolean volverActivo) {
+        this.volverActivo = volverActivo;
     }
 
     /**

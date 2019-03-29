@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <div style="margin-top: 2%; margin-bottom: 5%">
+        <p:outputPanel id="opFunciones">
+             <h2>                
+                 <p class="letraBlueBackgroundWhite">Cargo: #{uiEstablecimiento.cargos.nombre}</p>
+            </h2>
+            <h:panelGrid columns="1" >                    
+                    <h:outputText value="Actividad"/>
+                    <p:inputText value="#{uiEstablecimiento.funciones.nombre}" placeholder="Nombre"/>                    
+                    
+            </h:panelGrid>
+            
+            <h:panelGrid columns="2">
+                <p:commandButton value="Crear / Modificar" action="#{uiEstablecimiento.guardarFunciones()}"
+                                     icon="ui-icon-disk"
+                                     update="formCargos:opFunciones"/>
+                <p:commandButton value="Limpiar" action="#{uiEstablecimiento.limpiarFunciones()}"
+                                     icon="ui-icon-cancel"
+                                     update="formCargos:opFunciones"/>
+            </h:panelGrid>
+            
+            <p:dataTable  value="#{uiEstablecimiento.funcionesList}" var="varFunciones" emptyMessage="No hay Actividades"
+                              rowStyleClass="Centro">
+
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column headerText="Opciones"/>                            
+                            <p:column headerText="Nombre"/>                            
+                        </p:row> 
+                    </p:columnGroup>
+                    <p:column>
+                        <p:commandButton icon="ui-icon-pencil" title="Modificar Actividad" update="formCargos:opFunciones"
+                                         action="#{uiEstablecimiento.subirItemFunciones()}"/>   
+                    </p:column>                                        
+                    <p:column>
+                        <h:outputText value="#{varFunciones.nombre}"/>
+                    </p:column> 
+            </p:dataTable>
+        </p:outputPanel>            
+    </div>
+</ui:composition>
