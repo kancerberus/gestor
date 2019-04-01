@@ -20,7 +20,7 @@
                         <p:row>  
                             <p:column  headerText="Opciones" />
                             <p:column headerText="Cargo" filterBy="#{varCargosEstablecimiento.cargos.nombre}"/>
-                            <p:column headerText="Actividad" filterBy="#{varCargosEstablecimiento.nombre}"/>                            
+                            <p:column headerText="Actividad" filterBy="#{varCargosEstablecimiento.funciones.nombre}"/>                            
                             <p:column headerText="Diligenciado" />                            
                         </p:row>
                     </p:columnGroup>
@@ -35,7 +35,7 @@
                         <h:outputText value="#{varCargosEstablecimiento.cargos.nombre}"/>
                     </p:column> 
                     <p:column>
-                        <h:outputText value="#{varCargosEstablecimiento.nombre}"/>
+                        <h:outputText value="#{varCargosEstablecimiento.funciones.nombre}"/>
                     </p:column> 
                     <p:column>
                         <h:outputText value="#{varCargosEstablecimiento.diligenciado ? 'SI' : 'NO'}" style="#{uiMatrizRiesgos.styleDiligenciado}"/>

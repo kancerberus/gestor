@@ -20,6 +20,7 @@ import com.gestor.modelo.Sesion;
 import com.gestor.publico.Cargos;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Funciones;
+import com.gestor.publico.RelCargosEstablecimiento;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorUsuario;
@@ -54,9 +55,9 @@ public class UIMatrizRiesgos implements Serializable{
     private boolean guardarActivo = true;
     private boolean nuevoActivo = false;
     private boolean consultarActivo = false;
-    private boolean cancelarActivo = false;
+    private boolean cancelarActivo = true;
     private boolean eliminarActivo = false;
-    private boolean volverActivo = true;
+    private boolean volverActivo = false;
     
     private StreamedContent fileDownloadMatriz;
     private StreamedContent fileDownloadMatriz2;
@@ -79,7 +80,7 @@ public class UIMatrizRiesgos implements Serializable{
     private List<AdjuntosCategoria> adjuntosCategorias = new ArrayList<>();    
     private List<AdjuntosCategoria> adjuntosCategorias2 = new ArrayList<>();    
     
-    private List<Funciones> cargosActividadesEstablecimientoList= new ArrayList<>();
+    private List<RelCargosEstablecimiento> cargosActividadesEstablecimientoList= new ArrayList<>();
     
     
     private List<MatrizRiesgos> matricesRiesgoEstablecimientoList = new ArrayList<>();
@@ -128,17 +129,17 @@ public class UIMatrizRiesgos implements Serializable{
     public String subirItemMatriz(){
         try {                      
             gestorMatrizRiesgos=new GestorMatrizRiesgos();
-            Funciones f=(Funciones) UtilJSF.getBean("varCargosEstablecimiento");
+            RelCargosEstablecimiento rel=(RelCargosEstablecimiento) UtilJSF.getBean("varCargosEstablecimiento");
             evaluacion= (Evaluacion) UtilJSF.getBean("evaluacion");
             
-            matrizRiesgos = gestorMatrizRiesgos.cargarMatrizRiesgosCargoActividad(f.getCargos().getCodCargo(), f.getCodFuncion(), evaluacion.getEvaluacionPK().getCodigoEstablecimiento());
+            matrizRiesgos = gestorMatrizRiesgos.cargarMatrizRiesgosCargoActividad(rel.getCargos().getCodCargo(), rel.getCodFuncion(), evaluacion.getEvaluacionPK().getCodigoEstablecimiento());
             
             if(matrizRiesgos == null){
                 matrizRiesgos=new MatrizRiesgos();
-                matrizRiesgos.getCargos().setCodCargo(f.getCargos().getCodCargo());
-                matrizRiesgos.getCargos().setNombre(f.getCargos().getNombre());
-                matrizRiesgos.getFunciones().setCodFuncion(f.getCodFuncion());
-                matrizRiesgos.getFunciones().setNombre(f.getNombre());                 
+                matrizRiesgos.getCargos().setCodCargo(rel.getCargos().getCodCargo());
+                matrizRiesgos.getCargos().setNombre(rel.getCargos().getNombre());
+                matrizRiesgos.getFunciones().setCodFuncion(rel.getCodFuncion());
+                matrizRiesgos.getFunciones().setNombre(rel.getFunciones().getNombre());                 
             }
                 this.cargarRiesgos();
                 this.cargarMedidasIntervecion();
@@ -198,14 +199,14 @@ public class UIMatrizRiesgos implements Serializable{
     }
     
     public String getStyleDiligenciado() {
-        Funciones f=(Funciones) UtilJSF.getBean("varCargosEstablecimiento");
+        RelCargosEstablecimiento rel=(RelCargosEstablecimiento) UtilJSF.getBean("varCargosEstablecimiento");
         String style = "padding: 10px;width 50%;"
                 + "opacity: 0.83;background-color: #006699;"
                 + "transition: opacity 0.6s; font-weight: bold;";          
-        if(f.getDiligenciado()==true){
+        if(rel.getDiligenciado()==true){
             style+= "color: #99ff99;";
         }
-        if(f.getDiligenciado()==false){
+        if(rel.getDiligenciado()==false){
             style+= "color: #ff6666;";
         }
         return style;
@@ -252,7 +253,7 @@ public class UIMatrizRiesgos implements Serializable{
             evaluacion= (Evaluacion) UtilJSF.getBean("evaluacion");
             cargosActividadesEstablecimientoList = new ArrayList<>();
             gestorMatrizRiesgos= new GestorMatrizRiesgos();
-            cargosActividadesEstablecimientoList.addAll((Collection<? extends Funciones>) gestorMatrizRiesgos.cargarListaCargosFuncionesEstablecimiento(evaluacion.getEstablecimiento().getCodigoEstablecimiento()));            
+            cargosActividadesEstablecimientoList.addAll((Collection<? extends RelCargosEstablecimiento>) gestorMatrizRiesgos.cargarListaCargosFuncionesEstablecimiento(evaluacion.getEstablecimiento().getCodigoEstablecimiento()));            
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -321,7 +322,7 @@ public class UIMatrizRiesgos implements Serializable{
             gestorMatrizRiesgos = new GestorMatrizRiesgos();
             this.nvielExposcionList.addAll((Collection<? extends NivelExposicion>) gestorMatrizRiesgos.cargarListaNivelExposicion()); 
             
-            if(this.matrizRiesgos.getNivelDeficiencia().getValor() != 0){
+            if(this.matrizRiesgos.getNivelDeficiencia().getValor() != null){
                 this.matrizRiesgos.setNivelProbabilidad(matrizRiesgos.getNivelExposcion().getValor()*matrizRiesgos.getNivelDeficiencia().getValor());
                 if(matrizRiesgos.getNivelProbabilidad()<=4){
                    this.matrizRiesgos.setInterpretacionProb("BAJO");
@@ -331,8 +332,7 @@ public class UIMatrizRiesgos implements Serializable{
                     this.matrizRiesgos.setInterpretacionProb("ALTO");
                 }
             this.cargarNivelConsecuencia();
-            }
-            
+            }            
             
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
@@ -346,7 +346,7 @@ public class UIMatrizRiesgos implements Serializable{
             this.nivelConsecuenciaList.addAll((Collection<? extends NivelConsecuencia>) gestorMatrizRiesgos.cargarListaNivelConsecuencia());
             
             this.matrizRiesgos.setNivelRiesgo(matrizRiesgos.getNivelProbabilidad()*matrizRiesgos.getNivelConsecuencia().getValor());
-            if(matrizRiesgos.getNivelRiesgo()!=0){
+            if(matrizRiesgos.getNivelRiesgo()!=null){
                 if(matrizRiesgos.getNivelRiesgo()>=600){
                     matrizRiesgos.setInterpretacionNr("I");
                 }
@@ -478,15 +478,15 @@ public class UIMatrizRiesgos implements Serializable{
             gestorMatrizRiesgos.almacenarMatrizRiesgo(mr);
             
             UtilMSG.addSuccessMsg("Matriz Creada correctamente.");            
+            this.cargarCargosFuncionesEstablecimiento();
+            return ("/matriz/administrar-matriz-cargos-establecimiento.xhtml?faces-redirect=true");        
         } catch (Exception ex) {
             
         }       
-        return "";
+        return ("/matriz/administrar-matriz-cargos-establecimiento.xhtml?faces-redirect=true");        
     }
     
-    public String volver(){ 
-        adjuntosCategorias=new ArrayList<>();
-        adjuntosCategorias2=new ArrayList<>();
+    public String cancelar(){         
         this.cargarCargosFuncionesEstablecimiento();
         return ("/matriz/administrar-matriz-cargos-establecimiento.xhtml?faces-redirect=true");        
     }
@@ -531,14 +531,13 @@ public class UIMatrizRiesgos implements Serializable{
         return fileDownloadMatriz2;
     }
 
-    public List<Funciones> getCargosActividadesEstablecimientoList() {
+    public List<RelCargosEstablecimiento> getCargosActividadesEstablecimientoList() {
         return cargosActividadesEstablecimientoList;
     }
 
-    public void setCargosActividadesEstablecimientoList(List<Funciones> cargosActividadesEstablecimientoList) {
+    public void setCargosActividadesEstablecimientoList(List<RelCargosEstablecimiento> cargosActividadesEstablecimientoList) {
         this.cargosActividadesEstablecimientoList = cargosActividadesEstablecimientoList;
     }
-
 
     public void setFileDownloadMatriz2(StreamedContent fileDownloadMatriz2) {
         this.fileDownloadMatriz2 = fileDownloadMatriz2;

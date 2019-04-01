@@ -276,7 +276,7 @@ public class UIEstablecimiento implements Serializable {
         
             gestorEstablecimiento= new GestorEstablecimiento();
             establecimiento.setListaCargosEstablecimientos(this.cargarCargosEstablecimientosAsignados());
-      
+            
             gestorEstablecimiento.almacenarCargosEstablecimiento(establecimiento);
             
             
@@ -321,9 +321,9 @@ public class UIEstablecimiento implements Serializable {
             if(funciones.getCodFuncion()==null){
                 funciones.setCodFuncion(funcionesList.size()+1); 
             }
-            funciones.setDiligenciado(false);
             
-            Funciones fun= new Funciones(cargos.getCodCargo(), funciones.getCodFuncion(), funciones.getNombre(), funciones.getDiligenciado());
+            
+            Funciones fun= new Funciones(cargos.getCodCargo(), funciones.getCodFuncion(), funciones.getNombre());
             gestorEstablecimiento.validarFuncion(fun);
             gestorEstablecimiento.almacenarFuncion(fun);
             
