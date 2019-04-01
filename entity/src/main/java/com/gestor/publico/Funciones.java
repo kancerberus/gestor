@@ -33,9 +33,7 @@ public class Funciones implements Serializable, Cloneable {
     @Column(name = "cod_funcion")
     private Integer codFuncion;
     @Column(name = "nombre")
-    private String nombre;
-    @Column(name = "diligenciado")
-    private Boolean diligenciado;
+    private String nombre;    
     
     
     private Cargos cargos= new Cargos();
@@ -43,19 +41,10 @@ public class Funciones implements Serializable, Cloneable {
     public Funciones() {        
     }
 
-    public Funciones(Integer codCargo, Integer codFuncion, String nombre, Boolean diligenciado) {
+    public Funciones(Integer codCargo, Integer codFuncion, String nombre) {
         this.codCargo = codCargo;
         this.codFuncion = codFuncion;
-        this.nombre = nombre;
-        this.diligenciado = diligenciado;
-    }
-
-    public Boolean getDiligenciado() {
-        return diligenciado;
-    }
-
-    public void setDiligenciado(Boolean diligenciado) {
-        this.diligenciado = diligenciado;
+        this.nombre = nombre;     
     }
 
     public Cargos getCargos() {
