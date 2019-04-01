@@ -100,16 +100,36 @@ public class EstablecimientoDAO {
         }
     }
     
-    public void agregarCargosEstablecimiento(Cargos cargos, Establecimiento establecimiento) throws SQLException {
-        Consulta consulta = null;
+    @SuppressWarnings("null")
+    public void agregarCargosEstablecimiento(Cargos cargos, Establecimiento establecimiento) throws SQLException {        
+        Consulta consulta = null;    
+        ResultSet rs = null;
+        List<Funciones> listaFunciones = new ArrayList<>();        
         try {
+                        
+            consulta= new Consulta(conexion);
+            StringBuilder sql1= new StringBuilder(
+                    "SELECT cod_funcion, cod_cargo, nombre " +
+                        "FROM public.funciones " +
+                        "WHERE cod_cargo='"+cargos.getCodCargo()+"'"
+            );            
+            rs=consulta.ejecutar(sql1);
+            while (rs.next()) {
+                Funciones fun= new Funciones(rs.getInt("cod_cargo"), rs.getInt("cod_funcion"), rs.getString("nombre"));                
+                fun.setCodFuncion(rs.getInt("cod_funcion"));                              
+                listaFunciones.add(fun);                
+            }                       
+            
+            for(int i=0;i<listaFunciones.size();i++){
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO rel_cargos_establecimiento("
-                    + " codigo_establecimiento, cod_cargo)"
-                    + " VALUES (" + establecimiento.getCodigoEstablecimiento() + ", '" + cargos.getCodCargo() + "')"
+                    + " codigo_establecimiento, cod_cargo, cod_funcion, diligenciado)"
+                    + " VALUES (" + establecimiento.getCodigoEstablecimiento() + ", '" + cargos.getCodCargo() + "', '"+listaFunciones.get(i).getCodFuncion()+"', '"+false+"')"
             );
             consulta.actualizar(sql);
+            }
+            
         } finally {
             if (consulta != null) {
                 consulta.desconectar();
@@ -241,7 +261,7 @@ public class EstablecimientoDAO {
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
-                Funciones fun= new Funciones(rs.getInt("cod_cargo"), rs.getInt("cod_funcion"), rs.getString("nombre"), rs.getBoolean("diligenciado"));
+                Funciones fun= new Funciones(rs.getInt("cod_cargo"), rs.getInt("cod_funcion"), rs.getString("nombre"));
                 fun.setCodCargo(rs.getInt("cod_cargo"));
                 fun.setCodFuncion(rs.getInt("cod_funcion"));
                 fun.setNombre(rs.getString("nombre"));                
@@ -367,7 +387,7 @@ public class EstablecimientoDAO {
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO funciones("
                     + " cod_cargo, cod_funcion, nombre, diligenciado )"
-                    + " VALUES (" +funcion.getCodCargo()+","+funcion.getCodFuncion()+",'"+funcion.getNombre()+"', '"+funcion.getDiligenciado()+"')"
+                    + " VALUES (" +funcion.getCodCargo()+","+funcion.getCodFuncion()+",'"+funcion.getNombre()+"')"
                     + " ON CONFLICT (cod_cargo, cod_funcion) DO UPDATE"
                     + " SET nombre=EXCLUDED.nombre "                    
             );

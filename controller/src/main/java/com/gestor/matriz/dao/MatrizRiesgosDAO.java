@@ -20,6 +20,7 @@ import com.gestor.matriz.Riesgo;
 import com.gestor.matriz.RiesgoPosible;
 import com.gestor.publico.Cargos;
 import com.gestor.publico.Funciones;
+import com.gestor.publico.RelCargosEstablecimiento;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,11 +54,10 @@ public class MatrizRiesgosDAO {
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
-                Funciones fun = new Funciones(rs.getInt("cod_cargo"), rs.getInt("cod_funcion"), rs.getString("nombre"), rs.getBoolean("diligenciado"));
+                Funciones fun = new Funciones(rs.getInt("cod_cargo"), rs.getInt("cod_funcion"), rs.getString("nombre"));
                 fun.setCodCargo(rs.getInt("cod_cargo"));
                 fun.setCodFuncion(rs.getInt("cod_funcion"));
-                fun.setNombre(rs.getString("nombre"));
-                fun.setDiligenciado(rs.getBoolean("diligenciado"));
+                fun.setNombre(rs.getString("nombre"));                
                 listaFunciones.add(fun);                               
             }
             return listaFunciones;
@@ -226,11 +226,9 @@ public class MatrizRiesgosDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "UPDATE public.funciones f "
+                    "UPDATE public.rel_cargos_establecimiento rel "
                         + " SET diligenciado='"+true+"'"
-                        + " FROM public.cargos car"
-                        + " INNER JOIN public.rel_cargos_establecimiento rel on (rel.cod_cargo=car.cod_cargo)"
-                        + " WHERE rel.codigo_establecimiento='"+matrizRiesgos.getCodigoEstablecimiento()+"' AND f.cod_cargo='"+matrizRiesgos.getCodCargo()+"' AND cod_funcion='"+matrizRiesgos.getCodFuncion()+"'"                    
+                        + " WHERE rel.codigo_establecimiento='"+matrizRiesgos.getCodigoEstablecimiento()+"' AND rel.cod_cargo='"+matrizRiesgos.getCodCargo()+"' AND rel.cod_funcion='"+matrizRiesgos.getCodFuncion()+"'"                    
             );
             consulta.actualizar(sql);
         } finally {
@@ -255,10 +253,10 @@ public class MatrizRiesgosDAO {
                     + " R.cod_riesgo codr, R.nombre nomr, "
                     + " EX.cod_exposicion codex, EX.nombre nomex,"
                     + " CR.cod_categoria_riesgo codcr, CR.nombre nomcr,"
-                    + " RP.cod_riesgo_posible codrp, RP.nombre nomrp,"
-                    + " ND.cod_nivel_def codnd, ND.nombre nomdf,"
-                    + " NE.cod_nivel_exp codnexp, NE.nombre nomexp,"
-                    + " NC.cod_nivel_consec codnnc, NC.nombre nomnc,"
+                    + " RP.cod_riesgo_posible codrp, RP.nombre nomrp, RP.descripcion descrp,"
+                    + " ND.cod_nivel_def codnd, ND.nombre nomdf, ND.significado signd, ND.valor valornd,"
+                    + " NE.cod_nivel_exp codnexp, NE.nombre nomexp, NE.significado signe, NE.valor valorne,"
+                    + " NC.cod_nivel_consec codnnc, NC.nombre nomnc, NC.significado signc, NC.valor valornc,"
                     + " MI.cod_medida codmi, MI.nombre nommi,"
                     + " E.cod_elemento code, E.nombre nome,"
                     + " AC1.cod_categoria codcat, AC1.nombre nomct, ACT1.cod_categoria_tipo codct, ACT1.nombre nomcat,"
@@ -291,14 +289,14 @@ public class MatrizRiesgosDAO {
                     rs.getInt("codcat"), rs.getInt("codcat2"), rs.getInt("codct"), rs.getInt("codct2"), rs.getString("observaciones"));                    
                     
                 mr.setCargos(new Cargos(rs.getInt("codc"), rs.getString("nomc")));
-                mr.setFunciones(new Funciones(rs.getInt("codc"), rs.getInt("codf"), rs.getString("nomf"), rs.getBoolean("diligenciado")));                
+                mr.setFunciones(new Funciones(rs.getInt("codc"), rs.getInt("codf"), rs.getString("nomf")));                
                 mr.setRiesgo(new Riesgo(rs.getInt("codr"), rs.getString("nomr")));
                 mr.setExposicion(new Exposicion(rs.getInt("codex"), rs.getString("nomex"), rs.getInt("codr")));
                 mr.setCategoriaRiesgo(new CategoriaRiesgo(rs.getInt("codcr"), rs.getString("nomcr")));
-                mr.setRiesgoPosible(new RiesgoPosible(rs.getInt("codcr"), rs.getInt("codrp"), rs.getString("nomrp"), ""));
-                mr.setNivelDeficiencia(new NivelDeficiencia(rs.getInt("codnd"), 0, rs.getString("nomdf"),"" ));
-                mr.setNivelExposcion(new NivelExposicion(rs.getInt("codnexp"), rs.getString("nomexp"), 0, ""));
-                mr.setNivelConsecuencia(new NivelConsecuencia(rs.getInt("codnnc"), rs.getString("nomnc"), 0, ""));
+                mr.setRiesgoPosible(new RiesgoPosible(rs.getInt("codcr"), rs.getInt("codrp"), rs.getString("nomrp"), rs.getString("descrp")));
+                mr.setNivelDeficiencia(new NivelDeficiencia(rs.getInt("codnd"), rs.getInt("valornd"), rs.getString("nomdf"),rs.getString("signd") ));
+                mr.setNivelExposcion(new NivelExposicion(rs.getInt("codnexp"), rs.getString("nomexp"), rs.getInt("valorne"), rs.getString("signe")));
+                mr.setNivelConsecuencia(new NivelConsecuencia(rs.getInt("codnnc"), rs.getString("nomnc"), rs.getInt("valornc"), rs.getString("signc")));
                 mr.setMedidasIntervencion(new MedidasIntervencion(rs.getInt("codmi"), rs.getString("nommi")));
                 mr.setElementoProteccion(new ElementosProteccion(rs.getInt("code"), rs.getString("nome")));
                 mr.setAdjuntosCategoria(new AdjuntosCategoria(rs.getInt("codcat"), rs.getString("nomcat"), 0));
@@ -371,7 +369,7 @@ public class MatrizRiesgosDAO {
                     rs.getInt("codcat"), rs.getInt("codcat2"), rs.getInt("codct"), rs.getInt("codct2"), rs.getString("observaciones"));                    
                     
                 mr.setCargos(new Cargos(rs.getInt("codc"), rs.getString("nomc")));
-                mr.setFunciones(new Funciones(rs.getInt("codc"), rs.getInt("codf"), rs.getString("nomf"), rs.getBoolean("diligenciado")));                
+                mr.setFunciones(new Funciones(rs.getInt("codc"), rs.getInt("codf"), rs.getString("nomf")));                
                 mr.setRiesgo(new Riesgo(rs.getInt("codr"), rs.getString("nomr")));
                 mr.setExposicion(new Exposicion(rs.getInt("codex"), rs.getString("nomex"), rs.getInt("codr")));
                 mr.setCategoriaRiesgo(new CategoriaRiesgo(rs.getInt("codcr"), rs.getString("nomcr")));
@@ -426,24 +424,25 @@ public class MatrizRiesgosDAO {
         }
     }
     
-    public ArrayList<Funciones> cargarListaCargosFuncionesEstablecimiento(Integer codigoEstablecimiento) throws Exception {
+    public ArrayList<RelCargosEstablecimiento> cargarListaCargosFuncionesEstablecimiento(Integer codigoEstablecimiento) throws Exception {
         ResultSet rs = null;
         Consulta consulta = null;
-        ArrayList<Funciones> listaCargosFuncionesEstablecimiento = new ArrayList<>();
+        ArrayList<RelCargosEstablecimiento> listaCargosFuncionesEstablecimiento = new ArrayList<>();
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    " SELECT car.cod_cargo codcar, car.nombre nomcar, f.cod_funcion codf, f.nombre nomf ,f.diligenciado diligenciado" +
-                        " FROM public.rel_cargos_establecimiento " +
+                    " SELECT codigo_establecimiento, car.cod_cargo codcar, car.nombre nomcar, f.cod_funcion codf, f.nombre nomf , rel.diligenciado diligenciado" +
+                        " FROM public.rel_cargos_establecimiento rel" +
                         " JOIN cargos car using (cod_cargo) " +
-                        " JOIN funciones f using (cod_cargo) " +
-                        " WHERE codigo_establecimiento= '"+codigoEstablecimiento+"'"                                                     
+                        " JOIN funciones f using (cod_cargo, cod_funcion) " +
+                        " WHERE rel.codigo_establecimiento= '"+codigoEstablecimiento+"'"                                                     
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
-                Funciones f=new Funciones(rs.getInt("codcar"), rs.getInt("codf"), rs.getString("nomf"), rs.getBoolean("diligenciado"));
-                f.setCargos(new Cargos(rs.getInt("codcar"), rs.getString("nomcar")));
-                listaCargosFuncionesEstablecimiento.add(f);                          
+                RelCargosEstablecimiento rel= new RelCargosEstablecimiento(rs.getInt("codigo_establecimiento"), rs.getInt("codcar"), rs.getInt("codf"), rs.getBoolean("diligenciado"));
+                rel.setCargos(new Cargos(rs.getInt("codcar"), rs.getString("nomcar")));
+                rel.setFunciones(new Funciones(rs.getInt("codcar"), rs.getInt("codf"), rs.getString("nomf")));                
+                listaCargosFuncionesEstablecimiento.add(rel);                          
             }
             return listaCargosFuncionesEstablecimiento;
         } finally {
