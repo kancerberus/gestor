@@ -107,7 +107,7 @@ public class UIMatrizRiesgos implements Serializable{
             usuariosList = new ArrayList<>();
             usuariosList.addAll(gestorUsuario.cargarListaUsuarios());            
             
-
+            
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }
@@ -127,65 +127,55 @@ public class UIMatrizRiesgos implements Serializable{
     }
     
     public String subirItemMatriz(){
-        try {                      
-            gestorMatrizRiesgos=new GestorMatrizRiesgos();
-            RelCargosEstablecimiento rel=(RelCargosEstablecimiento) UtilJSF.getBean("varCargosEstablecimiento");
-            evaluacion= (Evaluacion) UtilJSF.getBean("evaluacion");
-            
-            matrizRiesgos = gestorMatrizRiesgos.cargarMatrizRiesgosCargoActividad(rel.getCargos().getCodCargo(), rel.getCodFuncion(), evaluacion.getEvaluacionPK().getCodigoEstablecimiento());
-            
-            if(matrizRiesgos == null){
-                matrizRiesgos=new MatrizRiesgos();
-                matrizRiesgos.getCargos().setCodCargo(rel.getCargos().getCodCargo());
-                matrizRiesgos.getCargos().setNombre(rel.getCargos().getNombre());
-                matrizRiesgos.getFunciones().setCodFuncion(rel.getCodFuncion());
-                matrizRiesgos.getFunciones().setNombre(rel.getFunciones().getNombre());                 
-            }
-                this.cargarRiesgos();
-                this.cargarMedidasIntervecion();
-                this.cargarElementosProteccion();
-                this.cargarNivelDeficiencia();
-                this.cargarNivelConsecuencia();
-                this.cargarNivelExposicion();
-                this.cargarAdjuntosCategoriaTipo();
-                this.cargarAdjuntosCategoriaTipo2();
-                this.cargarRiesgoPosibles();
-                this.cargarExposiciones();
-            
-            
-            return ("/matriz/crear-matriz-riesgos.xhtml?faces-redirect=true");
-        } catch (Exception ex) {
-            return ("/matriz/crear-matriz-riesgos.xhtml?faces-redirect=true");
-        }         
-    }
-    
-    public String crearMatrizNueva(){
-        try {                      
+        try {           
             this.cargarCargosEstablecimiento();
             this.cargarFunciones();
             this.cargarRiesgos();
+            this.cargarExposiciones();
             this.cargarRiesgoPosibles();
+            this.cargarNivelDeficiencia();
+            this.cargarNivelExposicion();
+            this.cargarNivelConsecuencia();
+            this.cargarMedidasIntervecion();
+            this.cargarElementosProteccion();           
+            this.cargarFunciones();
+            this.cargarRiesgoPosibles();
+            this.cargarExposiciones();
+            matrizRiesgos = (MatrizRiesgos) UtilJSF.getBean("varRiesgoEstablecimiento");                                   
+            this.cargarAdjuntosCategoriaTipo();
+            this.cargarAdjuntosCategoriaTipo2();   
+            return ("/matriz/crear-matriz-riesgos.xhtml?faces-redirect=true");
+        } catch (Exception ex) {
             
+        }  
+        return ("/matriz/crear-matriz-riesgos.xhtml?faces-redirect=true");
+    }
+    
+    public String crearMatrizNueva(){
+        try {       
+            matrizRiesgos=new MatrizRiesgos();
+            this.cargarCargosEstablecimiento();            
+            this.cargarRiesgos();                   
             this.cargarMedidasIntervecion();
             this.cargarElementosProteccion();
             this.cargarNivelDeficiencia();
             this.cargarNivelConsecuencia();
             this.cargarNivelExposicion();
             this.cargarAdjuntosCategoriaTipo();
-            this.cargarAdjuntosCategoriaTipo2();
-            this.cargarExposiciones();
+            this.cargarAdjuntosCategoriaTipo2();              
             return ("/matriz/crear-matriz-riesgos.xhtml?faces-redirect=true");
         } catch (Exception e) {
-            return ("/matriz/crear-matriz-riesgos.xhtml?faces-redirect=true");          
+        return ("/matriz/crear-matriz-riesgos.xhtml?faces-redirect=true");
         }
         
     }
     
     public String getStyleAceptabilidad() {
-        String style = "padding: 20px;width: 50%;"
+        String style = "padding: 10px;width: 50%;"
                 + "opacity: 0.83;background-color: #539aa0;"
-                + "transition: opacity 0.6s; font-weight: bold;";          
-        if(matrizRiesgos.getAceptabilidadRiesgo() == null){
+                + "transition: opacity 0.6s; font-weight: bold;"; 
+        if(matrizRiesgos!=null){
+            if(matrizRiesgos.getAceptabilidadRiesgo() == null){
             return style="";
         }
         if(matrizRiesgos.getAceptabilidadRiesgo().equals("ACEPTABLE") ){
@@ -194,32 +184,18 @@ public class UIMatrizRiesgos implements Serializable{
                 style += "color: #ffff66;";
         }if(matrizRiesgos.getAceptabilidadRiesgo().equals("NO ACEPTABLE")){
             style += "color: #ff3333;";
+        }            
         }
+        
         return style;
     }
-    
-    public String getStyleDiligenciado() {
-        RelCargosEstablecimiento rel=(RelCargosEstablecimiento) UtilJSF.getBean("varCargosEstablecimiento");
-        String style = "padding: 10px;width 50%;"
-                + "opacity: 0.83;background-color: #006699;"
-                + "transition: opacity 0.6s; font-weight: bold;";          
-        if(rel.getDiligenciado()==true){
-            style+= "color: #99ff99;";
-        }
-        if(rel.getDiligenciado()==false){
-            style+= "color: #ff6666;";
-        }
-        return style;
-    }
-    
 
     public String subirItemevaluacion() {
         try{  
             Evaluacion ev = (Evaluacion) UtilJSF.getBean("varEvaluacion");      
-            UtilJSF.setBean("evaluacion", ev , UtilJSF.SESSION_SCOPE);
+            UtilJSF.setBean("evaluacion", ev , UtilJSF.SESSION_SCOPE);            
             
-            //
-            this.cargarCargosFuncionesEstablecimiento();            
+            this.cargarMatrizCargoEstablecimiento();
             return ("/matriz/administrar-matriz-cargos-establecimiento.xhtml?faces-redirect=true");
         }catch(Exception e){
         return ("/matriz/matriz-cargos-establecimiento.xhtml?faces-redirect=true");  
@@ -265,27 +241,42 @@ public class UIMatrizRiesgos implements Serializable{
             riesgosList.addAll((Collection<? extends Riesgo>) gestorMatrizRiesgos.cargarListaRiesgos());
             
             categoriaRiesgosList= new ArrayList<>();
-            categoriaRiesgosList.addAll((Collection<? extends CategoriaRiesgo>) gestorMatrizRiesgos.cargarListaCategoriaRiesgos());
-            
+            categoriaRiesgosList.addAll((Collection<? extends CategoriaRiesgo>) gestorMatrizRiesgos.cargarListaCategoriaRiesgos());            
     }
     
     public void cargarExposiciones() throws Exception{
+            
+            if(matrizRiesgos==null){
+            matrizRiesgos = (MatrizRiesgos) UtilJSF.getBean("varRiesgoEstablecimiento");                           
+            }
             gestorMatrizRiesgos= new GestorMatrizRiesgos();
             exposicionList = new ArrayList<>();
             exposicionList.addAll((Collection<? extends Exposicion>) gestorMatrizRiesgos.cargarListaExposiciones(matrizRiesgos.getRiesgo().getCodRiesgo()));
     }
     
-    public void cargarRiesgoPosibles() throws Exception{
-            gestorMatrizRiesgos= new GestorMatrizRiesgos();
-            riesgoPosibleList = new ArrayList<>();
-            riesgoPosibleList.addAll((Collection<? extends RiesgoPosible>) gestorMatrizRiesgos.cargarListaRiesgoPosibles(matrizRiesgos.getCategoriaRiesgo().getCodCategoriaRiesgo()));
+    public void cargarRiesgoPosibles() {
+        try {
+                if(matrizRiesgos.getCategoriaRiesgo().getCodCategoriaRiesgo() != null && matrizRiesgos!=null){  
+                    if(matrizRiesgos.getCategoriaRiesgo().getCodCategoriaRiesgo() !=  matrizRiesgos.getRiesgoPosible().getCodCategoriaRiesgo()){
+                        matrizRiesgos.setRiesgoPosible(new RiesgoPosible());
+                    }
+                gestorMatrizRiesgos= new GestorMatrizRiesgos();
+                riesgoPosibleList = new ArrayList<>();                
+                riesgoPosibleList.addAll((Collection<? extends RiesgoPosible>) gestorMatrizRiesgos.cargarListaRiesgoPosibles(matrizRiesgos.getCategoriaRiesgo().getCodCategoriaRiesgo()));                
+            }
+        } catch (Exception e) {
+        }        
     }
     
     public void cargarFunciones() {
-        try {            
+        try {                 
+            if(matrizRiesgos.getCargos()==null || matrizRiesgos.getCargos().getCodCargo()==null){
+                matrizRiesgos = (MatrizRiesgos) UtilJSF.getBean("varRiesgoEstablecimiento");                           
+            }
             funcionesList = new ArrayList<>();
             gestorMatrizRiesgos = new GestorMatrizRiesgos();
-            this.funcionesList.addAll((Collection<? extends Funciones>) gestorMatrizRiesgos.cargarListaFunciones(matrizRiesgos.getCargos().getCodCargo()));            
+            this.funcionesList.addAll((Collection<? extends Funciones>) gestorMatrizRiesgos.cargarListaFunciones(matrizRiesgos.getCargos().getCodCargo()));                    
+                        
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -311,7 +302,7 @@ public class UIMatrizRiesgos implements Serializable{
             }
             
         } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
+            
         }
     }
     
@@ -377,8 +368,7 @@ public class UIMatrizRiesgos implements Serializable{
             }
             
             
-        } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
+        } catch (Exception ex) {            
         }
     }    
 
@@ -413,14 +403,18 @@ public class UIMatrizRiesgos implements Serializable{
             adjuntosCategorias= new ArrayList<>();
             adjuntosCategorias.addAll(gestorAdjuntosCategoria.cargarListaAdjuntosCategoriapm());            
             
+            
+            if(matrizRiesgos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK()==null){
+                matrizRiesgos = (MatrizRiesgos) UtilJSF.getBean("varRiesgoEstablecimiento");                           
+            }
+            
             if(matrizRiesgos.getAdjuntosCategoria().getCodCategoria() != null){
                 matrizRiesgos.getAdjuntosCategoria().setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(matrizRiesgos.getAdjuntosCategoria().getCodCategoria()));                                                
             }    
             
             if(matrizRiesgos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo()!=null){
                 nom = gestorMatrizRiesgos.cargarNombreAdjunto(ev.getEvaluacionPK().getCodigoEstablecimiento(),  ev.getEvaluacionPK().getCodEvaluacion(), matrizRiesgos.getAdjuntosCategoria().getCodCategoria(), matrizRiesgos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo());                 
-            }
-            
+            }            
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -466,8 +460,8 @@ public class UIMatrizRiesgos implements Serializable{
             }
             
             MatrizRiesgos mr= new MatrizRiesgos(e.getEvaluacionPK().getCodigoEstablecimiento(), matrizRiesgos.getCargos().getCodCargo(), matrizRiesgos.getCodMatriz(), 
-                    matrizRiesgos.getFunciones().getCodFuncion(), matrizRiesgos.getTarea(), matrizRiesgos.isRutinaria(), matrizRiesgos.getRiesgo().getCodRiesgo(), matrizRiesgos.getRiesgoPosible().getCodRiesgoPosible(),
-                    matrizRiesgos.getExposicion().getCodExposicion(), matrizRiesgos.getCategoriaRiesgo().getCodCategoriaRiesgo(), matrizRiesgos.isFuente(), matrizRiesgos.isMedio(), matrizRiesgos.isIndividuo(),
+                    matrizRiesgos.getFunciones().getCodFuncion(), matrizRiesgos.isRutinaria(), matrizRiesgos.getRiesgo().getCodRiesgo(), matrizRiesgos.getRiesgoPosible().getCodRiesgoPosible(),
+                    matrizRiesgos.getExposicion().getCodExposicion(), matrizRiesgos.getCategoriaRiesgo().getCodCategoriaRiesgo(), matrizRiesgos.getFuente(), matrizRiesgos.getMedio(), matrizRiesgos.getIndividuo(),
                     matrizRiesgos.getNivelDeficiencia().getCodNivelDef(), matrizRiesgos.getNivelExposcion().getCodNivelExp(), matrizRiesgos.getNivelConsecuencia().getCodNivelConsec(), matrizRiesgos.getNivelRiesgo(), 
                     matrizRiesgos.getInterpretacionNr(), matrizRiesgos.getAceptabilidadRiesgo(),matrizRiesgos.getNivelProbabilidad(),matrizRiesgos.getInterpretacionProb(), matrizRiesgos.getNumExpuestos(), 
                     matrizRiesgos.getPeorConsecuencia(), matrizRiesgos.isReqLegal(), matrizRiesgos.getMedidasIntervencion().getCodMedida(), matrizRiesgos.getDescripcionMedida(), 
@@ -478,15 +472,16 @@ public class UIMatrizRiesgos implements Serializable{
             gestorMatrizRiesgos.almacenarMatrizRiesgo(mr);
             
             UtilMSG.addSuccessMsg("Matriz Creada correctamente.");            
-            this.cargarCargosFuncionesEstablecimiento();
+            this.cargarMatrizCargoEstablecimiento();
             return ("/matriz/administrar-matriz-cargos-establecimiento.xhtml?faces-redirect=true");        
         } catch (Exception ex) {
-            
+            UtilLog.generarLog(this.getClass(), ex);
+            UtilMSG.addSuccessMsg("Complete los Campos");            
         }       
-        return ("/matriz/administrar-matriz-cargos-establecimiento.xhtml?faces-redirect=true");        
+    return "";
     }
     
-    public String cancelar(){         
+    public String cancelar(){   
         this.cargarCargosFuncionesEstablecimiento();
         return ("/matriz/administrar-matriz-cargos-establecimiento.xhtml?faces-redirect=true");        
     }

@@ -43,8 +43,6 @@ public class MatrizRiesgos implements Serializable {
     private Integer codMatriz;
     @Column(name = "cod_funcion")
     private Integer codFuncion;    
-    @Column(name = "tarea")
-    private String tarea;
     @Column(name = "rutinaria")
     private boolean rutinaria;
     @Column(name = "cod_riesgo")
@@ -56,11 +54,11 @@ public class MatrizRiesgos implements Serializable {
     @Column(name = "cod_categoria_riesgo")
     private Integer codCategoriaRiesgo;
     @Column(name = "fuente")
-    private boolean fuente;
+    private String fuente;
     @Column(name = "medio")
-    private boolean medio;
+    private String medio;
     @Column(name = "individuo")
-    private boolean individuo;
+    private String individuo;
     @Column(name = "cod_nivel_def")
     private Integer codNivelDef;
     @Column(name = "cod_nivel_exp")
@@ -123,12 +121,11 @@ public class MatrizRiesgos implements Serializable {
         return codNivelCons;
     }
 
-    public MatrizRiesgos(Integer codigoEstablecimiento, Integer codCargo, Integer codMatriz, Integer codFuncion, String tarea, boolean rutinaria, Integer codRiesgo, Integer codRiesgoPosible, Integer codExposicion, Integer codCategoriaRiesgo, boolean fuente, boolean medio, boolean individuo, Integer codNivelDef, Integer codNivelExp, Integer codNivelCons, Integer nivelRiesgo, String interpretacionNr, String aceptabilidadRiesgo, Integer nivelProbabilidad, String interpretacionProb, Integer numExpuestos, String peorConsecuencia, boolean reqLegal, Integer codMedida, String descripcionMedida, String descripcionMedida2, Integer codElemento, Integer codCategoria, Integer codCategoria2, Integer codCategoriaTipo, Integer codCategoriaTipo2, String observaciones) {
+    public MatrizRiesgos(Integer codigoEstablecimiento, Integer codCargo, Integer codMatriz, Integer codFuncion, boolean rutinaria, Integer codRiesgo, Integer codRiesgoPosible, Integer codExposicion, Integer codCategoriaRiesgo, String fuente, String medio, String individuo, Integer codNivelDef, Integer codNivelExp, Integer codNivelCons, Integer nivelRiesgo, String interpretacionNr, String aceptabilidadRiesgo, Integer nivelProbabilidad, String interpretacionProb, Integer numExpuestos, String peorConsecuencia, boolean reqLegal, Integer codMedida, String descripcionMedida, String descripcionMedida2, Integer codElemento, Integer codCategoria, Integer codCategoria2, Integer codCategoriaTipo, Integer codCategoriaTipo2, String observaciones) {
         this.codigoEstablecimiento = codigoEstablecimiento;
         this.codCargo = codCargo;
         this.codMatriz = codMatriz;
         this.codFuncion = codFuncion;
-        this.tarea = tarea;
         this.rutinaria = rutinaria;
         this.codRiesgo = codRiesgo;
         this.codRiesgoPosible = codRiesgoPosible;
@@ -157,6 +154,24 @@ public class MatrizRiesgos implements Serializable {
         this.codCategoriaTipo = codCategoriaTipo;
         this.codCategoriaTipo2 = codCategoriaTipo2;
         this.observaciones = observaciones;
+    }
+
+
+    public String getStyleAceptabilidadfila() {
+        String style = "padding: 8px;width: 95%;"
+                + "opacity: 0.83;background-color: #539aa0;"
+                + "transition: opacity 0.6s; font-weight: bold;";          
+        if( aceptabilidadRiesgo == null){
+            return style="";
+        }
+        if(aceptabilidadRiesgo.equals("ACEPTABLE") ){
+            style += "color: #33ff33;";
+        }if(aceptabilidadRiesgo.equals("ACEPTABLE CON CONTROL")){
+                style += "color: #ffff66;";
+        }if(aceptabilidadRiesgo.equals("NO ACEPTABLE")){
+            style += "color: #ff3333;";
+        }
+        return style;
     }
     
     
@@ -440,27 +455,27 @@ public class MatrizRiesgos implements Serializable {
         this.nivelDeficiencia = nivelDeficiencia;
     }
 
-    public boolean isFuente() {
+    public String getFuente() {
         return fuente;
     }
 
-    public void setFuente(boolean fuente) {
+    public void setFuente(String fuente) {
         this.fuente = fuente;
     }
 
-    public boolean isMedio() {
+    public String getMedio() {
         return medio;
     }
 
-    public void setMedio(boolean medio) {
+    public void setMedio(String medio) {
         this.medio = medio;
     }
 
-    public boolean isIndividuo() {
+    public String getIndividuo() {
         return individuo;
     }
 
-    public void setIndividuo(boolean individuo) {
+    public void setIndividuo(String individuo) {
         this.individuo = individuo;
     }
 
@@ -488,13 +503,6 @@ public class MatrizRiesgos implements Serializable {
         this.codMatriz = codMatriz;
     }
 
-    public String getTarea() {
-        return tarea;
-    }
-
-    public void setTarea(String tarea) {
-        this.tarea = tarea;
-    }
 
     public boolean isRutinaria() {
         return rutinaria;

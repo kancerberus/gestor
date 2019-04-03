@@ -124,8 +124,8 @@ public class EstablecimientoDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO rel_cargos_establecimiento("
-                    + " codigo_establecimiento, cod_cargo, cod_funcion, diligenciado)"
-                    + " VALUES (" + establecimiento.getCodigoEstablecimiento() + ", '" + cargos.getCodCargo() + "', '"+listaFunciones.get(i).getCodFuncion()+"', '"+false+"')"
+                    + " codigo_establecimiento, cod_cargo, cod_funcion)"
+                    + " VALUES (" + establecimiento.getCodigoEstablecimiento() + ", '" + cargos.getCodCargo() + "', '"+listaFunciones.get(i).getCodFuncion()+"')"
             );
             consulta.actualizar(sql);
             }
@@ -254,7 +254,7 @@ public class EstablecimientoDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT cod_cargo, cod_funcion, nombre , diligenciado"                    
+                    "SELECT cod_cargo, cod_funcion, nombre "                    
                     + " FROM funciones fun"
                     + " WHERE cod_cargo='"+codCargo+"'"                                
                     + " ORDER BY cod_funcion"
@@ -386,7 +386,7 @@ public class EstablecimientoDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO funciones("
-                    + " cod_cargo, cod_funcion, nombre, diligenciado )"
+                    + " cod_cargo, cod_funcion, nombre )"
                     + " VALUES (" +funcion.getCodCargo()+","+funcion.getCodFuncion()+",'"+funcion.getNombre()+"')"
                     + " ON CONFLICT (cod_cargo, cod_funcion) DO UPDATE"
                     + " SET nombre=EXCLUDED.nombre "                    

@@ -6,22 +6,40 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 template="/template.xhtml">
     <ui:define name="content">
-
-
-        <h:form enctype="multipart/form-data" id="formAdminCargosMatrizRiesgos" style="font-size: small;">
-            <h2>MATRICES DE RIESGO <p:outputLabel style="font-family: bolder"  value="#{evaluacion.establecimiento.nombre}"/></h2>
-            <h:panelGroup rendered="#{uiPlantrabajo.filtroActivo}">                
-            </h:panelGroup>
-            <p:dataTable  value="#{uiMatrizRiesgos.cargosActividadesEstablecimientoList}" var="varCargosEstablecimiento" emptyMessage="No hay Matrices generados."
+        <h:form enctype="multipart/form-data"  id="formAdminCargosMatrizRiesgos" style="font-size: small;">
+            <h2>MATRIZ DE RIESGOS </h2>
+            <h3>EMPRESA: <p:outputLabel style="font-family: bolder"  value="#{evaluacion.establecimiento.nombre}"/></h3>
+            <h:panelGroup rendered="#{uiPlantrabajo.filtroActivo}">
+                <p:separator style="height: 3px"/>
+                <p:panelGrid columns="3" styleClass="letra-xx-small-centro" style="font-size: xx-small">                               
+                </p:panelGrid>
+                <p:commandButton icon="ui-icon-plus" value="Crear Riesgo" style="margin: auto auto;width: 210px;height: 30px; border-radius: 10px;"
+                                 action="#{uiMatrizRiesgos.crearMatrizNueva()}" update="formAdminCargosMatrizRiesgos"/>
+                <p:separator style="height: 3px"/>
+            </h:panelGroup> 
+            <p:dataTable  value="#{uiMatrizRiesgos.matricesRiesgoEstablecimientoList}" var="varRiesgoEstablecimiento" emptyMessage="No hay Riesgos generados."
                               widgetVar="varMatrizCargosTable" 
                               rowStyleClass="letra-xx-small-centro" styleClass="letra-xx-small-centro"
                               rowHover="true">
                     <p:columnGroup type="header">
                         <p:row>  
                             <p:column  headerText="Opciones" />
-                            <p:column headerText="Cargo" filterBy="#{varCargosEstablecimiento.cargos.nombre}"/>
-                            <p:column headerText="Actividad" filterBy="#{varCargosEstablecimiento.funciones.nombre}"/>                            
-                            <p:column headerText="Diligenciado" />                            
+                            <p:column headerText="Cargo" filterBy="#{varRiesgoEstablecimiento.cargos.nombre}"/>
+                            <p:column headerText="Actividad" filterBy="#{varRiesgoEstablecimiento.funciones.nombre}"/>                            
+                            <p:column headerText="Riesgo" filterBy="#{varRiesgoEstablecimiento.riesgo.nombre}"/> 
+                            <p:column headerText="Exposicion" filterBy="#{varRiesgoEstablecimiento.exposicion.nombre}"/> 
+                            <p:column headerText="Categoria Riesgo" filterBy="#{varRiesgoEstablecimiento.categoriaRiesgo.nombre}"/> 
+                            <p:column headerText="Aceptabilidad Del Riesgo" filterBy="#{varRiesgoEstablecimiento.aceptabilidadRiesgo}"
+                                    filterMatchMode="equals">
+                                  <f:facet name="filter">
+                                      <p:selectOneButton onchange="PF('varMatrizCargosTable').filter()"
+                                                     style="font-size: 8px;">
+                                          <f:selectItem itemLabel="ACEPTABLE" itemValue="ACEPTABLE"  />
+                                          <f:selectItem itemLabel="ACEPTABLE CON CONTROL"  itemValue="ACEPTABLE CON CONTROL"/>
+                                          <f:selectItem itemLabel="NO ACEPTABLE" itemValue="NO ACEPTABLE" />
+                                      </p:selectOneButton>
+                                  </f:facet>                                
+                            </p:column>
                         </p:row>
                     </p:columnGroup>
 
@@ -32,17 +50,26 @@
                         </p:commandButton>
                     </p:column>
                     <p:column>
-                        <h:outputText value="#{varCargosEstablecimiento.cargos.nombre}"/>
+                        <h:outputText value="#{varRiesgoEstablecimiento.cargos.nombre}"/>
                     </p:column> 
                     <p:column>
-                        <h:outputText value="#{varCargosEstablecimiento.funciones.nombre}"/>
+                        <h:outputText value="#{varRiesgoEstablecimiento.funciones.nombre}"/>
                     </p:column> 
                     <p:column>
-                        <h:outputText value="#{varCargosEstablecimiento.diligenciado ? 'SI' : 'NO'}" style="#{uiMatrizRiesgos.styleDiligenciado}"/>
+                        <h:outputText value="#{varRiesgoEstablecimiento.riesgo.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varRiesgoEstablecimiento.exposicion.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varRiesgoEstablecimiento.categoriaRiesgo.nombre}"/>
+                    </p:column>                
+                    <p:column>
+                        <div style="#{varRiesgoEstablecimiento.styleAceptabilidadfila}" >
+                            <strong>#{varRiesgoEstablecimiento.aceptabilidadRiesgo eq 'ACEPTABLE'?'ACEPTABLE':varRiesgoEstablecimiento.aceptabilidadRiesgo eq 'ACEPTABLE CON CONTROL'?'ACEPTABLE CON CONTROL':varRiesgoEstablecimiento.aceptabilidadRiesgo eq 'NO ACEPTABLE'?'NO ACEPTABLE':''}</strong>
+                        </div>
                     </p:column> 
                 </p:dataTable>
-
-
             <p:separator/>
 
             <style type="text/css">

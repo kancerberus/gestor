@@ -24,9 +24,7 @@ public class RelCargosEstablecimiento implements Serializable {
     @Column(name = "cod_cargo")
     private Integer codCargo;
     @Column(name = "cod_funcion")
-    private Integer codFuncion;
-    @Column(name = "diligenciado")
-    private Boolean diligenciado;
+    private Integer codFuncion;    
     
     private Funciones funciones = new Funciones();
     private Cargos cargos= new Cargos();
@@ -34,11 +32,10 @@ public class RelCargosEstablecimiento implements Serializable {
     public RelCargosEstablecimiento() {
     }
 
-    public RelCargosEstablecimiento(Integer codigoEstablecimiento, Integer codCargo, Integer codFuncion, Boolean diligenciado) {
+    public RelCargosEstablecimiento(Integer codigoEstablecimiento, Integer codCargo, Integer codFuncion) {
         this.codigoEstablecimiento = codigoEstablecimiento;
         this.codCargo = codCargo;
-        this.codFuncion = codFuncion;
-        this.diligenciado = diligenciado;
+        this.codFuncion = codFuncion;        
     }
 
     public Funciones getFunciones() {
@@ -80,16 +77,6 @@ public class RelCargosEstablecimiento implements Serializable {
     public void setCodFuncion(Integer codFuncion) {
         this.codFuncion = codFuncion;
     }
-
-    public Boolean getDiligenciado() {
-        return diligenciado;
-    }
-
-    public void setDiligenciado(Boolean diligenciado) {
-        this.diligenciado = diligenciado;
-    }
-
-    
     
     @Override
     public int hashCode() {

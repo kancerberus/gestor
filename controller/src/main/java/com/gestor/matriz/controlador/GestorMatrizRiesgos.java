@@ -153,8 +153,7 @@ public class GestorMatrizRiesgos extends Gestor implements Serializable{
             this.abrirConexion();
             this.inicioTransaccion();
             MatrizRiesgosDAO matrizRiesgosDAO= new MatrizRiesgosDAO(conexion);
-            matrizRiesgosDAO.insertarMatrizRiesgos(matrizRiesgos);
-            matrizRiesgosDAO.updiligenciado(matrizRiesgos);
+            matrizRiesgosDAO.insertarMatrizRiesgos(matrizRiesgos);            
             this.finTransaccion();
         } finally {
             this.cerrarConexion();
