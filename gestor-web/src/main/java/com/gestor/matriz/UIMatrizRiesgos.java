@@ -7,6 +7,7 @@ package com.gestor.matriz;
 
 import com.gestor.controller.Propiedades;
 import com.gestor.entity.App;
+import com.gestor.entity.Dialogo;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
@@ -58,6 +59,7 @@ public class UIMatrizRiesgos implements Serializable{
     private boolean cancelarActivo = true;
     private boolean eliminarActivo = false;
     private boolean volverActivo = false;
+    private String mrPdf="";
     
     private StreamedContent fileDownloadMatriz;
     private StreamedContent fileDownloadMatriz2;
@@ -524,6 +526,34 @@ public class UIMatrizRiesgos implements Serializable{
             UtilLog.generarLog(this.getClass(), ex);
         }
         return fileDownloadMatriz2;
+    }
+    
+    public void dialogoGenerarpdf() {
+        try {            
+            Dialogo dialogo = new Dialogo("dialogos/generarPDF.xhtml", "Generar Matriz de Riesgos", "clip", "30%", Dialogo.EFECTO);
+            UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
+            UtilJSF.execute("PF('dialog').show();");           
+            this.cargarCargosEstablecimiento();
+            UtilJSF.setBean("establecimiento", establecimiento, UtilJSF.APPLICATION_SCOPE);            
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    
+    public void matrizRiesgosPDF(){
+        Integer codEstablecimiento=evaluacion.getEstablecimiento().getCodigoEstablecimiento();
+        Integer codCargo=matrizRiesgos.getCargos().getCodCargo();
+        mrPdf=("window.open('.././exportar?nomReporte=matrizRiesgos&parametros=codigo_establecimiento,cod_cargo&valores=" + codEstablecimiento +","+codCargo+ "&tipos=I,I');");        
+                
+    }
+
+    public String getMrPdf() {
+        return mrPdf;
+    }
+
+    public void setMrPdf(String mrPdf) {
+        this.mrPdf = mrPdf;
     }
 
     public List<RelCargosEstablecimiento> getCargosActividadesEstablecimientoList() {

@@ -179,9 +179,9 @@
                     </p:selectOneRadio>
                 </p:panelGrid>                    
                 <p:panelGrid style="margin-left: 65%;margin-top: -10%" columns="1">
-                    <h:outputText style="font-weight: bold;" value="Equipos De Proteccion"/>                                        
-                    <p:selectOneMenu value="#{uiMatrizRiesgos.matrizRiesgos.elementoProteccion}" converter="convertidorGenerico"
-                        style="text-align:center; width: 150px">                          
+                    <h:outputText style="font-weight: bold;" value="Elementos De Proteccion"/>                                        
+                    <p:selectOneMenu value="#{uiMatrizRiesgos.matrizRiesgos.elementoProteccion}" converter="convertidorGenerico" effect="fade" 
+                        style="text-align:center; width: 150px" filter="true" filterMatchMode="startsWith">                          
                         <f:selectItem itemLabel="Seleccionar..." itemValue="" /> 
                         <f:selectItems value="#{uiMatrizRiesgos.elementosProteccionList}" var="ep" itemLabel="#{ep.nombre}" itemValue="#{ep}"/>                                                                                                                                                                                                                                               
                     </p:selectOneMenu>                    

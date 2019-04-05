@@ -24,7 +24,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.util.JRLoader;
-
+import org.codehaus.groovy.control.CompilationFailedException;
 /**
  *
  * @author Andres
@@ -42,7 +42,7 @@ public class UIExportar extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, CompilationFailedException{
         try {
             String nomReporte = request.getParameter("nomReporte");                        
             String parametros = request.getParameter("parametros");
@@ -77,7 +77,7 @@ public class UIExportar extends HttpServlet {
             //mapa.put("SUBREPORT_DIR", sc.getRealPath(nomReporte + ".jasper").replace(nomReporte.split("/")[nomReporte.split("/").length - 1] + ".jasper", ""));
             String controlador = "org.postgresql.Driver";
             Class.forName(controlador).newInstance();
-            String url = "jdbc:postgresql://192.168.1.9:5432/gestor";
+            String url = "jdbc:postgresql://localhost:5432/gestorDEV";
             String usuario = "postgres";
             String clave = "1234";
             Connection conexion = java.sql.DriverManager.getConnection(url, usuario, clave);
@@ -99,7 +99,7 @@ public class UIExportar extends HttpServlet {
             out.flush();
             out.close();
 
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException | JRException | ParseException ex) {
+        } catch (ClassNotFoundException | InstantiationException | CompilationFailedException | IllegalAccessException | SQLException | JRException | ParseException ex) {
             Logger.getLogger(UIExportar.class.getName()).log(Level.SEVERE, null, ex);
         }
 

@@ -278,8 +278,6 @@ public class UIEstablecimiento implements Serializable {
             establecimiento.setListaCargosEstablecimientos(this.cargarCargosEstablecimientosAsignados());
             
             gestorEstablecimiento.almacenarCargosEstablecimiento(establecimiento);
-            
-            
             UtilMSG.addSuccessMsg("Cargos modificados correctamente");
         } catch (Exception ex) {
             if (UtilLog.causaControlada(ex)) {
