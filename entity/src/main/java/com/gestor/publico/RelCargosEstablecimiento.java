@@ -22,9 +22,7 @@ public class RelCargosEstablecimiento implements Serializable {
     private Integer codigoEstablecimiento;
     @Basic(optional = false)
     @Column(name = "cod_cargo")
-    private Integer codCargo;
-    @Column(name = "cod_funcion")
-    private Integer codFuncion;    
+    private Integer codCargo;        
     
     private Funciones funciones = new Funciones();
     private Cargos cargos= new Cargos();
@@ -32,10 +30,9 @@ public class RelCargosEstablecimiento implements Serializable {
     public RelCargosEstablecimiento() {
     }
 
-    public RelCargosEstablecimiento(Integer codigoEstablecimiento, Integer codCargo, Integer codFuncion) {
+    public RelCargosEstablecimiento(Integer codigoEstablecimiento, Integer codCargo) {
         this.codigoEstablecimiento = codigoEstablecimiento;
-        this.codCargo = codCargo;
-        this.codFuncion = codFuncion;        
+        this.codCargo = codCargo;               
     }
 
     public Funciones getFunciones() {
@@ -68,14 +65,6 @@ public class RelCargosEstablecimiento implements Serializable {
 
     public void setCodCargo(Integer codCargo) {
         this.codCargo = codCargo;
-    }
-
-    public Integer getCodFuncion() {
-        return codFuncion;
-    }
-
-    public void setCodFuncion(Integer codFuncion) {
-        this.codFuncion = codFuncion;
     }
     
     @Override

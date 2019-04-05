@@ -387,7 +387,8 @@ public class MatrizRiesgosDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_elemento, nombre "                    
-                    + " FROM matriz.elementos_proteccion "                                                     
+                    + " FROM matriz.elementos_proteccion"
+                    + " ORDER BY nombre ASC"                                                     
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
@@ -417,12 +418,12 @@ public class MatrizRiesgosDAO {
                     " SELECT codigo_establecimiento, car.cod_cargo codcar, car.nombre nomcar, f.cod_funcion codf, f.nombre nomf " +
                         " FROM public.rel_cargos_establecimiento rel" +
                         " JOIN cargos car using (cod_cargo) " +
-                        " JOIN funciones f using (cod_cargo, cod_funcion) " +
+                        " JOIN funciones f using (cod_cargo) " +
                         " WHERE rel.codigo_establecimiento= '"+codigoEstablecimiento+"'"                                                     
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
-                RelCargosEstablecimiento rel= new RelCargosEstablecimiento(rs.getInt("codigo_establecimiento"), rs.getInt("codcar"), rs.getInt("codf"));
+                RelCargosEstablecimiento rel= new RelCargosEstablecimiento(rs.getInt("codigo_establecimiento"), rs.getInt("codcar"));
                 rel.setCargos(new Cargos(rs.getInt("codcar"), rs.getString("nomcar")));
                 rel.setFunciones(new Funciones(rs.getInt("codcar"), rs.getInt("codf"), rs.getString("nomf")));                
                 listaCargosFuncionesEstablecimiento.add(rel);                          

@@ -107,7 +107,7 @@ public class EstablecimientoDAO {
         List<Funciones> listaFunciones = new ArrayList<>();        
         try {
                         
-            consulta= new Consulta(conexion);
+            /*consulta= new Consulta(conexion);
             StringBuilder sql1= new StringBuilder(
                     "SELECT cod_funcion, cod_cargo, nombre " +
                         "FROM public.funciones " +
@@ -120,15 +120,15 @@ public class EstablecimientoDAO {
                 listaFunciones.add(fun);                
             }                       
             
-            for(int i=0;i<listaFunciones.size();i++){
+            for(int i=0;i<listaFunciones.size();i++){*/
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO rel_cargos_establecimiento("
-                    + " codigo_establecimiento, cod_cargo, cod_funcion)"
-                    + " VALUES (" + establecimiento.getCodigoEstablecimiento() + ", '" + cargos.getCodCargo() + "', '"+listaFunciones.get(i).getCodFuncion()+"')"
+                    + " codigo_establecimiento, cod_cargo)"
+                    + " VALUES (" + establecimiento.getCodigoEstablecimiento() + ", '" + cargos.getCodCargo() + "')"
             );
             consulta.actualizar(sql);
-            }
+            //}
             
         } finally {
             if (consulta != null) {
@@ -226,7 +226,7 @@ public class EstablecimientoDAO {
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_cargo, nombre "                    
                     + " FROM cargos car"                    
-                    + " ORDER BY cod_cargo"
+                    + " ORDER BY nombre ASC"
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
@@ -318,6 +318,7 @@ public class EstablecimientoDAO {
                     + " FROM rel_cargos_establecimiento"
                     + " JOIN cargos C USING (cod_cargo)"
                     + " WHERE codigo_establecimiento='" + codEstablecimiento + "'"
+                    + " GROUP BY C.cod_cargo"
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
