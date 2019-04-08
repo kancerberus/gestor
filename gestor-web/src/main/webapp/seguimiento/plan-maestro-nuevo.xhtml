@@ -23,8 +23,7 @@
                                     <p:commandLink action="#{uiPlanMaestro.seleccionarEstablecimiento()}" title="Seleccionar Empresa"
                                                update="formPlanMaestroNuevo">
                                         <h:panelGroup rendered="#{not empty varEstablecimientoPm.logo}">
-                                            <img src="data:image/jpg;base64,#{varEstablecimientoPm.logo}" />
-                                        
+                                            <img src="data:image/jpg;base64,#{varEstablecimientoPm.logo}"/>                                        
                                     </h:panelGroup>
                                     <p:column>                        
                                         <p:graphicImage value="#{varEstablecimientoPm.logo}" cache="false" width="50"/>
