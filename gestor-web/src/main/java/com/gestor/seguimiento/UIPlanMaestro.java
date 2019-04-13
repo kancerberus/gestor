@@ -115,8 +115,10 @@ public class UIPlanMaestro {
             pm.setPlanTituloList((List<PlanTitulo>) gestorPlanTitulo.cargarPlanTituloList(pm.getPlanMaestroPK().getCodigoEstablecimiento(), pm.getPlanMaestroPK().getCodEvaluacion()));
             UtilJSF.setBean("planMaestro", pm, UtilJSF.SESSION_SCOPE);
             if(s.getUsuarios().getRoles().getCodigoRol()==4){
-            return ("/seguimiento/plan-maestro_1.xhtml?faces-redirect=true");
+                this.procesarPlanMaestro();
+            return ("/seguimiento/plan-maestro_1.xhtml?faces-redirect=true");            
             }else{
+                this.procesarPlanMaestro();
                 return ("/seguimiento/plan-maestro.xhtml?faces-redirect=true");
             }
         } catch (Exception e) {
@@ -136,10 +138,19 @@ public class UIPlanMaestro {
 
     public String procesarPlanMaestro() {
         try {
+            
+            
             GestorPlanMaestro gestorPlanMaestro = new GestorPlanMaestro();
             GestorGeneral gestorGeneral = new GestorGeneral();
-            GestorPlanTitulo gestorPlanTitulo = new GestorPlanTitulo();
-            PlanMaestro pm = (PlanMaestro) new PlanMaestro(new PlanMaestroPK(
+            GestorPlanTitulo gestorPlanTitulo = new GestorPlanTitulo();           
+            
+            if(evaluacion.getEvaluacionPK()==null){
+                PlanMaestro pm=(PlanMaestro) UtilJSF.getBean("varPlanMaestro");
+                evaluacion.setEvaluacionPK(pm.getEvaluacion().getEvaluacionPK());                
+            }
+            
+                
+            PlanMaestro pm = (PlanMaestro) new PlanMaestro(new PlanMaestroPK(                    
                     evaluacion.getEvaluacionPK().getCodEvaluacion(),
                     evaluacion.getEvaluacionPK().getCodigoEstablecimiento(),
                     null
