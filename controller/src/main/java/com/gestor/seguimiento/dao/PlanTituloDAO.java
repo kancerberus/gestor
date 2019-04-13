@@ -7,7 +7,6 @@ package com.gestor.seguimiento.dao;
 
 import com.gestor.publico.Establecimiento;
 import com.gestor.seguimiento.PlanTitulo;
-import com.gestor.seguimiento.PlanTituloTexto;
 import com.gestor.seguimiento.PlanTituloPK;
 import conexion.Consulta;
 import java.sql.Connection;
@@ -75,12 +74,7 @@ public class PlanTituloDAO {
                 consulta.desconectar();
             }
         }
-    }
-    
-    
-    
-    
-    
+    }    
 
     public Collection<? extends PlanTitulo> cargarPlanTituloList(int codigoEstablecimiento, Long codEvaluacion) throws SQLException {
         ResultSet rs = null;

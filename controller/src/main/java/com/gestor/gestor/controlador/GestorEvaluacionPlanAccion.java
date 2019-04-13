@@ -50,7 +50,20 @@ public class GestorEvaluacionPlanAccion extends Gestor {
             evaluacionPlanAccionDAO.upsertEvaluacionPlanAccion(ep);
             evaluacionPlanAccionDAO.insertaEvaluacionPlanAccionDetalle(ep.getEvaluacionPlanAccionDetalle());
             evaluacionPlanAccionDAO.insertaEvaluacionPlanAccionDetalleNotas(ep.getEvaluacionPlanAccionDetalle().getEvaluacionPlanAccionDetalleNotas());
-
+            this.finTransaccion();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public void procesarTareaRiesgo(EvaluacionPlanAccion ep) throws Exception {
+        try {
+            this.abrirConexion();
+            this.inicioTransaccion();
+            EvaluacionPlanAccionDAO evaluacionPlanAccionDAO = new EvaluacionPlanAccionDAO(conexion);
+            evaluacionPlanAccionDAO.upsertEvaluacionPlanAccion(ep);
+            evaluacionPlanAccionDAO.insertaEvaluacionPlanAccionDetalle(ep.getEvaluacionPlanAccionDetalle());
+            evaluacionPlanAccionDAO.insertaEvaluacionPlanAccionDetalleNotas(ep.getEvaluacionPlanAccionDetalle().getEvaluacionPlanAccionDetalleNotas());
             this.finTransaccion();
         } finally {
             this.cerrarConexion();
@@ -62,6 +75,16 @@ public class GestorEvaluacionPlanAccion extends Gestor {
             this.abrirConexion();
             EvaluacionPlanAccionDAO evaluacionPlanAccionDAO = new EvaluacionPlanAccionDAO(conexion);
             return evaluacionPlanAccionDAO.cargarListaEvaluacionPlanAccion(codEvaluacion, codigoEstablecimiento, codCiclo, codSeccion, codDetalle, codItem);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends EvaluacionPlanAccionDetalle> cargarListaMatrizTareaRiesgo(int codigoEstablecimiento, int codMatriz) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionPlanAccionDAO evaluacionPlanAccionDAO = new EvaluacionPlanAccionDAO(conexion);
+            return evaluacionPlanAccionDAO.cargarListaMatrizTareaRiesgo(codigoEstablecimiento, codMatriz);
         } finally {
             this.cerrarConexion();
         }
@@ -92,6 +115,16 @@ public class GestorEvaluacionPlanAccion extends Gestor {
             this.abrirConexion();
             EvaluacionPlanAccionDAO evaluacionPlanAccionDAO = new EvaluacionPlanAccionDAO(conexion);
             evaluacionPlanAccionDAO.actualizarEvaluacionPlanAccionDetalle(epd);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public void actualizarEvaluacionPlanAccionDetalleRiesgoMatriz(EvaluacionPlanAccionDetalle epd) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionPlanAccionDAO evaluacionPlanAccionDAO = new EvaluacionPlanAccionDAO(conexion);
+            evaluacionPlanAccionDAO.actualizarEvaluacionPlanAccionDetalleRiesgoMatriz(epd);
         } finally {
             this.cerrarConexion();
         }

@@ -13,10 +13,13 @@ import conexion.Consulta;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import javax.print.attribute.standard.DateTimeAtCompleted;
 
 /**
  *
@@ -63,6 +66,17 @@ public class EvaluacionResumenDAO {
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
+            StringBuilder sql1=new StringBuilder(
+                    "SELECT MAX(date_trunc('seconds', fecha_registro::TIMESTAMP)) as fecha_reg " +
+                    "FROM gestor.evaluacion_resumen where cod_evaluacion = '"+codEvaluacion+"' and codigo_establecimiento='"+codigoEstablecimiento+"'"
+            );
+            rs=consulta.ejecutar(sql1);
+            Date fulreg=null;            
+            
+            while(rs.next()){
+                fulreg=rs.getTimestamp("fecha_reg");                      
+            }            
+            consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_evaluacion, codigo_establecimiento, cod_resumen, documento_usuario,"
                     + " cod_ciclo, ciclo, numeral, ciclo_calificacion, seccion, seccion_peso,"
@@ -70,8 +84,10 @@ public class EvaluacionResumenDAO {
                     + " detalle_orden, items, items_detalle, items_peso, items_orden,"
                     + " cod_puntaje, califica, fecha_registro"
                     + " FROM gestor.evaluacion_resumen"
-                    + " WHERE cod_evaluacion=" + codEvaluacion + " AND codigo_establecimiento=" + codigoEstablecimiento
-                    + " AND fecha_registro::DATE=" + UtilFecha.formatoFecha(fechaResumen, null, UtilFecha.PATRON_FECHA_YYYYMMDD, UtilFecha.CARACTER_COMILLA)
+                    + " WHERE cod_evaluacion = '"+codEvaluacion+"' and codigo_establecimiento='"+codigoEstablecimiento+"' and fecha_registro::TIMESTAMP >= '"+fulreg+"' " 
+                    + " GROUP BY cod_evaluacion, codigo_establecimiento, fecha_registro, cod_resumen, documento_usuario, " 
+                    + " cod_ciclo, ciclo, numeral, ciclo_calificacion, seccion, seccion_peso, seccion_orden, seccion_calificacion, detalle, detalle_peso, detalle_calificacion, " 
+                    + " detalle_orden, items, items_detalle, items_peso, items_orden, cod_puntaje, califica, numeral "
                     + " ORDER BY numeral"
             );
             rs = consulta.ejecutar(sql);

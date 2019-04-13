@@ -79,8 +79,8 @@ public class EvaluacionPlanAccionDAO {
         }
     }
 
-    public void insertaEvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetalle epd) throws SQLException {
-
+    public void insertaEvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetalle epd) throws SQLException {        
+        
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
@@ -90,23 +90,103 @@ public class EvaluacionPlanAccionDAO {
                     + " cod_ciclo, cod_seccion, cod_detalle, cod_item, nombre, descripcion,"
                     + " estado, documento_usuario, fecha_registro, cedula, fecha_plazo,"
                     + " cod_fuente_hallazgo, cod_clase_hallazgo, cod_tipo_accion, cod_motivo_correccion, descripcion_hallazgo, "
-                    + " observaciones, cod_centrotrabajo, registro, eficacia)"
+                    + " observaciones, cod_centrotrabajo, registro, eficacia, cod_tipo_plan_accion, cod_plan_accion_detalle)"
                     + " VALUES (" + epd.getEvaluacionPlanAccionDetallePK().getCodEvaluacion() + ", " + epd.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento()
                     + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlan()
-                    + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle() + ", '" + epd.getCodCiclo() + "', " + epd.getCodSeccion() + ", " + epd.getCodDetalle()
+                    + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle() + ",null, " + epd.getCodSeccion() + ", " + epd.getCodDetalle()
                     + " ," + epd.getCodItem() + ", '" + epd.getNombre() + "', '" + epd.getDescripcion() + "', '" + epd.getEstado() + "','" + epd.getDocumentoUsuario()+"', " 
                     + " NOW(), '" + epd.getResponsable().getCedula() + "','" + epd.getFechaPlazo() + "', "+epd.getFuentehallazgo().getCodFuentehallazgo()+", "+epd.getClasehallazgo().getCodClasehallazgo()
                     + " ," + epd.getTipoaccion().getCodTipoaccion()+", "+epd.getMotivocorreccion().getCodMotivocorreccion()+" "
-                    + ",'" + epd.getDescripcionhallazgo()+"','"+epd.getObservaciones()+"', "+epd.getCentrotrabajo().getCodCentrotrabajo()+",null, null )" 
+                    + ",'" + epd.getDescripcionhallazgo()+"','"+epd.getObservaciones()+"', 1,null, null,'2', '"+epd.getMatrizRiesgos().getCodRiesgoMatriz()+"' )" 
             );            
             consulta.actualizar(sql);
+            
+            
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql2 = new StringBuilder(
+                    "INSERT INTO rel_tipo_plan_accion_evaluacion_plan_accion_detalle("
+                    + " codigo_establecimiento, cod_tipo_plan_accion, cod_plan_detalle, cod_plan_accion_detalle)"
+                    + " VALUES (" + epd.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento()+" ,'2', "
+                    + " " + epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle() + ","+ epd.getMatrizRiesgos().getCodRiesgoMatriz() + ")" 
+            );            
+            consulta.actualizar(sql2);
+            
         } finally {
             if (consulta != null) {
                 consulta.desconectar();
             }
         }
     }
+    
+    
+            
+    public Collection<? extends EvaluacionPlanAccionDetalle> cargarListaMatrizTareaRiesgo( int codigoEstablecimiento, int codMatriz) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT cod_evaluacion, EPAD.codigo_establecimiento, EPAD.cod_plan, EPAD.cod_plan_detalle,"
+                    + " cod_ciclo, cod_seccion, cod_detalle, cod_item, EPAD.nombre, descripcion,"
+                    + " EPAD.estado, EPAD.fecha_registro, EPAD.fecha_plazo, EPAD.fecha_actualiza,"
+                    + " EPAD.descripcion_hallazgo, EPAD.observaciones, EPAD.registro, EPAD.eficacia, "
+                    + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario,"
+                    + " R.cedula r_cedula, R.nombres r_nombres, R.apellidos r_apellidos, R.telefono r_telefono, R.correo r_correo, R.estado r_estado, R.codigo_establecimiento r_codigo_establecimiento,"                                                         
+                    + " fh.cod_fuente_hallazgo cod_fh, fh.nombre nom_fh,"
+                    + " ch.cod_clase_hallazgo cod_ch, ch.nombre nom_ch,"
+                    + " ta.cod_tipo_accion cod_ta, ta.nombre nom_ta,"
+                    + " mc.cod_motivo_correccion cod_mc, mc.nombre nom_mc,"
+                    + " ct.cod_centrotrabajo cod_ct, ct.nombre nom_ct"
+                    + " FROM gestor.evaluacion_plan_accion_detalle EPAD"
+                    + " JOIN rel_tipo_plan_accion_evaluacion_plan_accion_detalle reltpa USING(cod_tipo_plan_accion)"
+                    + " JOIN matriz.matriz_riesgos mt on(mt.cod_riesgo_matriz=reltpa.cod_plan_accion_detalle)"                            
+                    + " JOIN public.usuarios U USING (documento_usuario)"
+                    + " JOIN gestor.fuente_hallazgo fh USING (cod_fuente_hallazgo)"                                    
+                    + " JOIN gestor.clase_hallazgo ch USING (cod_clase_hallazgo)"                            
+                    + " JOIN gestor.tipo_accion ta USING (cod_tipo_accion)"
+                    + " JOIN gestor.motivo_correccion mc USING (cod_motivo_correccion)"
+                    + " JOIN public.centro_trabajo ct on (ct.cod_centrotrabajo=EPAD.cod_centrotrabajo and ct.codigo_establecimiento=EPAD.codigo_establecimiento)"
+                    + " JOIN public.responsable R USING (cedula)"
+                    + " WHERE EPAD.cod_plan_accion_detalle='"+codMatriz+"' AND cod_tipo_plan_accion='2' AND EPAD.codigo_establecimiento=" + codigoEstablecimiento                     
+                    + " AND EPAD.estado<>'" + App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ELIMINADO + "'"
+                    + " GROUP BY EPAD.cod_plan_accion_detalle,cod_evaluacion, EPAD.codigo_establecimiento, EPAD.cod_plan, EPAD.cod_plan_detalle, " 
+                    + " EPAD.nombre, descripcion, EPAD.estado, EPAD.fecha_registro, EPAD.fecha_plazo, EPAD.fecha_actualiza, EPAD.descripcion_hallazgo, EPAD.observaciones,"
+                    + " EPAD.registro, EPAD.eficacia,  U.documento_usuario, U.nombre , U.apellido, U.usuario, R.cedula , R.nombres , R.apellidos , R.telefono , R.correo ,"
+                    + " R.estado , R.codigo_establecimiento , fh.cod_fuente_hallazgo , fh.nombre , ch.cod_clase_hallazgo , ch.nombre , ta.cod_tipo_accion , ta.nombre ,"
+                    + " mc.cod_motivo_correccion , mc.nombre , ct.cod_centrotrabajo, ct.nombre "
+                    
+            );
+            rs = consulta.ejecutar(sql);
+            Collection<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles = new ArrayList<EvaluacionPlanAccionDetalle>();
+            while (rs.next()) {
+                EvaluacionPlanAccionDetalle epad = new EvaluacionPlanAccionDetalle(new EvaluacionPlanAccionDetallePK(rs.getLong("cod_evaluacion"), codigoEstablecimiento, rs.getLong("cod_plan"), rs.getLong("cod_plan_detalle")),
+                        rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), rs.getString("nombre"), rs.getString("descripcion"), rs.getString("estado"),
+                        new Usuarios(
+                                new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
+                        ), rs.getDate("fecha_registro"), rs.getDate("fecha_plazo"), rs.getDate("fecha_actualiza"), rs.getString("descripcion_hallazgo"),
+                        rs.getString("observaciones"), rs.getBoolean("registro"), rs.getBoolean("eficacia")
+                );
+                epad.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));                
+                epad.setFuentehallazgo(new FuenteHallazgo(rs.getInt("cod_fh"), rs.getString("nom_fh")));
+                epad.setClasehallazgo(new ClaseHallazgo(rs.getInt("cod_ch"), rs.getString("nom_ch")));
+                epad.setTipoaccion(new TipoAccion(rs.getInt("cod_ta"), rs.getString("nom_ta")));
+                epad.setMotivocorreccion(new MotivoCorreccion(rs.getInt("cod_mc"), rs.getString("nom_mc")));
+                epad.setCentrotrabajo(new CentroTrabajo(rs.getInt("cod_ct"), rs.getString("nom_ct")));
 
+                evaluacionPlanAccionDetalles.add(epad);
+
+            }
+            return evaluacionPlanAccionDetalles;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
     public Collection<? extends EvaluacionPlanAccionDetalle> cargarListaEvaluacionPlanAccion(Long codEvaluacion, int codigoEstablecimiento, String codCiclo, int codSeccion, int codDetalle, int codItem) throws SQLException {
         ResultSet rs = null;
         Consulta consulta = null;
@@ -282,9 +362,32 @@ public class EvaluacionPlanAccionDAO {
                     + " cod_fuente_hallazgo= "+epd.getFuentehallazgo().getCodFuentehallazgo()+", cod_clase_hallazgo="+epd.getClasehallazgo().getCodClasehallazgo()+","
                     + " cod_tipo_accion="+epd.getTipoaccion().getCodTipoaccion()+", cod_motivo_correccion="+epd.getMotivocorreccion().getCodMotivocorreccion()+","
                     + " fecha_plazo='"+epd.getFechaPlazo()+"', descripcion_hallazgo='"+epd.getDescripcionhallazgo()+"',"
-                    + " observaciones='"+epd.getObservaciones()+"', cod_centrotrabajo='"+epd.getCentrotrabajo().getCodCentrotrabajo()+"', registro="+epd.getRegistro()+", eficacia="+epd.getEficacia()+""                                                                            
+                    + " observaciones='"+epd.getObservaciones()+"', cod_centrotrabajo='"+epd.getCentrotrabajo().getCodCentrotrabajo()+"', registro="+epd.getRegistro()+", eficacia="+epd.getEficacia()+", cod_tipo_plan_accion='"+epd.getTipoaccion().getCodTipoaccion()+"'"
                     + " WHERE cod_evaluacion=" + epd.getEvaluacionPlanAccionDetallePK().getCodEvaluacion() + " AND codigo_establecimiento=" + epd.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento()
                     + " AND cod_plan=" + epd.getEvaluacionPlanAccionDetallePK().getCodPlan() + " AND cod_plan_detalle=" + epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()
+            );
+            consulta.actualizar(sql);
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    public void actualizarEvaluacionPlanAccionDetalleRiesgoMatriz(EvaluacionPlanAccionDetalle epd) throws SQLException {
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "UPDATE gestor.evaluacion_plan_accion_detalle"
+                    + " SET nombre='" + epd.getNombre() + "', descripcion='" + epd.getDescripcion() + "', fecha_actualiza=NOW(), cedula='" + epd.getResponsable().getCedula() + "',"
+                    + " cod_fuente_hallazgo= "+epd.getFuentehallazgo().getCodFuentehallazgo()+", cod_clase_hallazgo="+epd.getClasehallazgo().getCodClasehallazgo()+","
+                    + " cod_tipo_accion="+epd.getTipoaccion().getCodTipoaccion()+", cod_motivo_correccion="+epd.getMotivocorreccion().getCodMotivocorreccion()+","
+                    + " fecha_plazo='"+epd.getFechaPlazo()+"', descripcion_hallazgo='"+epd.getDescripcionhallazgo()+"',"
+                    + " observaciones='"+epd.getObservaciones()+"', registro="+epd.getRegistro()+", eficacia="+epd.getEficacia()+""
+                    + " WHERE cod_evaluacion=" + epd.getEvaluacionPlanAccionDetallePK().getCodEvaluacion() + " AND codigo_establecimiento=" + epd.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento()
+                    + " AND cod_plan=" + epd.getEvaluacionPlanAccionDetallePK().getCodPlan() + " AND cod_plan_detalle=" + epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()+" "
+                    + " AND cod_plan_accion_detalle='"+epd.getMatrizRiesgos().getCodRiesgoMatriz()+"'"
             );
             consulta.actualizar(sql);
         } finally {

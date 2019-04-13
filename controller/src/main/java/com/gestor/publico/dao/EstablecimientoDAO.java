@@ -102,25 +102,8 @@ public class EstablecimientoDAO {
     
     @SuppressWarnings("null")
     public void agregarCargosEstablecimiento(Cargos cargos, Establecimiento establecimiento) throws SQLException {        
-        Consulta consulta = null;    
-        ResultSet rs = null;
-        List<Funciones> listaFunciones = new ArrayList<>();        
+        Consulta consulta = null;                  
         try {
-                        
-            /*consulta= new Consulta(conexion);
-            StringBuilder sql1= new StringBuilder(
-                    "SELECT cod_funcion, cod_cargo, nombre " +
-                        "FROM public.funciones " +
-                        "WHERE cod_cargo='"+cargos.getCodCargo()+"'"
-            );            
-            rs=consulta.ejecutar(sql1);
-            while (rs.next()) {
-                Funciones fun= new Funciones(rs.getInt("cod_cargo"), rs.getInt("cod_funcion"), rs.getString("nombre"));                
-                fun.setCodFuncion(rs.getInt("cod_funcion"));                              
-                listaFunciones.add(fun);                
-            }                       
-            
-            for(int i=0;i<listaFunciones.size();i++){*/
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO rel_cargos_establecimiento("
@@ -128,8 +111,6 @@ public class EstablecimientoDAO {
                     + " VALUES (" + establecimiento.getCodigoEstablecimiento() + ", '" + cargos.getCodCargo() + "')"
             );
             consulta.actualizar(sql);
-            //}
-            
         } finally {
             if (consulta != null) {
                 consulta.desconectar();

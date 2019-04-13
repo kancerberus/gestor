@@ -196,22 +196,20 @@ public class MatrizRiesgosDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "INSERT INTO matriz.matriz_riesgos "
-                    + " ( codigo_establecimiento, cod_cargo, cod_matriz, rutinaria, cod_funcion, cod_riesgo, cod_riesgo_posible, cod_exposicion, cod_categoria_riesgo, "
+                    + " ( codigo_establecimiento, cod_cargo, cod_riesgo_matriz, rutinaria, cod_funcion, cod_riesgo, cod_riesgo_posible, cod_exposicion, cod_categoria_riesgo, "
                     + " fuente, medio, individuo, cod_nivel_def, cod_nivel_exp, nivel_probabilidad, interpretacion_prob, cod_nivel_consec, nivel_riesgo, "
-                    + " interpretacion_nr, aceptabilidad_riesgo, nro_expuestos, peor_consecuencia, requisito_legal, observaciones, cod_medida,"
-                    + " descripcion_medida, cod_elemento, cod_categoria, cod_categoria_tipo, descripcion_medida2, cod_categoria2, cod_categoria_tipo2)"
-                    + " VALUES ('" + mr.getCodigoEstablecimiento() + "', '" + mr.getCodCargo() + "', '" + mr.getCodMatriz() + "'," 
+                    + " interpretacion_nr, aceptabilidad_riesgo, nro_expuestos, peor_consecuencia, requisito_legal, observaciones, cod_medida, cod_elemento)"
+                    + " VALUES ('" + mr.getCodigoEstablecimiento() + "', '" + mr.getCodCargo() + "', '" + mr.getCodRiesgoMatriz() + "'," 
                     + " "+mr.isRutinaria()+", '"+mr.getCodFuncion()+"', '"+mr.getCodRiesgo()+"', '"+mr.getCodRiesgoPosible()+"', '"+mr.getCodExposicion()+"', '"+mr.getCodCategoriaRiesgo()+"', "
                     + " '"+mr.getFuente()+"','"+mr.getMedio()+"','"+mr.getIndividuo()+"','"+mr.getCodNivelDef()+"', '"+mr.getCodNivelExp()+"', '"+mr.getNivelProbabilidad()+"', "
                     + " '"+mr.getInterpretacionProb()+"', '"+mr.getCodNivelCons()+"', '"+mr.getNivelRiesgo()+"','"+mr.getInterpretacionNr()+"','"+mr.getAceptabilidadRiesgo()+"', "
-                    + "'"+mr.getNumExpuestos()+"','"+mr.getPeorConsecuencia()+"','"+mr.isReqLegal()+"', '"+mr.getObservaciones()+"','"+mr.getCodMedida()+"', "
-                    + "'"+mr.getDescripcionMedida()+"', '"+mr.getCodElemento()+"', '"+mr.getCodCategoria()+"', '"+mr.getCodCategoriaTipo()+"', '"+mr.getDescripcionMedida2()+"', "
-                    + "'"+mr.getCodCategoria2()+"', '"+mr.getCodCategoriaTipo2()+"') "
-                    + " ON CONFLICT (codigo_establecimiento, cod_cargo, cod_matriz) DO UPDATE"
+                    + " '"+mr.getNumExpuestos()+"','"+mr.getPeorConsecuencia()+"','"+mr.isReqLegal()+"', '"+mr.getObservaciones()+"','"+mr.getCodMedida()+"', "
+                    + " '"+mr.getCodElemento()+"') "
+                    + " ON CONFLICT (codigo_establecimiento, cod_cargo, cod_riesgo_matriz) DO UPDATE"
                     + " SET rutinaria=EXCLUDED.rutinaria, cod_funcion=EXCLUDED.cod_funcion, cod_riesgo=EXCLUDED.cod_riesgo, cod_riesgo_posible=EXCLUDED.cod_riesgo_posible, cod_exposicion=EXCLUDED.cod_exposicion, cod_categoria_riesgo=EXCLUDED.cod_categoria_riesgo,"
                     + " fuente=EXCLUDED.fuente, medio=EXCLUDED.medio, individuo=EXCLUDED.individuo, cod_nivel_def=EXCLUDED.cod_nivel_def, cod_nivel_exp=EXCLUDED.cod_nivel_exp, nivel_probabilidad=EXCLUDED.nivel_probabilidad, interpretacion_prob=EXCLUDED.interpretacion_prob, cod_nivel_consec=EXCLUDED.cod_nivel_consec, "
                     + " nivel_riesgo=EXCLUDED.nivel_riesgo, interpretacion_nr=EXCLUDED.interpretacion_nr, aceptabilidad_riesgo=EXCLUDED.aceptabilidad_riesgo, nro_expuestos=EXCLUDED.nro_expuestos, peor_consecuencia=EXCLUDED.peor_consecuencia, requisito_legal=EXCLUDED.requisito_legal, observaciones=EXCLUDED.observaciones,"
-                    + " cod_medida=EXCLUDED.cod_medida,descripcion_medida=EXCLUDED.descripcion_medida, cod_elemento=EXCLUDED.cod_elemento, cod_categoria=EXCLUDED.cod_categoria, cod_categoria_tipo=EXCLUDED.cod_categoria_tipo, descripcion_medida2=EXCLUDED.descripcion_medida2, cod_categoria2=EXCLUDED.cod_categoria2, cod_categoria_tipo2=EXCLUDED.cod_categoria_tipo2"
+                    + " cod_medida=EXCLUDED.cod_medida,cod_elemento=EXCLUDED.cod_elemento"
             );
             consulta.actualizar(sql);
         } finally {
@@ -228,9 +226,9 @@ public class MatrizRiesgosDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT codigo_establecimiento, cod_matriz, tarea, rutinaria, fuente, medio, individuo, nivel_probabilidad, interpretacion_prob, "
+                    "SELECT codigo_establecimiento, cod_riesgo_matriz, tarea, rutinaria, fuente, medio, individuo, nivel_probabilidad, interpretacion_prob, "
                     + "nivel_riesgo, interpretacion_nr, aceptabilidad_riesgo, nro_expuestos, peor_consecuencia, requisito_legal,"
-                    + "observaciones, descripcion_medida, descripcion_medida2, "
+                    + "observaciones, "
                     + " C.cod_cargo codc, C.nombre nomc, "
                     + " F.cod_funcion codf, F.nombre nomf, "
                     + " R.cod_riesgo codr, R.nombre nomr, "
@@ -242,8 +240,6 @@ public class MatrizRiesgosDAO {
                     + " NC.cod_nivel_consec codnnc, NC.nombre nomnc, NC.significado signc, NC.valor valornc,"
                     + " MI.cod_medida codmi, MI.nombre nommi,"
                     + " E.cod_elemento code, E.nombre nome,"
-                    + " AC1.cod_categoria codcat, AC1.nombre nomct, ACT1.cod_categoria_tipo codct, ACT1.nombre nomcat,"
-                    + " AC2.cod_categoria codcat2, AC2.nombre nomct2, ACT2.cod_categoria_tipo codct2, ACT2.nombre nomcat2"                    
                     + " FROM matriz.matriz_riesgos MR"
                     + " JOIN cargos C USING (cod_cargo)"
                     + " JOIN funciones F using (cod_cargo, cod_funcion)"
@@ -256,20 +252,15 @@ public class MatrizRiesgosDAO {
                     + " JOIN matriz.nivel_consecuencia NC using (cod_nivel_consec)"
                     + " JOIN matriz.medidas_intervencion MI using (cod_medida)"
                     + " JOIN matriz.elementos_proteccion E using (cod_elemento)"
-                    + " INNER JOIN gestor.adjuntos_categoria AC1 on (ac1.cod_categoria=mr.cod_categoria) "
-                    + " INNER JOIN gestor.adjuntos_categoria AC2 on (ac2.cod_categoria=mr.cod_categoria2) "
-                    + " INNER JOIN gestor.adjuntos_categoria_tipo act1 on (act1.cod_categoria = mr.cod_categoria and act1.cod_categoria_tipo = mr.cod_categoria_tipo)"
-                    + " INNER JOIN gestor.adjuntos_categoria_tipo act2 ON (act2.cod_categoria = mr.cod_categoria2 and act2.cod_categoria_tipo = mr.cod_categoria_tipo2)"                            
                     + " WHERE codigo_establecimiento='" + codigoEstablecimiento + "' and mr.cod_cargo='"+codCargo+"' and mr.cod_funcion='"+codFuncion+"'"
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
-                MatrizRiesgos mr= new MatrizRiesgos(rs.getInt("codigo_establecimiento"), rs.getInt("codc"), rs.getInt("cod_matriz"), rs.getInt("codf"),
+                MatrizRiesgos mr= new MatrizRiesgos(rs.getInt("codigo_establecimiento"), rs.getInt("codc"), rs.getInt("cod_riesgo_matriz"), rs.getInt("codf"),
                     rs.getBoolean("rutinaria"), rs.getInt("codr"), rs.getInt("codrp"), rs.getInt("codex"), rs.getInt("codcr"),rs.getString("fuente"), rs.getString("medio"),
                     rs.getString("individuo"), rs.getInt("codnd"), rs.getInt("codnexp"), rs.getInt("codnnc"),rs.getInt("nivel_riesgo"), rs.getString("interpretacion_nr"), 
                     rs.getString("aceptabilidad_riesgo"), rs.getInt("nivel_probabilidad"), rs.getString("interpretacion_prob"),rs.getInt("nro_expuestos"), rs.getString("nro_expuestos"),
-                    rs.getBoolean("requisito_legal"), rs.getInt("codmi"), rs.getString("descripcion_medida"), rs.getString("descripcion_medida2"), rs.getInt("code"),
-                    rs.getInt("codcat"), rs.getInt("codcat2"), rs.getInt("codct"), rs.getInt("codct2"), rs.getString("observaciones"));                    
+                    rs.getBoolean("requisito_legal"), rs.getInt("codmi"), rs.getInt("code"), rs.getString("observaciones"));                    
                     
                 mr.setCargos(new Cargos(rs.getInt("codc"), rs.getString("nomc")));
                 mr.setFunciones(new Funciones(rs.getInt("codc"), rs.getInt("codf"), rs.getString("nomf")));                
@@ -281,11 +272,7 @@ public class MatrizRiesgosDAO {
                 mr.setNivelExposcion(new NivelExposicion(rs.getInt("codnexp"), rs.getString("nomexp"), rs.getInt("valorne"), rs.getString("signe")));
                 mr.setNivelConsecuencia(new NivelConsecuencia(rs.getInt("codnnc"), rs.getString("nomnc"), rs.getInt("valornc"), rs.getString("signc")));
                 mr.setMedidasIntervencion(new MedidasIntervencion(rs.getInt("codmi"), rs.getString("nommi")));
-                mr.setElementoProteccion(new ElementosProteccion(rs.getInt("code"), rs.getString("nome")));
-                mr.setAdjuntosCategoria(new AdjuntosCategoria(rs.getInt("codcat"), rs.getString("nomcat"), 0));
-                mr.getAdjuntosCategoria().setAdjuntosCategoriaTipo(new AdjuntosCategoriaTipo(new AdjuntosCategoriaTipoPK(rs.getInt("codcat"), rs.getInt("codct")), rs.getString("nomcat")));
-                mr.setAdjuntosCategoria2(new AdjuntosCategoria(rs.getInt("codcat2"), rs.getString("nomcat2"), 0));
-                mr.getAdjuntosCategoria2().setAdjuntosCategoriaTipo(new AdjuntosCategoriaTipo(new AdjuntosCategoriaTipoPK(rs.getInt("codcat2"), rs.getInt("codct2")), rs.getString("nomcat2")));
+                mr.setElementoProteccion(new ElementosProteccion(rs.getInt("code"), rs.getString("nome")));                
                 return mr;
             }
             return null;
@@ -308,9 +295,9 @@ public class MatrizRiesgosDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT codigo_establecimiento, cod_matriz,rutinaria, fuente, medio, individuo, nivel_probabilidad, interpretacion_prob, "
+                    "SELECT codigo_establecimiento, cod_riesgo_matriz,rutinaria, fuente, medio, individuo, nivel_probabilidad, interpretacion_prob, "
                     + "nivel_riesgo, interpretacion_nr, aceptabilidad_riesgo, nro_expuestos, peor_consecuencia, requisito_legal,"
-                    + "observaciones, descripcion_medida, descripcion_medida2, "
+                    + "observaciones, "
                     + " C.cod_cargo codc, C.nombre nomc, "
                     + " F.cod_funcion codf, F.nombre nomf, "
                     + " R.cod_riesgo codr, R.nombre nomr, "
@@ -321,9 +308,7 @@ public class MatrizRiesgosDAO {
                     + " NE.cod_nivel_exp codnexp, NE.nombre nomexp, NE.significado sigexp, NE.valor valne,"
                     + " NC.cod_nivel_consec codnnc, NC.nombre nomnc, NC.significado signc, NC.valor valnc,"
                     + " MI.cod_medida codmi, MI.nombre nommi,"
-                    + " E.cod_elemento code, E.nombre nome,"
-                    + " AC1.cod_categoria codcat, AC1.nombre nomct, ACT1.cod_categoria_tipo codct, ACT1.nombre nomcat,"
-                    + " AC2.cod_categoria codcat2, AC2.nombre nomct2, ACT2.cod_categoria_tipo codct2, ACT2.nombre nomcat2"                    
+                    + " E.cod_elemento code, E.nombre nome"
                     + " FROM matriz.matriz_riesgos MR"
                     + " JOIN cargos C USING (cod_cargo)"
                     + " JOIN funciones F using (cod_cargo, cod_funcion)"
@@ -336,20 +321,15 @@ public class MatrizRiesgosDAO {
                     + " JOIN matriz.nivel_consecuencia NC using (cod_nivel_consec)"
                     + " JOIN matriz.medidas_intervencion MI using (cod_medida)"
                     + " JOIN matriz.elementos_proteccion E using (cod_elemento)"
-                    + " INNER JOIN gestor.adjuntos_categoria AC1 on (ac1.cod_categoria=mr.cod_categoria) "
-                    + " INNER JOIN gestor.adjuntos_categoria AC2 on (ac2.cod_categoria=mr.cod_categoria2) "
-                    + " INNER JOIN gestor.adjuntos_categoria_tipo act1 on (act1.cod_categoria = mr.cod_categoria and act1.cod_categoria_tipo = mr.cod_categoria_tipo)"
-                    + " INNER JOIN gestor.adjuntos_categoria_tipo act2 ON (act2.cod_categoria = mr.cod_categoria2 and act2.cod_categoria_tipo = mr.cod_categoria_tipo2)"                            
                     + " WHERE codigo_establecimiento='" + codEstablecimiento + "'"
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
-                MatrizRiesgos mr= new MatrizRiesgos(rs.getInt("codigo_establecimiento"), rs.getInt("codc"), rs.getInt("cod_matriz"), rs.getInt("codf"),
+                MatrizRiesgos mr= new MatrizRiesgos(rs.getInt("codigo_establecimiento"), rs.getInt("codc"), rs.getInt("cod_riesgo_matriz"), rs.getInt("codf"),
                     rs.getBoolean("rutinaria"), rs.getInt("codr"), rs.getInt("codrp"), rs.getInt("codex"), rs.getInt("codcr"),rs.getString("fuente"), rs.getString("medio"),
                     rs.getString("individuo"), rs.getInt("codnd"), rs.getInt("codnexp"), rs.getInt("codnnc"),rs.getInt("nivel_riesgo"), rs.getString("interpretacion_nr"), 
                     rs.getString("aceptabilidad_riesgo"), rs.getInt("nivel_probabilidad"), rs.getString("interpretacion_prob"),rs.getInt("nro_expuestos"), rs.getString("nro_expuestos"),
-                    rs.getBoolean("requisito_legal"), rs.getInt("codmi"), rs.getString("descripcion_medida"), rs.getString("descripcion_medida2"), rs.getInt("code"),
-                    rs.getInt("codcat"), rs.getInt("codcat2"), rs.getInt("codct"), rs.getInt("codct2"), rs.getString("observaciones"));                    
+                    rs.getBoolean("requisito_legal"), rs.getInt("codmi"),rs.getInt("code"), rs.getString("observaciones"));                    
                     
                 mr.setCargos(new Cargos(rs.getInt("codc"), rs.getString("nomc")));
                 mr.setFunciones(new Funciones(rs.getInt("codc"), rs.getInt("codf"), rs.getString("nomf")));                
@@ -361,11 +341,7 @@ public class MatrizRiesgosDAO {
                 mr.setNivelExposcion(new NivelExposicion(rs.getInt("codnexp"), rs.getString("nomexp"), rs.getInt("valne"), rs.getString("sigexp")));
                 mr.setNivelConsecuencia(new NivelConsecuencia(rs.getInt("codnnc"), rs.getString("nomnc"), rs.getInt("valnc"), rs.getString("signc")));
                 mr.setMedidasIntervencion(new MedidasIntervencion(rs.getInt("codmi"), rs.getString("nommi")));
-                mr.setElementoProteccion(new ElementosProteccion(rs.getInt("code"), rs.getString("nome")));
-                mr.setAdjuntosCategoria(new AdjuntosCategoria(rs.getInt("codcat"), rs.getString("nomcat"), 0));
-                mr.getAdjuntosCategoria().setAdjuntosCategoriaTipo(new AdjuntosCategoriaTipo(new AdjuntosCategoriaTipoPK(rs.getInt("codcat"), rs.getInt("codct")), rs.getString("nomcat")));
-                mr.setAdjuntosCategoria2(new AdjuntosCategoria(rs.getInt("codcat2"), rs.getString("nomcat2"), 0));
-                mr.getAdjuntosCategoria2().setAdjuntosCategoriaTipo(new AdjuntosCategoriaTipo(new AdjuntosCategoriaTipoPK(rs.getInt("codcat2"), rs.getInt("codct2")), rs.getString("nomcat2")));
+                mr.setElementoProteccion(new ElementosProteccion(rs.getInt("code"), rs.getString("nome")));                
                 listaMatrizCargosEstablecimiento.add(mr);
             }
             return listaMatrizCargosEstablecimiento;

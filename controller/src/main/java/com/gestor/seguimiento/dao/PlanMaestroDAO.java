@@ -58,7 +58,7 @@ public class PlanMaestroDAO {
                     + " FROM seguimiento.plan_maestro PM"
                     + " JOIN gestor.evaluacion E USING (cod_evaluacion, codigo_establecimiento)"
                     + " JOIN public.establecimiento ES USING (codigo_establecimiento)"
-                    + condicion
+                    //+ condicion
             );
             rs = consulta.ejecutar(sql);
 

@@ -32,6 +32,7 @@ public class GestorGeneral extends Gestor implements Serializable {
     public static String GESTOR_EVALUACION_CAPACITACION_COD_CAPACITACION_SEQ = "gestor.evaluacion_capacitacion_cod_capacitacion_seq";
     public static String GESTOR_EVALUACION_CAPACITACION_DETALLE_COD_CAPACITACION_DETALLE_SEQ = "gestor.evaluacion_capacitacion_detalle_cod_capacitacion_detalle_seq";
     public static String GESTOR_EVALUACION_PLAN_ACCION_DETALLE_COD_PLAN_DETALLE_SEQ = "gestor.evaluacion_plan_accion_detalle_cod_plan_detalle_seq";
+    public static String MATRIZ_MATRIZ_RIESGOS_COD_RIESGO_MATRIZ_SEQ = "matriz.matriz_matriz_riesgos_cod_riesgo_matriz_seq";            
 
     public static boolean VALIDA_PK = true;
     public static boolean NO_VALIDA_PK = false;
