@@ -39,8 +39,8 @@ public class MatrizRiesgos implements Serializable {
     private Integer codigoEstablecimiento;
     @Column(name = "cod_cargo")
     private Integer codCargo;
-    @Column(name = "cod_matriz")
-    private Integer codMatriz;
+    @Column(name = "cod_riesgo_matriz")
+    private Integer codRiesgoMatriz;
     @Column(name = "cod_funcion")
     private Integer codFuncion;    
     @Column(name = "rutinaria")
@@ -83,20 +83,8 @@ public class MatrizRiesgos implements Serializable {
     private boolean reqLegal;
     @Column(name = "cod_medida")
     private Integer codMedida;
-    @Column(name = "descripcion_medida")
-    private String descripcionMedida;
-    @Column(name = "descripcion_medida2")
-    private String descripcionMedida2;
     @Column(name = "cod_elemento")
     private Integer codElemento;
-    @Column(name = "cod_categoria")
-    private Integer codCategoria;
-    @Column(name = "cod_categoria2")
-    private Integer codCategoria2;
-    @Column(name = "cod_categoria_tipo")
-    private Integer codCategoriaTipo;
-    @Column(name = "cod_categoria_tipo2")
-    private Integer codCategoriaTipo2;
     @Column(name = "observaciones")
     private String observaciones;        
     
@@ -110,9 +98,7 @@ public class MatrizRiesgos implements Serializable {
     private NivelExposicion nivelExposcion= new NivelExposicion();
     private NivelConsecuencia nivelConsecuencia= new NivelConsecuencia();
     private MedidasIntervencion medidasIntervencion= new MedidasIntervencion();
-    private ElementosProteccion elementoProteccion= new ElementosProteccion();
-    private AdjuntosCategoria adjuntosCategoria = new AdjuntosCategoria();
-    private AdjuntosCategoria adjuntosCategoria2 = new AdjuntosCategoria();
+    private ElementosProteccion elementoProteccion= new ElementosProteccion();    
     
     public MatrizRiesgos() {
     }
@@ -121,10 +107,10 @@ public class MatrizRiesgos implements Serializable {
         return codNivelCons;
     }
 
-    public MatrizRiesgos(Integer codigoEstablecimiento, Integer codCargo, Integer codMatriz, Integer codFuncion, boolean rutinaria, Integer codRiesgo, Integer codRiesgoPosible, Integer codExposicion, Integer codCategoriaRiesgo, String fuente, String medio, String individuo, Integer codNivelDef, Integer codNivelExp, Integer codNivelCons, Integer nivelRiesgo, String interpretacionNr, String aceptabilidadRiesgo, Integer nivelProbabilidad, String interpretacionProb, Integer numExpuestos, String peorConsecuencia, boolean reqLegal, Integer codMedida, String descripcionMedida, String descripcionMedida2, Integer codElemento, Integer codCategoria, Integer codCategoria2, Integer codCategoriaTipo, Integer codCategoriaTipo2, String observaciones) {
+    public MatrizRiesgos(Integer codigoEstablecimiento, Integer codCargo, Integer codRiesgoMatriz, Integer codFuncion, boolean rutinaria, Integer codRiesgo, Integer codRiesgoPosible, Integer codExposicion, Integer codCategoriaRiesgo, String fuente, String medio, String individuo, Integer codNivelDef, Integer codNivelExp, Integer codNivelCons, Integer nivelRiesgo, String interpretacionNr, String aceptabilidadRiesgo, Integer nivelProbabilidad, String interpretacionProb, Integer numExpuestos, String peorConsecuencia, boolean reqLegal, Integer codMedida, Integer codElemento, String observaciones) {
         this.codigoEstablecimiento = codigoEstablecimiento;
         this.codCargo = codCargo;
-        this.codMatriz = codMatriz;
+        this.codRiesgoMatriz = codRiesgoMatriz;
         this.codFuncion = codFuncion;
         this.rutinaria = rutinaria;
         this.codRiesgo = codRiesgo;
@@ -145,14 +131,8 @@ public class MatrizRiesgos implements Serializable {
         this.numExpuestos = numExpuestos;
         this.peorConsecuencia = peorConsecuencia;
         this.reqLegal = reqLegal;
-        this.codMedida = codMedida;
-        this.descripcionMedida = descripcionMedida;
-        this.descripcionMedida2 = descripcionMedida2;
-        this.codElemento = codElemento;
-        this.codCategoria = codCategoria;
-        this.codCategoria2 = codCategoria2;
-        this.codCategoriaTipo = codCategoriaTipo;
-        this.codCategoriaTipo2 = codCategoriaTipo2;
+        this.codMedida = codMedida;        
+        this.codElemento = codElemento;        
         this.observaciones = observaciones;
     }
 
@@ -173,8 +153,14 @@ public class MatrizRiesgos implements Serializable {
         }
         return style;
     }
-    
-    
+
+    public Integer getCodRiesgoMatriz() {
+        return codRiesgoMatriz;
+    }
+
+    public void setCodRiesgoMatriz(Integer codRiesgoMatriz) {
+        this.codRiesgoMatriz = codRiesgoMatriz;
+    }
 
     public Integer getCodRiesgoPosible() {
         return codRiesgoPosible;
@@ -182,38 +168,6 @@ public class MatrizRiesgos implements Serializable {
 
     public void setCodRiesgoPosible(Integer codRiesgoPosible) {
         this.codRiesgoPosible = codRiesgoPosible;
-    }
-
-    public Integer getCodCategoria2() {
-        return codCategoria2;
-    }
-
-    public void setCodCategoria2(Integer codCategoria2) {
-        this.codCategoria2 = codCategoria2;
-    }
-
-    public Integer getCodCategoriaTipo2() {
-        return codCategoriaTipo2;
-    }
-
-    public void setCodCategoriaTipo2(Integer codCategoriaTipo2) {
-        this.codCategoriaTipo2 = codCategoriaTipo2;
-    }
-
-    public AdjuntosCategoria getAdjuntosCategoria2() {
-        return adjuntosCategoria2;
-    }
-
-    public void setAdjuntosCategoria2(AdjuntosCategoria adjuntosCategoria2) {
-        this.adjuntosCategoria2 = adjuntosCategoria2;
-    }
-
-    public String getDescripcionMedida2() {
-        return descripcionMedida2;
-    }
-
-    public void setDescripcionMedida2(String descripcionMedida2) {
-        this.descripcionMedida2 = descripcionMedida2;
     }
 
     public String getAceptabilidadRiesgo() {
@@ -248,15 +202,6 @@ public class MatrizRiesgos implements Serializable {
         this.interpretacionProb = interpretacionProb;
     }
 
-
-    public String getDescripcionMedida() {
-        return descripcionMedida;
-    }
-
-    public void setDescripcionMedida(String descripcionMedida) {
-        this.descripcionMedida = descripcionMedida;
-    }
-
     public Integer getCodFuncion() {
         return codFuncion;
     }
@@ -272,31 +217,6 @@ public class MatrizRiesgos implements Serializable {
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
-
-    public Integer getCodCategoria() {
-        return codCategoria;
-    }
-
-    public void setCodCategoria(Integer codCategoria) {
-        this.codCategoria = codCategoria;
-    }
-
-    public Integer getCodCategoriaTipo() {
-        return codCategoriaTipo;
-    }
-
-    public void setCodCategoriaTipo(Integer codCategoriaTipo) {
-        this.codCategoriaTipo = codCategoriaTipo;
-    }
-
-    public AdjuntosCategoria getAdjuntosCategoria() {
-        return adjuntosCategoria;
-    }
-
-    public void setAdjuntosCategoria(AdjuntosCategoria adjuntosCategoria) {
-        this.adjuntosCategoria = adjuntosCategoria;
-    }
-
 
     public Integer getCodElemento() {
         return codElemento;
@@ -495,15 +415,6 @@ public class MatrizRiesgos implements Serializable {
         this.codCargo = codCargo;
     }
 
-    public Integer getCodMatriz() {
-        return codMatriz;
-    }
-
-    public void setCodMatriz(Integer codMatriz) {
-        this.codMatriz = codMatriz;
-    }
-
-
     public boolean isRutinaria() {
         return rutinaria;
     }
@@ -540,7 +451,7 @@ public class MatrizRiesgos implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (codMatriz != null ? codMatriz.hashCode() : 0);
+        hash += (codRiesgoMatriz != null ? codRiesgoMatriz.hashCode() : 0);
         return hash;
     }
 
@@ -551,7 +462,7 @@ public class MatrizRiesgos implements Serializable {
             return false;
         }
         MatrizRiesgos other = (MatrizRiesgos) object;
-        if ((this.codMatriz == null && other.codMatriz != null) || (this.codMatriz != null && !this.codMatriz.equals(other.codMatriz))) {
+        if ((this.codRiesgoMatriz == null && other.codRiesgoMatriz != null) || (this.codRiesgoMatriz != null && !this.codRiesgoMatriz.equals(other.codRiesgoMatriz))) {
             return false;
         }
         return true;
@@ -559,7 +470,7 @@ public class MatrizRiesgos implements Serializable {
 
     @Override
     public String toString() {
-        return "com.gestor.matriz[ cod_matriz=" + codMatriz + " ]";
+        return "com.gestor.matriz[ cod_riesgo_matriz=" + codRiesgoMatriz + " ]";
     }
 
     void getAdjuntosCategoria2(AdjuntosCategoria adjuntosCategoria) {

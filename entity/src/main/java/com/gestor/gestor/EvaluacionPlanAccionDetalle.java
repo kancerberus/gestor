@@ -7,7 +7,9 @@ package com.gestor.gestor;
 
 import com.gestor.publico.CentroTrabajo;
 import com.gestor.publico.Establecimiento;
+import com.gestor.matriz.MatrizRiesgos;
 import com.gestor.publico.Responsable;
+import com.gestor.publico.TipoPlanAccion;
 import com.gestor.publico.Usuarios;
 import com.gestor.seguimiento.PlanTrabajo;
 import com.gestor.seguimiento.PlanTrabajoActividad;
@@ -47,6 +49,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_RESPONSABLE = "EPAD.responsable ILIKE (?)";
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_FECHA_REGISTRO_GTE = "EPAD.fecha_registro::DATE >= ?";
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_FECHA_REGISTRO_LTE = "EPAD.fecha_registro::DATE <= ?";
+    public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_TIPO_PLAN_ACCION = "EPAD.cod_tipo_plan_accion IN (?)";
     
     public static String EVALUACION_PLAN_ACCION_DETALLE_ESTADO_CERRADO = "C";
     
@@ -81,7 +84,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private Boolean eficacia;
     @Column(name = "registro")
     private Boolean registro;
-    private Integer diasRestantes;
+    private Integer diasRestantes;            
     
     private String documentoUsuario;
     
@@ -93,8 +96,8 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private CentroTrabajo centrotrabajo = new CentroTrabajo();    
     private PlanTrabajoActividad plantrabajoactividad = new PlanTrabajoActividad();
     private PlanTrabajo plantrabajo =new PlanTrabajo();
-    
-    
+    private TipoPlanAccion tipoPlanAccion= new TipoPlanAccion();
+    private MatrizRiesgos matrizRiesgos= new MatrizRiesgos();
     
     private Usuarios usuarios;
 
@@ -138,8 +141,24 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.descripcionhallazgo = descripcionhallazgo;
         this.observaciones = observaciones;
         this.registro = registro;
-        this.eficacia = eficacia;
+        this.eficacia = eficacia;        
         
+    }
+
+    public MatrizRiesgos getMatrizRiesgos() {
+        return matrizRiesgos;
+    }
+
+    public void setMatrizRiesgos(MatrizRiesgos matrizRiesgos) {
+        this.matrizRiesgos = matrizRiesgos;
+    }
+
+    public TipoPlanAccion getTipoPlanAccion() {
+        return tipoPlanAccion;
+    }
+
+    public void setTipoPlanAccion(TipoPlanAccion tipoPlanAccion) {
+        this.tipoPlanAccion = tipoPlanAccion;
     }
 
     public Integer getDiasRestantes() {
