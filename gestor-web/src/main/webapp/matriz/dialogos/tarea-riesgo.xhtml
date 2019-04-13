@@ -9,22 +9,15 @@
     <div style="text-align: center;">
         <p:outputPanel id="opPlanAccion">
             <h3>                
-                <h:outputText value="Plan Acción Ítem"/>
-                Item Asociado #{uiPlanAccion.sdiSeleccionado.detalle}
+                <h:outputText value="Plan Acción Ítem"/>                
             </h3>
+
+            
             <h:panelGrid id="pgPlanAccion" columns="4"  width="80%" cellspacing="30px">
                     <h:panelGrid columns="2">
                         <h:outputLabel value="Nombre Plan Accion: " style="font-weight: bold;"/>
                         <p:inputText value="#{evaluacionPlanAccionDetalle.nombre}" placeholder="Nombre del plan de accción"
                                      />                        
-                        
-                        <h:outputLabel value="Centro De Trabajo: " style="font-weight: bold;"/>
-                        <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.centrotrabajo}" converter="convertidorGenerico"
-                                         style="text-align: center;width: 180px;">  
-                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
-                            <f:selectItems value="#{uiPlanAccion.centrostrabajo}" var="ct" itemValue="#{ct}" itemLabel="#{ct.nombre}" />
-                            <p:ajax event="change" process="@this"/>
-                        </p:selectOneMenu>
 
                         <h:outputLabel value="Descripción Del Hallazgo: " style="font-weight: bold;"/>
                         <p:inputTextarea value="#{evaluacionPlanAccionDetalle.descripcionhallazgo}" placeholder="Registra la descripción del hallazgo"/>
@@ -33,7 +26,7 @@
                         <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.fuentehallazgo}" converter="convertidorGenerico"
                                          style="text-align: center;width: 180px;">  
                             <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
-                            <f:selectItems value="#{uiPlanAccion.fuentehallazgos}" var="fh" itemValue="#{fh}" itemLabel="#{fh.nombre}" />
+                            <f:selectItems value="#{uiMatrizRiesgos.fuentehallazgos}" var="fh" itemValue="#{fh}" itemLabel="#{fh.nombre}" />
                             <p:ajax event="change" process="@this"/>
                         </p:selectOneMenu>
                     </h:panelGrid>
@@ -42,7 +35,7 @@
                         <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.clasehallazgo}" converter="convertidorGenerico"
                                          style="text-align: center;width: 180px;">  
                             <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
-                            <f:selectItems value="#{uiPlanAccion.clasehallazgos}" var="ch" itemValue="#{ch}" itemLabel="#{ch.nombre}" />
+                            <f:selectItems value="#{uiMatrizRiesgos.clasehallazgos}" var="ch" itemValue="#{ch}" itemLabel="#{ch.nombre}" />
                             <p:ajax event="change" process="@this"/>
                         </p:selectOneMenu>
                         <h:outputLabel value="Descripción De La Accion:" style="font-weight: bold;margin-top: 50%"/>
@@ -52,7 +45,7 @@
                         <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.tipoaccion}" converter="convertidorGenerico"
                                          style="text-align: center;width: 180px;">  
                             <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
-                            <f:selectItems value="#{uiPlanAccion.tipoacciones}" var="ta" itemValue="#{ta}" itemLabel="#{ta.nombre}" />
+                            <f:selectItems value="#{uiMatrizRiesgos.tipoacciones}" var="ta" itemValue="#{ta}" itemLabel="#{ta.nombre}" />
                             <p:ajax event="change" process="@this"/>
                         </p:selectOneMenu>
 
@@ -60,7 +53,7 @@
                         <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.motivocorreccion}" converter="convertidorGenerico"
                                          style="text-align: center;width: 180px;">  
                             <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
-                            <f:selectItems value="#{uiPlanAccion.motivocorrecciones}" var="ta" itemValue="#{ta}" itemLabel="#{ta.nombre}" />
+                            <f:selectItems value="#{uiMatrizRiesgos.motivocorrecciones}" var="ta" itemValue="#{ta}" itemLabel="#{ta.nombre}" />
                             <p:ajax event="change" process="@this"/>
                         </p:selectOneMenu>
 
@@ -68,7 +61,7 @@
                         <p:selectOneMenu value="#{evaluacionPlanAccionDetalle.responsable}" converter="convertidorGenerico"
                                          style="text-align: center;width: 180px;">  
                             <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
-                            <f:selectItems value="#{uiPlanAccion.responsables}" var="res" itemValue="#{res}" itemLabel="#{res.nombresApellidos}" />
+                            <f:selectItems value="#{uiMatrizRiesgos.responsables}" var="res" itemValue="#{res}" itemLabel="#{res.nombresApellidos}" />
                             <p:ajax event="change" process="@this"/>
                         </p:selectOneMenu>
                     </h:panelGrid>
@@ -83,7 +76,7 @@
             </h:panelGrid>            
             
             <h:panelGrid>
-                <p:dataTable id="dtPlanAccionDetalle"  value="#{uiPlanAccion.evaluacionPlanAccionDetalles}" var="varPlanAccionDetalle" emptyMessage="El ítem no tiene planes de acción."
+                <p:dataTable id="dtPlanAccionDetalle"  value="#{uiMatrizRiesgos.evaluacionPlanAccionDetalles}" var="varPlanAccionDetalle" emptyMessage="El ítem no tiene planes de acción."
                              scrollRows="200" rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable" style="width: 100%"
                              rowHover="true" scrollable="true" scrollWidth="1920" scrollHeight="100">
                     <f:facet name="header">
@@ -91,30 +84,30 @@
                     </f:facet>
                     <p:columnGroup type="header">  
                         <p:row>  
-                            <p:column headerText="Opciones" />
-                            <p:column headerText="Nombre" filterBy="#{varPlanAccionDetalle.nombre}" sortBy="#{varPlanAccionDetalle.nombre}"/>                            
-                            <p:column headerText="Centro Trabajo" filterBy="#{varPlanAccionDetalle.centrotrabajo}" />
-                            <p:column headerText="Descripción Hallazgo"/>        
+                            <p:column  headerText="Opciones" />
+                            <p:column headerText="Nombre" filterBy="#{varPlanAccionDetalle.nombre}" sortBy="#{varPlanAccionDetalle.nombre}"/>                                                        
+                            <p:column  headerText="Descripción Hallazgo"/>        
                             <p:column headerText="Fuente Hallazgo" filterBy="#{varPlanAccionDetalle.fuentehallazgo}" />                            
                             <p:column headerText="Clase Hallazgo" filterBy="#{varPlanAccionDetalle.clasehallazgo}" />                            
-                            <p:column headerText="Descripción Accion"/>        
+                            <p:column  headerText="Descripción Accion"/>        
                             <p:column headerText="Tipo Accion" filterBy="#{varPlanAccionDetalle.tipoaccion}" />                            
                             <p:column headerText="Motivo Correccion" filterBy="#{varPlanAccionDetalle.motivocorreccion}" />                                                        
-                            <p:column headerText="Usuario" filterBy="#{varPlanAccionDetalle.usuarios.usuario}"/>                            
-                            <p:column headerText="Estado" filterBy="#{varPlanAccionDetalle.estado}"/>
-                            <p:column headerText="Responsable" filterBy="#{varPlanAccionDetalle.responsable.nombresApellidos}"/>
-                            <p:column headerText="Fecha Creacion" sortBy="#{varPlanAccionDetalle.fechaRegistro}"/>                            
-                            <p:column headerText="Fecha vencicmiento" />
+                            <p:column  headerText="Usuario" filterBy="#{varPlanAccionDetalle.usuarios.usuario}"/>                            
+                            <p:column  headerText="Estado" filterBy="#{varPlanAccionDetalle.estado}"/>
+                            <p:column  headerText="Responsable" filterBy="#{varPlanAccionDetalle.responsable.nombresApellidos}"/>
+                            <p:column  headerText="Fecha Creacion" sortBy="#{varPlanAccionDetalle.fechaRegistro}"/>                            
+                            <p:column  headerText="Fecha vencicmiento" />
                             <p:column headerText="Observaciones"/> 
                             <p:column headerText="Registro"/> 
-                            <p:column headerText="Evaluacion Eficacia"/>
+                            <p:column headerText="Evaluacion Eficacia"/> 
+                            
                         </p:row> 
                     </p:columnGroup>
 
                     <p:column>
                         <p:panelGrid columns="3">
-                            <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Acción" action="#{uiPlanAccion.modificarPlanAccion()}" update="formSeccionDetalleItems:opPlanAccion formSeccionDetalleItems:opcionesMenuPlanAccion"/>
-                            <p:commandButton icon="ui-icon-trash" title="Eliminar Plan Acción" action="#{uiPlanAccion.eliminarPlanAccion()}" update="formSeccionDetalleItems:opPlanAccion">
+                            <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Acción" action="#{uiMatrizRiesgos.modificarPlanAccion()}" update="formMatrizRiesgos:opPlanAccion formMatrizRiesgos:opcionesMenuPlanAccion"/>
+                            <p:commandButton icon="ui-icon-trash" title="Eliminar Plan Acción" action="#{uiMatrizRiesgos}" update="formMatrizRiesgos:opPlanAccion">
                                 <p:confirm header="Eliminar Plan Acción" message="Desea eliminar el plan de acción ?" icon="ui-icon-alert" />
                             </p:commandButton>
                         </p:panelGrid>
@@ -122,9 +115,6 @@
                     <p:column >
                         <h:outputText value="#{varPlanAccionDetalle.nombre}"/>
                     </p:column>                                        
-                    <p:column>
-                        <h:outputText value="#{varPlanAccionDetalle.centrotrabajo.nombre}"/>
-                    </p:column>
                     <p:column>
                         <h:outputText value="#{varPlanAccionDetalle.descripcionhallazgo}" />
                     </p:column>                    
@@ -183,16 +173,16 @@
         <p:toolbar id="opcionesMenuPlanAccion" style="height: 45px; width: auto">
             <p:toolbarGroup align="center" style="margin: auto auto;  align-content: center">
                 <h:panelGrid columns="3" cellspacing="10" style="align-content: center; display: inline-block;">
-                    <p:commandButton value="Generar Plan Acción" icon="ui-icon-disk" action="#{uiPlanAccion.procesarPlanAccion()}" process="@parent pgPlanAccion" update="pgPlanAccion dtPlanAccionDetalle"
-                                     rendered="#{not uiPlanAccion.modificarActivo}">                                                
+                    <p:commandButton value="Generar Plan Acción" icon="ui-icon-disk" action="#{uiMatrizRiesgos.procesarPlanAccion()}" process="@parent pgPlanAccion" update="pgPlanAccion dtPlanAccionDetalle"
+                                     rendered="#{not uiMatrizRiesgos.modificarActivo}">                                                
                     </p:commandButton>
                         
-                    <p:commandButton value="Modificar Plan Acción" icon="ui-icon-disk" action="#{uiPlanAccion.procesarPlanAccionModificar()}" 
+                    <p:commandButton value="Modificar Plan Acción" icon="ui-icon-disk" action="#{uiMatrizRiesgos.procesarPlanAccionModificar()}" 
                                      process="@parent pgPlanAccion" update="pgPlanAccion dtPlanAccionDetalle opcionesMenuPlanAccion"
-                                     rendered="#{uiPlanAccion.modificarActivo}"/>
+                                     rendered="#{uiMatrizRiesgos.modificarActivo}"/>
 
                     <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" oncomplete="PF('dialog').hide();"/>
-                    <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiPlanAccion.limpiar()}" update="opPlanAccion opcionesMenuPlanAccion" process="@this"/>
+                    <p:commandButton value="Limpiar" icon="ui-icon-cancel" action="#{uiMatrizRiesgos}" update="opPlanAccion opcionesMenuPlanAccion" process="@this"/>
                 </h:panelGrid>
             </p:toolbarGroup>
         </p:toolbar> 

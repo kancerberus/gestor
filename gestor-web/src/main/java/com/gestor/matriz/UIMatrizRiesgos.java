@@ -5,39 +5,50 @@
  */
 package com.gestor.matriz;
 
-import com.gestor.controller.Propiedades;
+import com.gestor.controller.GestorGeneral;
 import com.gestor.entity.App;
 import com.gestor.entity.Dialogo;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
+import com.gestor.entity.UtilTexto;
 import com.gestor.gestor.AdjuntosCategoria;
-import com.gestor.gestor.AdjuntosCategoriaTipo;
+import com.gestor.gestor.ClaseHallazgo;
 import com.gestor.gestor.Evaluacion;
-import com.gestor.gestor.controlador.GestorAdjuntosCategoria;
+import com.gestor.gestor.EvaluacionPlanAccion;
+import com.gestor.gestor.EvaluacionPlanAccionDetalle;
+import com.gestor.gestor.EvaluacionPlanAccionDetalleNotas;
+import com.gestor.gestor.EvaluacionPlanAccionDetalleNotasPK;
+import com.gestor.gestor.EvaluacionPlanAccionDetallePK;
+import com.gestor.gestor.EvaluacionPlanAccionPK;
+import com.gestor.gestor.FuenteHallazgo;
+import com.gestor.gestor.MotivoCorreccion;
+import com.gestor.gestor.TipoAccion;
+import com.gestor.gestor.controlador.GestorClaseHallazgo;
 import com.gestor.gestor.controlador.GestorEvaluacion;
+import com.gestor.gestor.controlador.GestorEvaluacionPlanAccion;
+import com.gestor.gestor.controlador.GestorFuenteHallazgo;
+import com.gestor.gestor.controlador.GestorMotivoCorreccion;
+import com.gestor.gestor.controlador.GestorTipoAccion;
 import com.gestor.matriz.controlador.GestorMatrizRiesgos;
 import com.gestor.modelo.Sesion;
 import com.gestor.publico.Cargos;
+import com.gestor.publico.CentroTrabajo;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Funciones;
 import com.gestor.publico.RelCargosEstablecimiento;
+import com.gestor.publico.Responsable;
+import com.gestor.publico.TipoPlanAccion;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.controlador.GestorEstablecimiento;
+import com.gestor.publico.controlador.GestorResponsable;
 import com.gestor.publico.controlador.GestorUsuario;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
 
@@ -60,9 +71,23 @@ public class UIMatrizRiesgos implements Serializable{
     private boolean eliminarActivo = false;
     private boolean volverActivo = false;
     private String mrPdf="";
+    private String responsable;
+    private Usuarios usuariosSeleccionado;
     
-    private StreamedContent fileDownloadMatriz;
-    private StreamedContent fileDownloadMatriz2;
+    
+    private Boolean modificarActivo = Boolean.FALSE;
+    private Boolean filtroActivo = Boolean.TRUE;
+    
+    private EvaluacionPlanAccionDetalle evaluacionPlanAccionDetalle = new EvaluacionPlanAccionDetalle();
+    private EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK = new EvaluacionPlanAccionDetallePK();
+    private List<Responsable> responsables = new ArrayList<>();
+    private List<ClaseHallazgo> clasehallazgos = new ArrayList<>();
+    private List<FuenteHallazgo> fuentehallazgos = new ArrayList<>();
+    private List<TipoAccion> tipoacciones = new ArrayList<>();
+    private List<TipoPlanAccion> tiposTarea=new ArrayList<>();
+    private List<MotivoCorreccion> motivocorrecciones  = new ArrayList<>();
+    private List<CentroTrabajo> centrostrabajo = new ArrayList<>();
+    private List<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles = new ArrayList<>();    
     
     private GestorMatrizRiesgos gestorMatrizRiesgos;
     private GestorEstablecimiento gestorEstablecimiento;
@@ -89,8 +114,6 @@ public class UIMatrizRiesgos implements Serializable{
             
     private List<Establecimiento> establecimientoList = new ArrayList<>();
     private List<Establecimiento> establecimientoListSeleccionado = new ArrayList<>();
-
-    private Boolean filtroActivo = Boolean.TRUE;
     
     private Evaluacion evaluacion = new Evaluacion();
     private String nom=" ";
@@ -143,9 +166,8 @@ public class UIMatrizRiesgos implements Serializable{
             this.cargarFunciones();
             this.cargarRiesgoPosibles();
             this.cargarExposiciones();
-            matrizRiesgos = (MatrizRiesgos) UtilJSF.getBean("varRiesgoEstablecimiento");                                   
-            this.cargarAdjuntosCategoriaTipo();
-            this.cargarAdjuntosCategoriaTipo2();   
+            this.cargarListaMatrizTareaRiesgo();
+            matrizRiesgos = (MatrizRiesgos) UtilJSF.getBean("varRiesgoEstablecimiento");                                               
             return ("/matriz/crear-matriz-riesgos.xhtml?faces-redirect=true");
         } catch (Exception ex) {
             
@@ -162,9 +184,7 @@ public class UIMatrizRiesgos implements Serializable{
             this.cargarElementosProteccion();
             this.cargarNivelDeficiencia();
             this.cargarNivelConsecuencia();
-            this.cargarNivelExposicion();
-            this.cargarAdjuntosCategoriaTipo();
-            this.cargarAdjuntosCategoriaTipo2();              
+            this.cargarNivelExposicion();            
             return ("/matriz/crear-matriz-riesgos.xhtml?faces-redirect=true");
         } catch (Exception e) {
         return ("/matriz/crear-matriz-riesgos.xhtml?faces-redirect=true");
@@ -197,7 +217,7 @@ public class UIMatrizRiesgos implements Serializable{
             Evaluacion ev = (Evaluacion) UtilJSF.getBean("varEvaluacion");      
             UtilJSF.setBean("evaluacion", ev , UtilJSF.SESSION_SCOPE);            
             
-            this.cargarMatrizCargoEstablecimiento();
+            this.cargarMatrizCargoEstablecimiento();            
             return ("/matriz/administrar-matriz-cargos-establecimiento.xhtml?faces-redirect=true");
         }catch(Exception e){
         return ("/matriz/matriz-cargos-establecimiento.xhtml?faces-redirect=true");  
@@ -372,7 +392,7 @@ public class UIMatrizRiesgos implements Serializable{
             
         } catch (Exception ex) {            
         }
-    }    
+    }
 
     
     
@@ -396,79 +416,23 @@ public class UIMatrizRiesgos implements Serializable{
         }
     }
     
-    public void cargarAdjuntosCategoriaTipo() {
-        try {
-            GestorAdjuntosCategoria gestorAdjuntosCategoria = new GestorAdjuntosCategoria();    
-            Evaluacion ev = (Evaluacion) UtilJSF.getBean("evaluacion");      
-            
-            gestorMatrizRiesgos= new GestorMatrizRiesgos();
-            adjuntosCategorias= new ArrayList<>();
-            adjuntosCategorias.addAll(gestorAdjuntosCategoria.cargarListaAdjuntosCategoriapm());            
-            
-            
-            if(matrizRiesgos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK()==null){
-                matrizRiesgos = (MatrizRiesgos) UtilJSF.getBean("varRiesgoEstablecimiento");                           
-            }
-            
-            if(matrizRiesgos.getAdjuntosCategoria().getCodCategoria() != null){
-                matrizRiesgos.getAdjuntosCategoria().setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(matrizRiesgos.getAdjuntosCategoria().getCodCategoria()));                                                
-            }    
-            
-            if(matrizRiesgos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo()!=null){
-                nom = gestorMatrizRiesgos.cargarNombreAdjunto(ev.getEvaluacionPK().getCodigoEstablecimiento(),  ev.getEvaluacionPK().getCodEvaluacion(), matrizRiesgos.getAdjuntosCategoria().getCodCategoria(), matrizRiesgos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo());                 
-            }            
-        } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
-        }
-    }
-    
-     public void cargarAdjuntosCategoriaTipo2() {
-        try {
-            GestorAdjuntosCategoria gestorAdjuntosCategoria = new GestorAdjuntosCategoria();    
-            Evaluacion ev = (Evaluacion) UtilJSF.getBean("evaluacion");      
-            
-            gestorMatrizRiesgos= new GestorMatrizRiesgos();
-            adjuntosCategorias2= new ArrayList<>();
-            adjuntosCategorias2.addAll(gestorAdjuntosCategoria.cargarListaAdjuntosCategoriapm());                        
-            
-            if(matrizRiesgos.getAdjuntosCategoria2().getCodCategoria()!= null){
-                matrizRiesgos.getAdjuntosCategoria2().setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(matrizRiesgos.getAdjuntosCategoria2().getCodCategoria()));
-            }
-            if(matrizRiesgos.getAdjuntosCategoria2().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo() !=null){
-                nom2 = gestorMatrizRiesgos.cargarNombreAdjunto(ev.getEvaluacionPK().getCodigoEstablecimiento(),  ev.getEvaluacionPK().getCodEvaluacion(), matrizRiesgos.getAdjuntosCategoria2().getCodCategoria(), matrizRiesgos.getAdjuntosCategoria2().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo());                 
-            }
-            
-        } catch (Exception ex) {
-            UtilLog.generarLog(this.getClass(), ex);
-        }
-    }
-    
     public String guardar() {
         try {
             gestorMatrizRiesgos= new GestorMatrizRiesgos();            
             Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
-            if(matricesRiesgoEstablecimientoList.isEmpty()){
-                matrizRiesgos.setCodMatriz(1);
-            }
-            if(matrizRiesgos.getCodMatriz()==null){
-            matrizRiesgos.setCodMatriz(matricesRiesgoEstablecimientoList.size()+1);
-            }
+            GestorGeneral gestorGeneral=new GestorGeneral();
             
-            
-            if(matrizRiesgos.getDescripcionMedida2().equals("") || matrizRiesgos.getAdjuntosCategoria2()==null){
-                matrizRiesgos.setDescripcionMedida2("");                                
-                matrizRiesgos.setAdjuntosCategoria2(new AdjuntosCategoria(0));    
-                matrizRiesgos.getAdjuntosCategoria2().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().setCodCategoriaTipo(0);
+            if(matrizRiesgos.getCodRiesgoMatriz()==null){
+                Long codMatriz=gestorGeneral.nextval(GestorGeneral.MATRIZ_MATRIZ_RIESGOS_COD_RIESGO_MATRIZ_SEQ);
+                matrizRiesgos.setCodRiesgoMatriz(codMatriz.intValue());
             }
             
-            MatrizRiesgos mr= new MatrizRiesgos(e.getEvaluacionPK().getCodigoEstablecimiento(), matrizRiesgos.getCargos().getCodCargo(), matrizRiesgos.getCodMatriz(), 
+            MatrizRiesgos mr= new MatrizRiesgos(e.getEvaluacionPK().getCodigoEstablecimiento(), matrizRiesgos.getCargos().getCodCargo(), matrizRiesgos.getCodRiesgoMatriz(), 
                     matrizRiesgos.getFunciones().getCodFuncion(), matrizRiesgos.isRutinaria(), matrizRiesgos.getRiesgo().getCodRiesgo(), matrizRiesgos.getRiesgoPosible().getCodRiesgoPosible(),
                     matrizRiesgos.getExposicion().getCodExposicion(), matrizRiesgos.getCategoriaRiesgo().getCodCategoriaRiesgo(), matrizRiesgos.getFuente(), matrizRiesgos.getMedio(), matrizRiesgos.getIndividuo(),
                     matrizRiesgos.getNivelDeficiencia().getCodNivelDef(), matrizRiesgos.getNivelExposcion().getCodNivelExp(), matrizRiesgos.getNivelConsecuencia().getCodNivelConsec(), matrizRiesgos.getNivelRiesgo(), 
                     matrizRiesgos.getInterpretacionNr(), matrizRiesgos.getAceptabilidadRiesgo(),matrizRiesgos.getNivelProbabilidad(),matrizRiesgos.getInterpretacionProb(), matrizRiesgos.getNumExpuestos(), 
-                    matrizRiesgos.getPeorConsecuencia(), matrizRiesgos.isReqLegal(), matrizRiesgos.getMedidasIntervencion().getCodMedida(), matrizRiesgos.getDescripcionMedida(), 
-                    matrizRiesgos.getDescripcionMedida2(), matrizRiesgos.getElementoProteccion().getCodElemento(), matrizRiesgos.getAdjuntosCategoria().getCodCategoria(), matrizRiesgos.getAdjuntosCategoria2().getCodCategoria(),
-                    matrizRiesgos.getAdjuntosCategoria().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo(), matrizRiesgos.getAdjuntosCategoria2().getAdjuntosCategoriaTipo().getAdjuntosCategoriaTipoPK().getCodCategoriaTipo(),
+                    matrizRiesgos.getPeorConsecuencia(), matrizRiesgos.isReqLegal(), matrizRiesgos.getMedidasIntervencion().getCodMedida(), matrizRiesgos.getElementoProteccion().getCodElemento(),                    
                     matrizRiesgos.getObservaciones());
             //gestorMatrizRiesgos.validarMatrizRiesgos(mr);            
             gestorMatrizRiesgos.almacenarMatrizRiesgo(mr);
@@ -488,46 +452,6 @@ public class UIMatrizRiesgos implements Serializable{
         return ("/matriz/administrar-matriz-cargos-establecimiento.xhtml?faces-redirect=true");        
     }
     
-    public StreamedContent getFileDownloadMatriz() {        
-        try {             
-            Evaluacion ev = (Evaluacion) UtilJSF.getBean("evaluacion");      
-            
-            Properties p = Propiedades.getInstancia().getPropiedades();
-            String rutaAdjunto = p.getProperty("rutaAdjunto") + File.separator + App.ADJUNTO_PREFIJO + ev.getEvaluacionPK().getCodEvaluacion();
-            if(matrizRiesgos.getAdjuntosCategoria() == null){
-                return null;
-            }
-            InputStream stream = new FileInputStream(rutaAdjunto+ File.separator + nom);
-            fileDownloadMatriz = new DefaultStreamedContent(stream, null, rutaAdjunto);
-        } catch (FileNotFoundException ex) {
-            UtilMSG.addErrorMsg("Archivo No Existe", "El adjunto " + nom + ", no fue encontrado. Si el problema persiste contactenos para asistirle.");
-            UtilLog.generarLog(this.getClass(), ex);
-        }
-        return fileDownloadMatriz;
-    }
-
-    public void setFileDownloadMatriz(StreamedContent fileDownloadMatriz) {
-        this.fileDownloadMatriz = fileDownloadMatriz;
-    }
-
-    public StreamedContent getFileDownloadMatriz2() {        
-        try {             
-            Evaluacion ev = (Evaluacion) UtilJSF.getBean("evaluacion");      
-            
-            Properties p = Propiedades.getInstancia().getPropiedades();
-            String rutaAdjunto2 = p.getProperty("rutaAdjunto") + File.separator + App.ADJUNTO_PREFIJO + ev.getEvaluacionPK().getCodEvaluacion();
-            if(matrizRiesgos.getAdjuntosCategoria2() == null){
-                return null;
-            }
-            InputStream stream2 = new FileInputStream(rutaAdjunto2+ File.separator + nom2);
-            fileDownloadMatriz2 = new DefaultStreamedContent(stream2, null, rutaAdjunto2);
-        } catch (FileNotFoundException ex) {
-            UtilMSG.addErrorMsg("Archivo No Existe", "El adjunto " + nom2 + ", no fue encontrado. Si el problema persiste contactenos para asistirle.");
-            UtilLog.generarLog(this.getClass(), ex);
-        }
-        return fileDownloadMatriz2;
-    }
-    
     public void dialogoGenerarpdf() {
         try {            
             Dialogo dialogo = new Dialogo("dialogos/generarPDF.xhtml", "Generar Matriz de Riesgos", "clip", "30%", Dialogo.EFECTO);
@@ -540,6 +464,255 @@ public class UIMatrizRiesgos implements Serializable{
         }
     }
     
+    
+    public void cargarListaMatrizTareaRiesgo() {
+        try {                                     
+            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");            
+            UtilJSF.setBean("varRiesgoEstablecimiento", matrizRiesgos, UtilJSF.SESSION_SCOPE);
+            GestorGeneral gestorGeneral=new GestorGeneral();
+            
+            MatrizRiesgos mr=(MatrizRiesgos) UtilJSF.getBean("varRiesgoEstablecimiento");
+            if(mr.getCodRiesgoMatriz()==null){
+                Long codMatriz=gestorGeneral.nextval(GestorGeneral.MATRIZ_MATRIZ_RIESGOS_COD_RIESGO_MATRIZ_SEQ);
+                mr.setCodRiesgoMatriz(codMatriz.intValue());
+            }
+            
+            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
+            evaluacionPlanAccionDetalles = new ArrayList<>();
+            evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaMatrizTareaRiesgo( e.getEvaluacionPK().getCodigoEstablecimiento(),mr.getCodRiesgoMatriz()));
+    
+        } catch (Exception ex) {
+            UtilLog.generarLog(this.getClass(), ex);
+        }
+    }
+    
+    public void modificarPlanAccion() {
+        EvaluacionPlanAccionDetalle epad = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("varPlanAccionDetalle");        
+        modificarActivo = Boolean.TRUE;
+        UtilJSF.setBean("evaluacionPlanAccionDetalle", epad, UtilJSF.SESSION_SCOPE);
+//        System.out.println("obj" + (EvaluacionPlanAccionDetalle) UtilJSF.getBean("evaluacionPlanAccionDetalle"));
+    }
+    
+    
+    public void procesarPlanAccionModificar() {
+        try {            
+            EvaluacionPlanAccionDetalle epd = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("evaluacionPlanAccionDetalle");
+            epd.getMatrizRiesgos().setCodRiesgoMatriz(matrizRiesgos.getCodRiesgoMatriz());
+            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
+            epd = gestorEvaluacionPlanAccion.validarEvaluacionPlanAccionDetalle(epd);
+            gestorEvaluacionPlanAccion.actualizarEvaluacionPlanAccionDetalleRiesgoMatriz(epd);
+            //this.enviarCorreo();
+            this.modificarActivo = Boolean.FALSE;
+
+            evaluacionPlanAccionDetalles = new ArrayList<>();
+            
+            UtilJSF.setBean("evaluacionPlanAccionDetalle", new EvaluacionPlanAccionDetalle(), UtilJSF.SESSION_SCOPE);
+            this.cargarListaMatrizTareaRiesgo();
+
+        } catch (Exception e) {
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getCause().getMessage(), e.getMessage());
+            } else {
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }
+        }
+    }
+    
+    
+    public void mostrarDialogoPlanAccion() {
+        try {                                         
+            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
+            Sesion sesion = (Sesion) UtilJSF.getBean("sesion");            
+            
+            this.cargarListaMatrizTareaRiesgo();
+            GestorResponsable gestorResponsable = new GestorResponsable();            
+            GestorEstablecimiento gestorEstablecimiento= new GestorEstablecimiento();
+            Integer sisgapp = gestorEstablecimiento.buscarSisgapp();
+            
+            responsables = new ArrayList<>();
+            List<String> condicionesConsulta = new ArrayList<>();
+            condicionesConsulta.add(App.CONDICION_WHERE);
+            condicionesConsulta.add(Responsable.RESPONSABLE_CONDICION_CODIGO_ESTABLECIMIENTO.replace("?", String.valueOf(e.getEstablecimiento().getCodigoEstablecimiento())+","+sisgapp));
+            responsables.addAll(gestorResponsable.cargarListaResponsable(
+                    UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
+            ));
+                
+            GestorFuenteHallazgo gestorFuentehallazgo = new GestorFuenteHallazgo();
+            fuentehallazgos.addAll((Collection<? extends FuenteHallazgo>) gestorFuentehallazgo.cargarListaFuentehallazgo());
+
+            GestorClaseHallazgo gestorClasehallazgo = new GestorClaseHallazgo();            
+            clasehallazgos.addAll((Collection<? extends ClaseHallazgo>) gestorClasehallazgo.cargarListaClasehallazgo());
+
+            GestorTipoAccion gestorTipoaccion = new GestorTipoAccion();            
+            tipoacciones.addAll((Collection<? extends TipoAccion>) gestorTipoaccion.cargarListaTipoaccion());
+
+            GestorMotivoCorreccion gestorMotivocorreccion = new GestorMotivoCorreccion();
+            motivocorrecciones.addAll((Collection<? extends MotivoCorreccion>) gestorMotivocorreccion.cargarListaMotivocorreccion());            
+
+            List<Responsable> responsablesSisgapp = new ArrayList<>();
+            for (Responsable rs : sesion.getResponsables()) {
+                for (Responsable r : responsables) {
+                    if (!rs.equals(r)) {
+                        responsablesSisgapp.add(rs);
+                    }
+                }
+            }
+            if (!responsablesSisgapp.isEmpty()) {
+                responsables.addAll(responsablesSisgapp);
+            }
+            UtilJSF.setBean("evaluacionPlanAccionDetalle", new EvaluacionPlanAccionDetalle(), UtilJSF.SESSION_SCOPE);
+            Dialogo dialogo = new Dialogo("dialogos/tarea-riesgo.xhtml", "Tarea Riesgo", "clip", Dialogo.WIDTH_50);
+            UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
+            UtilJSF.execute("PF('dialog').show();");
+
+        } catch (Exception e) {
+            if (UtilLog.causaControlada(e)) {
+                UtilMSG.addWarningMsg(e.getMessage());
+            } else {
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), e);
+            }
+        }
+    }
+    
+     public void procesarPlanAccion() {
+        try {
+            
+            EvaluacionPlanAccionDetalle epd = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("evaluacionPlanAccionDetalle");
+            String documentoUsuario = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios().getUsuariosPK().getDocumentoUsuario();
+            Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
+            matrizRiesgos = (MatrizRiesgos) UtilJSF.getBean("varRiesgoEstablecimiento");
+            
+            GestorGeneral gestorGeneral = new GestorGeneral();
+            GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
+
+            epd = gestorEvaluacionPlanAccion.validarEvaluacionPlanAccionDetalle(epd);
+
+            Long codPlan = gestorEvaluacionPlanAccion.consultarEvaluacionPlanAccion(e.getEvaluacionPK().getCodEvaluacion(),
+                    e.getEvaluacionPK().getCodigoEstablecimiento(), App.EVALUACION_PLAN_ACCION_ESTADO_ABIERTO);
+
+            if (codPlan == null) {
+                codPlan = gestorGeneral.nextval(GestorGeneral.GESTOR_EVALUACION_PLAN_ACCION_COD_PLAN_SEQ);
+            }
+
+            EvaluacionPlanAccion ep = new EvaluacionPlanAccion(
+                    new EvaluacionPlanAccionPK(e.getEvaluacionPK().getCodEvaluacion(),
+                            e.getEvaluacionPK().getCodigoEstablecimiento(),
+                            codPlan),
+                    App.EVALUACION_PLAN_ACCION_ESTADO_ABIERTO, documentoUsuario, documentoUsuario
+            );
+            epd.setEvaluacionPlanAccionDetallePK(new EvaluacionPlanAccionDetallePK(ep.getEvaluacionPlanAccionPK().getCodEvaluacion(), ep.getEvaluacionPlanAccionPK().getCodigoEstablecimiento(),
+                    ep.getEvaluacionPlanAccionPK().getCodPlan()));
+            epd.setEstado(App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO);
+            
+            epd.setDocumentoUsuario(documentoUsuario);            
+            epd.getEvaluacionPlanAccionDetallePK().setCodPlanDetalle(codPlan);
+            epd.getEvaluacionPlanAccionDetallePK().setCodPlanDetalle(gestorGeneral.nextval(GestorGeneral.GESTOR_EVALUACION_PLAN_ACCION_DETALLE_COD_PLAN_DETALLE_SEQ));            
+
+            EvaluacionPlanAccionDetalleNotas epadn = new EvaluacionPlanAccionDetalleNotas(
+                    new EvaluacionPlanAccionDetalleNotasPK(ep.getEvaluacionPlanAccionPK().getCodEvaluacion(), ep.getEvaluacionPlanAccionPK().getCodigoEstablecimiento(),
+                            codPlan, epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()),
+                    documentoUsuario, epd.getEstado(), "REGISTRO INICIAL", "Inicia registro de plan acción, responsable: " + UtilTexto.capitalizarCadena(responsable), usuariosSeleccionado);
+            epd.setEvaluacionPlanAccionDetalleNotas(epadn);
+            epd.getMatrizRiesgos().setCodRiesgoMatriz(matrizRiesgos.getCodRiesgoMatriz());
+            
+            ep.setEvaluacionPlanAccionDetalle(epd);
+            gestorEvaluacionPlanAccion.procesarTareaRiesgo(ep);
+            //this.enviarCorreo();
+            UtilJSF.setBean("evaluacionPlanAccionDetalle", new EvaluacionPlanAccionDetalle(), UtilJSF.SESSION_SCOPE);            
+            UtilMSG.addSuccessMsg("Tarea Riesgo Guardada", "La Tarea se almaceno satisfactoriamente.");            
+            
+            
+        } catch (Exception ex) {
+            if (UtilLog.causaControlada(ex)) {
+                UtilMSG.addWarningMsg("Validación", ex.getMessage());
+            } else {
+                UtilMSG.addSupportMsg();
+                UtilLog.generarLog(this.getClass(), ex);
+            }
+        }
+    }
+
+    public EvaluacionPlanAccionDetalle getEvaluacionPlanAccionDetalle() {
+        return evaluacionPlanAccionDetalle;
+    }
+
+    public void setEvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetalle evaluacionPlanAccionDetalle) {
+        this.evaluacionPlanAccionDetalle = evaluacionPlanAccionDetalle;
+    }
+
+    public EvaluacionPlanAccionDetallePK getEvaluacionPlanAccionDetallePK() {
+        return evaluacionPlanAccionDetallePK;
+    }
+
+    public void setEvaluacionPlanAccionDetallePK(EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK) {
+        this.evaluacionPlanAccionDetallePK = evaluacionPlanAccionDetallePK;
+    }
+
+    public List<EvaluacionPlanAccionDetalle> getEvaluacionPlanAccionDetalles() {
+        return evaluacionPlanAccionDetalles;
+    }
+
+    public void setEvaluacionPlanAccionDetalles(List<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles) {
+        this.evaluacionPlanAccionDetalles = evaluacionPlanAccionDetalles;
+    }
+
+    public List<ClaseHallazgo> getClasehallazgos() {
+        return clasehallazgos;
+    }
+
+    public void setClasehallazgos(List<ClaseHallazgo> clasehallazgos) {
+        this.clasehallazgos = clasehallazgos;
+    }
+
+    public List<FuenteHallazgo> getFuentehallazgos() {
+        return fuentehallazgos;
+    }
+
+    public void setFuentehallazgos(List<FuenteHallazgo> fuentehallazgos) {
+        this.fuentehallazgos = fuentehallazgos;
+    }
+
+    public List<TipoAccion> getTipoacciones() {
+        return tipoacciones;
+    }
+
+    public void setTipoacciones(List<TipoAccion> tipoacciones) {
+        this.tipoacciones = tipoacciones;
+    }
+
+    public List<TipoPlanAccion> getTiposTarea() {
+        return tiposTarea;
+    }
+
+    public void setTiposTarea(List<TipoPlanAccion> tiposTarea) {
+        this.tiposTarea = tiposTarea;
+    }
+
+    public List<MotivoCorreccion> getMotivocorrecciones() {
+        return motivocorrecciones;
+    }
+
+    public void setMotivocorrecciones(List<MotivoCorreccion> motivocorrecciones) {
+        this.motivocorrecciones = motivocorrecciones;
+    }
+
+    public List<CentroTrabajo> getCentrostrabajo() {
+        return centrostrabajo;
+    }
+
+    public void setCentrostrabajo(List<CentroTrabajo> centrostrabajo) {
+        this.centrostrabajo = centrostrabajo;
+    }
+
+    public List<Responsable> getResponsables() {
+        return responsables;
+    }
+
+    public void setResponsables(List<Responsable> responsables) {
+        this.responsables = responsables;
+    }
     
     public void matrizRiesgosPDF(){
         Integer codEstablecimiento=evaluacion.getEstablecimiento().getCodigoEstablecimiento();
@@ -564,10 +737,6 @@ public class UIMatrizRiesgos implements Serializable{
         this.cargosActividadesEstablecimientoList = cargosActividadesEstablecimientoList;
     }
 
-    public void setFileDownloadMatriz2(StreamedContent fileDownloadMatriz2) {
-        this.fileDownloadMatriz2 = fileDownloadMatriz2;
-    }
-
     public String getNom2() {
         return nom2;
     }
@@ -583,6 +752,14 @@ public class UIMatrizRiesgos implements Serializable{
 
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    public Boolean getModificarActivo() {
+        return modificarActivo;
+    }
+
+    public void setModificarActivo(Boolean modificarActivo) {
+        this.modificarActivo = modificarActivo;
     }
        
     public String getComponentesRefrescar() {

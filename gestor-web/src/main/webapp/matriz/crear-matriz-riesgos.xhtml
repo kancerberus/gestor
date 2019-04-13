@@ -188,79 +188,101 @@
                 </p:panelGrid>
             </p:panel>
             
-            <p:panel id="panelEvidencias" style="width: 99.7%;height: 162px;margin-left: auto; float: right" header="Evidencias"  >
-                <p:panelGrid style="float: left; margin-left: 1%" columns="6">
-                    <p:column>
-                        <p:row>
-                            <h:outputText style="font-weight: bold;" value="Tarea 1:"/>
-                        </p:row>
-                        <br/>
-                        <p:row>
-                            <p:inputTextarea style="" rows="3" autoResize="false" minQueryLength="5" value="#{uiMatrizRiesgos.matrizRiesgos.descripcionMedida}"/>
-                        </p:row>
-                    </p:column>
-                    <p:column>
-                        <p:row>
-                    <p:selectOneMenu value="#{uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria}" converter="convertidorGenerico"
-                                     style="text-align: center;width: 150px">  
-                    <f:selectItem itemLabel="Seleccionar categoria" itemValue="" /> 
-                    <f:selectItems value="#{uiMatrizRiesgos.adjuntosCategorias}" var="mra" itemLabel="#{mra.nombre}" itemValue="#{mra}"/>
-                    <p:ajax  update="cattipo" listener="#{uiMatrizRiesgos.cargarAdjuntosCategoriaTipo()}" />                    
-                    </p:selectOneMenu>                    
+            <p:panel id="panelEvidencias" style="width: 99.7%;height: 250px;margin-left: auto; float: right" header="Evidencias"  >
+                
+                <h:panelGrid style="float: left">  
+                    <p:commandLink action="#{uiMatrizRiesgos.mostrarDialogoPlanAccion()}" update=":formMatrizRiesgos:dialog" >
+                        <p:graphicImage url="/resources/imagenes/ciclos/mind-map.png" 
+                                        width="30%"/> 
+                    </p:commandLink>
+                    <h:outputText value="Reportar Plan Accion" style="font-family: bold"/>
+                </h:panelGrid>
+                
+                
+                
+                <p:dataTable id="dtPlanAccionDetalleRiesgo"  value="#{uiMatrizRiesgos.evaluacionPlanAccionDetalles}" var="varPlanAccionDetalle" emptyMessage="El ítem no tiene planes de acción."
+                             scrollRows="10" rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable" style="width: 70%; float: left"
+                             rowHover="true" scrollable="true"  scrollWidth="90%" scrollHeight="100">
+                    <f:facet name="header">
+                        Planes de Acción
+                    </f:facet>
+                    <p:columnGroup type="header">  
+                        <p:row>  
                             
-                    </p:row>
-                    <br/><br/>
-                    <p:row>
-                    <p:selectOneMenu id="cattipo" value="#{uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria.adjuntosCategoriaTipo}" converter="convertidorGenerico"
-                                     style="text-align: center;width: 150px" disabled="#{empty uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria.adjuntosCategoriaTipoList}">                          
-                        <f:selectItem itemLabel="Seleccionar tipo" itemValue=""  /> 
-                        <f:selectItems value="#{uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria.adjuntosCategoriaTipoList}" var="mrca" itemLabel="#{mrca.nombre}" itemValue="#{mrca}"/>                        
-                        <p:ajax  update="cattipo,filename" listener="#{uiMatrizRiesgos.cargarAdjuntosCategoriaTipo()}" />                    
-                    </p:selectOneMenu>
-                    </p:row>
+                            <p:column headerText="Nombre" filterBy="#{varPlanAccionDetalle.nombre}" sortBy="#{varPlanAccionDetalle.nombre}"/>                                                        
+                            <p:column  headerText="Descripción Hallazgo"/>        
+                            <p:column headerText="Fuente Hallazgo" filterBy="#{varPlanAccionDetalle.fuentehallazgo}" />                            
+                            <p:column headerText="Clase Hallazgo" filterBy="#{varPlanAccionDetalle.clasehallazgo}" />                            
+                            <p:column  headerText="Descripción Accion"/>        
+                            <p:column headerText="Tipo Accion" filterBy="#{varPlanAccionDetalle.tipoaccion}" />                            
+                            <p:column headerText="Motivo Correccion" filterBy="#{varPlanAccionDetalle.motivocorreccion}" />                                                        
+                            <p:column  headerText="Usuario" filterBy="#{varPlanAccionDetalle.usuarios.usuario}"/>                            
+                            <p:column  headerText="Estado" filterBy="#{varPlanAccionDetalle.estado}"/>
+                            <p:column  headerText="Responsable" filterBy="#{varPlanAccionDetalle.responsable.nombresApellidos}"/>
+                            <p:column  headerText="Fecha Creacion" sortBy="#{varPlanAccionDetalle.fechaRegistro}"/>                            
+                            <p:column  headerText="Fecha vencicmiento" />
+                            <p:column headerText="Observaciones"/> 
+                            <p:column headerText="Registro"/> 
+                            <p:column headerText="Evaluacion Eficacia"/> 
+                            
+                        </p:row> 
+                    </p:columnGroup>
+
+                    
+                    <p:column >
+                        <h:outputText value="#{varPlanAccionDetalle.nombre}"/>
+                    </p:column>                                        
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.descripcionhallazgo}" />
                     </p:column>                    
                     <p:column>
-                            <p:commandButton icon="ui-icon-document" title="Ver Adjunto" ajax="false">    
-                                <p:fileDownload value="#{uiMatrizRiesgos.fileDownloadMatriz}" />
-                            </p:commandButton>
-                            <h:outputText value=" "/>
-                            <h:outputText id="filename" value="#{uiMatrizRiesgos.nom}"/>
+                        <h:outputText value="#{varPlanAccionDetalle.fuentehallazgo.nombre}"/>
                     </p:column>
-                </p:panelGrid>                    
-                <p:panelGrid style="position: relative; width: 10%" columns="6">
                     <p:column>
-                        <p:row>
-                            <h:outputText style="font-weight: bold" value="Tarea 2:"/>           
-                        </p:row>
-                        <p:row>
-                            <p:inputTextarea  style="" rows="3" autoResize="false" minQueryLength="5" value="#{uiMatrizRiesgos.matrizRiesgos.descripcionMedida2}"/>       
-                        </p:row>
+                        <h:outputText value="#{varPlanAccionDetalle.clasehallazgo.nombre}"/>
                     </p:column>
-                    <br/>
                     <p:column>
-                        <p:selectOneMenu value="#{uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria2}" converter="convertidorGenerico"
-                                     style="text-align: center;">  
-                    <f:selectItem itemLabel="Seleccionar categoria" itemValue="" /> 
-                    <f:selectItems value="#{uiMatrizRiesgos.adjuntosCategorias}" var="mra" itemLabel="#{mra.nombre}" itemValue="#{mra}"/>
-                    <p:ajax  update="cattipo2" listener="#{uiMatrizRiesgos.cargarAdjuntosCategoriaTipo2()}" />                    
-                    </p:selectOneMenu>
-                    <br/><br/>
-                    <p:selectOneMenu id="cattipo2" value="#{uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria2.adjuntosCategoriaTipo}" converter="convertidorGenerico"
-                                     style="text-align: center" disabled="#{empty uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria2.adjuntosCategoriaTipoList}">                          
-                        <f:selectItem itemLabel="Seleccionar tipo" itemValue=""  /> 
-                        <f:selectItems value="#{uiMatrizRiesgos.matrizRiesgos.adjuntosCategoria2.adjuntosCategoriaTipoList}" var="mrca" itemLabel="#{mrca.nombre}" itemValue="#{mrca}"/>
-                        <p:ajax  update="cattipo2,filename2" listener="#{uiMatrizRiesgos.cargarAdjuntosCategoriaTipo2()}" />                    
-                    </p:selectOneMenu>                        
+                        <h:outputText value="#{varPlanAccionDetalle.descripcion}" />
                     </p:column> 
-                    
                     <p:column>
-                            <p:commandButton icon="ui-icon-document" title="Ver Adjunto" ajax="false">    
-                                <p:fileDownload value="#{uiMatrizRiesgos.fileDownloadMatriz2}" />
-                            </p:commandButton>
-                            <h:outputText value=" "/>
-                            <h:outputText id="filename2" value="#{uiMatrizRiesgos.nom2}"/>
+                        <h:outputText value="#{varPlanAccionDetalle.tipoaccion.nombre}"/>
                     </p:column>
-                </p:panelGrid>
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.motivocorreccion.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.usuarios.usuario}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.estado}"/>
+                    </p:column> 
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.responsable.nombresApellidos}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.fechaRegistro}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>                                    
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.fechaPlazo}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.observaciones}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.registro ? 'Con Registro' : 'Sin Registro' }" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPlanAccionDetalle.eficacia ? 'Eficaz' : 'No Eficaz' }" />
+                    </p:column>
+                </p:dataTable>
+            
+
+                
             </p:panel>
             
             <p:panel style="margin: auto;float: left; width: 99.5%" id="panelObservacionesgenerales"  header="Observaciones Generales"  >

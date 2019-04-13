@@ -29,9 +29,9 @@ import com.gestor.gestor.controlador.GestorTipoAccion;
 import com.gestor.publico.CentroTrabajo;
 import com.gestor.publico.PlanTrabajoObjetivo;
 import com.gestor.publico.PlanTrabajoPrograma;
+import com.gestor.publico.TipoPlanAccion;
 import com.gestor.publico.controlador.GestorCentroTrabajo;
-import com.gestor.publico.controlador.GestorObjetivo;
-import com.gestor.publico.controlador.GestorPrograma;
+import com.gestor.publico.controlador.GestorTipoPlanAccion;
 import com.gestor.publico.controlador.GestorUsuario;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,7 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.mail.Message;
@@ -71,13 +70,16 @@ public class UIPlanAccion {
     private List<String> selectedOptions;
     //filtros
     private List<Establecimiento> establecimientoList = new ArrayList<>();
-    private List<Establecimiento> establecimientoListSeleccionado = new ArrayList<>();
+    private List<TipoPlanAccion> tipoPlanAccionList=new ArrayList<>();
+    private List<Establecimiento> establecimientoListSeleccionado = new ArrayList<>();    
 
     private List<Usuarios> usuariosList = new ArrayList<>();
     private Usuarios usuariosSeleccionado;
 
     private List<String> ciclosString = new ArrayList<>();
+    private List<Integer> tiposPlanAccion=new ArrayList<>();
     private List<String> ciclosStringSeleccionado = new ArrayList<>();
+    
 
     private Map<String, String> capacitacionEstado = new HashMap<>();
     private List<String> capacitacionEstadoSeleccionado = new ArrayList<>();    
@@ -93,7 +95,7 @@ public class UIPlanAccion {
     private List<PlanTrabajoObjetivo> objetivos = new ArrayList<>();
     private List<ClaseHallazgo> clasehallazgos = new ArrayList<>();
     private List<FuenteHallazgo> fuentehallazgos = new ArrayList<>();
-    private List<TipoAccion> tipoacciones = new ArrayList<>();
+    private List<TipoAccion> tipoacciones = new ArrayList<>();    
     private List<MotivoCorreccion> motivocorrecciones  = new ArrayList<>();
     private List<CentroTrabajo> centrostrabajo = new ArrayList<>();    
 
@@ -105,6 +107,13 @@ public class UIPlanAccion {
             establecimientoList = new ArrayList<>();
             establecimientoList.addAll(s.getEstablecimientoList());
             
+            GestorTipoPlanAccion gestorTipoPlanAccion=new GestorTipoPlanAccion();
+            tipoPlanAccionList=new ArrayList<>();
+            tipoPlanAccionList.addAll(gestorTipoPlanAccion.cargarListaTipoaccion());
+            
+                        
+            tiposPlanAccion=new ArrayList<>();
+            //for(TiposPlanAccion tp:)
             
             ciclosString = new ArrayList<>();
             for (Ciclo c : s.getCiclos()) {
@@ -289,9 +298,14 @@ public class UIPlanAccion {
             establecimiento= new Establecimiento();
         }
         
+        /*if(tipoPlanAccion!=null){
+            String cadena;            
+            condicionesConsulta.add(App.CONDICION_AND);
+            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_TIPO_PLAN_ACCION.replace("?", ""));
+        }*/
+        
 
-        if (usuariosSeleccionado != null && usuariosSeleccionado.getUsuariosPK() != null
-                && usuariosSeleccionado.getUsuariosPK().getDocumentoUsuario() != null && !usuariosSeleccionado.getUsuariosPK().getDocumentoUsuario().equalsIgnoreCase("")) {
+        if (usuariosSeleccionado != null && usuariosSeleccionado.getUsuariosPK() != null && usuariosSeleccionado.getUsuariosPK().getDocumentoUsuario() != null && !usuariosSeleccionado.getUsuariosPK().getDocumentoUsuario().equalsIgnoreCase("")) {
             condicionesConsulta.add(App.CONDICION_AND);
             condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_DOCUMENTO_USUARIO.replace("?", UtilTexto.CARACTER_COMILLA + usuariosSeleccionado.getUsuariosPK().getDocumentoUsuario() + UtilTexto.CARACTER_COMILLA));
         }
@@ -311,6 +325,7 @@ public class UIPlanAccion {
             }
             condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_CICLO.replace("?", cadena));
         }
+        
 
         if (responsable != null && responsable.length() > 0) {
             condicionesConsulta.add(App.CONDICION_AND);
@@ -534,7 +549,8 @@ public class UIPlanAccion {
                             codPlan, epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()),
                     documentoUsuario, epd.getEstado(), "REGISTRO INICIAL", "Inicia registro de plan acción, responsable: " + UtilTexto.capitalizarCadena(responsable), usuariosSeleccionado);
             epd.setEvaluacionPlanAccionDetalleNotas(epadn);
-
+            
+            
             ep.setEvaluacionPlanAccionDetalle(epd);
             gestorEvaluacionPlanAccion.procesarPlanAccion(ep);
             //this.enviarCorreo();
@@ -674,7 +690,7 @@ public class UIPlanAccion {
     public void mostrarDialogoPlanAccion() {
         try {                     
             Sesion sesion = (Sesion) UtilJSF.getBean("sesion");
-            this.sdiSeleccionado = (SeccionDetalleItems) UtilJSF.getBean("varSeccionDetalleItems");                        
+            this.sdiSeleccionado = (SeccionDetalleItems) UtilJSF.getBean("varSeccionDetalleItems");
                     
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             GestorResponsable gestorResponsable = new GestorResponsable();
@@ -700,9 +716,6 @@ public class UIPlanAccion {
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO) 
             ));
             
-            
-            
-            
             if(clasehallazgos.isEmpty()){
                 
                 GestorFuenteHallazgo gestorFuentehallazgo = new GestorFuenteHallazgo();
@@ -716,6 +729,7 @@ public class UIPlanAccion {
 
                 GestorMotivoCorreccion gestorMotivocorreccion = new GestorMotivoCorreccion();
                 motivocorrecciones.addAll((Collection<? extends MotivoCorreccion>) gestorMotivocorreccion.cargarListaMotivocorreccion());            
+                
             
             }
             
@@ -759,6 +773,14 @@ public class UIPlanAccion {
             style += "color: #FF0000";
         }
         return style;
+    }
+
+    public List<Integer> getTiposPlanAccion() {
+        return tiposPlanAccion;
+    }
+
+    public void setTiposPlanAccion(List<Integer> tiposPlanAccion) {
+        this.tiposPlanAccion = tiposPlanAccion;
     }
 
     public int getDias() {
@@ -971,6 +993,14 @@ public class UIPlanAccion {
         this.ciclosString = ciclosString;
     }
 
+    public List<TipoPlanAccion> getTipoPlanAccionList() {
+        return tipoPlanAccionList;
+    }
+
+    public void setTipoPlanAccionList(List<TipoPlanAccion> tipoPlanAccionList) {
+        this.tipoPlanAccionList = tipoPlanAccionList;
+    }    
+    
     /**
      * @return the ciclosStringSeleccionado
      */

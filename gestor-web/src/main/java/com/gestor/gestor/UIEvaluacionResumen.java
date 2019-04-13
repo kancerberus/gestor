@@ -17,6 +17,8 @@ import com.gestor.modelo.Sesion;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.controlador.GestorUsuario;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -94,6 +96,7 @@ public class UIEvaluacionResumen {
             evaluacion = (Evaluacion) UtilJSF.getBean("varEvaluacionResumen");
             evaluacionResumenList = new ArrayList<>();
             GestorEvaluacionResumen gestorEvaluacionResumen = new GestorEvaluacionResumen();
+            
             evaluacionResumenList.addAll(gestorEvaluacionResumen.cargarEvaluacionResumen(evaluacion.getEvaluacionPK().getCodEvaluacion(), evaluacion.getEvaluacionPK().getCodigoEstablecimiento(), evaluacion.getFechaResumen()));
             evaluacion.setResumenesList(gestorEvaluacion.getResumenesFromJson(evaluacion.getResumenes()));
             if (evaluacionResumenList == null || evaluacionResumenList.isEmpty()) {

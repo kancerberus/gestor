@@ -285,8 +285,9 @@ public class UIPlanMaestro {
         try {
             Sesion s = (Sesion) UtilJSF.getBean("sesion");            
             UtilJSF.setBean("dialogo", new Dialogo(), UtilJSF.SESSION_SCOPE);
+            
 //            Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
-            planMaestroList = new ArrayList<>();
+            planMaestroList = new ArrayList<>();            
             GestorPlanMaestro gestorPlanMaestro = new GestorPlanMaestro();
             GestorGeneral gestorGeneral = new GestorGeneral();
 

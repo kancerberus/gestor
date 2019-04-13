@@ -11,6 +11,7 @@ import com.gestor.gestor.Puntajes;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.Lista;
 import com.gestor.publico.Responsable;
+import com.gestor.publico.TipoPlanAccion;
 import com.gestor.publico.Usuarios;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class Sesion {
     private boolean logueado;
     private HashMap configuracion = new HashMap();
     private HashMap<Integer, Boolean> permisos = new HashMap<>();
-    private List<Ciclo> ciclos;
+    private List<Ciclo> ciclos;    
     private List<Puntajes> puntajesList;
     private List<Establecimiento> establecimientoList;       
     private Lista listaVigenciaArchivos;
