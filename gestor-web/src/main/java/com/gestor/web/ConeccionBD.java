@@ -17,7 +17,7 @@ public class ConeccionBD {
     Connection conn;        
 
     public ConeccionBD() throws SQLException {
-        this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/gestorDEV", "postgres", "1234");
+        this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/gestorPRUEBA", "postgres", "1234");
     }
 
     public Connection getConn() {
