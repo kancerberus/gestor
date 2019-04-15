@@ -296,8 +296,8 @@ public class MatrizRiesgosDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT codigo_establecimiento, cod_riesgo_matriz,rutinaria, fuente, medio, individuo, nivel_probabilidad, interpretacion_prob, "
-                    + "nivel_riesgo, interpretacion_nr, aceptabilidad_riesgo, nro_expuestos, peor_consecuencia, requisito_legal,"
-                    + "observaciones, "
+                    + " nivel_riesgo, interpretacion_nr, aceptabilidad_riesgo, nro_expuestos, peor_consecuencia, requisito_legal,"
+                    + " observaciones, "
                     + " C.cod_cargo codc, C.nombre nomc, "
                     + " F.cod_funcion codf, F.nombre nomf, "
                     + " R.cod_riesgo codr, R.nombre nomr, "

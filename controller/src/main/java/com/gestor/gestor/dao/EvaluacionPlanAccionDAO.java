@@ -156,7 +156,7 @@ public class EvaluacionPlanAccionDAO {
                     + " mc.cod_motivo_correccion , mc.nombre , ct.cod_centrotrabajo, ct.nombre "
                     
             );
-            rs = consulta.ejecutar(sql);
+                rs = consulta.ejecutar(sql);
             Collection<EvaluacionPlanAccionDetalle> evaluacionPlanAccionDetalles = new ArrayList<EvaluacionPlanAccionDetalle>();
             while (rs.next()) {
                 EvaluacionPlanAccionDetalle epad = new EvaluacionPlanAccionDetalle(new EvaluacionPlanAccionDetallePK(rs.getLong("cod_evaluacion"), codigoEstablecimiento, rs.getLong("cod_plan"), rs.getLong("cod_plan_detalle")),
