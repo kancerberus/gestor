@@ -77,7 +77,7 @@ public class UIExportar extends HttpServlet {
             //mapa.put("SUBREPORT_DIR", sc.getRealPath(nomReporte + ".jasper").replace(nomReporte.split("/")[nomReporte.split("/").length - 1] + ".jasper", ""));
             String controlador = "org.postgresql.Driver";
             Class.forName(controlador).newInstance();
-            String url = "jdbc:postgresql://localhost:5432/gestorPRUEBA";
+            String url = "jdbc:postgresql://localhost:5432/gestor";
             String usuario = "postgres";
             String clave = "1234";
             Connection conexion = java.sql.DriverManager.getConnection(url, usuario, clave);
