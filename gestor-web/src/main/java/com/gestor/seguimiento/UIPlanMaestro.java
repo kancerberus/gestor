@@ -137,8 +137,7 @@ public class UIPlanMaestro {
     }
 
     public String procesarPlanMaestro() {
-        try {
-            
+        try {           
             
             GestorPlanMaestro gestorPlanMaestro = new GestorPlanMaestro();
             GestorGeneral gestorGeneral = new GestorGeneral();

@@ -24,10 +24,10 @@
                         Filtros de Búsqueda
                     </f:facet>
 
-                    <h:panelGrid>
+                    <h:panelGrid style="margin-left: -80%">
 
                         <h:outputLabel value="Empresas"/>
-                        <p:selectManyMenu value="#{uiPlanMaestro.establecimientoListSeleccionado}" converter="establecimientoConverter"    
+                        <p:selectManyMenu value="#{uiPlanMaestro.establecimientoListSeleccionado}" converter="establecimientoConverter" style="width: 90%"
                                           var="t" filter="true" filterMatchMode="contains" showCheckbox="true" styleClass="Centro" >
                             <f:selectItems value="#{uiPlanMaestro.establecimientoList}" var="varEmpresa" itemLabel="#{varEmpresa.nombre}" itemValue="#{varEmpresa}" />
                             <p:column>                        

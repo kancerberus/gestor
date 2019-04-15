@@ -22,8 +22,7 @@
                         Filtros de Búsqueda
                     </f:facet>
 
-                    <h:panelGrid  >
-
+                    <h:panelGrid>
                         <h:outputLabel value="Evaluador"/>
                         <p:selectOneMenu value="#{uiPlanAccion.usuariosSeleccionado}" converter="convertidorGenerico"
                                                          style="text-align: center;width: 180px;">  
@@ -43,9 +42,9 @@
                                 </p:column>
                             <p:column >
                                 <h:outputText value="#{t.nombre}" />
-                                </p:column>                                
+                            </p:column>                                
                         </p:selectOneListbox>                        
-                </h:panelGrid>
+                    </h:panelGrid>
                     <h:panelGrid columns="2">
                         <h:outputLabel value="Cod Evaluación"/>
                         <p:inputText placeholder="Cod Evaluación" value="#{uiPlanAccion.codEvaluacion}"/>
@@ -58,7 +57,11 @@
 
                         <h:outputLabel value="Responsable"/>
                         <p:inputText placeholder="Responsable" value="#{uiPlanAccion.responsable}"/>
-
+                        
+                        <h:outputText value="Tipo Plan Accion" />
+                        <p:selectManyButton value="#{uiPlanAccion.tiposPlanAccionIntegerSeleccionado}" converter="convertidorGenerico" >
+                            <f:selectItems value="#{uiPlanAccion.tipoPlanAccionList}" var="tpa" itemLabel="#{tpa.nombre}"/>
+                        </p:selectManyButton>
                     </h:panelGrid>
 
                     <h:panelGrid columns="2">

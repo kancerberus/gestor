@@ -78,7 +78,7 @@
             <h:panelGrid>
                 <p:dataTable id="dtPlanAccionDetalle"  value="#{uiMatrizRiesgos.evaluacionPlanAccionDetalles}" var="varPlanAccionDetalle" emptyMessage="El ítem no tiene planes de acción."
                              scrollRows="200" rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable" style="width: 100%"
-                             rowHover="true" scrollable="true" scrollWidth="1920" scrollHeight="100">
+                             rowHover="true" scrollable="true" scrollWidth="auto" scrollHeight="100">
                     <f:facet name="header">
                         Planes de Acción
                     </f:facet>
@@ -178,7 +178,7 @@
                     </p:commandButton>
                         
                     <p:commandButton value="Modificar Plan Acción" icon="ui-icon-disk" action="#{uiMatrizRiesgos.procesarPlanAccionModificar()}" 
-                                     process="@parent pgPlanAccion" update="pgPlanAccion dtPlanAccionDetalle opcionesMenuPlanAccion"
+                                     process="@parent pgPlanAccion" update="pgPlanAccion dtPlanAccionDetalle opcionesMenuPlanAccion, formMatrizRiesgos:dtPlanAccionDetalleRiesgo"
                                      rendered="#{uiMatrizRiesgos.modificarActivo}"/>
 
                     <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" oncomplete="PF('dialog').hide();"/>

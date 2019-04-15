@@ -79,6 +79,7 @@ public class UIPlanAccion {
     private List<String> ciclosString = new ArrayList<>();
     private List<Integer> tiposPlanAccion=new ArrayList<>();
     private List<String> ciclosStringSeleccionado = new ArrayList<>();
+    private List<Integer> tiposPlanAccionIntegerSeleccionado = new ArrayList<>();
     
 
     private Map<String, String> capacitacionEstado = new HashMap<>();
@@ -113,7 +114,10 @@ public class UIPlanAccion {
             
                         
             tiposPlanAccion=new ArrayList<>();
-            //for(TiposPlanAccion tp:)
+            for(TipoPlanAccion tp:tipoPlanAccionList){
+                tiposPlanAccion.add(tp.getCodTipoPlanAccion());
+                tiposPlanAccionIntegerSeleccionado.add(tp.getCodTipoPlanAccion());
+            }
             
             ciclosString = new ArrayList<>();
             for (Ciclo c : s.getCiclos()) {
@@ -298,11 +302,14 @@ public class UIPlanAccion {
             establecimiento= new Establecimiento();
         }
         
-        /*if(tipoPlanAccion!=null){
-            String cadena;            
+        if(tiposPlanAccionIntegerSeleccionado!=null && !tiposPlanAccionIntegerSeleccionado.isEmpty()){
             condicionesConsulta.add(App.CONDICION_AND);
-            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_TIPO_PLAN_ACCION.replace("?", ""));
-        }*/
+            String cadena = UtilTexto.CARACTER_COMILLA + "0" + UtilTexto.CARACTER_COMILLA;
+            for (Integer i : tiposPlanAccionIntegerSeleccionado) {
+                cadena += "," + UtilTexto.CARACTER_COMILLA + i.toString() + UtilTexto.CARACTER_COMILLA;
+            }
+            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_TIPO_PLAN_ACCION.replace("?", cadena));
+        }
         
 
         if (usuariosSeleccionado != null && usuariosSeleccionado.getUsuariosPK() != null && usuariosSeleccionado.getUsuariosPK().getDocumentoUsuario() != null && !usuariosSeleccionado.getUsuariosPK().getDocumentoUsuario().equalsIgnoreCase("")) {
@@ -1006,6 +1013,14 @@ public class UIPlanAccion {
      */
     public List<String> getCiclosStringSeleccionado() {
         return ciclosStringSeleccionado;
+    }
+
+    public List<Integer> getTiposPlanAccionIntegerSeleccionado() {
+        return tiposPlanAccionIntegerSeleccionado;
+    }
+
+    public void setTiposPlanAccionIntegerSeleccionado(List<Integer> tiposPlanAccionIntegerSeleccionado) {
+        this.tiposPlanAccionIntegerSeleccionado = tiposPlanAccionIntegerSeleccionado;
     }
 
     /**

@@ -188,9 +188,9 @@
                 </p:panelGrid>
             </p:panel>
             
-            <p:panel id="panelEvidencias" style="width: 99.7%;height: 250px;margin-left: auto; float: right" header="Evidencias"  >
+            <p:panel id="panelEvidencias" style="width: 99.7%;height: 300px;margin-left: auto; float: right" header="Evidencias"  >
                 
-                <h:panelGrid style="float: left">  
+                <h:panelGrid >  
                     <p:commandLink action="#{uiMatrizRiesgos.mostrarDialogoPlanAccion()}" update=":formMatrizRiesgos:dialog" >
                         <p:graphicImage url="/resources/imagenes/ciclos/mind-map.png" 
                                         width="30%"/> 
@@ -201,8 +201,8 @@
                 
                 
                 <p:dataTable id="dtPlanAccionDetalleRiesgo"  value="#{uiMatrizRiesgos.evaluacionPlanAccionDetalles}" var="varPlanAccionDetalle" emptyMessage="El ítem no tiene planes de acción."
-                             scrollRows="10" rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable" style="width: 70%; float: left"
-                             rowHover="true" scrollable="true"  scrollWidth="90%" scrollHeight="100">
+                             scrollRows="10" rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable" style="width: 100%"
+                             rowHover="true" scrollable="true"  scrollWidth="97%" scrollHeight="100">
                     <f:facet name="header">
                         Planes de Acción
                     </f:facet>

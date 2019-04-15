@@ -16,14 +16,14 @@
                 <p:commandButton icon="ui-icon-plus" value="Crear Riesgo" style="margin: auto auto; margin-left: 55%;width: 210px;height: 30px; border-radius: 10px;"
                                  action="#{uiMatrizRiesgos.crearMatrizNueva()}" update="formAdminCargosMatrizRiesgos"/>
                 <p:commandButton icon="ui-icon-document" value="Generar Matriz De Riesgos" action="#{uiMatrizRiesgos.dialogoGenerarpdf()}" update="formAdminCargosMatrizRiesgos"
-                                 style="margin: auto auto;width: 200px;height: 30px; margin-left: 270%;border-radius: 10px;"
+                                 style="margin: auto auto;width: 200px;height: 30px; margin-left: 230%;border-radius: 10px;"
                                  />
                 </p:panelGrid>
                 <p:separator style="height: 3px"/>
                 
             </h:panelGroup> 
             <p:dataTable  value="#{uiMatrizRiesgos.matricesRiesgoEstablecimientoList}" var="varRiesgoEstablecimiento" emptyMessage="No hay Riesgos generados."
-                              widgetVar="varMatrizCargosTable" 
+                          widgetVar="varMatrizCargosTable" style="width: auto"
                               rowStyleClass="letra-xx-small-centro" styleClass="letra-xx-small-centro"
                               rowHover="true">
                     <p:columnGroup type="header">

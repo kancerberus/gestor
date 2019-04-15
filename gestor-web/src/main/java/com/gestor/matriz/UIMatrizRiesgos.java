@@ -176,15 +176,16 @@ public class UIMatrizRiesgos implements Serializable{
     }
     
     public String crearMatrizNueva(){
-        try {       
-            matrizRiesgos=new MatrizRiesgos();
+        try {                   
             this.cargarCargosEstablecimiento();            
             this.cargarRiesgos();                   
             this.cargarMedidasIntervecion();
             this.cargarElementosProteccion();
             this.cargarNivelDeficiencia();
             this.cargarNivelConsecuencia();
-            this.cargarNivelExposicion();            
+            this.cargarNivelExposicion();                
+            this.evaluacionPlanAccionDetalles.clear();
+            matrizRiesgos=new MatrizRiesgos();
             return ("/matriz/crear-matriz-riesgos.xhtml?faces-redirect=true");
         } catch (Exception e) {
         return ("/matriz/crear-matriz-riesgos.xhtml?faces-redirect=true");
@@ -439,6 +440,7 @@ public class UIMatrizRiesgos implements Serializable{
             
             UtilMSG.addSuccessMsg("Matriz Creada correctamente.");            
             this.cargarMatrizCargoEstablecimiento();
+            this.cargarListaMatrizTareaRiesgo();
             return ("/matriz/administrar-matriz-cargos-establecimiento.xhtml?faces-redirect=true");        
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
@@ -447,8 +449,8 @@ public class UIMatrizRiesgos implements Serializable{
     return "";
     }
     
-    public String cancelar(){   
-        this.cargarCargosFuncionesEstablecimiento();
+    public String cancelar(){           
+        this.cargarCargosFuncionesEstablecimiento();                
         return ("/matriz/administrar-matriz-cargos-establecimiento.xhtml?faces-redirect=true");        
     }
     
@@ -622,7 +624,7 @@ public class UIMatrizRiesgos implements Serializable{
             //this.enviarCorreo();
             UtilJSF.setBean("evaluacionPlanAccionDetalle", new EvaluacionPlanAccionDetalle(), UtilJSF.SESSION_SCOPE);            
             UtilMSG.addSuccessMsg("Tarea Riesgo Guardada", "La Tarea se almaceno satisfactoriamente.");            
-            
+            this.cargarListaMatrizTareaRiesgo();
             
         } catch (Exception ex) {
             if (UtilLog.causaControlada(ex)) {
