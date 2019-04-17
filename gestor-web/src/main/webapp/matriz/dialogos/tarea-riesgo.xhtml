@@ -106,7 +106,7 @@
 
                     <p:column>
                         <p:panelGrid columns="3">
-                            <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Acción" action="#{uiMatrizRiesgos.modificarPlanAccion()}" update="formAdminCargosMatrizRiesgos:opPlanAccion"/>
+                            <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Acción" action="#{uiMatrizRiesgos.modificarPlanAccion()}" update="formAdminCargosMatrizRiesgos:opPlanAccion, formAdminCargosMatrizRiesgos:dtPlanAccionDetalle"/>
                             <p:commandButton icon="ui-icon-trash" title="Eliminar Plan Acción" action="#{uiMatrizRiesgos}" update="formAdminCargosMatrizRiesgos:opPlanAccion">
                                 <p:confirm header="Eliminar Plan Acción" message="Desea eliminar el plan de acción ?" icon="ui-icon-alert" />
                             </p:commandButton>

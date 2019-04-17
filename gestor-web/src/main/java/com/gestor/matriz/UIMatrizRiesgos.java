@@ -475,8 +475,7 @@ public class UIMatrizRiesgos implements Serializable{
             
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             evaluacionPlanAccionDetalles = new ArrayList<>();
-            evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaMatrizTareaRiesgo( e.getEvaluacionPK().getCodigoEstablecimiento(),mr.getCodRiesgoMatriz()));
-            UtilMSG.addSuccessMsg("Plan Accion Modificado Exitosamente");            
+            evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaMatrizTareaRiesgo( e.getEvaluacionPK().getCodigoEstablecimiento(),mr.getCodRiesgoMatriz()));            
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -485,8 +484,7 @@ public class UIMatrizRiesgos implements Serializable{
     public void modificarPlanAccion() {
         EvaluacionPlanAccionDetalle epad = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("varPlanAccionDetalle");        
         modificarActivo = Boolean.TRUE;
-        UtilJSF.setBean("evaluacionPlanAccionDetalle", epad, UtilJSF.SESSION_SCOPE);
-//        System.out.println("obj" + (EvaluacionPlanAccionDetalle) UtilJSF.getBean("evaluacionPlanAccionDetalle"));
+        UtilJSF.setBean("evaluacionPlanAccionDetalle", epad, UtilJSF.SESSION_SCOPE);   
     }
     
     
@@ -498,13 +496,12 @@ public class UIMatrizRiesgos implements Serializable{
             epd = gestorEvaluacionPlanAccion.validarEvaluacionPlanAccionDetalle(epd);
             gestorEvaluacionPlanAccion.actualizarEvaluacionPlanAccionDetalleRiesgoMatriz(epd);
             //this.enviarCorreo();
-            this.modificarActivo = Boolean.FALSE;
+            this.modificarActivo = Boolean.TRUE;
 
             evaluacionPlanAccionDetalles = new ArrayList<>();
             
             UtilJSF.setBean("evaluacionPlanAccionDetalle", new EvaluacionPlanAccionDetalle(), UtilJSF.SESSION_SCOPE);
-            this.cargarListaMatrizTareaRiesgo();
-            
+            this.cargarListaMatrizTareaRiesgo();            
 
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
@@ -536,15 +533,19 @@ public class UIMatrizRiesgos implements Serializable{
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
             ));
                 
+            fuentehallazgos=new ArrayList<>();
             GestorFuenteHallazgo gestorFuentehallazgo = new GestorFuenteHallazgo();
             fuentehallazgos.addAll((Collection<? extends FuenteHallazgo>) gestorFuentehallazgo.cargarListaFuentehallazgo());
 
+            clasehallazgos=new ArrayList<>();
             GestorClaseHallazgo gestorClasehallazgo = new GestorClaseHallazgo();            
             clasehallazgos.addAll((Collection<? extends ClaseHallazgo>) gestorClasehallazgo.cargarListaClasehallazgo());
 
+            tipoacciones=new ArrayList<>();
             GestorTipoAccion gestorTipoaccion = new GestorTipoAccion();            
             tipoacciones.addAll((Collection<? extends TipoAccion>) gestorTipoaccion.cargarListaTipoaccion());
-
+            
+            motivocorrecciones=new ArrayList<>();
             GestorMotivoCorreccion gestorMotivocorreccion = new GestorMotivoCorreccion();
             motivocorrecciones.addAll((Collection<? extends MotivoCorreccion>) gestorMotivocorreccion.cargarListaMotivocorreccion());            
 
