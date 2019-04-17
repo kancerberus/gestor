@@ -84,10 +84,15 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private Boolean eficacia;
     @Column(name = "registro")
     private Boolean registro;
-    private Integer diasRestantes;            
+    private Integer diasRestantes;  
+    @Column(name = "cod_plan_accion_detalle")
+    private Integer codPlanAccionDetalle;
+    
+    
     
     private String documentoUsuario;
     
+    private MatrizRiesgos matrizRiesgos=new MatrizRiesgos();
     private Responsable responsable = new Responsable();    
     private FuenteHallazgo fuentehallazgo = new FuenteHallazgo();
     private ClaseHallazgo clasehallazgo = new ClaseHallazgo();
@@ -97,7 +102,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private PlanTrabajoActividad plantrabajoactividad = new PlanTrabajoActividad();
     private PlanTrabajo plantrabajo =new PlanTrabajo();
     private TipoPlanAccion tipoPlanAccion= new TipoPlanAccion();
-    private MatrizRiesgos matrizRiesgos= new MatrizRiesgos();
+    
     
     private Usuarios usuarios;
 
@@ -125,7 +130,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.evaluacionPlanAccionDetallePK = new EvaluacionPlanAccionDetallePK(codEvaluacion, codigoEstablecimiento, codPlan, codPlanDetalle);
     }
 
-    public EvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK, String codCiclo, Integer codSeccion, Integer codDetalle, Integer codItem, String nombre, String descripcion, String estado, Usuarios usuarios, Date fechaRegistro, Date fechaPlazo, Date fechaFinalizado, String descripcionhallazgo, String observaciones, Boolean registro, Boolean eficacia) {
+    public EvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetallePK evaluacionPlanAccionDetallePK, String codCiclo, Integer codSeccion, Integer codDetalle, Integer codItem, String nombre, String descripcion, String estado, Usuarios usuarios, Date fechaRegistro, Date fechaPlazo, Date fechaFinalizado, String descripcionhallazgo, String observaciones, Boolean registro, Boolean eficacia, Integer codPlanAccionDetalle) {
         this.evaluacionPlanAccionDetallePK = evaluacionPlanAccionDetallePK;        
         this.codCiclo = codCiclo;
         this.codSeccion = codSeccion;
@@ -141,8 +146,17 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.descripcionhallazgo = descripcionhallazgo;
         this.observaciones = observaciones;
         this.registro = registro;
-        this.eficacia = eficacia;        
+        this.eficacia = eficacia;  
+        this.codPlanAccionDetalle= codPlanAccionDetalle;
         
+    }
+
+    public Integer getCodPlanAccionDetalle() {
+        return codPlanAccionDetalle;
+    }
+
+    public void setCodPlanAccionDetalle(Integer codPlanAccionDetalle) {
+        this.codPlanAccionDetalle = codPlanAccionDetalle;
     }
 
     public MatrizRiesgos getMatrizRiesgos() {

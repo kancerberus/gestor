@@ -232,7 +232,7 @@ public class Evaluacion implements Serializable, Cloneable {
     /**
      * @return the ciclos
      */
-    public List<Ciclo> getCiclos() {
+    public List<Ciclo> getCiclos() {        
         return ciclos;
     }
 

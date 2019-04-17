@@ -27,7 +27,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "ciclo")
 @NamedQueries({
-    @NamedQuery(name = "Ciclo.findAll", query = "SELECT c FROM Ciclo c")
+    @NamedQuery(name = "Ciclo.findAll", query = "SELECT c FROM Ciclo c WHERE cod_ciclo<>'X'")
 })
 @ManagedBean
 @SessionScoped
@@ -92,7 +92,7 @@ public class Ciclo implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
+        int hash = 1;
         hash += (codCiclo != null ? codCiclo.hashCode() : 0);
         return hash;
     }
