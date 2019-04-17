@@ -471,18 +471,12 @@ public class UIMatrizRiesgos implements Serializable{
         try {                                     
             Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");            
             UtilJSF.setBean("varRiesgoEstablecimiento", matrizRiesgos, UtilJSF.SESSION_SCOPE);
-            GestorGeneral gestorGeneral=new GestorGeneral();
-            
-            MatrizRiesgos mr=(MatrizRiesgos) UtilJSF.getBean("varRiesgoEstablecimiento");
-            if(mr.getCodRiesgoMatriz()==null){
-                Long codMatriz=gestorGeneral.nextval(GestorGeneral.MATRIZ_MATRIZ_RIESGOS_COD_RIESGO_MATRIZ_SEQ);
-                mr.setCodRiesgoMatriz(codMatriz.intValue());
-            }
+            MatrizRiesgos mr=(MatrizRiesgos) UtilJSF.getBean("varRiesgoEstablecimiento");            
             
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             evaluacionPlanAccionDetalles = new ArrayList<>();
             evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaMatrizTareaRiesgo( e.getEvaluacionPK().getCodigoEstablecimiento(),mr.getCodRiesgoMatriz()));
-    
+            UtilMSG.addSuccessMsg("Plan Accion Modificado Exitosamente");            
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -510,6 +504,7 @@ public class UIMatrizRiesgos implements Serializable{
             
             UtilJSF.setBean("evaluacionPlanAccionDetalle", new EvaluacionPlanAccionDetalle(), UtilJSF.SESSION_SCOPE);
             this.cargarListaMatrizTareaRiesgo();
+            
 
         } catch (Exception e) {
             if (UtilLog.causaControlada(e)) {
@@ -525,7 +520,8 @@ public class UIMatrizRiesgos implements Serializable{
     public void mostrarDialogoPlanAccion() {
         try {                                         
             Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
-            Sesion sesion = (Sesion) UtilJSF.getBean("sesion");            
+            Sesion sesion = (Sesion) UtilJSF.getBean("sesion");    
+            matrizRiesgos= (MatrizRiesgos) UtilJSF.getBean("varRiesgoEstablecimiento");
             
             this.cargarListaMatrizTareaRiesgo();
             GestorResponsable gestorResponsable = new GestorResponsable();            
@@ -564,7 +560,7 @@ public class UIMatrizRiesgos implements Serializable{
                 responsables.addAll(responsablesSisgapp);
             }
             UtilJSF.setBean("evaluacionPlanAccionDetalle", new EvaluacionPlanAccionDetalle(), UtilJSF.SESSION_SCOPE);
-            Dialogo dialogo = new Dialogo("dialogos/tarea-riesgo.xhtml", "Tarea Riesgo", "clip", Dialogo.WIDTH_50);
+            Dialogo dialogo = new Dialogo("dialogos/tarea-riesgo.xhtml", "Tarea Riesgo", "clip", Dialogo.WIDTH_AUTO);
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
             UtilJSF.execute("PF('dialog').show();");
 
@@ -584,7 +580,8 @@ public class UIMatrizRiesgos implements Serializable{
             EvaluacionPlanAccionDetalle epd = (EvaluacionPlanAccionDetalle) UtilJSF.getBean("evaluacionPlanAccionDetalle");
             String documentoUsuario = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios().getUsuariosPK().getDocumentoUsuario();
             Evaluacion e = (Evaluacion) UtilJSF.getBean("evaluacion");
-            matrizRiesgos = (MatrizRiesgos) UtilJSF.getBean("varRiesgoEstablecimiento");
+            UtilJSF.setBean("varRiesgoEstablecimiento", matrizRiesgos, UtilJSF.SESSION_SCOPE);
+            MatrizRiesgos mr = (MatrizRiesgos) UtilJSF.getBean("varRiesgoEstablecimiento");
             
             GestorGeneral gestorGeneral = new GestorGeneral();
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
@@ -597,7 +594,8 @@ public class UIMatrizRiesgos implements Serializable{
             if (codPlan == null) {
                 codPlan = gestorGeneral.nextval(GestorGeneral.GESTOR_EVALUACION_PLAN_ACCION_COD_PLAN_SEQ);
             }
-
+            
+            
             EvaluacionPlanAccion ep = new EvaluacionPlanAccion(
                     new EvaluacionPlanAccionPK(e.getEvaluacionPK().getCodEvaluacion(),
                             e.getEvaluacionPK().getCodigoEstablecimiento(),
@@ -617,7 +615,8 @@ public class UIMatrizRiesgos implements Serializable{
                             codPlan, epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle()),
                     documentoUsuario, epd.getEstado(), "REGISTRO INICIAL", "Inicia registro de plan acción, responsable: " + UtilTexto.capitalizarCadena(responsable), usuariosSeleccionado);
             epd.setEvaluacionPlanAccionDetalleNotas(epadn);
-            epd.getMatrizRiesgos().setCodRiesgoMatriz(matrizRiesgos.getCodRiesgoMatriz());
+            
+            epd.getMatrizRiesgos().setCodRiesgoMatriz(mr.getCodRiesgoMatriz());
             
             ep.setEvaluacionPlanAccionDetalle(epd);
             gestorEvaluacionPlanAccion.procesarTareaRiesgo(ep);

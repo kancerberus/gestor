@@ -83,7 +83,7 @@
                 <p:commandButton value="Consultar" style="margin: auto auto;width: 210px;height: 30px; border-radius: 10px;"
                                  action="#{uiPlanAccion.consultarSeguimientoPlanAccion()}" update="formPlanesAccion"/>
                 <br/>
-                <p:separator style="height: 3px;width: 100%" />                
+                <p:separator style="height: 3px;width: auto" />                
             </h:panelGroup>
             <br/>
             <br/>
@@ -101,6 +101,12 @@
                 </p:column>
                 <p:column headerText="Código" width="2%" filterBy="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codPlanDetalle}">
                     <h:outputText value="#{varPlanAccionDetalle.evaluacionPlanAccionDetallePK.codPlanDetalle}" />    
+                </p:column>
+                <p:column headerText="Código Fuente" width="2%" filterBy="#{varPlanAccionDetalle.codPlanAccionDetalle}">
+                    <h:outputText value="#{varPlanAccionDetalle.codPlanAccionDetalle}" />    
+                </p:column>
+                <p:column headerText="Tipo Plan Accion" width="2%" filterBy="#{varPlanAccionDetalle.tipoPlanAccion.nombre}">
+                    <h:outputText value="#{varPlanAccionDetalle.tipoPlanAccion.nombre}" />    
                 </p:column>
                 <p:column headerText="Empresa" filterBy="#{varPlanAccionDetalle.establecimiento.nombre}">
                     <h:outputText value="#{varPlanAccionDetalle.establecimiento.nombre}" />

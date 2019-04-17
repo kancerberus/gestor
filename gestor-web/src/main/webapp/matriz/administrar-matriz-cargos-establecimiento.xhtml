@@ -29,6 +29,7 @@
                     <p:columnGroup type="header">
                         <p:row>  
                             <p:column  headerText="Opciones" />
+                            <p:column headerText="Codigo Riesgo"/>
                             <p:column headerText="Cargo" filterBy="#{varRiesgoEstablecimiento.cargos.nombre}"/>
                             <p:column headerText="Actividad" filterBy="#{varRiesgoEstablecimiento.funciones.nombre}"/>                            
                             <p:column headerText="Riesgo" filterBy="#{varRiesgoEstablecimiento.riesgo.nombre}"/> 
@@ -53,7 +54,12 @@
                                          update="formAdminCargosMatrizRiesgos"
                                          action="#{uiMatrizRiesgos.subirItemMatriz()}">                            
                         </p:commandButton>
+                        <p:commandButton label="Tareas" value="Tareas" title="Crear Tarea" action="#{uiMatrizRiesgos.mostrarDialogoPlanAccion()}" update="formAdminCargosMatrizRiesgos" >
+                        </p:commandButton>                        
                     </p:column>
+                    <p:column>
+                        <h:outputText value="#{varRiesgoEstablecimiento.codRiesgoPosible}"/>
+                    </p:column>                    
                     <p:column>
                         <h:outputText value="#{varRiesgoEstablecimiento.cargos.nombre}"/>
                     </p:column> 

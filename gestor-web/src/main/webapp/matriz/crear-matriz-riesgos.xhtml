@@ -190,25 +190,14 @@
             
             <p:panel id="panelEvidencias" style="width: 99.7%;height: 300px;margin-left: auto; float: right" header="Evidencias"  >
                 
-                <h:panelGrid >  
-                    <p:commandLink action="#{uiMatrizRiesgos.mostrarDialogoPlanAccion()}" update=":formMatrizRiesgos:dialog" >
-                        <p:graphicImage url="/resources/imagenes/ciclos/mind-map.png" 
-                                        width="30%"/> 
-                    </p:commandLink>
-                    <h:outputText value="Reportar Plan Accion" style="font-family: bold"/>
-                </h:panelGrid>
-                
-                
-                
                 <p:dataTable id="dtPlanAccionDetalleRiesgo"  value="#{uiMatrizRiesgos.evaluacionPlanAccionDetalles}" var="varPlanAccionDetalle" emptyMessage="El ítem no tiene planes de acción."
-                             scrollRows="10" rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable" style="width: 100%"
-                             rowHover="true" scrollable="true"  scrollWidth="97%" scrollHeight="100">
+                             scrollRows="15" rowStyleClass="letra-xx-small-centro" widgetVar="evaluacionAdjuntosTable" style="width: 100%"
+                             rowHover="true" scrollable="true"  scrollWidth="97%" scrollHeight="150">
                     <f:facet name="header">
                         Planes de Acción
                     </f:facet>
                     <p:columnGroup type="header">  
-                        <p:row>  
-                            
+                        <p:row>
                             <p:column headerText="Nombre" filterBy="#{varPlanAccionDetalle.nombre}" sortBy="#{varPlanAccionDetalle.nombre}"/>                                                        
                             <p:column  headerText="Descripción Hallazgo"/>        
                             <p:column headerText="Fuente Hallazgo" filterBy="#{varPlanAccionDetalle.fuentehallazgo}" />                            

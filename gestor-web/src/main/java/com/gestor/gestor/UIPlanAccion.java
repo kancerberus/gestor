@@ -79,7 +79,9 @@ public class UIPlanAccion {
     private List<String> ciclosString = new ArrayList<>();
     private List<Integer> tiposPlanAccion=new ArrayList<>();
     private List<String> ciclosStringSeleccionado = new ArrayList<>();
-    private List<Integer> tiposPlanAccionIntegerSeleccionado = new ArrayList<>();
+    private List<TipoPlanAccion> tiposPlanAccionIntegerSeleccionado = new ArrayList<>();
+    private TipoPlanAccion tipoPlanAccion=new TipoPlanAccion();
+    
     
 
     private Map<String, String> capacitacionEstado = new HashMap<>();
@@ -104,7 +106,8 @@ public class UIPlanAccion {
         try {
             Sesion s = (Sesion) UtilJSF.getBean("sesion");
             GestorUsuario gestorUsuario = new GestorUsuario();
-
+            
+            establecimiento=new Establecimiento();
             establecimientoList = new ArrayList<>();
             establecimientoList.addAll(s.getEstablecimientoList());
             
@@ -116,7 +119,7 @@ public class UIPlanAccion {
             tiposPlanAccion=new ArrayList<>();
             for(TipoPlanAccion tp:tipoPlanAccionList){
                 tiposPlanAccion.add(tp.getCodTipoPlanAccion());
-                tiposPlanAccionIntegerSeleccionado.add(tp.getCodTipoPlanAccion());
+                tiposPlanAccionIntegerSeleccionado.add(tp);
             }
             
             ciclosString = new ArrayList<>();
@@ -129,9 +132,11 @@ public class UIPlanAccion {
             capacitacionEstado.put(App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ELIMINADO_TEXTO, App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ELIMINADO);
             capacitacionEstado.put(App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_CERRADO_TEXTO, App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_CERRADO);
             capacitacionEstado.put(App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO_TEXTO, App.EVALUACION_PLAN_ACCION_DETALLE_ESTADO_ABIERTO);            
-
+            
             usuariosList = new ArrayList<>();
             usuariosList.addAll(gestorUsuario.cargarListaUsuarios());
+            
+            
 
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
@@ -298,19 +303,17 @@ public class UIPlanAccion {
         if(establecimiento!=null){            
             String cadena="";
             cadena = Integer.toString(establecimiento.getCodigoEstablecimiento());
-            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena )); 
-            establecimiento= new Establecimiento();
+            condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena ));             
         }
         
-        if(tiposPlanAccionIntegerSeleccionado!=null && !tiposPlanAccionIntegerSeleccionado.isEmpty()){
+        if(tiposPlanAccionIntegerSeleccionado!=null && !tiposPlanAccionIntegerSeleccionado.isEmpty()){            
             condicionesConsulta.add(App.CONDICION_AND);
             String cadena = UtilTexto.CARACTER_COMILLA + "0" + UtilTexto.CARACTER_COMILLA;
-            for (Integer i : tiposPlanAccionIntegerSeleccionado) {
-                cadena += "," + UtilTexto.CARACTER_COMILLA + i.toString() + UtilTexto.CARACTER_COMILLA;
+            for(int i=0; i<tiposPlanAccionIntegerSeleccionado.size();i++){                
+                cadena += "," + UtilTexto.CARACTER_COMILLA + Integer.toString(tiposPlanAccionIntegerSeleccionado.get(i).getCodTipoPlanAccion()) + UtilTexto.CARACTER_COMILLA;                                        
             }
             condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_TIPO_PLAN_ACCION.replace("?", cadena));
         }
-        
 
         if (usuariosSeleccionado != null && usuariosSeleccionado.getUsuariosPK() != null && usuariosSeleccionado.getUsuariosPK().getDocumentoUsuario() != null && !usuariosSeleccionado.getUsuariosPK().getDocumentoUsuario().equalsIgnoreCase("")) {
             condicionesConsulta.add(App.CONDICION_AND);
@@ -323,15 +326,17 @@ public class UIPlanAccion {
             condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_EVALUACION.replace("?", codEvaluacion.toString()));                        
             
         }
-
-        if (ciclosStringSeleccionado != null && !ciclosStringSeleccionado.isEmpty()) {
+        
+        if (ciclosStringSeleccionado != null && !ciclosStringSeleccionado.isEmpty()) {                        
             condicionesConsulta.add(App.CONDICION_AND);
             String cadena = UtilTexto.CARACTER_COMILLA + "0" + UtilTexto.CARACTER_COMILLA;
             for (String s : ciclosStringSeleccionado) {
-                cadena += "," + UtilTexto.CARACTER_COMILLA + s + UtilTexto.CARACTER_COMILLA;
+                cadena += "," + UtilTexto.CARACTER_COMILLA + s + UtilTexto.CARACTER_COMILLA;                  
             }
+            cadena+=","+UtilTexto.CARACTER_COMILLA+"X"+UtilTexto.CARACTER_COMILLA;
             condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_CICLO.replace("?", cadena));
         }
+        
         
 
         if (responsable != null && responsable.length() > 0) {
@@ -366,9 +371,13 @@ public class UIPlanAccion {
             evaluacionPlanAccionDetalles = new ArrayList<>();
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             List<String> condicionesConsulta = this.filtrarOpcionesSeleccionadas();
+
+
             evaluacionPlanAccionDetalles.addAll(gestorEvaluacionPlanAccion.cargarListaEvaluacionPlanAccion(
-                UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)                
-            ));                                      
+                UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
+            ));
+            
+            
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }
@@ -782,6 +791,14 @@ public class UIPlanAccion {
         return style;
     }
 
+    public TipoPlanAccion getTipoPlanAccion() {
+        return tipoPlanAccion;
+    }
+
+    public void setTipoPlanAccion(TipoPlanAccion tipoPlanAccion) {
+        this.tipoPlanAccion = tipoPlanAccion;
+    }
+
     public List<Integer> getTiposPlanAccion() {
         return tiposPlanAccion;
     }
@@ -1015,13 +1032,15 @@ public class UIPlanAccion {
         return ciclosStringSeleccionado;
     }
 
-    public List<Integer> getTiposPlanAccionIntegerSeleccionado() {
+    public List<TipoPlanAccion> getTiposPlanAccionIntegerSeleccionado() {
         return tiposPlanAccionIntegerSeleccionado;
     }
 
-    public void setTiposPlanAccionIntegerSeleccionado(List<Integer> tiposPlanAccionIntegerSeleccionado) {
+    public void setTiposPlanAccionIntegerSeleccionado(List<TipoPlanAccion> tiposPlanAccionIntegerSeleccionado) {
         this.tiposPlanAccionIntegerSeleccionado = tiposPlanAccionIntegerSeleccionado;
     }
+
+    
 
     /**
      * @param ciclosStringSeleccionado the ciclosStringSeleccionado to set

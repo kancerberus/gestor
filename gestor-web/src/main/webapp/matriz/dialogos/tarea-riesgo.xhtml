@@ -106,8 +106,8 @@
 
                     <p:column>
                         <p:panelGrid columns="3">
-                            <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Acción" action="#{uiMatrizRiesgos.modificarPlanAccion()}" update="formMatrizRiesgos:opPlanAccion formMatrizRiesgos:opcionesMenuPlanAccion"/>
-                            <p:commandButton icon="ui-icon-trash" title="Eliminar Plan Acción" action="#{uiMatrizRiesgos}" update="formMatrizRiesgos:opPlanAccion">
+                            <p:commandButton icon="ui-icon-pencil" title="Modificar Plan Acción" action="#{uiMatrizRiesgos.modificarPlanAccion()}" update="formAdminCargosMatrizRiesgos:opPlanAccion"/>
+                            <p:commandButton icon="ui-icon-trash" title="Eliminar Plan Acción" action="#{uiMatrizRiesgos}" update="formAdminCargosMatrizRiesgos:opPlanAccion">
                                 <p:confirm header="Eliminar Plan Acción" message="Desea eliminar el plan de acción ?" icon="ui-icon-alert" />
                             </p:commandButton>
                         </p:panelGrid>
@@ -178,7 +178,7 @@
                     </p:commandButton>
                         
                     <p:commandButton value="Modificar Plan Acción" icon="ui-icon-disk" action="#{uiMatrizRiesgos.procesarPlanAccionModificar()}" 
-                                     process="@parent pgPlanAccion" update="pgPlanAccion dtPlanAccionDetalle opcionesMenuPlanAccion, formMatrizRiesgos:dtPlanAccionDetalleRiesgo"
+                                     process="@parent pgPlanAccion" update="pgPlanAccion opcionesMenuPlanAccion"
                                      rendered="#{uiMatrizRiesgos.modificarActivo}"/>
 
                     <p:commandButton value="Volver" icon="ui-icon-triangle-1-w" oncomplete="PF('dialog').hide();"/>
