@@ -139,6 +139,7 @@ public class GestorEvaluacionPlanAccion extends Gestor {
             this.cerrarConexion();
         }
     }
+    
 
     public List<EvaluacionPlanAccionDetalleNotas> cargarEvaluacionPlanAccionDetalleNotasList(EvaluacionPlanAccionDetalleNotasPK evaluacionPlanAccionDetalleNotasPK) throws Exception {
         try {

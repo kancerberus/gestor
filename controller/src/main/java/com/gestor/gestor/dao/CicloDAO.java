@@ -33,7 +33,7 @@ public class CicloDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_ciclo, nombre, numeral"
-                    + " FROM gestor.ciclo ORDER BY numeral;"
+                    + " FROM gestor.ciclo WHERE cod_ciclo<>'X' ORDER BY numeral;"
             );
 
             rs = consulta.ejecutar(sql);
@@ -62,7 +62,7 @@ public class CicloDAO {
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_ciclo, nombre, numeral"
                     + " FROM gestor.ciclo "
-                    + " where numeral = '"+numeral+"' "
+                    + " where numeral = '"+numeral+"' and cod_ciclo<>'X' "
                             
             );
 

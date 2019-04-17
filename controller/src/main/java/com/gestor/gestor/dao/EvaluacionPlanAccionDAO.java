@@ -31,6 +31,7 @@ import com.gestor.publico.PlanTrabajoObjetivo;
 import com.gestor.publico.PlanTrabajoPrograma;
 
 import com.gestor.publico.Responsable;
+import com.gestor.publico.TipoPlanAccion;
 import com.gestor.publico.Usuarios;
 import com.gestor.publico.UsuariosPK;
 import com.gestor.seguimiento.PlanTrabajo;
@@ -81,6 +82,8 @@ public class EvaluacionPlanAccionDAO {
 
     public void insertaEvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetalle epd) throws SQLException {        
         
+        
+        
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
@@ -93,8 +96,8 @@ public class EvaluacionPlanAccionDAO {
                     + " observaciones, cod_centrotrabajo, registro, eficacia, cod_tipo_plan_accion, cod_plan_accion_detalle)"
                     + " VALUES (" + epd.getEvaluacionPlanAccionDetallePK().getCodEvaluacion() + ", " + epd.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento()
                     + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlan()
-                    + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle() + ",null, " + epd.getCodSeccion() + ", " + epd.getCodDetalle()
-                    + " ," + epd.getCodItem() + ", '" + epd.getNombre() + "', '" + epd.getDescripcion() + "', '" + epd.getEstado() + "','" + epd.getDocumentoUsuario()+"', " 
+                    + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle() + ",'X', '999', '999' "
+                    + " ,'999', '" + epd.getNombre() + "', '" + epd.getDescripcion() + "', '" + epd.getEstado() + "','" + epd.getDocumentoUsuario()+"', " 
                     + " NOW(), '" + epd.getResponsable().getCedula() + "','" + epd.getFechaPlazo() + "', "+epd.getFuentehallazgo().getCodFuentehallazgo()+", "+epd.getClasehallazgo().getCodClasehallazgo()
                     + " ," + epd.getTipoaccion().getCodTipoaccion()+", "+epd.getMotivocorreccion().getCodMotivocorreccion()+" "
                     + ",'" + epd.getDescripcionhallazgo()+"','"+epd.getObservaciones()+"', 1,null, null,'2', '"+epd.getMatrizRiesgos().getCodRiesgoMatriz()+"' )" 
@@ -164,7 +167,7 @@ public class EvaluacionPlanAccionDAO {
                         new Usuarios(
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
                         ), rs.getDate("fecha_registro"), rs.getDate("fecha_plazo"), rs.getDate("fecha_actualiza"), rs.getString("descripcion_hallazgo"),
-                        rs.getString("observaciones"), rs.getBoolean("registro"), rs.getBoolean("eficacia")
+                        rs.getString("observaciones"), rs.getBoolean("registro"), rs.getBoolean("eficacia"),0
                 );
                 epad.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));                
                 epad.setFuentehallazgo(new FuenteHallazgo(rs.getInt("cod_fh"), rs.getString("nom_fh")));
@@ -224,7 +227,7 @@ public class EvaluacionPlanAccionDAO {
                         new Usuarios(
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
                         ), rs.getDate("fecha_registro"), rs.getDate("fecha_plazo"), rs.getDate("fecha_actualiza"), rs.getString("descripcion_hallazgo"),
-                        rs.getString("observaciones"), rs.getBoolean("registro"), rs.getBoolean("eficacia")
+                        rs.getString("observaciones"), rs.getBoolean("registro"), rs.getBoolean("eficacia"),0
                 );
                 epad.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));                
                 epad.setFuentehallazgo(new FuenteHallazgo(rs.getInt("cod_fh"), rs.getString("nom_fh")));
@@ -406,13 +409,14 @@ public class EvaluacionPlanAccionDAO {
                     " SELECT EPAD.cod_evaluacion, EPAD.codigo_establecimiento, EPAD.cod_plan, EPAD.cod_plan_detalle,"
                     + " EPAD.cod_ciclo, EPAD.cod_seccion, EPAD.cod_detalle, EPAD.cod_item, EPAD.nombre AS epad_nombre, EPAD.descripcion,"
                     + " EPAD.estado, EPAD.fecha_registro, EPAD.fecha_plazo, EPAD.fecha_actualiza, EPAD.fecha_finalizado, EPAD.descripcion_hallazgo,"
-                    + " EPAD.observaciones, EPAD.registro, EPAD.eficacia,"                               
+                    + " EPAD.observaciones, EPAD.registro, EPAD.eficacia, EPAD.cod_plan_accion_detalle,"                               
                     + " U.documento_usuario, U.nombre AS nombre_usuario, U.apellido, U.usuario,"
                     + " SDI.cod_item AS sdi_cod_item, SDI.nombre AS sdi_nombre, SDI.detalle AS sdi_detalle, SDI.peso AS sdi_peso, SDI.activo AS sdi_activo, SDI.imagen AS sdi_imagen, SDI.orden AS sdi_orden, SDI.numeral AS sdi_numeral,"
                     + " SD.cod_detalle AS sd_cod_detalle, SD.nombre AS sd_nombre, SD.detalle AS sd_detalle, SD.orden AS sd_orden, SD.peso AS sd_peso, SD.imagen AS sd_imagen, SD.activo AS sd_activo, SD.numeral AS sd_numeral,"
                     + " S.cod_seccion AS s_cod_seccion, S.nombre AS s_nombre, S.activo AS s_activo, S.peso AS s_peso, S.imagen AS s_imagen, S.orden AS s_orden, S.numeral AS s_numeral,"
                     + " E.cod_evaluacion AS e_cod_evaluacion, E.documento_usuario AS e_documento_usuario, E.fecha AS e_fecha, E.fecha_registro AS e_fecha_registro, E.estado AS e_estado,"
                     + " ES.nombre AS es_nombre,"
+                    + " cod_tipo_plan_accion codtp, tp.nombre nomtp,  "
                     + " C.cod_ciclo AS c_cod_ciclo, C.nombre AS c_nombre, C.numeral AS c_numeral,"
                     + " fh.cod_fuente_hallazgo cod_fh, fh.nombre nom_fh,"
                     + " ch.cod_clase_hallazgo cod_ch, ch.nombre nom_ch,"
@@ -434,7 +438,8 @@ public class EvaluacionPlanAccionDAO {
                     + " JOIN gestor.tipo_accion ta USING (cod_tipo_accion)"
                     + " JOIN gestor.motivo_correccion mc USING (cod_motivo_correccion)"
                     + " JOIN public.centro_trabajo ct USING (codigo_establecimiento,cod_centrotrabajo)"
-                    + " JOIN public.responsable R ON (R.cedula=EPAD.cedula)"                    
+                    + " JOIN public.responsable R ON (R.cedula=EPAD.cedula)"
+                    + " JOIN public.tipo_plan_accion tp using (cod_tipo_plan_accion)"                    
                     + condicion
                     + " ORDER BY C.numeral, S.numeral, SD.numeral, SDI.numeral"
             );
@@ -450,7 +455,7 @@ public class EvaluacionPlanAccionDAO {
                                 new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre_usuario"), rs.getString("apellido"), rs.getString("usuario")
                         ), rs.getDate("fecha_registro"
                         ), rs.getDate("fecha_plazo"),rs.getDate("fecha_finalizado"), rs.getString("descripcion_hallazgo"),
-                        rs.getString("observaciones"), rs.getBoolean("registro"), rs.getBoolean("eficacia")
+                        rs.getString("observaciones"), rs.getBoolean("registro"), rs.getBoolean("eficacia"),rs.getInt("cod_plan_accion_detalle")
                 );
                 epad.setResponsable(new Responsable(rs.getString("r_cedula"), rs.getString("r_nombres"), rs.getString("r_apellidos"), rs.getString("r_correo"), rs.getString("r_telefono")));                
                 epad.getPlantrabajoactividad().setResponsable(new Responsable("", "", "", "", ""));
@@ -458,7 +463,8 @@ public class EvaluacionPlanAccionDAO {
                 epad.setClasehallazgo(new ClaseHallazgo(rs.getInt("cod_ch"), rs.getString("nom_ch")));
                 epad.setTipoaccion(new TipoAccion(rs.getInt("cod_ta"), rs.getString("nom_ta")));
                 epad.setMotivocorreccion(new MotivoCorreccion(rs.getInt("cod_mc"), rs.getString("nom_mc")));
-                epad.setCentrotrabajo(new CentroTrabajo(rs.getInt("cod_ct"), rs.getString("nom_ct")));                
+                epad.setCentrotrabajo(new CentroTrabajo(rs.getInt("cod_ct"), rs.getString("nom_ct")));   
+                epad.setTipoPlanAccion(new TipoPlanAccion(rs.getInt("codtp"), rs.getString("nomtp")));
                 //evaluacion
                 Evaluacion e = new Evaluacion(new EvaluacionPK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento")), rs.getString("documento_usuario"),
                         rs.getDate("e_fecha"), rs.getDate("e_fecha_registro"), rs.getString("e_estado"));
@@ -527,6 +533,7 @@ public class EvaluacionPlanAccionDAO {
             }
         }
     }
+    
 
     public void insertaEvaluacionPlanAccionDetalleNotas(EvaluacionPlanAccionDetalleNotas epadn) throws SQLException {
         Consulta consulta = null;
