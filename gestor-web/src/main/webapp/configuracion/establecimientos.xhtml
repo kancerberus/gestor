@@ -7,7 +7,6 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 template="/template.xhtml"
                 >
-
     <ui:define name="content">
         <h:form enctype="multipart/form-data" id="formEstablecimientos" style="font-size: small;">
             <p:panel id="panelEstablecimientos"  header="Administrar Establecimientos" >
@@ -100,16 +99,12 @@
                                         rendered="#{empty varEstablecimiento.logo}"/>
                     </p:column>
                 </p:dataTable>
-
             </p:panel>
-
             <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
                       onHide="limpiarModal()">
                 <ui:include src="#{dialogo.src}"/>
             </p:dialog>
             <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}" update="dialog" />
         </h:form>
-
     </ui:define>
-
 </ui:composition>

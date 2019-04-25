@@ -243,6 +243,7 @@ public class UIPlantitulo implements Serializable{
             
             UtilMSG.addSuccessMsg("Adjunto eliminado correctamente.");            
             this.cargarPlantituloadjuntolista();
+            plantituloadjunto=new PlanTituloAdiuntos();
         }catch (Exception e) {
             UtilMSG.addSuccessMsg("Adjunto en uso.");
         }

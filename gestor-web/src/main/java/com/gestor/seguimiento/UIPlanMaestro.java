@@ -116,7 +116,7 @@ public class UIPlanMaestro {
             UtilJSF.setBean("planMaestro", pm, UtilJSF.SESSION_SCOPE);
             if(s.getUsuarios().getRoles().getCodigoRol()==4){
                 this.procesarPlanMaestro();
-            return ("/seguimiento/plan-maestro_1.xhtml?faces-redirect=true");            
+            return ("/seguimiento/pm/vuwopux.xhtml?faces-redirect=true");            
             }else{
                 this.procesarPlanMaestro();
                 return ("/seguimiento/plan-maestro.xhtml?faces-redirect=true");
@@ -322,7 +322,7 @@ public class UIPlanMaestro {
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
                     )
                 );
-            return ("/seguimiento/planes-maestros_1.xhtml?faces-redirect=true");
+            return ("/seguimiento/pm/xvzhuehs.xhtml?faces-redirect=true");
             }else{
                 planMaestroList.addAll(gestorPlanMaestro.cargarListaPlanMaestro(
                     UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)

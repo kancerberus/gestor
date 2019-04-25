@@ -279,6 +279,7 @@ public class UIPlanItem implements Serializable{
             
             UtilMSG.addSuccessMsg("Adjunto eliminado correctamente.");            
             this.cargarPlansecciondetalleitemadjuntoList();
+            plansecciondetalleitemadjuntos=new PlanSeccionDetalleItemAdjuntos();
         }catch (Exception e) {
             UtilMSG.addSuccessMsg("Adjunto en uso.");
         }
