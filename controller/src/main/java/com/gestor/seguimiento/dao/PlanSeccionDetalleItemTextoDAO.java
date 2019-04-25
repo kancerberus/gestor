@@ -29,6 +29,7 @@ public class PlanSeccionDetalleItemTextoDAO {
     
     public void insertarPlanseccionDetalleItemTexto(PlanSeccionDetalleItemTexto plansecciondetalleitemtexto) throws SQLException {
         Consulta consulta = null;
+        if(!plansecciondetalleitemtexto.getTexto().isEmpty()){
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
@@ -45,6 +46,16 @@ public class PlanSeccionDetalleItemTextoDAO {
             if (consulta != null) {
                 consulta.desconectar();
             }
+        }
+        }else{
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE "
+                    + "FROM seguimiento.plan_seccion_detalle_item_texto "
+                    + "WHERE codigo_establecimiento='"+plansecciondetalleitemtexto.getPlanSeccionDetalleItemTextoPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+plansecciondetalleitemtexto.getPlanSeccionDetalleItemTextoPK().getCodTitulo()+"'"
+                    + " AND cod_seccion='"+plansecciondetalleitemtexto.getPlanSeccionDetalleItemTextoPK().getCodSeccion()+"' AND cod_seccion_detalle='"+plansecciondetalleitemtexto.getPlanSeccionDetalleItemTextoPK().getCodSeccionDetalle()+"' AND cod_seccion_detalle_item='"+plansecciondetalleitemtexto.getPlanSeccionDetalleItemTextoPK().getCodSeccionDetalleItem()+"' AND cod_seccion_detalle_item_texto='1' "
+            );
+            consulta.actualizar(sql);            
         }
     }
     

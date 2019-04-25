@@ -28,22 +28,34 @@ public class PlanSeccionTextoDAO {
     }
     
     public void insertarPlanseccionTexto(PlanSeccionTexto plansecciontexto) throws SQLException {
-        Consulta consulta = null;
-        try {
-            consulta = new Consulta(this.conexion);
-            StringBuilder sql = new StringBuilder(
+        Consulta consulta = null;                
+        if(!plansecciontexto.getTexto().isEmpty()){
+            try {
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
                     "INSERT INTO seguimiento.plan_seccion_texto "
                     + " ( codigo_establecimiento, cod_titulo, cod_seccion, cod_seccion_texto, texto )"
                     + " VALUES ('"+plansecciontexto.getPlanSeccionTextoPK().getCodigoEstablecimiento()+"', '"+plansecciontexto.getPlanSeccionTextoPK().getCodTitulo()+"', "
                     + " '"+plansecciontexto.getPlanSeccionTextoPK().getCodSeccion()+"', '"+plansecciontexto.getPlanSeccionTextoPK().getCodSeccionTexto()+"', '"+plansecciontexto.getTexto()+"') "
                     + " ON CONFLICT (cod_titulo, codigo_establecimiento, cod_seccion, cod_seccion_texto) DO UPDATE"
                     + " SET texto=EXCLUDED.texto "
-            );
-            consulta.actualizar(sql);
-        } finally {
-            if (consulta != null) {
-                consulta.desconectar();
+                );
+                consulta.actualizar(sql);
+             
+            }finally {
+                if (consulta != null) {
+                    consulta.desconectar();
+                }
             }
+        }else{
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE "
+                    + "FROM seguimiento.plan_seccion_texto "
+                    + "WHERE codigo_establecimiento='"+plansecciontexto.getPlanSeccionTextoPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+plansecciontexto.getPlanSeccionTextoPK().getCodTitulo()+"'"
+                    + " AND cod_seccion='"+plansecciontexto.getPlanSeccionTextoPK().getCodSeccion()+"' AND cod_seccion_texto='1' "
+            );
+            consulta.actualizar(sql);            
         }
     }
     

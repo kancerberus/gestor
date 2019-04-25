@@ -7,10 +7,7 @@ package com.gestor.seguimiento.controlador;
 
 import com.gestor.controller.Gestor;
 import com.gestor.seguimiento.PlanMaestro;
-import com.gestor.seguimiento.PlanTitulo;
 import com.gestor.seguimiento.dao.PlanMaestroDAO;
-import com.gestor.seguimiento.dao.PlanTituloDAO;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -40,8 +37,7 @@ public class GestorPlanMaestro extends Gestor {
             this.abrirConexion();
 
             PlanMaestroDAO planMaestroDAO = new PlanMaestroDAO(conexion);
-            return planMaestroDAO.cargarListaPlanMaestro(condicion);
-
+            return planMaestroDAO.cargarListaPlanMaestroGerente(condicion);
         } finally {
             this.cerrarConexion();
         }

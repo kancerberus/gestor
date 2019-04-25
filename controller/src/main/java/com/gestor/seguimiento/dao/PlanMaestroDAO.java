@@ -82,6 +82,47 @@ public class PlanMaestroDAO {
             }
         }
     }
+    
+    public Collection<? extends PlanMaestro> cargarListaPlanMaestroGerente(String condicion) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT PM.cod_evaluacion, PM.cod_maestro, PM.fecha_registro,"
+                    + " PM.fecha_actualiza,"
+                    + " E.cod_evaluacion AS cod_evaluacion_e, E.documento_usuario, E.fecha,"
+                    + " E.fecha_registro AS fecha_registro_e, E.estado, E.fecha_resumen, E.calificacion, E.peso, E.resumenes,"
+                    + " ES.codigo_establecimiento, ES.codigo_municipio, ES.nombre AS nombre_es, ES.nit, ES.direccion,"
+                    + " ES.telefono, ES.correo, ES.fecha_cierre_diario, ES.tipo_establecimiento, ES.logo"
+                    + " FROM seguimiento.plan_maestro PM"
+                    + " JOIN gestor.evaluacion E USING (cod_evaluacion, codigo_establecimiento)"
+                    + " JOIN public.establecimiento ES USING (codigo_establecimiento)"                    
+                    + condicion
+            );
+            rs = consulta.ejecutar(sql);
+
+            Collection<PlanMaestro> planMaestroList = new ArrayList<>();
+            while (rs.next()) {
+                PlanMaestro pm = new PlanMaestro(new PlanMaestroPK(
+                        rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento"), rs.getLong("cod_maestro")
+                ), rs.getDate("fecha_registro"), rs.getDate("fecha_actualiza"));
+                pm.setEvaluacion(new Evaluacion(new EvaluacionPK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento")), rs.getString("documento_usuario"),
+                        rs.getDate("fecha"), rs.getDate("fecha_registro_e"), rs.getString("estado"), rs.getDouble("calificacion"), rs.getDouble("peso")));
+                pm.setEstablecimiento(new Establecimiento(rs.getInt("codigo_establecimiento"), rs.getString("nombre_es"), rs.getString("nit"), rs.getString("direccion"), rs.getString("telefono"), rs.getString("correo"), rs.getString("logo")));
+                planMaestroList.add(pm);
+            }
+            return planMaestroList;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
 
     public void upsertPlanMaestro(PlanMaestro pm) throws SQLException {
 

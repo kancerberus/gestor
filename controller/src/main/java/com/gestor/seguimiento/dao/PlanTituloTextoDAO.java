@@ -72,6 +72,7 @@ public class PlanTituloTextoDAO extends Gestor {
 
     public void insertarPlantituloTexto(PlanTituloTexto plantitulotexto) throws SQLException {
         Consulta consulta = null;
+        if(!plantitulotexto.getTexto().isEmpty()){
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
@@ -86,6 +87,16 @@ public class PlanTituloTextoDAO extends Gestor {
             if (consulta != null) {
                 consulta.desconectar();
             }
+        }
+        }else{
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "DELETE "
+                    + "FROM seguimiento.plan_titulo_texto "
+                    + "WHERE codigo_establecimiento='"+plantitulotexto.getPlanTituloTextoPK().getCodigoEstablecimiento()+"' AND cod_titulo='"+plantitulotexto.getPlanTituloTextoPK().getCodTitulo()+"'"
+                    + " AND cod_titulo_texto='1' "
+            );
+            consulta.actualizar(sql);                        
         }
     }
 
