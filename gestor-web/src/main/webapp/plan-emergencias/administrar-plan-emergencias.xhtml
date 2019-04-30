@@ -42,19 +42,15 @@
                                         <f:selectItem itemLabel="ACEPTABLE" itemValue="A" />
                                     </p:selectOneButton>
                                 </f:facet>
-
                             </p:column>
-
                         </p:row> 
                     </p:columnGroup>
-
                     <p:column>
                         <p:commandButton icon="ui-icon-pencil" title="Administrar Matriz de Riesgos" 
                                          update="formAdminPlanEmergencias"
                                          action="#{uiPlanEmergencias.subirItemevaluacion()}">                            
-                            </p:commandButton>
+                        </p:commandButton>
                     </p:column>
-
                     <p:column>
                         <h:outputText value="#{varEvaluacion.evaluacionPK.codEvaluacion}"/>
                     </p:column>

@@ -500,7 +500,7 @@ public class UIPlanAccion {
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             epd = gestorEvaluacionPlanAccion.validarEvaluacionPlanAccionDetalle(epd);
             gestorEvaluacionPlanAccion.actualizarEvaluacionPlanAccionDetalle(epd);
-            this.enviarCorreo();
+            //this.enviarCorreo();
             this.modificarActivo = Boolean.FALSE;
 
             evaluacionPlanAccionDetalles = new ArrayList<>();
@@ -607,18 +607,26 @@ public class UIPlanAccion {
     }
     
     public void enviarCorreo(){
-        final String username = "gestorapp@sisgappcolombia.com";
-        final String password = "4prF$nsL3";
-        final String smtp = "sisgappcolombia.com";
+        final String username = "francisco.vivas@solutech.com.co";
+        final String password = "Franvivas18*";
+        final String smtp = "solutech.com";
         final String port = "587";
         final String ssltrust = "true";
         final String smtpauth = "true";
 
         Properties props = new Properties();
-        props.put("mail.smtp.auth", smtpauth);
-        props.put("mail.smtp.starttls.enable", ssltrust);
-        props.put("mail.smtp.ssl.trust", smtp);
         props.put("mail.smtp.port", port);
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        
+        /*props.put("mail.smtp.auth", smtpauth);
+        props.put("mail.smtp.starttls.enable", ssltrust);
+        //props.put("mail.smtp.ssl.trust", smtp);
+        //props.put("mail.smtp.port", port);
+        props.put("mail.smtp.debug", "true");        
+        props.put("mail.smtp.socketFactory.port", port);
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.socketFactory.fallback", "false");*/
 
         Session session = Session.getInstance(props,
           new javax.mail.Authenticator() {
@@ -694,7 +702,7 @@ public class UIPlanAccion {
             transport.close();
         }catch(Exception e){
             if (UtilLog.causaControlada(e)) {
-                UtilMSG.addWarningMsg(e.getMessage());                
+                UtilMSG.addWarningMsg("No se puedo enviar el correo "+e.getCause()+e.getMessage());
             } else {                                
                 UtilMSG.addSupportMsg();                
                 UtilMSG.addWarningMsg("No se puedo enviar el correo "+e.getCause()+e.getMessage());

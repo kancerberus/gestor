@@ -425,7 +425,7 @@ public class UICapacitacion {
             GestorEvaluacionCapacitacion gestorEvaluacionCapacitacion = new GestorEvaluacionCapacitacion();
             ecd = gestorEvaluacionCapacitacion.validarEvaluacionCapacitacionDetalle(ecd);
             gestorEvaluacionCapacitacion.actualizarEvaluacionCapacitacionDetalle(ecd);
-            this.enviarCorreo();
+            //this.enviarCorreo();
             this.modificarActivo = Boolean.FALSE;
 
             evaluacionCapacitacionDetalles = new ArrayList<>();
@@ -496,7 +496,7 @@ public class UICapacitacion {
             ec.setEvaluacionCapacitacionDetalle(ecd);
 
             gestorEvaluacionCapacitacion.procesarCapacitacion(ec);
-            this.enviarCorreo();
+            //this.enviarCorreo();
             UtilJSF.setBean("evaluacionCapacitacionDetalle", new EvaluacionCapacitacionDetalle(), UtilJSF.SESSION_SCOPE);
             UtilMSG.addSuccessMsg("Capacitación Guardada", "Se almaceno la capacitación satisfactoriamente.");
             evaluacionCapacitacionDetalles = new ArrayList<>();
