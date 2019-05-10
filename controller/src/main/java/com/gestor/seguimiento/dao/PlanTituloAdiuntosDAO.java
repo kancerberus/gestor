@@ -106,17 +106,37 @@ public class PlanTituloAdiuntosDAO {
     
     public void eliminarPlantituloadjunto(PlanTituloAdiuntos plantituloadjuntos) throws SQLException {
         Consulta consulta = null;  
-        try {                                      
-        
+        try {         
+            
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
+                    "DELETE"
+                    + " FROM seguimiento.plan_maestro_plan_titulo_adiuntos "
+                    + " WHERE  codigo_establecimiento='"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodigoEstablecimiento()+"' AND "
+                    + " cod_titulo='"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodTitulo()+"' AND cod_titulo_adjunto='"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodTituloAdjunto()+"'"
+                    
+            );
+            consulta.actualizar(sql); 
+        
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql1 = new StringBuilder(
+                    "DELETE"
+                    + " FROM seguimiento.plan_titulo_adiuntos_evaluacion_adjuntos "
+                    + " WHERE  codigo_establecimiento='"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodigoEstablecimiento()+"' AND "
+                    + " cod_titulo='"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodTitulo()+"' AND cod_titulo_adjunto='"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodTituloAdjunto()+"'"
+                    
+            );
+            consulta.actualizar(sql1); 
+            
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql2 = new StringBuilder(
                     "DELETE"
                     + " FROM seguimiento.plan_titulo_adiuntos "
                     + " WHERE  codigo_establecimiento='"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodigoEstablecimiento()+"' AND "
                     + " cod_titulo='"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodTitulo()+"' AND cod_titulo_adjunto='"+plantituloadjuntos.getPlanTituloAdiuntosPK().getCodTituloAdjunto()+"'"
                     
             );
-            consulta.actualizar(sql);            
+            consulta.actualizar(sql2);            
         } finally {
             if (consulta != null) {
                 consulta.desconectar();

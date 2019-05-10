@@ -93,6 +93,29 @@ public class PlanSeccionAdjuntosDAO {
     public void eliminarPlanseccionadjunto(PlanSeccionAdjuntos planseccionadjuntos) throws SQLException {
         Consulta consulta = null;
         try {
+            
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql1 = new StringBuilder(
+                    "DELETE "
+                    + " FROM seguimiento.plan_maestro_plan_seccion_adjuntos "
+                    + " WHERE codigo_establecimiento='"+planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodigoEstablecimiento()+"' AND "
+                    + "cod_titulo='"+planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodTitulo()+"' AND "
+                    + "cod_seccion='"+planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodSeccion()+"' AND "
+                    + "cod_seccion_adjunto='"+planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodSeccionAdjunto()+"' "
+            );
+            consulta.actualizar(sql1);            
+            
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql2 = new StringBuilder(
+                    "DELETE "
+                    + " FROM seguimiento.plan_seccion_adjuntos_evaluacion_adjuntos "
+                    + " WHERE codigo_establecimiento='"+planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodigoEstablecimiento()+"' AND "
+                    + "cod_titulo='"+planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodTitulo()+"' AND "
+                    + "cod_seccion='"+planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodSeccion()+"' AND "
+                    + "cod_seccion_adjunto='"+planseccionadjuntos.getPlanSeccionAdjuntosPK().getCodSeccionAdjunto()+"' "
+            );
+            consulta.actualizar(sql2);
+            
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "DELETE "

@@ -79,11 +79,8 @@ public class EvaluacionPlanAccionDAO {
             }
         }
     }
-
-    public void insertaEvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetalle epd) throws SQLException {        
-        
-        
-        
+    
+    public void insertaPlanAccionMatrizRiesgos(EvaluacionPlanAccionDetalle epd) throws SQLException {       
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);
@@ -114,6 +111,36 @@ public class EvaluacionPlanAccionDAO {
             );            
             consulta.actualizar(sql2);
             
+        } finally {
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    
+
+        public void insertaEvaluacionPlanAccionDetalle(EvaluacionPlanAccionDetalle epd) throws SQLException {
+
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "INSERT INTO gestor.evaluacion_plan_accion_detalle("
+                    + " cod_evaluacion, codigo_establecimiento, cod_plan, cod_plan_detalle,"
+                    + " cod_ciclo, cod_seccion, cod_detalle, cod_item, nombre, descripcion,"
+                    + " estado, documento_usuario, fecha_registro, cedula , fecha_plazo, descripcion_hallazgo,"
+                    + " observaciones, cod_clase_hallazgo, cod_tipo_accion, cod_motivo_correccion, registro, eficacia, cod_centrotrabajo, cod_fuente_hallazgo,"
+                    + " cod_tipo_plan_accion)"
+                    + " VALUES (" + epd.getEvaluacionPlanAccionDetallePK().getCodEvaluacion() + ", " + epd.getEvaluacionPlanAccionDetallePK().getCodigoEstablecimiento()
+                    + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlan()
+                    + " ," + epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle() + ", '" + epd.getCodCiclo() + "', " + epd.getCodSeccion() + ", " + epd.getCodDetalle()
+                    + " ," + epd.getCodItem() + ", '" + epd.getNombre() + "', '" + epd.getDescripcion() + "', '" + epd.getEstado() + "','" + epd.getDocumentoUsuario() + "'"
+                    + " , NOW() ," + epd.getResponsable().getCedula()+",'"+epd.getFechaPlazo()+"','"+epd.getDescripcionhallazgo()+"','"+epd.getObservaciones()+"',"+epd.getClasehallazgo().getCodClasehallazgo()
+                    + " ," + epd.getTipoaccion().getCodTipoaccion()+","+epd.getMotivocorreccion().getCodMotivocorreccion()+","+epd.getRegistro()+", "+epd.getEficacia()
+                    + " ," + epd.getCentrotrabajo().getCodCentrotrabajo()+","+epd.getFuentehallazgo().getCodFuentehallazgo()+",1)"
+            );
+            consulta.actualizar(sql);
         } finally {
             if (consulta != null) {
                 consulta.desconectar();

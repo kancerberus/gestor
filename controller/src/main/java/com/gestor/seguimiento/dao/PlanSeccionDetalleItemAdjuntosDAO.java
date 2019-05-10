@@ -8,13 +8,9 @@ package com.gestor.seguimiento.dao;
 import com.gestor.gestor.AdjuntosCategoria;
 import com.gestor.gestor.AdjuntosCategoriaTipo;
 import com.gestor.gestor.AdjuntosCategoriaTipoPK;
-import com.gestor.seguimiento.PlanSeccionAdjuntos;
-import com.gestor.seguimiento.PlanSeccionAdjuntos;
 import com.gestor.seguimiento.PlanSeccionDetalleItemAdjuntos;
 import com.gestor.seguimiento.PlanSeccionDetalleItemAdjuntosPK;
-import com.gestor.seguimiento.PlanSeccionAdjuntosPK;
 import com.gestor.seguimiento.PlanSeccionDetalleItem;
-import com.gestor.seguimiento.PlanSeccionDetalleItemPK;
 import conexion.Consulta;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -98,7 +94,36 @@ public class PlanSeccionDetalleItemAdjuntosDAO {
     public void eliminarPlansecciondetalleitemadjunto(PlanSeccionDetalleItemAdjuntos plansecciondetalleitemadjuntos) throws SQLException {
         Consulta consulta = null;
         try {
+            
             consulta = new Consulta(this.conexion);
+            StringBuilder sql1 = new StringBuilder(
+                    "DELETE "
+                    + " FROM seguimiento.plan_seccion_detalle_item_adjuntos_evaluacion_adjuntos "
+                    + " WHERE codigo_establecimiento='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodigoEstablecimiento()+"' AND "
+                    + " cod_titulo='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodTitulo()+"' AND "
+                    + " cod_seccion='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccion()+"' AND "
+                    + " cod_seccion_detalle='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccionDetalle()+"' AND "
+                    + " cod_seccion_detalle_item='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccionDetalleItem()+"' AND "
+                    + " cod_seccion_detalle_item_adjuntos='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccionDetalleItemAdjuntos()+"' "
+            );            
+            consulta.actualizar(sql1);
+            
+            consulta = new Consulta(this.conexion);            
+            StringBuilder sql2 = new StringBuilder(
+                    "DELETE "
+                    + " FROM seguimiento.plan_maestro_plan_seccion_detalle_item_adjuntos "
+                    + " WHERE codigo_establecimiento='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodigoEstablecimiento()+"' AND "
+                    + " cod_titulo='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodTitulo()+"' AND "
+                    + " cod_seccion='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccion()+"' AND "
+                    + " cod_seccion_detalle='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccionDetalle()+"' AND "
+                    + " cod_seccion_detalle_item='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccionDetalleItem()+"' AND "
+                    + " cod_seccion_detalle_item_adjuntos='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccionDetalleItemAdjuntos()+"' "
+            );
+            
+            consulta.actualizar(sql2);
+            
+            
+            consulta = new Consulta(this.conexion);            
             StringBuilder sql = new StringBuilder(
                     "DELETE "
                     + " FROM seguimiento.plan_seccion_detalle_item_adjuntos "
@@ -110,6 +135,8 @@ public class PlanSeccionDetalleItemAdjuntosDAO {
                     + " cod_seccion_detalle_item_adjuntos='"+plansecciondetalleitemadjuntos.getPlanSeccionDetalleItemAdjuntosPK().getCodSeccionDetalleItemAdjuntos()+"' "
             );
             consulta.actualizar(sql);
+            
+
         } finally {
             if (consulta != null) {
                 consulta.desconectar();

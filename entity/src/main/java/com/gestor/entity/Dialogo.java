@@ -22,7 +22,7 @@ public class Dialogo implements Serializable {
     public static String WIDTH_AUTO = "auto";
     public static String WIDTH_80 = "80%";
     public static String WIDTH_50 = "50%";
-    public static String WIDTH_100 = "100%";
+    public static String WIDTH_100 = "100%";    
 
     public Dialogo() {
     }
@@ -50,8 +50,8 @@ public class Dialogo implements Serializable {
     private String header;
     private String effect;
     private String width;
-    private String style;
-
+    private String style;    
+   
     /**
      * @return the src
      */

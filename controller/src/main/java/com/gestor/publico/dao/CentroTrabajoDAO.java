@@ -99,6 +99,43 @@ public class CentroTrabajoDAO {
         }
     }
     
+    
+    public List<?> cargarListaCentrosTrabajoVulnerabilidades(int codEstablecimiento) throws SQLException {        
+        ResultSet rs = null;
+        
+        Consulta consulta = null;        
+        List<CentroTrabajo> listaCentrosTrabajo = new ArrayList<>();
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    "SELECT codigo_establecimiento,cod_centrotrabajo, nombre, nit, estado " +
+                    "FROM centro_trabajo " +
+                    "WHERE estado='true' AND codigo_establecimiento='"+codEstablecimiento+"' AND cod_centrotrabajo NOT IN (Select cod_centro_trabajo " +
+                    "FROM plemergencias.plan_emergencia pe " +
+                    "WHERE pe.codigo_establecimiento='"+codEstablecimiento+"')"
+            );
+            rs = consulta.ejecutar(sql);
+            while (rs.next()) {
+                CentroTrabajo ct= new CentroTrabajo(rs.getInt("codigo_establecimiento"), rs.getInt("cod_centrotrabajo"), rs.getString("nombre") , rs.getString("nit"), rs.getBoolean("estado"));                
+                ct.setCodCentrotrabajo(rs.getInt("cod_centrotrabajo"));
+                ct.setNombre(rs.getString("nombre")); 
+                ct.setNit(rs.getString("nit"));
+                ct.setEstado(rs.getBoolean("estado"));
+                listaCentrosTrabajo.add(ct);
+            }
+            
+            return listaCentrosTrabajo;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    
     public void insertarCentro(CentroTrabajo centro) throws SQLException {
         Consulta consulta = null;
         try {
