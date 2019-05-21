@@ -133,7 +133,7 @@ public class UIPlanTrabajo implements Serializable{
         try {
             Sesion s = (Sesion) UtilJSF.getBean("sesion");
             GestorUsuario gestorUsuario = new GestorUsuario();
-
+            
             establecimientoList = new ArrayList<>();
             establecimientoList.addAll(s.getEstablecimientoList());
 
@@ -611,19 +611,18 @@ public class UIPlanTrabajo implements Serializable{
             Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
             plantrabajoActividadList = new ArrayList<>();
             GestorPlanTrabajo gestorPlanTrabajo = new GestorPlanTrabajo();
-                    
-            
+
+
                 List<String> condicionesConsulta = new ArrayList<>();
                 condicionesConsulta.add(App.CONDICION_WHERE);
                 condicionesConsulta.add(PlanTrabajoActividad.PLAN_TRABAJO_ACTIVIDAD_CONDICION_COD_ESTABLECIMIENTO.replace("?", "3" ));
-                establecimiento.setCodigoEstablecimiento(3);           
                 this.cargarPlanesTrabajoList();
                 plantrabajoActividadList.addAll(gestorPlanTrabajo.cargarListaEvaluacionPlanAccion(
                         UtilTexto.listToString(condicionesConsulta, UtilTexto.SEPARADOR_ESPACIO)
                 )
                 );
                 if(!plantrabajoActividadList.isEmpty()){
-                UtilJSF.setBean("varPlantrabajoactividad", plantrabajoActividadList.get(0), UtilJSF.SESSION_SCOPE);                
+                UtilJSF.setBean("varPlantrabajoactividad", plantrabajoActividadList.get(0), UtilJSF.SESSION_SCOPE);
                 }
                 //this.getAvancePlanAccion();
             UtilJSF.setBean("varPlantrabajoactividad", new PlanTrabajoActividad(), UtilJSF.SESSION_SCOPE);
