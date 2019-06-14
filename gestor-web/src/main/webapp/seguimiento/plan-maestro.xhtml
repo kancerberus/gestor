@@ -6,10 +6,7 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 template="/template.xhtml">
     <ui:define name="content">
-
-
         <h:form enctype="multipart/form-data" id="formPlanMaestro" >
-            
             <h1>
                 PLAN MAESTRO
             </h1>
@@ -56,13 +53,14 @@
                                   rowHover="true">
 
                         <p:column headerText="Documento">
-                            <h:outputText value="#{varPlanTituloAdjuntos.documento}"/>
+                            <h:outputText value="#{varPlanTituloAdjuntos.documento}"/>                            
                         </p:column>
+    
                         <p:column headerText="Ver Documento" width="30%">
                             <div>
                                 <p:commandButton icon="ui-icon-document" title="Ver Adjunto" ajax="false">    
                                     <p:fileDownload value="#{uiPlanMaestro.fileDownload}" />
-                                </p:commandButton>
+                                </p:commandButton>                                
                                 <h:outputText value="  "/>
                                 <h:outputText value="#{varPlanTituloAdjuntos.evaluacionAdjuntos.archivoSimple}"/>
                             </div>
@@ -200,6 +198,9 @@
 
                                                 <p:column headerText="Documento">
                                                     <h:outputText value="#{varPlanSeccionDetalleAdjuntos.documento}"/>
+                                                    <p:media value="/resources/demo/media/guide.pdf" width="100%" height="300px">
+                                                        Your browser can't display pdf, 
+                                                    </p:media>
                                                 </p:column>
                                                 <p:column headerText="Ver Documento" width="30%">
                                                     <div>

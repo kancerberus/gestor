@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core">
+    
+        <p:outputPanel id="opAnalisisAmenaza">
+            <h2>                
+                 <p class="letraBlueBackgroundWhite">Analisis Amenazas: #{uiPlanEmergencias.planEmergencia.centrotrabajo.nombre}</p>
+            </h2>                  
+            <h:panelGrid columns="4" >
+                    <h:outputLabel value="Origen Tipo: " style="font-weight: bold;"/>
+                    <p:selectOneMenu value="#{uiPlanEmergencias.analisisAmenazas.tipoOrigen}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlanEmergencias.tiposOrigen}" var="to" itemValue="#{to}" itemLabel="#{to.nombre}" />
+                            <p:ajax  update="org" listener="#{uiPlanEmergencias.cargarTiposOrigen()}" />
+                    </p:selectOneMenu>                    
+                    
+                    <h:outputLabel value="Probabilidad: " style="font-weight: bold;"/>
+                    <p:selectOneMenu  value="#{uiPlanEmergencias.analisisAmenazas.probabilidad}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlanEmergencias.probabilidades}" var="p" itemValue="#{p}" itemLabel="#{p.nombre}" />
+                            <p:ajax event="change" process="@this"/>
+                    </p:selectOneMenu>
+                    
+                    <h:outputLabel  value="Amenaza: " style="font-weight: bold;"/>
+                    <p:selectOneMenu id="org" value="#{uiPlanEmergencias.origen}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;" disabled="#{empty uiPlanEmergencias.analisisAmenazas.tipoOrigen}">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlanEmergencias.relOrigenesTipo}" var="org" itemValue="#{org}" itemLabel="#{org.nombre}" />                            
+                    </p:selectOneMenu>
+                    
+                    <h:outputLabel value="Gravedad: " style="font-weight: bold;"/>
+                    <p:selectOneMenu value="#{uiPlanEmergencias.analisisAmenazas.gravedad}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlanEmergencias.gravedades}" var="g" itemValue="#{g}" itemLabel="#{g.nombre}" />
+                            <p:ajax event="change" process="@this"/>
+                    </p:selectOneMenu>
+                    
+            </h:panelGrid>
+            
+            <h:panelGrid columns="2">
+                <p:commandButton value="Crear / Modificar" action="#{uiPlanEmergencias.guardarAnalisisAmenazasList()}"
+                                     icon="ui-icon-disk"
+                                     update="opAnalisisAmenaza"/>              
+            </h:panelGrid>
+            
+            <p:dataTable id="analisisTable" var="varAnalisisAmenazas" value="#{uiPlanEmergencias.analisisAmenasasList}" sortBy="#{varAnalisisAmenazas.tipoOrigen.nombre}" expandableRowGroups="true" 
+                         rowKey="#{varAnalisisAmenazas.codAnalisisAmenaza}" selection="#{uiPlanEmergencias.selectedAnalisisAmenasa}" selectionMode="single"                         
+                         >
+                <p:headerRow>
+                    <p:column colspan="3">
+                        <h:outputText value="#{varAnalisisAmenazas.tipoOrigen.nombre}" />
+                    </p:column>
+                </p:headerRow>
+                <p:column headerText="Origen">
+                    <h:outputText value="#{varAnalisisAmenazas.relOrigenTipo.nombre}" />
+                </p:column>
+                <p:column headerText="Probabilidad">
+                    <h:outputText value="#{varAnalisisAmenazas.probabilidad.nombre}" />
+                </p:column>
+                <p:column headerText="Gravedad">
+                    <h:outputText value="#{varAnalisisAmenazas.gravedad.nombre}" />
+                </p:column>                                
+            </p:dataTable>
+            
+            <p:contextMenu for="analisisTable">                
+                <p:menuitem value="Eliminar" update="analisisTable" icon="pi pi-times" action="#{uiPlanEmergencias.deleteAnalisisAmenaza()}"/>
+            </p:contextMenu>
+                       
+            <br/>
+            <h:panelGrid columns="2">
+                <p:commandButton value="Guardar" action="#{uiPlanEmergencias.guardarAnalisisAmenaza()}"
+                                     icon="ui-icon-disk"
+                                     update="opAnalisisAmenaza"/>                
+            </h:panelGrid>
+        </p:outputPanel>                
+</ui:composition>

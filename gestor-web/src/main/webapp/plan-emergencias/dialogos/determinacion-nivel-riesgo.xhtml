@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+        <p:outputPanel id="opDeterminacionNivelRiesgo">
+            <h2>                
+                <p class="letraBlueBackgroundWhite">Determinacion Nivel De Riesgo: #{uiPlanEmergencias.planEmergencia.centrotrabajo.nombre}</p>
+            </h2>   
+            <br/>
+            <table border="0">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p:dataTable style="width: 40%" id="amenazas" var="varVulnerabilidades" value="#{uiPlanEmergencias.relOrigenTiposList}" expandableRowGroups="true" rowKey="#{varVulnerabilidades.codTipoOrigen}" 
+                                                     sortBy="#{varVulnerabilidades.codTipoOrigen}">
+                                <p:headerRow>
+                                    <p:column colspan="1">
+                                        <h:outputText value="#{varVulnerabilidades.tipoOrigen.nombre}" />
+                                    </p:column>
+                                    <p:column style="width:32px;text-align: center">                        
+                                    </p:column>
+                                </p:headerRow>
+                                <p:column headerText="Amenaza">
+                                    <h:outputText value="#{varVulnerabilidades.nombre}" />
+                                </p:column>                
+                                <p:column style="width:32px;text-align: center">
+                                    <p:commandButton  update="formAdminVulnerabilidades:opDeterminacionNivelRiesgo, formAdminVulnerabilidades:pgrid,formAdminVulnerabilidades:pie" icon="ui-icon-note" title="View">
+                                        <f:setPropertyActionListener value="#{varVulnerabilidades}" target="#{uiPlanEmergencias.selectedOrigenTipo}" />
+                                        <f:actionListener binding="#{uiPlanEmergencias.seleccionarAmenazaNivelRiesgo()}"/>
+                                   </p:commandButton>
+                               </p:column>
+                            </p:dataTable>
+                        </td>
+                        <td style="width: 70%;float: left;margin-left: -30%">
+                            <p:dataTable id="reldetNivelRiesgo" var="varVul" value="#{uiPlanEmergencias.relDetNivelRiesgoList}" 
+                                        sortBy="#{varVul.vulnerabilidad.nombre}" expandableRowGroups="true" 
+                                        >
+                               <f:facet name="header">
+                                   Determinacion Del Nivel De Riesgo
+                               </f:facet>
+                               <p:row>
+                                   <p:outputLabel value="#{uiPlanEmergencias.selectedOrigenTipo.nombre}"/>
+                               </p:row> 
+                               <p:columnGroup type="header">
+                                   <p:row>
+                                       <p:column colspan="5" headerText="#{uiPlanEmergencias.selectedOrigenTipo.nombre}" />
+                                   </p:row>
+                                   <p:row>                                                                        
+                                       <p:column rowspan="2" headerText="Vulnerabilidades" />                                                
+                                       <p:column colspan="3" headerText="Valores" />
+                                       <p:column rowspan="2" headerText="Color" />
+                                   </p:row>
+                                   <p:row>                        
+                                       <p:column headerText="Bajo (0.0)" />                        
+                                       <p:column headerText="Medio (0.5)" />                                                
+                                       <p:column headerText="Alto (1.0)" />                                                
+                                   </p:row>
+                               </p:columnGroup>                                
+                               <p:headerRow> 
+                                   <p:column style="background: #{varVul.color}" colspan="5">
+                                       <h:outputText value="#{varVul.vulnerabilidad.nombre}" />
+                                   </p:column>
+                               </p:headerRow>                
+                               <p:column>                    
+                                   <h:outputText value="#{varVul.relVulnerabilidadTipo.nombre}" />
+                               </p:column>
+                               <p:column>
+                                   <h:outputText value="#{varVul.alto}" />
+                               </p:column>
+                               <p:column>
+                                   <h:outputText value="#{varVul.medio}" />
+                               </p:column>
+                               <p:column>
+                                   <h:outputText value="#{varVul.bajo}" />
+                               </p:column>  
+                               <p:column style="background: #{varVul.color}">
+                                   <h:outputText value="#{varVul.subtotal}" />
+                               </p:column>
+                           </p:dataTable>
+                        </td>
+                        <td style="float: right;margin-right: 10%">
+                            <p:panelGrid style="width: 40%;margin-left: 30%" columns="1" id="pgrid" layout="grid">                                
+                                <h:outputText style="font-weight: bolder" value="Vulnerabilidad" />                                
+                                <h:outputText value="#{uiPlanEmergencias.detNivelRiesgo.promedio} Promedio" />
+                                <p:row>
+                                    <h:outputText style="font-weight: bolder" value="Nivel De Riesgo" />
+                                </p:row>                                
+                                <h:outputLabel style=" background: #{varVul.color}" value="#{uiPlanEmergencias.detNivelRiesgo.nivelRiesgo}" />
+                            </p:panelGrid>
+                            <h:panelGrid id="pie" style="float: right;margin-bottom: 30%" columns="1" >
+                                <p:chart type="pie" model="#{uiPlanEmergencias.pieDeterminacionNivelRiesgo}" style="width:400px;height:300px;" />  
+                            </h:panelGrid>
+                        </td>                        
+                    </tr>
+                </tbody>
+            </table>
+        </p:outputPanel>
+</ui:composition>

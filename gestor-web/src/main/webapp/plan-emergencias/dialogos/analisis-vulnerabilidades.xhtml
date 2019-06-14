@@ -1,0 +1,735 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core">
+    
+        <p:outputPanel id="opAnalisisVulnerabilidad">
+            <h2>                
+                 <p class="letraBlueBackgroundWhite">Analisis Vulnerabilidades: #{uiPlanEmergencias.planEmergencia.centrotrabajo.nombre}</p>
+            </h2>                  
+            <h:panelGrid columns="4" >
+                    <h:outputLabel value="Vulnerabilidad: " style="font-weight: bold;"/>
+                    <p:selectOneMenu value="#{uiPlanEmergencias.analisisVulnerabilidad.vulnerabilidad}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlanEmergencias.vulnerabilidadList}" var="vul" itemValue="#{vul}" itemLabel="#{vul.nombre}" />
+                            <p:ajax  update="relvt" listener="#{uiPlanEmergencias.cargarRelVulneravilidadTipoAnalisisVulnerabilidad()}" />
+                    </p:selectOneMenu>
+                    
+                    <h:outputLabel value="Tipo: " style="font-weight: bold;"/>
+                    <p:selectOneMenu id="relvt" value="#{uiPlanEmergencias.analisisVulnerabilidad.vulnerabilidadTipo}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlanEmergencias.relvulnerabilidadTipoList}" var="vult" itemValue="#{vult}" itemLabel="#{vult.nombre}" />                            
+                            <p:ajax  update="preg" listener="#{uiPlanEmergencias.cargarCuestionarioVulnerabilidadesTipo()}" />
+                    </p:selectOneMenu>
+                    
+                    <h:outputLabel value="Pregunta: " style="font-weight: bold;"/>
+                    <p:selectOneMenu id="preg" value="#{uiPlanEmergencias.analisisVulnerabilidad.cuestionarioVulnerabilidad}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiPlanEmergencias.cuestionarioVulnerabilidadAnalisisVulnerabilidadList}" var="cvul" itemValue="#{cvul}" itemLabel="#{cvul.nombre}" />
+                    </p:selectOneMenu>
+            </h:panelGrid>            
+            <h:panelGrid columns="2">
+                <p:commandButton value="Crear " action="#{uiPlanEmergencias.guardarAnalisisVulnerabilidadesList()}"
+                                     icon="ui-icon-disk"
+                                     update="opAnalisisVulnerabilidad, admvulpersonas,admvulrecursos, admvulsistemas"/>              
+            </h:panelGrid>  
+            <br/>            
+            <p:dataTable id="admvulpersonas" var="admvulpersonas" value="#{uiPlanEmergencias.analisisVulnerabilidadPersonasList}" expandableRowGroups="true" rowKey="#{admvulpersonas.codAnalisisVulnerabilidad}" 
+                         sortBy="#{admvulpersonas.vulnerabilidadTipo.nombre}"  editable="true" editMode="cell" widgetVar="celladmvulpersonas" 
+                         selection="#{uiPlanEmergencias.selectedAnalisisVulnerabilidadPersonas}" selectionMode="single"
+                         >
+                <f:facet name="header">
+                    PERSONAS
+                </f:facet>
+                
+                <p:ajax event="cellEdit" listener="#{uiPlanEmergencias.onCellEdit}" update="formAdminVulnerabilidades:admvulpersonas" />
+                <p:ajax event="rowUnselect" listener="#{uiPlanEmergencias.onRowUnselect}" update="formAdminVulnerabilidades" />
+                
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column width="30%" rowspan="3" headerText="Amenazas" />
+                        <p:column colspan="7" headerText="Origen Tecnico" />
+                        <p:column colspan="5" headerText="Origen Social" />
+                        <p:column colspan="5" headerText="Origen Natural" />
+                    </p:row>
+                    <p:row>
+                        <p:column headerText="Incendio" />
+                        <p:column headerText="Explosion" />
+                        <p:column headerText="Falla Estructural" />
+                        <p:column headerText="Inundacion" />
+                        <p:column headerText="Corto Circuito" />
+                        <p:column headerText="Emergencia Aeronautica" />
+                        <p:column headerText="Intoxicacion Alimentaria" />
+                        <p:column headerText="Desorden Civil" />
+                        <p:column headerText="Terrorismo" />
+                        <p:column headerText="Atentados" />
+                        <p:column headerText="Asaltos" />
+                        <p:column headerText="Incursion Guerrillera" />
+                        <p:column headerText="Sismos" />
+                        <p:column headerText="Erupcion Volcanica" />
+                        <p:column headerText="Deslizamiento de Tierra" />
+                        <p:column headerText="Inundacion" />                        
+                        <p:column headerText="Vientos Huracanados" />
+                    </p:row>
+                </p:columnGroup>
+                
+                <p:headerRow>
+                    <p:column colspan="18">
+                        <h:outputText value="#{admvulpersonas.vulnerabilidadTipo.nombre}" />
+                    </p:column>
+                </p:headerRow>
+                
+                <p:column width="250px">
+                    <h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.nombre}" />
+                </p:column>
+                
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif1}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif1}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif2}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif2}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif3}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif3}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif4}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif4}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif5}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif5}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif6}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif6}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif7}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif7}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif8}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif8}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif9}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif9}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif10}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif10}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif11}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif11}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif12}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif12}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif13}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif13}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif14}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif14}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif15}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif15}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif16}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif16}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulpersonas.cuestionarioVulnerabilidad.calif17}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulpersonas.cuestionarioVulnerabilidad.calif17}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>        
+                
+            </p:dataTable>
+            
+            <p:contextMenu for="admvulpersonas" widgetVar="cMenu">   
+                <p:menuitem value="Edit Cell" icon="pi pi-search" onclick="PF('celladmvulpersonas').showCellEditor();return false;"/>  
+                <p:menuitem value="Hide Menu" icon="pi pi-times" onclick="PF('cMenu').hide()"/>  
+            </p:contextMenu> 
+            
+            <p:contextMenu for="admvulpersonas">                
+                <p:menuitem value="Eliminar" update="opAnalisisVulnerabilidad,admvulpersonas" icon="pi pi-times" action="#{uiPlanEmergencias.deleteAnalisisVulnerabilidad()}"/>
+            </p:contextMenu>
+            <br/>
+            
+            <p:dataTable id="admvulrecursos" var="admvulrecursos" value="#{uiPlanEmergencias.analisisVulnerabilidadRecursosList}" expandableRowGroups="true" 
+                         rowKey="#{admvulrecursos.codAnalisisVulnerabilidad}" sortBy="#{admvulrecursos.vulnerabilidadTipo.nombre}" editable="true" editMode="cell" widgetVar="celladmvulrecursos"
+                         selection="#{uiPlanEmergencias.selectedAnalisisVulnerabilidadRecursos}" selectionMode="single">
+                <f:facet name="header">
+                    RECURSOS
+                </f:facet>
+                
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column width="30%" rowspan="3" headerText="Amenazas" />
+                        <p:column colspan="7" headerText="Origen Tecnico" />
+                        <p:column colspan="5" headerText="Origen Social" />
+                        <p:column colspan="5" headerText="Origen Natural" />
+                    </p:row>
+                    <p:row>
+                        <p:column headerText="Incendio" />
+                        <p:column headerText="Explosion" />
+                        <p:column headerText="Falla Estructural" />
+                        <p:column headerText="Inundacion" />
+                        <p:column headerText="Corto Circuito" />
+                        <p:column headerText="Emergencia Aeronautica" />
+                        <p:column headerText="Intoxicacion Alimentaria" />
+                        <p:column headerText="Desorden Civil" />
+                        <p:column headerText="Terrorismo" />
+                        <p:column headerText="Atentados" />
+                        <p:column headerText="Asaltos" />
+                        <p:column headerText="Incursion Guerrillera" />
+                        <p:column headerText="Sismos" />
+                        <p:column headerText="Erupcion Volcanica" />
+                        <p:column headerText="Deslizamiento de Tierra" />
+                        <p:column headerText="Inundacion" />                        
+                        <p:column headerText="Vientos Huracanados" />
+                    </p:row>
+                </p:columnGroup>
+                
+                <p:headerRow>
+                    <p:column colspan="18">
+                        <h:outputText value="#{admvulrecursos.vulnerabilidadTipo.nombre}" />
+                    </p:column>
+                </p:headerRow>
+                
+                <p:column width="250px">
+                    <h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.nombre}" />
+                </p:column>
+                
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif1}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif1}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif2}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif2}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif3}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif3}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif4}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif4}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif5}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif5}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif6}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif6}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif7}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif7}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif8}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif8}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif9}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif9}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif10}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif10}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif11}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif11}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif12}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif12}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif13}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif13}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif14}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif14}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif15}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif15}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif16}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif16}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulrecursos.cuestionarioVulnerabilidad.calif17}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulrecursos.cuestionarioVulnerabilidad.calif17}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                
+            </p:dataTable>            
+            
+            <p:contextMenu for="admvulrecursos" widgetVar="cMenu">   
+                <p:menuitem value="Edit Cell" icon="pi pi-search" onclick="PF('celladmvulrecursos').showCellEditor();return false;"/>  
+                <p:menuitem value="Hide Menu" icon="pi pi-times" onclick="PF('cMenu').hide()"/>  
+            </p:contextMenu> 
+            
+            <p:contextMenu for="admvulrecursos">                
+                <p:menuitem value="Eliminar" update="opAnalisisVulnerabilidad,admvulrecursos" icon="pi pi-times" action="#{uiPlanEmergencias.deleteAnalisisVulnerabilidad()}"/>
+            </p:contextMenu>
+            
+            <br/>
+            
+            <p:dataTable id="admvulsistemas" var="admvulsistemas" value="#{uiPlanEmergencias.analisisVulnerabilidadSistemasList}" expandableRowGroups="true" rowKey="#{admvulsistemas.codAnalisisVulnerabilidad}" 
+                         sortBy="#{admvulsistemas.vulnerabilidadTipo.nombre}" editable="true" editMode="cell" widgetVar="celladmvulsistemas" selection="#{uiPlanEmergencias.selectedAnalisisVulnerabilidadSistemas}" selectionMode="single">
+                <f:facet name="header">
+                    SYSTEMAS Y PROCESOS
+                </f:facet>
+                
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column width="30%" rowspan="3" headerText="Amenazas" />
+                        <p:column colspan="7" headerText="Origen Tecnico" />
+                        <p:column colspan="5" headerText="Origen Social" />
+                        <p:column colspan="5" headerText="Origen Natural" />
+                    </p:row>
+                    <p:row>
+                        <p:column headerText="Incendio" />
+                        <p:column headerText="Explosion" />
+                        <p:column headerText="Falla Estructural" />
+                        <p:column headerText="Inundacion" />
+                        <p:column headerText="Corto Circuito" />
+                        <p:column headerText="Emergencia Aeronautica" />
+                        <p:column headerText="Intoxicacion Alimentaria" />
+                        <p:column headerText="Desorden Civil" />
+                        <p:column headerText="Terrorismo" />
+                        <p:column headerText="Atentados" />
+                        <p:column headerText="Asaltos" />
+                        <p:column headerText="Incursion Guerrillera" />
+                        <p:column headerText="Sismos" />
+                        <p:column headerText="Erupcion Volcanica" />
+                        <p:column headerText="Deslizamiento de Tierra" />
+                        <p:column headerText="Inundacion" />                        
+                        <p:column headerText="Vientos Huracanados" />
+                    </p:row>
+                </p:columnGroup>
+                
+                <p:headerRow>
+                    <p:column colspan="18">
+                        <h:outputText value="#{admvulsistemas.vulnerabilidadTipo.nombre}" />
+                    </p:column>
+                </p:headerRow>
+                
+                <p:column width="250px">
+                    <h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.nombre}" />
+                </p:column>
+                
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif1}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif1}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif2}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif2}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif3}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif3}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif4}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif4}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif5}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif5}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif6}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif6}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif7}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif7}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif8}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif8}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif9}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif9}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif10}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif10}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif11}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif11}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif12}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif12}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif13}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif13}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif14}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif14}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif15}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif15}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif16}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif16}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+                <p:column>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{admvulsistemas.cuestionarioVulnerabilidad.calif17}" /></f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{admvulsistemas.cuestionarioVulnerabilidad.calif17}" style="width:100%">
+                                <f:selectItems value="#{uiPlanEmergencias.calificaciones}" var="cal" itemLabel="#{cal}" itemValue="#{cal}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>                   
+                </p:column>
+            </p:dataTable>
+            <p:contextMenu for="admvulsistemas" widgetVar="cMenu">   
+                <p:menuitem value="Edit Cell" icon="pi pi-search" onclick="PF('celladmvulsistemas').showCellEditor();return false;"/>  
+                <p:menuitem value="Hide Menu" icon="pi pi-times" onclick="PF('cMenu').hide()"/>  
+            </p:contextMenu> 
+            
+            <p:contextMenu for="admvulsistemas">                
+                <p:menuitem value="Eliminar" update="opAnalisisVulnerabilidad,admvulsistemas" icon="pi pi-times" action="#{uiPlanEmergencias.deleteAnalisisVulnerabilidad()}"/>
+            </p:contextMenu>
+            
+            <br/>
+            <h:panelGrid columns="2">
+                <p:commandButton value="Guardar/Limpiar" action="#{uiPlanEmergencias.guardarAnalisisVulnerabilidad()}"
+                                     icon="ui-icon-disk"
+                                     update="opAnalisisVulnerabilidad"/>                
+            </h:panelGrid>
+        </p:outputPanel>                
+</ui:composition>

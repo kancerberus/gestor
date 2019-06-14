@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml"
+                >
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formVulnerabilidades" style="font-size: small;">
+            <p:panel id="panelVulnerabilidades"  header="Administrar Establecimientos" >
+                <h:panelGrid columns="3" >
+                    <h:outputText value="Vulnerabilidad en:"/>
+                    <h:outputText value="Tipo:"/>
+                    <h:outputText value="Pregunta:"/>
+                    <p:selectOneMenu id="v" value="#{uiPlanEmergencias.cuestionarioVulnerabilidad.vulnerabilidad}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;">  
+                        <f:selectItem itemLabel="Seleccionar..." itemValue="" /> 
+                        <f:selectItems value="#{uiPlanEmergencias.vulnerabilidadList}" var="vul" itemLabel="#{vul.nombre}" itemValue="#{vul}"/>
+                        <p:ajax  update="relvt" listener="#{uiPlanEmergencias.cargarRelVulneravilidadTipo()}" />
+                    </p:selectOneMenu>                    
+                    <p:selectOneMenu id="relvt" value="#{uiPlanEmergencias.cuestionarioVulnerabilidad.relVulnerabilidadTipo}" converter="convertidorGenerico"
+                                     style="text-align: center;width: 180px;">  
+                        <f:selectItem itemLabel="Seleccionar..." itemValue="" /> 
+                        <f:selectItems value="#{uiPlanEmergencias.relvulnerabilidadTipoList}" var="relvt" itemLabel="#{relvt.nombre}" itemValue="#{relvt}"/>
+                        
+                    </p:selectOneMenu>
+                    <p:inputText value="#{uiPlanEmergencias.cuestionarioVulnerabilidad.nombre}"/>
+                </h:panelGrid>
+
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Crear / Modificar" action="#{uiPlanEmergencias.guardarPregunta()}"
+                                     icon="ui-icon-disk"
+                                     update="formVulnerabilidades">                        
+                        
+                    </p:commandButton>
+                    <p:commandButton value="Limpiar" action="#{uiPlanEmergencias.limpiar()}"
+                                     icon="ui-icon-cancel"
+                                     update="formVulnerabilidades"/>
+                </h:panelGrid>
+                <p:dataTable value="#{uiPlanEmergencias.cuestionarioVulnerabilidadList}" var="varCuestionario" emptyMessage="Sin Cuestionario"
+                              rowStyleClass="letra-x-small-centro"
+                              rowHover="true">
+
+                    <p:columnGroup type="header">  
+                        <p:row>  
+                            <p:column width="12%" headerText="Opciones" />
+                            <p:column headerText="Vulnerabilidad"/>
+                            <p:column  headerText="Tipo"/>
+                            <p:column  headerText="Pregunta"/>                            
+                        </p:row> 
+                    </p:columnGroup>
+
+                    <p:column >
+                        <p:commandButton icon="ui-icon-pencil" title="Modificar Pregunta" update="formVulnerabilidades, formVulnerabilidades:relvt"
+                                         action="#{uiPlanEmergencias.subirItemPregunta()}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varCuestionario.vulnerabilidad.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varCuestionario.relVulnerabilidadTipo.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varCuestionario.nombre}"/>
+                    </p:column>
+                </p:dataTable>
+
+            </p:panel>
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}" update="dialog" />
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

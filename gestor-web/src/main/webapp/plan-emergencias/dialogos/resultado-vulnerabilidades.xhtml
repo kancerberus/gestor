@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core">
+    
+        <p:outputPanel id="opResultadosAnalisisVulnerabilidad">
+            <h2>                
+                 <p class="letraBlueBackgroundWhite">Analisis Vulnerabilidades: #{uiPlanEmergencias.planEmergencia.centrotrabajo.nombre}</p>
+            </h2>   
+            <br/>            
+            <p:dataTable id="admvulResultadoVulnerabilidad" var="admvulResultadoVulnerabilidad" value="#{uiPlanEmergencias.resultadoAnalisisVulnerabilidadList}" expandableRowGroups="true" rowKey="#{admvulResultadoVulnerabilidad.codAnalisisVulResultado}" 
+                         sortBy="#{admvulResultadoVulnerabilidad.vulnerabilidad.nombre}" widgetVar="celladmvulResultadoVulnerabilidad"                          
+                         >
+                <f:facet name="header">
+                    RESULTADOS
+                </f:facet>
+                
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column width="30%" rowspan="3" headerText="Amenazas" />
+                        <p:column colspan="7" headerText="Origen Tecnico" />
+                        <p:column colspan="5" headerText="Origen Social" />
+                        <p:column colspan="5" headerText="Origen Natural" />
+                    </p:row>
+                    <p:row>
+                        <p:column headerText="Incendio" />
+                        <p:column headerText="Explosion" />
+                        <p:column headerText="Falla Estructural" />
+                        <p:column headerText="Inundacion" />
+                        <p:column headerText="Corto Circuito" />
+                        <p:column headerText="Emergencia Aeronautica" />
+                        <p:column headerText="Intoxicacion Alimentaria" />
+                        <p:column headerText="Desorden Civil" />
+                        <p:column headerText="Terrorismo" />
+                        <p:column headerText="Atentados" />
+                        <p:column headerText="Asaltos" />
+                        <p:column headerText="Incursion Guerrillera" />
+                        <p:column headerText="Sismos" />
+                        <p:column headerText="Erupcion Volcanica" />
+                        <p:column headerText="Deslizamiento de Tierra" />
+                        <p:column headerText="Inundacion" />                        
+                        <p:column headerText="Vientos Huracanados" />
+                    </p:row>
+                </p:columnGroup>
+                
+                <p:headerRow>
+                    <p:column colspan="18">
+                        <h:outputText value="#{admvulResultadoVulnerabilidad.vulnerabilidad.nombre}" />
+                    </p:column>
+                </p:headerRow>
+                
+                <p:column width="250px">
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.vulnerabilidadTipo.nombre}" />
+                </p:column>                
+                <p:column>                    
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom1}" />                  
+                </p:column>
+                <p:column>                    
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom2}" />
+                </p:column>
+                <p:column>                    
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom3}" />                                        
+                </p:column>
+                <p:column>                    
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom4}" />
+                </p:column>
+                <p:column>                    
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom5}" />
+                </p:column>
+                <p:column>                    
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom6}" />
+                </p:column>
+                <p:column>                    
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom7}" />
+                </p:column>
+                <p:column>                    
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom8}" />
+                </p:column>
+                <p:column>                    
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom9}" />
+                </p:column>
+                <p:column>                    
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom10}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom11}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom12}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom13}" />
+                </p:column>
+                <p:column>                    
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom14}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom15}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom16}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom17}" />
+                </p:column>                                       
+            </p:dataTable>
+            <br/>            
+        </p:outputPanel>                
+</ui:composition>

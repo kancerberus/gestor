@@ -84,14 +84,14 @@ public class UIPlanMaestro {
 //    private Long codEvaluacion;
 //    private String responsable;
     private Date fechaActualizaInicio;
-    private Date fechaActualizaFin;
+    private Date fechaActualizaFin;    
 
     @PostConstruct
     public void init() {
         try {            
             Sesion s = (Sesion) UtilJSF.getBean("sesion");
             establecimientoList = new ArrayList<>();
-            establecimientoList.addAll(s.getEstablecimientoList());
+            establecimientoList.addAll(s.getEstablecimientoList());            
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }
@@ -600,8 +600,9 @@ public class UIPlanMaestro {
                 UtilMSG.addWarningMsg("Adjunto No Encontrado", "No se encontro el adjunto, intente nuevamente o contáctenos para asistirle.");
                 return null;
             }
+            
             Properties p = Propiedades.getInstancia().getPropiedades();
-            String rutaAdjunto = p.getProperty("rutaAdjunto") + File.separator + App.ADJUNTO_PREFIJO + ea.getEvaluacionAdjuntosPK().getCodEvaluacion();
+            String rutaAdjunto = p.getProperty("rutaAdjunto") + File.separator + App.ADJUNTO_PREFIJO + ea.getEvaluacionAdjuntosPK().getCodEvaluacion();            
             nombreAdjunto = ea.getArchivo();
             InputStream stream = new FileInputStream(rutaAdjunto + File.separator + ea.getArchivo());
             fileDownload = new DefaultStreamedContent(stream, null, ea.getArchivoSimple());

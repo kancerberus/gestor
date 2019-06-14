@@ -11,7 +11,6 @@ import com.gestor.entity.Dialogo;
 import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
-import com.gestor.gestor.controlador.GestorCiclo;
 import com.gestor.gestor.controlador.GestorEvaluacion;
 import com.gestor.gestor.controlador.GestorPuntajes;
 import com.gestor.gestor.controlador.GestorSeccionDetalleItems;
