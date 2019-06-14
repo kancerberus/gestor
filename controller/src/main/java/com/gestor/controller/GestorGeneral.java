@@ -37,6 +37,9 @@ public class GestorGeneral extends Gestor implements Serializable {
     public static String PLAN_EMERGENCIA_COD_PLAN_EMERGENCIA_SEQ = "plemergencias.plan_emergencia_cod_plan_emergencia_seq";
     public static String ANALISIS_AMENAZAS_COD_ANAILIS_AMENAZA_SEQ = "plemergencias.analisis_amenazas_cod_analisis_amenaza_seq";
     public static String ANALISIS_VULNERABILIDAD_COD_ANALISIS_VULNERABILIDAD_SEQ = "plemergencias.analisis_vulnerabilidad_cod_analisis_vulnerabilidad_seq";
+    public static String ANALISIS_VULNERABILIDAD_COD_REL_ANALISIS_VUL_CUESTIONARIO_SEQ= "plemergencias.cod_rel_analisis_vul_cuestionario_seq";
+    public static String ANALISIS_VULNERABILIDAD_RESULTADOS_COD_ANALISIS_VUL_RESULTADOS_SEQ= "plemergencias.cod_analisis_vul_resultado_seq";
+    public static String DETERMINACION_NIVEL_RIESGO_COD_DET_NIVEL_RIESGO_SEQ = "plemergencias.determinacion_nivel_riesgo_cod_det_nivel_riesgo_seq";
     
     public static boolean VALIDA_PK = true;
     public static boolean NO_VALIDA_PK = false;

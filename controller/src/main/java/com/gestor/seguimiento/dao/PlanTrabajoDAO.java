@@ -139,7 +139,7 @@ public class PlanTrabajoDAO {
                         + " INNER JOIN gestor.fuente_hallazgo fh USING (cod_fuente_hallazgo)"
                         + " INNER JOIN gestor.recursos rec USING (cod_recursos)"
                         + " INNER JOIN public.responsable res USING (cedula)"
-                        + " INNER JOIN public.plan_trabajo_objetivo obj on (obj.codigo_establecimiento=pta.codigo_establecimiento and obj.cod_objetivo=pta.cod_objetivo and obj.cod_plan_trabajo=pta.cod_objetivo) "
+                        + " INNER JOIN public.plan_trabajo_objetivo obj on (obj.codigo_establecimiento=pta.codigo_establecimiento and obj.cod_objetivo=pta.cod_objetivo and obj.cod_plan_trabajo=pta.cod_plan_trabajo) "
                         + " INNER JOIN public.plan_trabajo_programa pr on (pr.codigo_establecimiento=pta.codigo_establecimiento and pr.cod_plan_trabajo=pta.cod_plan_trabajo and pr.cod_objetivo=pta.cod_objetivo and pr.cod_programa=pta.cod_programa)     "
                         + " INNER JOIN public.establecimiento e on (e.codigo_establecimiento=pta.codigo_establecimiento)         "
                         + " WHERE pta.codigo_establecimiento='"+plantrabajo.getCodEstablecimiento()+"' AND pta.cod_plan_trabajo='"+plantrabajo.getCodPlantrabajo()+"' "
