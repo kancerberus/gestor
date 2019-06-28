@@ -255,7 +255,7 @@ public class UIPlanEmergencias implements Serializable{
     public void seleccionarAmenazaNivelRiesgo(){
         try {            
             
-            planEmergencia= (PlanEmergencia) UtilJSF.getBean("varPlanEmergencia");
+            planEmergencia= (PlanEmergencia) UtilJSF.getBean("planEmergencia");
             gestorPlEmergencias=new GestorPlanEmergencias();            
             relDetNivelRiesgoList=new ArrayList<>();            
             relDetNivelRiesgoList.addAll((Collection<? extends RelDeterminacionNivelRiesgo>) gestorPlEmergencias.cargarRelDeterminacionNivelRiesgo(planEmergencia.getCodPlanEmergencia(),selectedOrigenTipo));
@@ -541,8 +541,8 @@ public class UIPlanEmergencias implements Serializable{
     
     public void dialogoDeterminacionNivelRiesgo() {
         try {            
-            planEmergencia= (PlanEmergencia) UtilJSF.getBean("planEmergencia");
-            UtilJSF.setBean("varPlanEmergencias", planEmergencia, UtilJSF.SESSION_SCOPE);            
+            planEmergencia= (PlanEmergencia) UtilJSF.getBean("varPlanEmergencias");
+            UtilJSF.setBean("planEmergencia", planEmergencia, UtilJSF.SESSION_SCOPE);            
             this.cargarRelOrigenTiposList();
             Dialogo dialogo = new Dialogo("dialogos/determinacion-nivel-riesgo.xhtml", "Determinacion Nivel De Riesgo", "clip", Dialogo.WIDTH_100," width:80%;height=100;");
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
