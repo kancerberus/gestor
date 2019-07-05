@@ -44,7 +44,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_LIMITE_600 = "LIMIT 600";
 
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO = "EPAD.codigo_establecimiento IN (?)";
-    public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_CENTROTRABAJO = "EPAD.cod_centro_trabajo IN (?)";
+    public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_CENTROTRABAJO = "EPAD.cod_centrotrabajo IN (?)";
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_EVALUACION = "EPAD.cod_evaluacion IN (?)";
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_CICLO = "EPAD.cod_ciclo IN (?)";
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_RESPONSABLE = "EPAD.responsable ILIKE (?)";
