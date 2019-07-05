@@ -5,6 +5,7 @@
 package com.gestor.controller;
 
 import java.util.Properties;
+
 /**
  *
  * @author juliano
@@ -15,7 +16,7 @@ public class GestorPropiedades {
         Properties p = new Properties();
         try {
 //    p.setProperty("urlbd", "jdbc:postgresql://localhost:5432/gestor");
-            p.setProperty("urlbd", "jdbc:postgresql://192.168.1.9:5432/gestor");
+            p.setProperty("urlbd", "jdbc:postgresql://localhost:5432/gestorDEV");
             p.setProperty("controlador", "org.postgresql.Driver");
             p.setProperty("usuario", "postgres");
 //    p.setProperty("clave", "postgres");
