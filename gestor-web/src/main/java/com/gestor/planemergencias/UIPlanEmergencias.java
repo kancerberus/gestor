@@ -253,7 +253,7 @@ public class UIPlanEmergencias implements Serializable{
     }
     
     public void seleccionarAmenazaNivelRiesgo(){
-        try {            
+        try {
             
             planEmergencia= (PlanEmergencia) UtilJSF.getBean("planEmergencia");
             gestorPlEmergencias=new GestorPlanEmergencias();            
@@ -296,7 +296,7 @@ public class UIPlanEmergencias implements Serializable{
             pieDeterminacionNivelRiesgo.setLegendPosition("w");
             pieDeterminacionNivelRiesgo.setLegendCols(1);    
             pieDeterminacionNivelRiesgo.setShadow(true);
-            
+            pieDeterminacionNivelRiesgo.setSliceMargin(20);
             //pieDeterminacionNivelRiesgo = gestorPlEmergencias.pieDeterminacionNivelRiesgo(planEmergencia.getCodPlanEmergencia(),selectedOrigenTipo);            
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);

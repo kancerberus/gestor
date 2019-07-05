@@ -34,6 +34,10 @@ public class FuenteHallazgo implements Serializable{
     @Basic(optional = false)
     @Column(name = "nombre")
     private String nombre;
+    @Column(name = "cantidad")
+    private Integer cantidad;
+    @Column(name = "distribucion")
+    private Float distribucion;
 
     public FuenteHallazgo() {
     }
@@ -41,6 +45,29 @@ public class FuenteHallazgo implements Serializable{
     public FuenteHallazgo(Integer codFuentehallazgo, String nombre) {
         this.codFuentehallazgo = codFuentehallazgo;
         this.nombre = nombre;
+    }
+
+    public FuenteHallazgo(Integer codFuentehallazgo, String nombre, Integer cantidad, Float distribucion) {
+        this.codFuentehallazgo = codFuentehallazgo;
+        this.nombre = nombre;
+        this.cantidad = cantidad;
+        this.distribucion = distribucion;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public Float getDistribucion() {
+        return distribucion;
+    }
+
+    public void setDistribucion(Float distribucion) {
+        this.distribucion = distribucion;
     }
 
     public Integer getCodFuentehallazgo() {
@@ -51,8 +78,6 @@ public class FuenteHallazgo implements Serializable{
         this.codFuentehallazgo = codFuentehallazgo;
     }
 
-    
-
     public String getNombre() {
         return nombre;
     }
@@ -60,7 +85,6 @@ public class FuenteHallazgo implements Serializable{
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
     
     @Override
     public boolean equals(Object object) {
