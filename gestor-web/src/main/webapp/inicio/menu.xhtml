@@ -114,8 +114,6 @@
                                  action="/configuracion/cargos.xhtml"/>
                     <p:menuitem  value="Administrar Vulnerabilidades"  style="font-size: 11px;"
                                  action="/configuracion/vulnerabilidades.xhtml"/>                        
-                    
-                        
                 </p:submenu>
             </p:column>
         </p:submenu>
@@ -135,7 +133,7 @@
                     <p:menuitem  value="Gestión Capacitaciones"  style="font-size: 11px;"
                                  action="#{uiCapacitacion.cargarCapacitacionGeneral()}"/>
                     <p:menuitem  value="Banco De Acciones"  style="font-size: 11px;"
-                                 action="#{uiPlanAccion.cargarPlanAccionGeneral()}"/>                    
+                                 action="#{uiPlanAccion.cargarPlanAccionGeneral()}"/>
                     <p:menuitem  value="Gestión Planes de Trabajo"  style="font-size: 11px;"
                                  action="#{uiPlantrabajo.cargarPlanTrabajoactividadGeneral()}"/>                    
                 </p:submenu>
@@ -150,6 +148,8 @@
                 <p:submenu label="Análisis" >
                     <p:menuitem  value="Plan Maestro"  style="font-size: 11px;"
                                  action="#{uiPlanMaestro.cargarPlanMaestro()}"/>                    
+                    <p:menuitem  value="Indicadores" style="font-size: 11px;"
+                                  action="/analisis/indicadores.xhtml"/>
                 </p:submenu>
 
             </p:column>

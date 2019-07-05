@@ -1,0 +1,286 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml">
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formIndicadores" style="font-size: small;">
+
+            <h2>INDICADORES</h2>
+            <h:panelGrid columns="2">
+                <h:outputText value="Filtro Busqueda: " />
+                <p:inputSwitch label="Filtro" onLabel="SI" offLabel="NO" value="#{uiIndicadores.filtroActivo}" styleClass="letra-xx-small-centro">
+                    <p:ajax update="formIndicadores"  />
+                </p:inputSwitch>
+            </h:panelGrid>
+            <h:panelGroup rendered="#{uiIndicadores.filtroActivo}">
+                <p:separator style="height: 3px"/>
+                <p:panelGrid columns="3" styleClass="letra-xx-small-centro" style="width: 40%;font-size: xx-small">
+                    <f:facet name="header">
+                        Filtros de Búsqueda
+                    </f:facet>
+
+                    <h:panelGrid >
+                        <h:outputLabel value="Empresas"/>
+                        <p:selectOneListbox  value="#{uiIndicadores.establecimiento}" converter="convertidorGenerico" var="t" filter="true" filterMatchMode="contains" style="width: 100%;margin-right: 80%;font-family: bolder" styleClass="Centro"
+                                                                                        >
+                            <f:selectItems value="#{uiIndicadores.establecimientoList}" var="varEmpresa" itemLabel="#{varEmpresa.nombre}" itemValue="#{varEmpresa}" />
+                            <p:ajax  update="select" listener="#{uiIndicadores.cargarCentrosTrabajo()}" />                            
+                            <p:column >
+                                    <p:graphicImage value="#{t.logo}" cache="false" width="40" />
+                                    <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" width="20" 
+                                       title="#{t.nombre}" rendered="#{empty t.logo}" />
+                            </p:column>
+                            
+                            <p:column >
+                                <h:outputText value="#{t.nombre}" />
+                            </p:column>                                
+                        </p:selectOneListbox>                           
+                        
+                        <h:outputLabel value="Centro De Trabajo: " style="font-weight: bold;"/>
+                        <p:selectOneMenu id="select" value="#{uiIndicadores.centroTrabajo}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiIndicadores.centrosTrabajoList}" var="ct" itemValue="#{ct}" itemLabel="#{ct.nombre}" />                            
+                        </p:selectOneMenu>
+                    </h:panelGrid>                    
+
+                    <h:panelGrid columns="2">
+                        <h:outputText value="Fecha Inicio" />
+                        <p:calendar value="#{uiIndicadores.fechaPlanInicio}" pattern="dd/MM/yyyy" placeholder="Fecha Plan Acción"/>
+
+                        <h:outputText value="Fecha Fin" />
+                        <p:calendar value="#{uiIndicadores.fechaPlanFin}" pattern="dd/MM/yyyy" placeholder="Fecha Plan Acción"/>                        
+
+                    </h:panelGrid>
+                </p:panelGrid>     
+                <p:commandButton value="Consultar" style="margin: auto auto;width: 210px;height: 30px; border-radius: 10px;"
+                                 action="#{uiIndicadores.consultarGraficas()}" update="formIndicadores"/>
+                <br/>
+                <p:separator style="height: 3px;width: auto" />                
+            </h:panelGroup>
+            <br/> 
+            <br/>
+            <p:panel id="basic" header="INDICADORES GRAFICOS" >                 
+                <p:panel header="INDICADORES DE MEJORA CONTINUA DEL SGSST">
+                    <table border="0" bgcolor="white" style="border-color: #3f6284" cellpadding="10">
+                        <tbody>
+                            <tr>
+                                <td style="background: yellow"><p:outputLabel value="GRADO DE CUMPLIMIENTO LEGAL" style="font-family: bolder" /></td>
+                                <td><p:outputLabel value="Desviaciones Intervenidas"/></td>
+                                <td><p:outputLabel value="#{uiIndicadores.cantReqLegalesCerrados}">
+                                    <f:convertNumber type="number" pattern="#"/>
+                                    </p:outputLabel>
+                                    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><h:outputText value="#{uiIndicadores.errorReqLegales}" style="#{uiIndicadores.styleErrReqLegales}">
+                                        <f:convertNumber type="percent" pattern="###,00%"/>
+                                    </h:outputText>
+                                </td>
+                                <td><p:outputLabel value="Desviaciones Identificadas"/></td>
+                                <td><p:outputLabel value="#{uiIndicadores.cantReqLegales}">
+                                    <f:convertNumber type="number" pattern="#"/>
+                                    </p:outputLabel>                                
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background: yellow"> <p:outputLabel value="CUMPLIMIENTO DE CONTROLES" style="font-family: bolder"/></td>
+                                <td><p:outputLabel value="Controles Implementados"/></td>
+                                <td><p:outputLabel value="#{uiIndicadores.cantIdPeligrosCerrados}">
+                                    <f:convertNumber type="number" pattern="#"/>
+                                    </p:outputLabel></td>
+                            </tr>
+                            <tr>
+                                <td><p:outputLabel value="#{uiIndicadores.errorIdPeligros}" style="#{uiIndicadores.styleErrReqLegales}">
+                                    <f:convertNumber type="percent" pattern="###,00%"/>
+                                    </p:outputLabel></td>
+                                <td><p:outputLabel value="Controles Necesarios"/></td>
+                                <td><p:outputLabel value="#{uiIndicadores.cantIdPeligros}">
+                                    <f:convertNumber type="number" pattern="#"/>
+                                    </p:outputLabel></td>
+                            </tr>
+                            <tr>
+                                <td style="background: yellow"><p:outputLabel value="EFICACIA DE LOS CONTROLES IMPLEMENTADOS" style="font-family: bolder"/></td>
+                                <td><p:outputLabel value="Controles eficaces"/></td>
+                                <td><p:outputLabel value="#{uiIndicadores.cantIdPeligros}">
+                                    <f:convertNumber type="number" pattern="#"/>
+                                    </p:outputLabel></td>
+                            </tr>
+                            <tr>
+                                <td><p:outputLabel value="#{uiIndicadores.errorIdpeligrosEficacia}" style="#{uiIndicadores.styleErrReqLegales}">
+                                    <f:convertNumber type="percent" pattern="###,00%"/>
+                                    </p:outputLabel></td>
+                                <td><p:outputLabel value="Controles Implementados"/></td>
+                                <td><p:outputLabel value="#{uiIndicadores.cantIdPeligrosCerrados}">
+                                        <f:convertNumber type="number" pattern="#"/>
+                                    </p:outputLabel>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background: yellow"><p:outputLabel value="NIVEL DE MEJORA CONTINUA" style="font-family: bolder"/></td>
+                                <td><p:outputLabel value="Acciones Implementadas"/></td>
+                                <td><p:outputLabel value="#{uiIndicadores.cantAccionesCerrados}">
+                                    <f:convertNumber type="number" pattern="#"/>
+                                    </p:outputLabel></td>
+                            </tr>
+                            <tr>
+                                <td><p:outputLabel value="#{uiIndicadores.errorAccionesCumplidas}" style="#{uiIndicadores.styleErrReqLegales}">
+                                    <f:convertNumber type="percent" pattern="###,00%"/>
+                                    </p:outputLabel></td>
+                                <td><p:outputLabel value="Acciones Identificadas"/></td>
+                                <td><p:outputLabel value="#{uiIndicadores.cantAcciones}">
+                                    <f:convertNumber type="number" pattern="#"/>
+                                    </p:outputLabel></td>
+                            </tr>
+                            <tr>
+                                <td style="background: yellow"><p:outputLabel value="EFICACIA DE LAS ACCIONES DE MEJORA" style="font-family: bolder"/></td>
+                                <td><p:outputLabel value="Acciones cerradas eficaces"/></td>
+                                <td><p:outputLabel value="#{uiIndicadores.cantAccionesEficacia}">
+                                    <f:convertNumber type="number" pattern="#"/>
+                                    </p:outputLabel></td>
+                            </tr>
+                            <tr>
+                                <td><p:outputLabel value="#{uiIndicadores.errorAccionesEficacia}" style="#{uiIndicadores.styleErrReqLegales}" >
+                                    <f:convertNumber type="percent" pattern="###,00%"/>
+                                    </p:outputLabel></td>
+                                <td><p:outputLabel value="Acciones Implementadas"/></td>
+                                <td><p:outputLabel value="#{uiIndicadores.cantAccionesCerrados}">
+                                    <f:convertNumber type="number" pattern="#"/>
+                                    </p:outputLabel></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </p:panel>
+                <p:panel header="DISTRIBUCIÓN DE LAS ACCIONES DE MEJORA POR NIVELES DE DESAGREGACIÓN">
+                <h:panelGrid columns="2" cellpadding="10" >
+                    <p:panel header="DISTRIBUCIÓN POR CLASE DE HALLAZGO">                  
+                     <p:column width="50%">
+                        
+                        <p:chart type="bar" model="#{uiIndicadores.graficoBarrasClaseHallazgo}" style="width: 100%"/>                         
+                        
+                         <p:dataTable var="varClaseHallazgo" value="#{uiIndicadores.evaluacionPlanAccionDetallesClaseHallazgo}"
+                          rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
+                             <p:column headerText="Clase Hallazgo">
+                                 <h:outputText value="#{varClaseHallazgo.clasehallazgo.nombre}" />
+                            </p:column>
+
+                            <p:column headerText="Cantidad">
+                                <h:outputText value="#{varClaseHallazgo.clasehallazgo.cantidad}" />
+                            </p:column>
+
+                            <p:column headerText="Distribucion">
+                                <h:outputText value="#{varClaseHallazgo.clasehallazgo.distribucion}%" />
+                            </p:column>
+                         </p:dataTable>
+                         
+                     </p:column>
+                    </p:panel>
+                     
+                     <p:column width="50%">
+                         <p:panel header="DISTRIBUCIÓN POR TIPO DE ACCION">                         
+                                           
+                         <p:chart type="bar" model="#{uiIndicadores.graficoBarrasTipoAccion}" style="width: 100%"/>
+                         
+                         <p:dataTable var="varTipoAccion" value="#{uiIndicadores.evaluacionPlanAccionDetallesTipoAccion}"
+                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
+                             <p:column headerText="Tipo Accion">
+                                 <h:outputText value="#{varTipoAccion.tipoaccion.nombre}" />
+                            </p:column>
+
+                            <p:column headerText="Cantidad">
+                                <h:outputText value="#{varTipoAccion.tipoaccion.cantidad}" />
+                            </p:column>
+
+                            <p:column headerText="Distribucion">
+                                <h:outputText value="#{varTipoAccion.tipoaccion.distribucion}%" />
+                            </p:column>
+                         </p:dataTable>
+                         </p:panel>
+                     </p:column>
+                 </h:panelGrid>
+                </p:panel>      
+                
+                <p:panel header="DISTRIBUCIÓN DE LAS ACCIONES DE MEJORA POR NIVELES DE DESAGREGACIÓN">
+                
+                <h:panelGrid columns="2" cellpadding="10" >
+                    <p:column width="50%">
+                        <p:panel header="DISTRIBUCION POR FUENTE" style="align-content: center">
+                        <p:dataTable var="varFuenteHallazgo" value="#{uiIndicadores.evaluacionPlanAccionDetallesFuenteHallazgo}"
+                          rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
+                             <p:column headerText="Fuente Hallazgo">
+                                 <h:outputText value="#{varFuenteHallazgo.fuentehallazgo.nombre}" />
+                            </p:column>
+
+                            <p:column headerText="Cantidad">
+                                <h:outputText value="#{varFuenteHallazgo.fuentehallazgo.cantidad}" />
+                            </p:column>
+
+                            <p:column headerText="Distribucion">
+                                <h:outputText value="#{varFuenteHallazgo.fuentehallazgo.distribucion}%" />
+                            </p:column>
+                         </p:dataTable>
+                        </p:panel>
+                    </p:column>
+                    <p:column width="50%">
+                        <p:panel header="DISTRIBUCION POR ESTADO" style="align-content: center" >
+                        <p:chart type="pie" model="#{uiIndicadores.pastelEstados}"  style="width: 100%"/>
+                        <p:dataTable var="varEstados" value="#{uiIndicadores.evaluacionPlanAccionDetallesEstado}"
+                          rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
+                             <p:column headerText="Estado">
+                                 <h:outputText value="#{varEstados.estado}" />
+                            </p:column>
+
+                            <p:column headerText="Cantidad">
+                                <h:outputText value="#{varEstados.cantidad}" />
+                            </p:column>
+
+                            <p:column headerText="Distribucion">
+                                <h:outputText value="#{varEstados.distribucion}%" />
+                            </p:column>
+                         </p:dataTable>
+                        </p:panel>
+                    </p:column>
+                </h:panelGrid>
+                    </p:panel>
+            <p:panel header="DISTRIBUCIÓN DE LAS ACCIONES DE MEJORA POR FUENTE DE HALLAZGO Y ESTAODS">
+                <h:panelGrid columns="1" cellpadding="10" style="margin-left: 20%">
+                    <p:column>
+                        <p:dataTable var="varFuenteHallazgoEstados" value="#{uiIndicadores.evaluacionPlanAccionDetalleFuenteHallazgoEstados}"
+                          rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 80%">
+                             <p:column headerText="Fuente Hallazgo">
+                                 <h:outputText value="#{varFuenteHallazgoEstados.fuentehallazgo.nombre}" />
+                            </p:column>
+                            <p:column headerText="Cantidad">
+                                <h:outputText value="#{varFuenteHallazgoEstados.cantidad}" />
+                            </p:column>
+                            <p:column headerText="Abiertos">
+                                <h:outputText value="#{varFuenteHallazgoEstados.abierto}" />
+                            </p:column>
+                            <p:column headerText="Cerrados">
+                                <h:outputText value="#{varFuenteHallazgoEstados.cerrado}" />
+                            </p:column>
+                            <p:column headerText="Vencidos">
+                                <h:outputText value="#{varFuenteHallazgoEstados.vencido}" />
+                            </p:column>
+                         </p:dataTable>
+                    </p:column>
+                </h:panelGrid>
+                </p:panel>
+            </p:panel>
+           
+            <p:separator/>
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}" width="#{dialogo.width}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}"  update="dialog" />
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

@@ -44,6 +44,7 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_LIMITE_600 = "LIMIT 600";
 
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO = "EPAD.codigo_establecimiento IN (?)";
+    public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_CENTROTRABAJO = "EPAD.cod_centro_trabajo IN (?)";
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_EVALUACION = "EPAD.cod_evaluacion IN (?)";
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_CICLO = "EPAD.cod_ciclo IN (?)";
     public static String EVALUACION_PLAN_ACCION_DETALLE_CONDICION_RESPONSABLE = "EPAD.responsable ILIKE (?)";
@@ -87,7 +88,14 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
     private Integer diasRestantes;  
     @Column(name = "cod_plan_accion_detalle")
     private Integer codPlanAccionDetalle;
+    @Column(name = "cantidad")
+    private Integer cantidad;
+    @Column(name = "distribucion")
+    private Float distribucion;
     
+    private Integer abierto;
+    private Integer cerrado;
+    private Integer vencido;
     
     
     private String documentoUsuario;
@@ -149,6 +157,62 @@ public class EvaluacionPlanAccionDetalle implements Serializable {
         this.eficacia = eficacia;  
         this.codPlanAccionDetalle= codPlanAccionDetalle;
         
+    }
+
+    public EvaluacionPlanAccionDetalle(String estado, Integer cantidad, Float distribucion,Date fechaPlazo ) {        
+        this.estado = estado;
+        this.cantidad = cantidad;
+        this.distribucion = distribucion;        
+        this.fechaPlazo = fechaPlazo;
+    }
+
+    public EvaluacionPlanAccionDetalle(Integer codFuenteHallazgo, String nombre,Integer cantidad, Integer abierto, Integer cerrado, Integer vencido) {
+        this.fuentehallazgo.setCodFuentehallazgo(codFuenteHallazgo);
+        this.fuentehallazgo.setNombre(nombre);
+        this.cantidad = cantidad;
+        this.abierto = abierto;
+        this.cerrado = cerrado;
+        this.vencido = vencido;
+    }
+
+    public Integer getAbierto() {
+        return abierto;
+    }
+
+    public void setAbierto(Integer abierto) {
+        this.abierto = abierto;
+    }
+
+    public Integer getCerrado() {
+        return cerrado;
+    }
+
+    public void setCerrado(Integer cerrado) {
+        this.cerrado = cerrado;
+    }
+
+    public Integer getVencido() {
+        return vencido;
+    }
+
+    public void setVencido(Integer vencido) {
+        this.vencido = vencido;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public Float getDistribucion() {
+        return distribucion;
+    }
+
+    public void setDistribucion(Float distribucion) {
+        this.distribucion = distribucion;
     }
 
     public Integer getCodPlanAccionDetalle() {

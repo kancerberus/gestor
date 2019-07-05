@@ -34,6 +34,9 @@ public class ClaseHallazgo implements Serializable{
     @Basic(optional = false)
     @Column(name = "nombre")
     private String nombre;
+    @Column(name = "cantidad")
+    private Integer cantidad;    
+    private Float distribucion;
 
     public ClaseHallazgo() {
     }
@@ -43,6 +46,38 @@ public class ClaseHallazgo implements Serializable{
         this.codclasehallazgo= codclasehallazgo;
         this.nombre = nombre;
         
+    }
+
+    public ClaseHallazgo(Integer codclasehallazgo, String nombre, Integer cantidad, Float distribucion) {
+        this.codclasehallazgo = codclasehallazgo;
+        this.nombre = nombre;
+        this.cantidad = cantidad;
+        this.distribucion = distribucion;
+    }
+
+    
+    public Integer getCodclasehallazgo() {
+        return codclasehallazgo;
+    }
+
+    public void setCodclasehallazgo(Integer codclasehallazgo) {
+        this.codclasehallazgo = codclasehallazgo;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public Float getDistribucion() {
+        return distribucion;
+    }
+
+    public void setDistribucion(Float distribucion) {
+        this.distribucion = distribucion;
     }
 
     public Integer getCodClasehallazgo() {

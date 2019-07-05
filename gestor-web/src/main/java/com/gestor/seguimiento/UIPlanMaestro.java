@@ -19,7 +19,6 @@ import com.gestor.gestor.controlador.GestorEvaluacion;
 import com.gestor.modelo.Sesion;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.EvaluacionAdjuntos;
-import com.gestor.publico.Usuarios;
 import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.seguimiento.controlador.GestorPlanMaestro;
 import com.gestor.seguimiento.controlador.GestorPlanTitulo;
@@ -284,8 +283,7 @@ public class UIPlanMaestro {
             UIPlantitulo pt = (UIPlantitulo) UtilJSF.getBean("uiPlantitulo");            
             UtilJSF.setBean("evaluacion", evaluacion, UtilJSF.SESSION_SCOPE);                                                                                  
             pt.cargarPlantitulo();     
-            return ("/seguimiento/titulo.xhtml?faces-redirect=true");                    
-             
+            return ("/seguimiento/titulo.xhtml?faces-redirect=true");
         }catch(Exception e){
         return ("/seguimiento/titulo.xhtml?faces-redirect=true");                    
         }        
@@ -600,7 +598,6 @@ public class UIPlanMaestro {
                 UtilMSG.addWarningMsg("Adjunto No Encontrado", "No se encontro el adjunto, intente nuevamente o contáctenos para asistirle.");
                 return null;
             }
-            
             Properties p = Propiedades.getInstancia().getPropiedades();
             String rutaAdjunto = p.getProperty("rutaAdjunto") + File.separator + App.ADJUNTO_PREFIJO + ea.getEvaluacionAdjuntosPK().getCodEvaluacion();            
             nombreAdjunto = ea.getArchivo();
@@ -636,6 +633,8 @@ public class UIPlanMaestro {
         }
         return fileDownload;
     }
+    
+    
     
     /**
      * @return the fileDownload

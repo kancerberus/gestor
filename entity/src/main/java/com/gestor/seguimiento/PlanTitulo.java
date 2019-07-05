@@ -5,6 +5,7 @@
  */
 package com.gestor.seguimiento;
 
+import com.gestor.publico.EvaluacionAdjuntos;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
@@ -35,7 +36,7 @@ public class PlanTitulo implements Serializable {
     private List<PlanTituloAdiuntos> planTituloAdiuntosList;
     private List<PlanTituloTexto> planTituloTextoList;
     private List<PlanSeccionAdjuntos> planSeccionAdjuntosList;
-    
+    private EvaluacionAdjuntos evaluacionAdjuntos;
     
     private List<PlanSeccion> planSeccionList;
 
@@ -54,6 +55,14 @@ public class PlanTitulo implements Serializable {
         this.planTituloPK = planTituloPK;
         this.nombre = nombre;
         this.numeral = numeral;        
+    }
+
+    public EvaluacionAdjuntos getEvaluacionAdjuntos() {
+        return evaluacionAdjuntos;
+    }
+
+    public void setEvaluacionAdjuntos(EvaluacionAdjuntos evaluacionAdjuntos) {
+        this.evaluacionAdjuntos = evaluacionAdjuntos;
     }
 
     public PlanTituloPK getPlanTituloPK() {
