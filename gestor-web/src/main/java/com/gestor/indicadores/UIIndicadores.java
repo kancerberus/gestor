@@ -168,7 +168,8 @@ public class UIIndicadores {
             condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_ESTABLECIMIENTO.replace("?", cadena ));             
         }
         
-        if(centroTrabajo!=null){            
+        if(centroTrabajo!=null){   
+            condicionesConsulta.add(App.CONDICION_AND);
             String cadena="";
             cadena = Integer.toString(centroTrabajo.getCodCentrotrabajo());
             condicionesConsulta.add(EvaluacionPlanAccionDetalle.EVALUACION_PLAN_ACCION_DETALLE_CONDICION_COD_CENTROTRABAJO.replace("?", cadena ));             

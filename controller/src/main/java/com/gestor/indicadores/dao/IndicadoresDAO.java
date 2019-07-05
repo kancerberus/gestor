@@ -296,7 +296,7 @@ public class IndicadoresDAO {
             StringBuilder sql = new StringBuilder(
                     "SELECT fh.cod_fuente_hallazgo codfh, fh.nombre nomfh " +
                     "FROM gestor.evaluacion_plan_accion_detalle EPAD  JOIN gestor.fuente_hallazgo fh using(cod_fuente_hallazgo) " +
-                    "WHERE codigo_establecimiento=9  and estado<>'E'" +
+                    condicion+" AND estado<>'E'" +
                     "GROUP BY fh.nombre, fh.cod_fuente_hallazgo "
             );
             rs = consulta.ejecutar(sql);
@@ -315,7 +315,7 @@ public class IndicadoresDAO {
                 StringBuilder sql1 = new StringBuilder(
                         "SELECT count (cod_plan_detalle) cantidad " +
                         "FROM gestor.evaluacion_plan_accion_detalle EPAD  JOIN gestor.fuente_hallazgo fh using(cod_fuente_hallazgo) " +
-                        "WHERE codigo_establecimiento=9 AND fh.cod_fuente_hallazgo='"+listaEvaluacionPlanAccionDetalleFuenteHallazgoEstados.get(i).getFuentehallazgo().getCodFuentehallazgo()+"'  and estado<>'E' "
+                        condicion+" AND fh.cod_fuente_hallazgo='"+listaEvaluacionPlanAccionDetalleFuenteHallazgoEstados.get(i).getFuentehallazgo().getCodFuentehallazgo()+"'  and estado<>'E' "
                 );
                 rs = consulta.ejecutar(sql1);
                 while (rs.next()) { 
@@ -326,7 +326,7 @@ public class IndicadoresDAO {
                 StringBuilder sql2= new StringBuilder(
                         "SELECT count (cod_plan_detalle) abierto " +
                         "FROM gestor.evaluacion_plan_accion_detalle EPAD  JOIN gestor.fuente_hallazgo fh using(cod_fuente_hallazgo) " +
-                        "WHERE codigo_establecimiento=9 AND fh.cod_fuente_hallazgo='"+listaEvaluacionPlanAccionDetalleFuenteHallazgoEstados.get(i).getFuentehallazgo().getCodFuentehallazgo()+"' AND estado='A' AND (CURRENT_DATE)<fecha_plazo AND estado='A'"
+                        condicion+" AND fh.cod_fuente_hallazgo='"+listaEvaluacionPlanAccionDetalleFuenteHallazgoEstados.get(i).getFuentehallazgo().getCodFuentehallazgo()+"' AND estado='A' AND (CURRENT_DATE)<fecha_plazo AND estado='A'"
                 );
                 rs = consulta.ejecutar(sql2);
                 while (rs.next()) {
@@ -337,7 +337,7 @@ public class IndicadoresDAO {
                 StringBuilder sql3= new StringBuilder(
                         "SELECT count (cod_plan_detalle) cerrado " +
                         "FROM gestor.evaluacion_plan_accion_detalle EPAD  JOIN gestor.fuente_hallazgo fh using(cod_fuente_hallazgo) " +
-                        "WHERE codigo_establecimiento=9 AND fh.cod_fuente_hallazgo='"+listaEvaluacionPlanAccionDetalleFuenteHallazgoEstados.get(i).getFuentehallazgo().getCodFuentehallazgo()+"' AND estado='C' "
+                        condicion+" AND fh.cod_fuente_hallazgo='"+listaEvaluacionPlanAccionDetalleFuenteHallazgoEstados.get(i).getFuentehallazgo().getCodFuentehallazgo()+"' AND estado='C' "
                 );
                 rs = consulta.ejecutar(sql3);
                 while (rs.next()) {
@@ -349,7 +349,7 @@ public class IndicadoresDAO {
                 StringBuilder sql4= new StringBuilder(
                         "SELECT count (cod_plan_detalle) vencido " +
                         "FROM gestor.evaluacion_plan_accion_detalle EPAD  JOIN gestor.fuente_hallazgo fh using(cod_fuente_hallazgo) " +
-                        "WHERE codigo_establecimiento=9 AND fh.cod_fuente_hallazgo='"+listaEvaluacionPlanAccionDetalleFuenteHallazgoEstados.get(i).getFuentehallazgo().getCodFuentehallazgo()+"' AND (CURRENT_DATE)>fecha_plazo AND estado='A' "
+                        condicion+ " AND fh.cod_fuente_hallazgo='"+listaEvaluacionPlanAccionDetalleFuenteHallazgoEstados.get(i).getFuentehallazgo().getCodFuentehallazgo()+"' AND (CURRENT_DATE)>fecha_plazo AND estado='A' "
                 );
                 rs = consulta.ejecutar(sql4);
                 while (rs.next()) {
