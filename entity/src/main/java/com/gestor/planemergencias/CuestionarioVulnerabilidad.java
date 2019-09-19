@@ -57,6 +57,23 @@ public class CuestionarioVulnerabilidad implements Serializable{
     private Float calif15=0.0f;
     private Float calif16=0.0f;
     private Float calif17=0.0f;
+    private Float calif18=0.0f;
+    private Float calif19=0.0f;
+    private Float calif20=0.0f;
+    private Float calif21=0.0f;
+    private Float calif22=0.0f;
+    private Float calif23=0.0f;
+    private Float calif24=0.0f;
+    private Float calif25=0.0f;
+    private Float calif26=0.0f;
+    private Float calif27=0.0f;
+    private Float calif28=0.0f;
+    private Float calif29=0.0f;
+    private Float calif30=0.0f;
+    private Float calif31=0.0f;
+    private Float calif32=0.0f;
+    private Float calif33=0.0f;
+    
     
     private Vulnerabilidad vulnerabilidad;
     private RelVulnerabilidadTipo relVulnerabilidadTipo;
@@ -77,6 +94,134 @@ public class CuestionarioVulnerabilidad implements Serializable{
         this.codVulnerabilidadTipo = codVulnerabilidadTipo;
         this.codCuestionario = codCuestionario;
         this.nombre = nombre;        
+    }
+
+    public Float getCalif18() {
+        return calif18;
+    }
+
+    public void setCalif18(Float calif18) {
+        this.calif18 = calif18;
+    }
+
+    public Float getCalif19() {
+        return calif19;
+    }
+
+    public void setCalif19(Float calif19) {
+        this.calif19 = calif19;
+    }
+
+    public Float getCalif20() {
+        return calif20;
+    }
+
+    public void setCalif20(Float calif20) {
+        this.calif20 = calif20;
+    }
+
+    public Float getCalif21() {
+        return calif21;
+    }
+
+    public void setCalif21(Float calif21) {
+        this.calif21 = calif21;
+    }
+
+    public Float getCalif22() {
+        return calif22;
+    }
+
+    public void setCalif22(Float calif22) {
+        this.calif22 = calif22;
+    }
+
+    public Float getCalif23() {
+        return calif23;
+    }
+
+    public void setCalif23(Float calif23) {
+        this.calif23 = calif23;
+    }
+
+    public Float getCalif24() {
+        return calif24;
+    }
+
+    public void setCalif24(Float calif24) {
+        this.calif24 = calif24;
+    }
+
+    public Float getCalif25() {
+        return calif25;
+    }
+
+    public void setCalif25(Float calif25) {
+        this.calif25 = calif25;
+    }
+
+    public Float getCalif26() {
+        return calif26;
+    }
+
+    public void setCalif26(Float calif26) {
+        this.calif26 = calif26;
+    }
+
+    public Float getCalif27() {
+        return calif27;
+    }
+
+    public void setCalif27(Float calif27) {
+        this.calif27 = calif27;
+    }
+
+    public Float getCalif28() {
+        return calif28;
+    }
+
+    public void setCalif28(Float calif28) {
+        this.calif28 = calif28;
+    }
+
+    public Float getCalif29() {
+        return calif29;
+    }
+
+    public void setCalif29(Float calif29) {
+        this.calif29 = calif29;
+    }
+
+    public Float getCalif30() {
+        return calif30;
+    }
+
+    public void setCalif30(Float calif30) {
+        this.calif30 = calif30;
+    }
+
+    public Float getCalif31() {
+        return calif31;
+    }
+
+    public void setCalif31(Float calif31) {
+        this.calif31 = calif31;
+    }
+
+    public Float getCalif32() {
+        return calif32;
+    }
+
+    public void setCalif32(Float calif32) {
+        this.calif32 = calif32;
+    }
+
+    public Float getCalif33() {
+        return calif33;
+    }
+
+    public void setCalif33(Float calif33) {
+        this.calif33 = calif33;
     }
 
     public Float getCalif1() {

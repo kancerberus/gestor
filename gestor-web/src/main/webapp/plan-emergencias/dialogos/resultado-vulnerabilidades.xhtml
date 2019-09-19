@@ -12,42 +12,57 @@
             </h2>   
             <br/>            
             <p:dataTable id="admvulResultadoVulnerabilidad" var="admvulResultadoVulnerabilidad" value="#{uiPlanEmergencias.resultadoAnalisisVulnerabilidadList}" expandableRowGroups="true" rowKey="#{admvulResultadoVulnerabilidad.codAnalisisVulResultado}" 
-                         sortBy="#{admvulResultadoVulnerabilidad.vulnerabilidad.nombre}" widgetVar="celladmvulResultadoVulnerabilidad"                          
-                         >
+                         sortBy="#{admvulResultadoVulnerabilidad.vulnerabilidad.nombre}" widgetVar="celladmvulResultadoVulnerabilidad"  scrollable="true" scrollWidth="200%" >
                 <f:facet name="header">
                     RESULTADOS
                 </f:facet>
                 
                 <p:columnGroup type="header">
                     <p:row>
-                        <p:column width="30%" rowspan="3" headerText="Amenazas" />
-                        <p:column colspan="7" headerText="Origen Tecnico" />
-                        <p:column colspan="5" headerText="Origen Social" />
-                        <p:column colspan="5" headerText="Origen Natural" />
+                        <p:column width="10%" rowspan="3" headerText="Amenazas" />
+                        <p:column colspan="14" headerText="Origen Tecnico" />
+                        <p:column colspan="10" headerText="Origen Social" />
+                        <p:column colspan="9" headerText="Origen Natural" />
                     </p:row>
-                    <p:row>
+                    <p:row style="font-size: 10px;font-weight: bolder" >
                         <p:column headerText="Incendio" />
+                        <p:column headerText="Incendio Forestal" />
+                        <p:column headerText="Accidente Transito" />
                         <p:column headerText="Explosion" />
+                        <p:column headerText="Fuga de Gas" />
+                        <p:column headerText="Derrame Quimicos" />
+                        <p:column headerText="Deslizamento por Tala " />
                         <p:column headerText="Falla Estructural" />
-                        <p:column headerText="Inundacion" />
+                        <p:column headerText="Inundación estado tuberias" />
+                        <p:column headerText="Inundación invasion rios" />
                         <p:column headerText="Corto Circuito" />
+                        <p:column headerText="Avalancha Obstruccion Quebradas " />
                         <p:column headerText="Emergencia Aeronautica" />
                         <p:column headerText="Intoxicacion Alimentaria" />
                         <p:column headerText="Desorden Civil" />
                         <p:column headerText="Terrorismo" />
+                        <p:column headerText="Zonas Minadas " />
                         <p:column headerText="Atentados" />
+                        <p:column headerText="Amenaza de Bomba" />
                         <p:column headerText="Asaltos" />
+                        <p:column headerText="Incendio Provocados " />
+                        <p:column headerText="Concentraciones masivas" />  
+                        <p:column headerText="Secuestro" />
                         <p:column headerText="Incursion Guerrillera" />
                         <p:column headerText="Sismos" />
                         <p:column headerText="Erupcion Volcanica" />
                         <p:column headerText="Deslizamiento de Tierra" />
-                        <p:column headerText="Inundacion" />                        
+                        <p:column headerText="Granizadas" />
+                        <p:column headerText="Incendio Forestal" />
+                        <p:column headerText="Tormenta Electrica" />
+                        <p:column headerText="Temperatura Extrema" />
+                        <p:column headerText="Inundación por lluvias " />
                         <p:column headerText="Vientos Huracanados" />
                     </p:row>
                 </p:columnGroup>
                 
                 <p:headerRow>
-                    <p:column colspan="18">
+                    <p:column colspan="34">
                         <h:outputText value="#{admvulResultadoVulnerabilidad.vulnerabilidad.nombre}" />
                     </p:column>
                 </p:headerRow>
@@ -105,8 +120,56 @@
                 </p:column>
                 <p:column>
                     <h:outputText value="#{admvulResultadoVulnerabilidad.prom17}" />
-                </p:column>                                       
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom18}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom19}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom20}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom21}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom22}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom23}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom24}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom25}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom26}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom27}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom28}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom29}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom30}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom31}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom32}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{admvulResultadoVulnerabilidad.prom33}" />
+                </p:column>
             </p:dataTable>
-            <br/>            
+            <br/>                        
         </p:outputPanel>                
 </ui:composition>

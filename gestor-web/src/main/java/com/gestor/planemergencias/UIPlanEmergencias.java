@@ -544,10 +544,10 @@ public class UIPlanEmergencias implements Serializable{
             planEmergencia= (PlanEmergencia) UtilJSF.getBean("varPlanEmergencias");
             UtilJSF.setBean("planEmergencia", planEmergencia, UtilJSF.SESSION_SCOPE);            
             this.cargarRelOrigenTiposList();
-            Dialogo dialogo = new Dialogo("dialogos/determinacion-nivel-riesgo.xhtml", "Determinacion Nivel De Riesgo", "clip", Dialogo.WIDTH_100," width:80%;height=100;");
+            Dialogo dialogo = new Dialogo("dialogos/determinacion-nivel-riesgo.xhtml", "Determinacion Nivel De Riesgo", "clip", Dialogo.WIDTH_100," width:80%;height=70;");
             UtilJSF.setBean("dialogo", dialogo, UtilJSF.SESSION_SCOPE);
             UtilJSF.execute("PF('dialog').show();");               
-            this.cargarPlanesEmergencias();            
+            this.cargarPlanesEmergencias();
         } catch (Exception ex) {
             UtilLog.generarLog(this.getClass(), ex);
         }
@@ -624,8 +624,10 @@ public class UIPlanEmergencias implements Serializable{
 
             gestorPlEmergencias.almacenarAnalisisVulnerabilidades(analisisVulnerabilidadList);
             analisisVulnerabilidadList=new ArrayList<>();
-            float prom1=0, prom2=0,prom3=0, prom4=0,prom5=0, prom6=0, prom7=0, prom8=0, prom9=0, prom10=0, prom11=0, prom12=0, prom13=0, prom14=0,prom15=0, prom16=0, prom17=0;            
-            float tot1=0,tot2=0,tot3=0,tot4=0,tot5=0,tot6=0,tot7=0,tot8=0,tot9=0,tot10=0,tot11=0,tot12=0,tot13=0,tot14=0,tot15=0,tot16=0,tot17=0;
+            float prom1=0, prom2=0,prom3=0, prom4=0,prom5=0, prom6=0, prom7=0, prom8=0, prom9=0, prom10=0, prom11=0, prom12=0, prom13=0,
+            prom14=0,prom15=0, prom16=0, prom17=0, prom18=0, prom19=0, prom20=0, prom21=0, prom22=0, prom23=0, prom24=0, prom25=0, prom26=0, prom27=0, prom28=0, prom29=0, prom30=0,prom31=0,prom32=0,prom33=0;            
+            float tot1=0,tot2=0,tot3=0,tot4=0,tot5=0,tot6=0,tot7=0,tot8=0,tot9=0,tot10=0,tot11=0,tot12=0,tot13=0,tot14=0,tot15=0,tot16=0,tot17=0,
+            tot18=0,tot19=0,tot20=0,tot21=0, tot22=0,tot23=0,tot24=0,tot25=0,tot26=0,tot27=0,tot28=0,tot29=0,tot30=0,tot31=0,tot32=0,tot33=0;                    
             Integer vultipo1,vultipo2=0;
             Integer acum=1;
                         
@@ -639,7 +641,7 @@ public class UIPlanEmergencias implements Serializable{
                for(int k=0; k<=tamVulnerabilidadtipo-1;k++){
                     int codVultipo=k+1;                    
                     analisisVulnerabilidadList.addAll((Collection<? extends AnalisisVulnerabilidad>) gestorPlEmergencias.cargarAnalisisVulnerabilidadesCentroTrabajo(planEmergencia, codVul, codVultipo));            
-                    prom1=0; prom2=0;prom3=0; prom4=0;prom5=0; prom6=0; prom7=0; prom8=0; prom9=0; prom10=0; prom11=0; prom12=0; prom13=0; prom14=0;prom15=0; prom16=0; prom17=0;
+                    prom1=0; prom2=0;prom3=0; prom4=0;prom5=0; prom6=0; prom7=0; prom8=0; prom9=0; prom10=0; prom11=0; prom12=0; prom13=0; prom14=0;prom15=0; prom16=0; prom17=0; prom18=0; prom19=0; prom20=0; prom21=0; prom22=0; prom23=0; prom24=0; prom25=0; prom26=0; prom27=0; prom28=0; prom29=0; prom30=0;prom31=0;prom32=0;prom33=0;
                     for(int i=0; i<=analisisVulnerabilidadList.size()-1;i++) {
                         analisisVulnerabilildadResultados.setCodPlanEmergencia(analisisVulnerabilidadList.get(i).getCodPlanEmergencia());
                         analisisVulnerabilildadResultados.setCodVulnerabilidad(analisisVulnerabilidadList.get(i).getVulnerabilidad().getCodVulnerabilidad());
@@ -661,44 +663,99 @@ public class UIPlanEmergencias implements Serializable{
                         prom15=((prom15+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif15())/acum);
                         prom16=((prom16+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif16())/acum);
                         prom17=((prom17+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif17())/acum);                        
+                        prom18=((prom18+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif18())/acum);                        
+                        prom19=((prom19+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif19())/acum);                        
+                        prom20=((prom20+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif20())/acum);                        
+                        prom21=((prom21+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif21())/acum);                        
+                        prom22=((prom22+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif22())/acum);                        
+                        prom23=((prom23+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif23())/acum);                        
+                        prom24=((prom24+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif24())/acum);                        
+                        prom25=((prom25+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif25())/acum);                        
+                        prom26=((prom26+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif26())/acum);                        
+                        prom27=((prom27+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif27())/acum);                        
+                        prom28=((prom28+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif28())/acum);                        
+                        prom29=((prom29+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif29())/acum);                        
+                        prom30=((prom30+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif30())/acum);                        
+                        prom31=((prom31+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif31())/acum);                        
+                        prom32=((prom32+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif32())/acum);                        
+                        prom33=((prom33+=analisisVulnerabilidadList.get(i).getCuestionarioVulnerabilidad().getCalif33())/acum);                        
                         acum++;
                     }
                     acum=1;
-                    if(prom1<3){analisisVulnerabilildadResultados.setProm1(0.0f);}
-                    if(prom2<3){analisisVulnerabilildadResultados.setProm2(0.0f);}
-                    if(prom3<3){analisisVulnerabilildadResultados.setProm3(0.0f);}
-                    if(prom4<3){analisisVulnerabilildadResultados.setProm4(0.0f);}
-                    if(prom5<3){analisisVulnerabilildadResultados.setProm5(0.0f);}
-                    if(prom6<3){analisisVulnerabilildadResultados.setProm6(0.0f);}
-                    if(prom7<3){analisisVulnerabilildadResultados.setProm7(0.0f);}                       
-                    if(prom8<3){analisisVulnerabilildadResultados.setProm8(0.0f);}
-                    if(prom9<3){analisisVulnerabilildadResultados.setProm9(0.0f);}
-                    if(prom10<3){analisisVulnerabilildadResultados.setProm10(0.0f);}
-                    if(prom11<3){analisisVulnerabilildadResultados.setProm11(0.0f);}
-                    if(prom12<3){analisisVulnerabilildadResultados.setProm12(0.0f);}
-                    if(prom13<3){analisisVulnerabilildadResultados.setProm13(0.0f);}
-                    if(prom14<3){analisisVulnerabilildadResultados.setProm14(0.0f);}
-                    if(prom15<3){analisisVulnerabilildadResultados.setProm15(0.0f);}
-                    if(prom16<3){analisisVulnerabilildadResultados.setProm16(0.0f);}
-                    if(prom17<3){analisisVulnerabilildadResultados.setProm17(0.0f);}
-
-                    if(prom1 >= 0.3 && prom1 <= 0.5 ){analisisVulnerabilildadResultados.setProm1(0.5f);}else{analisisVulnerabilildadResultados.setProm1(1f);}
-                    if(prom2 >= 0.3 && prom2 <= 0.5 ){analisisVulnerabilildadResultados.setProm2(0.5f);}else{analisisVulnerabilildadResultados.setProm2(1f);}
-                    if(prom3 >= 0.3 && prom3 <= 0.5 ){analisisVulnerabilildadResultados.setProm3(0.5f);}else{analisisVulnerabilildadResultados.setProm3(1f);}
-                    if(prom4 >= 0.3 && prom4 <= 0.5 ){analisisVulnerabilildadResultados.setProm4(0.5f);}else{analisisVulnerabilildadResultados.setProm4(1f);}
-                    if(prom5 >= 0.3 && prom5 <= 0.5 ){analisisVulnerabilildadResultados.setProm5(0.5f);}else{analisisVulnerabilildadResultados.setProm5(1f);}
-                    if(prom6 >= 0.3 && prom6 <= 0.5 ){analisisVulnerabilildadResultados.setProm6(0.5f);}else{analisisVulnerabilildadResultados.setProm6(1f);}
-                    if(prom7 >= 0.3 && prom7 <= 0.5 ){analisisVulnerabilildadResultados.setProm7(0.5f);}else{analisisVulnerabilildadResultados.setProm7(1f);}
-                    if(prom8 >= 0.3 && prom8 <= 0.5 ){analisisVulnerabilildadResultados.setProm8(0.5f);}else{analisisVulnerabilildadResultados.setProm8(1f);}
-                    if(prom9 >= 0.3 && prom9 <= 0.5 ){analisisVulnerabilildadResultados.setProm9(0.5f);}else{analisisVulnerabilildadResultados.setProm9(1f);}
-                    if(prom10 >= 0.3 && prom10 <= 0.5 ){analisisVulnerabilildadResultados.setProm10(0.5f);}else{analisisVulnerabilildadResultados.setProm10(1f);}
-                    if(prom11 >= 0.3 && prom11 <= 0.5 ){analisisVulnerabilildadResultados.setProm11(0.5f);}else{analisisVulnerabilildadResultados.setProm11(1f);}
-                    if(prom12 >= 0.3 && prom12 <= 0.5 ){analisisVulnerabilildadResultados.setProm12(0.5f);}else{analisisVulnerabilildadResultados.setProm12(1f);}
-                    if(prom13 >= 0.3 && prom13 <= 0.5 ){analisisVulnerabilildadResultados.setProm13(0.5f);}else{analisisVulnerabilildadResultados.setProm13(1f);}
-                    if(prom14 >= 0.3 && prom14 <= 0.5 ){analisisVulnerabilildadResultados.setProm14(0.5f);}else{analisisVulnerabilildadResultados.setProm14(1f);}
-                    if(prom15 >= 0.3 && prom15 <= 0.5 ){analisisVulnerabilildadResultados.setProm15(0.5f);}else{analisisVulnerabilildadResultados.setProm15(1f);}
-                    if(prom16 >= 0.3 && prom16 <= 0.5 ){analisisVulnerabilildadResultados.setProm16(0.5f);}else{analisisVulnerabilildadResultados.setProm16(1f);}
-                    if(prom17 >= 0.3 && prom17 <= 0.5 ){analisisVulnerabilildadResultados.setProm17(0.5f);}else{analisisVulnerabilildadResultados.setProm17(1f);}
+                    
+                    
+                    if(prom1 >= 0.3 && prom1 <= 0.5 )                    
+                    {analisisVulnerabilildadResultados.setProm1(0.5f);}
+                    if(prom1>0.5)
+                    {analisisVulnerabilildadResultados.setProm1(1f);}                    
+                    if(prom1<0.3)
+                    {analisisVulnerabilildadResultados.setProm1(0.0f);}
+                    
+                    
+                    if(prom2 >= 0.3 && prom2 <= 0.5 ){analisisVulnerabilildadResultados.setProm2(0.5f);}if(prom2>0.5){analisisVulnerabilildadResultados.setProm2(1f);}
+                    if(prom2<0.3){analisisVulnerabilildadResultados.setProm2(0.0f);}
+                    if(prom3 >= 0.3 && prom3 <= 0.5 ){analisisVulnerabilildadResultados.setProm3(0.5f);}if(prom3>0.5){analisisVulnerabilildadResultados.setProm3(1f);}
+                    if(prom3<0.3){analisisVulnerabilildadResultados.setProm3(0.0f);}
+                    if(prom4 >= 0.3 && prom4 <= 0.5 ){analisisVulnerabilildadResultados.setProm4(0.5f);}if(prom4>0.5){analisisVulnerabilildadResultados.setProm4(1f);}
+                    if(prom4<0.3){analisisVulnerabilildadResultados.setProm4(0.0f);}
+                    if(prom5 >= 0.3 && prom5 <= 0.5 ){analisisVulnerabilildadResultados.setProm5(0.5f);}if(prom5>0.5){analisisVulnerabilildadResultados.setProm5(1f);}                    
+                    if(prom5<0.3){analisisVulnerabilildadResultados.setProm5(0.0f);}
+                    if(prom6 >= 0.3 && prom6 <= 0.5 ){analisisVulnerabilildadResultados.setProm6(0.5f);}if(prom6>0.5){analisisVulnerabilildadResultados.setProm6(1f);}
+                    if(prom6<0.3){analisisVulnerabilildadResultados.setProm6(0.0f);}
+                    if(prom7 >= 0.3 && prom7 <= 0.5 ){analisisVulnerabilildadResultados.setProm7(0.5f);}if(prom7>0.5){analisisVulnerabilildadResultados.setProm7(1f);}
+                    if(prom7<0.3){analisisVulnerabilildadResultados.setProm7(0.0f);}       
+                    if(prom8 >= 0.3 && prom8 <= 0.5 ){analisisVulnerabilildadResultados.setProm8(0.5f);}if(prom8>0.5){analisisVulnerabilildadResultados.setProm8(1f);}
+                    if(prom8<0.3){analisisVulnerabilildadResultados.setProm8(0.0f);}
+                    if(prom9 >= 0.3 && prom9 <= 0.5 ){analisisVulnerabilildadResultados.setProm9(0.5f);}if(prom9>0.5){analisisVulnerabilildadResultados.setProm9(1f);}
+                    if(prom9<0.3){analisisVulnerabilildadResultados.setProm9(0.0f);}
+                    if(prom10 >= 0.3 && prom10 <= 0.5 ){analisisVulnerabilildadResultados.setProm10(0.5f);}if(prom10>0.5){analisisVulnerabilildadResultados.setProm10(1f);}
+                    if(prom10<0.3){analisisVulnerabilildadResultados.setProm10(0.0f);}
+                    if(prom11 >= 0.3 && prom11 <= 0.5 ){analisisVulnerabilildadResultados.setProm11(0.5f);}if(prom11>0.5){analisisVulnerabilildadResultados.setProm11(1f);}
+                    if(prom11<0.3){analisisVulnerabilildadResultados.setProm11(0.0f);}
+                    if(prom12 >= 0.3 && prom12 <= 0.5 ){analisisVulnerabilildadResultados.setProm12(0.5f);}if(prom12>0.5){analisisVulnerabilildadResultados.setProm12(1f);}
+                    if(prom12<0.3){analisisVulnerabilildadResultados.setProm12(0.0f);}
+                    if(prom13 >= 0.3 && prom13 <= 0.5 ){analisisVulnerabilildadResultados.setProm13(0.5f);}if(prom13>0.5){analisisVulnerabilildadResultados.setProm13(1f);}
+                    if(prom13<0.3){analisisVulnerabilildadResultados.setProm13(0.0f);}
+                    if(prom14 >= 0.3 && prom14 <= 0.5 ){analisisVulnerabilildadResultados.setProm14(0.5f);}if(prom14>0.5){analisisVulnerabilildadResultados.setProm14(1f);}
+                    if(prom14<0.3){analisisVulnerabilildadResultados.setProm14(0.0f);}
+                    if(prom15 >= 0.3 && prom15 <= 0.5 ){analisisVulnerabilildadResultados.setProm15(0.5f);}if(prom15>0.5){analisisVulnerabilildadResultados.setProm15(1f);}
+                    if(prom15<0.3){analisisVulnerabilildadResultados.setProm15(0.0f);}
+                    if(prom16 >= 0.3 && prom16 <= 0.5 ){analisisVulnerabilildadResultados.setProm16(0.5f);}if(prom16>0.5){analisisVulnerabilildadResultados.setProm16(1f);}
+                    if(prom16<0.3){analisisVulnerabilildadResultados.setProm16(0.0f);}
+                    if(prom17 >= 0.3 && prom17 <= 0.5 ){analisisVulnerabilildadResultados.setProm17(0.5f);}if(prom17>0.5){analisisVulnerabilildadResultados.setProm17(1f);}
+                    if(prom17<0.3){analisisVulnerabilildadResultados.setProm17(0.0f);}
+                    if(prom18 >= 0.3 && prom18 <= 0.5 ){analisisVulnerabilildadResultados.setProm18(0.5f);}if(prom18>0.5){analisisVulnerabilildadResultados.setProm18(1f);}
+                    if(prom18<0.3){analisisVulnerabilildadResultados.setProm18(0.0f);}
+                    if(prom19 >= 0.3 && prom19 <= 0.5 ){analisisVulnerabilildadResultados.setProm19(0.5f);}if(prom19>0.5){analisisVulnerabilildadResultados.setProm19(1f);}
+                    if(prom19<0.3){analisisVulnerabilildadResultados.setProm19(0.0f);}
+                    if(prom20 >= 0.3 && prom20 <= 0.5 ){analisisVulnerabilildadResultados.setProm20(0.5f);}if(prom20>0.5){analisisVulnerabilildadResultados.setProm20(1f);}
+                    if(prom20<0.3){analisisVulnerabilildadResultados.setProm20(0.0f);}
+                    if(prom21 >= 0.3 && prom21 <= 0.5 ){analisisVulnerabilildadResultados.setProm21(0.5f);}if(prom21>0.5){analisisVulnerabilildadResultados.setProm21(1f);}
+                    if(prom21<0.3){analisisVulnerabilildadResultados.setProm21(0.0f);}
+                    if(prom22 >= 0.3 && prom22 <= 0.5 ){analisisVulnerabilildadResultados.setProm22(0.5f);}if(prom22>0.5){analisisVulnerabilildadResultados.setProm22(1f);}
+                    if(prom22<0.3){analisisVulnerabilildadResultados.setProm22(0.0f);}
+                    if(prom23 >= 0.3 && prom23 <= 0.5 ){analisisVulnerabilildadResultados.setProm23(0.5f);}if(prom23>0.5){analisisVulnerabilildadResultados.setProm23(1f);}
+                    if(prom23<0.3){analisisVulnerabilildadResultados.setProm23(0.0f);}
+                    if(prom24 >= 0.3 && prom24 <= 0.5 ){analisisVulnerabilildadResultados.setProm24(0.5f);}if(prom24>0.5){analisisVulnerabilildadResultados.setProm24(1f);}
+                    if(prom24<0.3){analisisVulnerabilildadResultados.setProm24(0.0f);}
+                    if(prom25 >= 0.3 && prom25 <= 0.5 ){analisisVulnerabilildadResultados.setProm25(0.5f);}if(prom25>0.5){analisisVulnerabilildadResultados.setProm25(1f);}
+                    if(prom25<0.3){analisisVulnerabilildadResultados.setProm25(0.0f);}
+                    if(prom26 >= 0.3 && prom26 <= 0.5 ){analisisVulnerabilildadResultados.setProm26(0.5f);}if(prom26>0.5){analisisVulnerabilildadResultados.setProm26(1f);}
+                    if(prom26<0.3){analisisVulnerabilildadResultados.setProm26(0.0f);}
+                    if(prom27 >= 0.3 && prom27 <= 0.5 ){analisisVulnerabilildadResultados.setProm27(0.5f);}if(prom27>0.5){analisisVulnerabilildadResultados.setProm27(1f);}
+                    if(prom27<0.3){analisisVulnerabilildadResultados.setProm27(0.0f);}
+                    if(prom28 >= 0.3 && prom28 <= 0.5 ){analisisVulnerabilildadResultados.setProm28(0.5f);}if(prom28>0.5){analisisVulnerabilildadResultados.setProm28(1f);}
+                    if(prom28<0.3){analisisVulnerabilildadResultados.setProm28(0.0f);}
+                    if(prom29 >= 0.3 && prom29 <= 0.5 ){analisisVulnerabilildadResultados.setProm29(0.5f);}if(prom29>0.5){analisisVulnerabilildadResultados.setProm29(1f);}
+                    if(prom29<0.3){analisisVulnerabilildadResultados.setProm29(0.0f);}
+                    if(prom30 >= 0.3 && prom30 <= 0.5 ){analisisVulnerabilildadResultados.setProm30(0.5f);}if(prom30>0.5){analisisVulnerabilildadResultados.setProm30(1f);}
+                    if(prom30<0.3){analisisVulnerabilildadResultados.setProm30(0.0f);}
+                    if(prom31 >= 0.3 && prom31 <= 0.5 ){analisisVulnerabilildadResultados.setProm31(0.5f);}if(prom31>0.5){analisisVulnerabilildadResultados.setProm31(1f);}
+                    if(prom31<0.3){analisisVulnerabilildadResultados.setProm31(0.0f);}
+                    if(prom32 >= 0.3 && prom32 <= 0.5 ){analisisVulnerabilildadResultados.setProm32(0.5f);}if(prom32>0.5){analisisVulnerabilildadResultados.setProm32(1f);}
+                    if(prom32<0.3){analisisVulnerabilildadResultados.setProm32(0.0f);}
+                    if(prom33 >= 0.3 && prom33 <= 0.5 ){analisisVulnerabilildadResultados.setProm33(0.5f);}if(prom33>0.5){analisisVulnerabilildadResultados.setProm33(1f);}
+                    if(prom33<0.3){analisisVulnerabilildadResultados.setProm33(0.0f);}                            
                         
                     if(analisisVulnerabilidadList.size()>1){
                         resultadoAnalisisVulnerabilidadList.add(analisisVulnerabilildadResultados);
@@ -720,7 +777,8 @@ public class UIPlanEmergencias implements Serializable{
             for(int j=0; j<=tam;j++){
                 vul1=resultadoAnalisisVulnerabilidadList.get(j).getCodVulnerabilidad();
                 if(vul1 != vul2){
-                    tot1=0;tot2=0;tot3=0;tot4=0;tot5=0;tot6=0;tot7=0;tot8=0;tot9=0;tot10=0;tot11=0;tot12=0;tot13=0;tot14=0;tot15=0;tot16=0;tot17=0;                    
+                    tot1=0;tot2=0;tot3=0;tot4=0;tot5=0;tot6=0;tot7=0;tot8=0;tot9=0;tot10=0;tot11=0;tot12=0;tot13=0;tot14=0;tot15=0;tot16=0;tot17=0;
+                    tot18=0;tot19=0;tot20=0;tot21=0;tot22=0;tot22=0;tot23=0;tot24=0;tot25=0;tot26=0;tot27=0;tot28=0;tot29=0;tot30=0;tot31=0;tot32=0;tot33=0;                    
                     resultadoAnalisisVulnerabilidadList.add(analisisVulnerabilildadResultados);                    
                     analisisVulnerabilildadResultados = new AnalisisVulnerabilidadResultados();
                 }
@@ -760,7 +818,41 @@ public class UIPlanEmergencias implements Serializable{
                 tot16+=resultadoAnalisisVulnerabilidadList.get(j).getProm16();
                 analisisVulnerabilildadResultados.setProm16(tot16);
                 tot17+=resultadoAnalisisVulnerabilidadList.get(j).getProm17();
-                analisisVulnerabilildadResultados.setProm17(tot17); 
+                analisisVulnerabilildadResultados.setProm17(tot17);
+                tot18+=resultadoAnalisisVulnerabilidadList.get(j).getProm18();
+                analisisVulnerabilildadResultados.setProm18(tot18);
+                tot19+=resultadoAnalisisVulnerabilidadList.get(j).getProm19();
+                analisisVulnerabilildadResultados.setProm19(tot19);
+                tot20+=resultadoAnalisisVulnerabilidadList.get(j).getProm20();
+                analisisVulnerabilildadResultados.setProm20(tot20);
+                tot21+=resultadoAnalisisVulnerabilidadList.get(j).getProm21();
+                analisisVulnerabilildadResultados.setProm21(tot21);
+                tot22+=resultadoAnalisisVulnerabilidadList.get(j).getProm22();
+                analisisVulnerabilildadResultados.setProm22(tot22);
+                tot23+=resultadoAnalisisVulnerabilidadList.get(j).getProm23();
+                analisisVulnerabilildadResultados.setProm23(tot23);
+                tot24+=resultadoAnalisisVulnerabilidadList.get(j).getProm24();
+                analisisVulnerabilildadResultados.setProm24(tot24);
+                tot25+=resultadoAnalisisVulnerabilidadList.get(j).getProm25();
+                analisisVulnerabilildadResultados.setProm25(tot25);
+                tot26+=resultadoAnalisisVulnerabilidadList.get(j).getProm26();
+                analisisVulnerabilildadResultados.setProm26(tot26);
+                tot27+=resultadoAnalisisVulnerabilidadList.get(j).getProm27();
+                analisisVulnerabilildadResultados.setProm27(tot27);
+                tot28+=resultadoAnalisisVulnerabilidadList.get(j).getProm28();
+                analisisVulnerabilildadResultados.setProm28(tot28);
+                tot29+=resultadoAnalisisVulnerabilidadList.get(j).getProm29();
+                analisisVulnerabilildadResultados.setProm29(tot29);
+                tot30+=resultadoAnalisisVulnerabilidadList.get(j).getProm30();
+                analisisVulnerabilildadResultados.setProm30(tot30);
+                tot31+=resultadoAnalisisVulnerabilidadList.get(j).getProm31();
+                analisisVulnerabilildadResultados.setProm31(tot31);
+                tot32+=resultadoAnalisisVulnerabilidadList.get(j).getProm32();
+                analisisVulnerabilildadResultados.setProm32(tot32);
+                tot33+=resultadoAnalisisVulnerabilidadList.get(j).getProm33();
+                analisisVulnerabilildadResultados.setProm33(tot33);
+
+                
                 vul2=vul1;
             }
             
@@ -774,7 +866,7 @@ public class UIPlanEmergencias implements Serializable{
             
             gestorPlEmergencias.eliminarDeterminacionNivelRiesgo(planEmergencia.getCodPlanEmergencia());
 
-            for(int i = 1; i <= 17; i++){
+            for(int i = 1; i <= 33; i++){
                 StringBuilder sb = new StringBuilder(i);
                 sb.append(cadena);
                 sb.append(i);

@@ -227,7 +227,8 @@ public class PlanEmergenciasDAO {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_plan_emergencia, cod_vulnerabilidad, vul.nombre nomvul, cod_vulnerabilidad_tipo, vultipo.nombre nomvultipo, cod_analisis_vul_resultado, " +
-                    " prom1,prom2,prom3,prom4, prom5,prom6, prom7,prom8,prom9,prom10,prom11,prom12,prom13,prom14,prom15,prom16,prom17 " +
+                    " prom1,prom2,prom3,prom4, prom5,prom6, prom7,prom8,prom9,prom10,prom11,prom12,prom13,prom14,prom15,prom16,prom17,prom18,prom19,prom20,prom21,prom22,prom23,prom24,prom25, "
+                    + " prom26,prom27,prom28,prom29,prom30,prom31,prom32,prom33 " +
                     " FROM plemergencias.analisis_vulnerabilidad_resultados " +
                     " JOIN plemergencias.vulnerabilidad vul using(cod_vulnerabilidad) " +
                     " JOIN plemergencias.rel_vulnerabilidad_tipo vultipo using (cod_vulnerabilidad, cod_vulnerabilidad_tipo) " +
@@ -239,7 +240,8 @@ public class PlanEmergenciasDAO {
                 AnalisisVulnerabilidadResultados anvulres=new AnalisisVulnerabilidadResultados(pem.getCodPlanEmergencia(), rs.getInt("cod_vulnerabilidad_tipo"), 
                         rs.getInt("cod_vulnerabilidad"), rs.getInt("cod_analisis_vul_resultado"), rs.getFloat("prom1"), rs.getFloat("prom2"), rs.getFloat("prom3"), rs.getFloat("prom4"),
                         rs.getFloat("prom5"), rs.getFloat("prom6"), rs.getFloat("prom7"), rs.getFloat("prom8"), rs.getFloat("prom9"), rs.getFloat("prom10"), rs.getFloat("prom11"), rs.getFloat("prom12"),
-                        rs.getFloat("prom13"), rs.getFloat("prom14"), rs.getFloat("prom15"), rs.getFloat("prom16"), rs.getFloat("prom17")
+                        rs.getFloat("prom13"), rs.getFloat("prom14"), rs.getFloat("prom15"), rs.getFloat("prom16"), rs.getFloat("prom17"),rs.getFloat("prom18"), rs.getFloat("prom19"), rs.getFloat("prom20"), rs.getFloat("prom21"), rs.getFloat("prom22"),
+                        rs.getFloat("prom23"), rs.getFloat("prom24"), rs.getFloat("prom25"), rs.getFloat("prom26"), rs.getFloat("prom27"),rs.getFloat("prom28"), rs.getFloat("prom29"), rs.getFloat("prom30"), rs.getFloat("prom31"), rs.getFloat("prom32"), rs.getFloat("prom33")
                 );
                 
                 anvulres.setVulnerabilidad(new Vulnerabilidad(rs.getInt("cod_vulnerabilidad"), rs.getString("nomvul")));
@@ -884,17 +886,24 @@ public class PlanEmergenciasDAO {
             consulta = new Consulta(this.conexion);
                 StringBuilder sql1 = new StringBuilder(
                     "INSERT INTO plemergencias.rel_analisis_vulnerabilidad_cuestionario("
-                    + " cod_analisis_vulnerabilidad, cod_rel_analisis_vul_cuestionario,  cod_vulnerabilidad, cod_vulnerabilidad_tipo, cod_cuestionario, c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17 )"
+                    + " cod_analisis_vulnerabilidad, cod_rel_analisis_vul_cuestionario,  cod_vulnerabilidad, cod_vulnerabilidad_tipo, cod_cuestionario, c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,c25,c26,c27,c28,c29,c30,c31,c32,c33 )"
                     + " VALUES ('"+av.get(i).getCodAnalisisVulnerabilidad()+"', '"+av.get(i).getRelCuestionarioVulnerabilidad().getCodRelAnalisisVulCuestionario()+"', '"+av.get(i).getVulnerabilidad().getCodVulnerabilidad()+"', '"+av.get(i).getVulnerabilidadTipo().getCodVulnerabilidadTipo()+"', "
                     + " '"+av.get(i).getCuestionarioVulnerabilidad().getCodCuestionario()+"', '"+av.get(i).getCuestionarioVulnerabilidad().getCalif1()+"', '"+av.get(i).getCuestionarioVulnerabilidad().getCalif2()+"', "
                     + "'"+av.get(i).getCuestionarioVulnerabilidad().getCalif3()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif4()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif5()+"', "
                     + "'"+av.get(i).getCuestionarioVulnerabilidad().getCalif6()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif7()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif8()+"', "
                     + "'"+av.get(i).getCuestionarioVulnerabilidad().getCalif9()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif10()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif11()+"', "
                     + "'"+av.get(i).getCuestionarioVulnerabilidad().getCalif12()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif13()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif14()+"', "
-                    + "'"+av.get(i).getCuestionarioVulnerabilidad().getCalif15()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif16()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif17()+"' )"
+                    + "'"+av.get(i).getCuestionarioVulnerabilidad().getCalif15()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif16()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif17()+"', "
+                    + "'"+av.get(i).getCuestionarioVulnerabilidad().getCalif18()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif19()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif20()+"', "
+                    + "'"+av.get(i).getCuestionarioVulnerabilidad().getCalif21()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif22()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif23()+"',"
+                    + "'"+av.get(i).getCuestionarioVulnerabilidad().getCalif24()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif25()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif26()+"',"
+                    + "'"+av.get(i).getCuestionarioVulnerabilidad().getCalif27()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif28()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif29()+"',"
+                    + "'"+av.get(i).getCuestionarioVulnerabilidad().getCalif30()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif31()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif32()+"','"+av.get(i).getCuestionarioVulnerabilidad().getCalif33()+"')"
                     + " ON CONFLICT ( cod_analisis_vulnerabilidad,cod_rel_analisis_vul_cuestionario, cod_vulnerabilidad, cod_vulnerabilidad_tipo, cod_cuestionario) DO UPDATE "
                     + " SET c1=EXCLUDED.c1, c2=EXCLUDED.c2, c3=EXCLUDED.c3, c4=EXCLUDED.c4,c5=EXCLUDED.c5, c6=EXCLUDED.c6,c7=EXCLUDED.c7, c8=EXCLUDED.c8,"
-                    + " c9=EXCLUDED.c9, c10=EXCLUDED.c10,c11=EXCLUDED.c11, c12=EXCLUDED.c12,c13=EXCLUDED.c13, c14=EXCLUDED.c14,c15=EXCLUDED.c15, c16=EXCLUDED.c16,c17=EXCLUDED.c17"
+                    + " c9=EXCLUDED.c9, c10=EXCLUDED.c10,c11=EXCLUDED.c11, c12=EXCLUDED.c12,c13=EXCLUDED.c13, c14=EXCLUDED.c14,c15=EXCLUDED.c15, c16=EXCLUDED.c16,c17=EXCLUDED.c17,"
+                    + " c18=EXCLUDED.c18,c19=EXCLUDED.c19, c20=EXCLUDED.c20,c21=EXCLUDED.c21, c22=EXCLUDED.c22,c23=EXCLUDED.c23, c24=EXCLUDED.c24,c25=EXCLUDED.c25, c26=EXCLUDED.c26,c27=EXCLUDED.c27, "
+                    + " c28=EXCLUDED.c28,c29=EXCLUDED.c29, c30=EXCLUDED.c30,c31=EXCLUDED.c31,c32=EXCLUDED.c32,c33=EXCLUDED.c33"
                     
                 );
             consulta.actualizar(sql1);
@@ -927,13 +936,17 @@ public class PlanEmergenciasDAO {
                     consulta = new Consulta(this.conexion);
                         StringBuilder sql = new StringBuilder(
                             " INSERT INTO plemergencias.analisis_vulnerabilidad_resultados ( "
-                            + " cod_plan_emergencia, cod_vulnerabilidad, cod_vulnerabilidad_tipo, cod_analisis_vul_resultado, prom1, prom2, prom3, prom4, prom5, prom6, prom7, prom8, prom9,prom10, prom11, prom12, prom13, prom14, prom15, prom16, prom17 )"
+                            + " cod_plan_emergencia, cod_vulnerabilidad, cod_vulnerabilidad_tipo, cod_analisis_vul_resultado, prom1, prom2, prom3, prom4, prom5, prom6, prom7, prom8, prom9,prom10, prom11, prom12, prom13, prom14, prom15, prom16, prom17,prom18, prom19, prom20, prom21, prom22, prom23, prom24, prom25, prom26,prom27, prom28, prom29, prom30, prom31, prom32, prom33 )"
                             + " VALUES ( '"+avr.get(i).getCodPlanEmergencia()+"', '"+avr.get(i).getCodVulnerabilidad()+"', '"+avr.get(i).getCodVulnerabilidadTipo()+"', "
                             + " '"+avr.get(i).getCodAnalisisVulResultado()+"', '"+avr.get(i).getProm1()+"','"+avr.get(i).getProm2()+"','"+avr.get(i).getProm3()+"','"+avr.get(i).getProm4()+"','"+avr.get(i).getProm5()+"','"+avr.get(i).getProm6()+"','"+avr.get(i).getProm7()+"','"+avr.get(i).getProm8()+"', "
-                            + " '"+avr.get(i).getProm9()+"','"+avr.get(i).getProm10()+"','"+avr.get(i).getProm11()+"','"+avr.get(i).getProm12()+"','"+avr.get(i).getProm13()+"','"+avr.get(i).getProm14()+"','"+avr.get(i).getProm15()+"','"+avr.get(i).getProm16()+"','"+avr.get(i).getProm17()+"') "
+                            + " '"+avr.get(i).getProm9()+"','"+avr.get(i).getProm10()+"','"+avr.get(i).getProm11()+"','"+avr.get(i).getProm12()+"','"+avr.get(i).getProm13()+"','"+avr.get(i).getProm14()+"','"+avr.get(i).getProm15()+"','"+avr.get(i).getProm16()+"','"+avr.get(i).getProm17()+"','"+avr.get(i).getProm18()+"','"+avr.get(i).getProm19()+"' "
+                            + " ,'"+avr.get(i).getProm20()+"','"+avr.get(i).getProm21()+"','"+avr.get(i).getProm22()+"','"+avr.get(i).getProm23()+"','"+avr.get(i).getProm24()+"','"+avr.get(i).getProm25()+"','"+avr.get(i).getProm26()+"','"+avr.get(i).getProm27()+"','"+avr.get(i).getProm28()+"','"+avr.get(i).getProm29()+"','"+avr.get(i).getProm30()+"' "
+                            + ",'"+avr.get(i).getProm31()+"','"+avr.get(i).getProm32()+"','"+avr.get(i).getProm33()+"') "
                             + " ON CONFLICT ( cod_plan_emergencia, cod_vulnerabilidad, cod_vulnerabilidad_tipo, cod_analisis_vul_resultado) DO UPDATE "
                             + " SET prom1=EXCLUDED.prom1, prom2=EXCLUDED.prom2, prom3=EXCLUDED.prom3, prom4=EXCLUDED.prom4,prom5=EXCLUDED.prom5, prom6=EXCLUDED.prom6, prom7=EXCLUDED.prom7, prom8=EXCLUDED.prom8,"
-                            + " prom9=EXCLUDED.prom9, prom10=EXCLUDED.prom10,prom11=EXCLUDED.prom11, prom12=EXCLUDED.prom12,prom13=EXCLUDED.prom13, prom14=EXCLUDED.prom14,prom15=EXCLUDED.prom15, prom16=EXCLUDED.prom16, prom17=EXCLUDED.prom17"
+                            + " prom9=EXCLUDED.prom9, prom10=EXCLUDED.prom10,prom11=EXCLUDED.prom11, prom12=EXCLUDED.prom12,prom13=EXCLUDED.prom13, prom14=EXCLUDED.prom14,prom15=EXCLUDED.prom15, prom16=EXCLUDED.prom16, prom17=EXCLUDED.prom17,"
+                            + " prom18=EXCLUDED.prom18,prom19=EXCLUDED.prom19,prom20=EXCLUDED.prom20,prom21=EXCLUDED.prom21,prom22=EXCLUDED.prom22,prom23=EXCLUDED.prom23,prom24=EXCLUDED.prom24,prom25=EXCLUDED.prom25,prom26=EXCLUDED.prom26,prom27=EXCLUDED.prom27,"
+                            + " prom28=EXCLUDED.prom28,prom29=EXCLUDED.prom29,prom30=EXCLUDED.prom30,prom31=EXCLUDED.prom31,prom32=EXCLUDED.prom32,prom33=EXCLUDED.prom33"
                         );
                     consulta.actualizar(sql);
             }            

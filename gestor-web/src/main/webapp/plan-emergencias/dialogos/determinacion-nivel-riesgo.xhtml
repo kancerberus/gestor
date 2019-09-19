@@ -6,17 +6,19 @@
                 xmlns:p="http://primefaces.org/ui"                
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:c="http://java.sun.com/jsp/jstl/core">
-        <p:outputPanel id="opDeterminacionNivelRiesgo">
+    
+        
+    <p:outputPanel id="opDeterminacionNivelRiesgo">
             <h2>                
                 <p class="letraBlueBackgroundWhite">Determinacion Nivel De Riesgo: #{uiPlanEmergencias.planEmergencia.centrotrabajo.nombre}</p>
             </h2>   
-            <br/>
+            <br/>            
             <table border="0">
                 <tbody>
-                    <tr>
-                        <td>
+                    <tr>                        
+                        <td>                                  
                             <p:dataTable style="width: 40%" id="amenazas" var="varVulnerabilidades" value="#{uiPlanEmergencias.relOrigenTiposList}" expandableRowGroups="true" rowKey="#{varVulnerabilidades.codTipoOrigen}" 
-                                                     sortBy="#{varVulnerabilidades.codTipoOrigen}">
+                                         sortBy="#{varVulnerabilidades.codTipoOrigen}" scrollable="true" scrollHeight="600" >
                                 <p:headerRow>
                                     <p:column colspan="1">
                                         <h:outputText value="#{varVulnerabilidades.tipoOrigen.nombre}" />
@@ -33,7 +35,7 @@
                                         <f:actionListener binding="#{uiPlanEmergencias.seleccionarAmenazaNivelRiesgo()}"/>
                                    </p:commandButton>
                                </p:column>
-                            </p:dataTable>
+                            </p:dataTable>                            
                         </td>
                         <td style="width: 70%;float: left;margin-left: -30%">
                             <p:dataTable id="reldetNivelRiesgo" var="varVul" value="#{uiPlanEmergencias.relDetNivelRiesgoList}" 
@@ -98,5 +100,5 @@
                     </tr>
                 </tbody>
             </table>
-        </p:outputPanel>
+    </p:outputPanel>
 </ui:composition>
