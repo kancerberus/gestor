@@ -500,7 +500,7 @@ public class UIPlanAccion {
             GestorEvaluacionPlanAccion gestorEvaluacionPlanAccion = new GestorEvaluacionPlanAccion();
             epd = gestorEvaluacionPlanAccion.validarEvaluacionPlanAccionDetalle(epd);
             gestorEvaluacionPlanAccion.actualizarEvaluacionPlanAccionDetalle(epd);
-            //this.enviarCorreo();
+            this.enviarCorreo();
             this.modificarActivo = Boolean.FALSE;
 
             evaluacionPlanAccionDetalles = new ArrayList<>();
@@ -569,7 +569,7 @@ public class UIPlanAccion {
             
             ep.setEvaluacionPlanAccionDetalle(epd);
             gestorEvaluacionPlanAccion.procesarPlanAccion(ep);
-            //this.enviarCorreo();
+            this.enviarCorreo();
             UtilJSF.setBean("evaluacionPlanAccionDetalle", new EvaluacionPlanAccionDetalle(), UtilJSF.SESSION_SCOPE);            
             UtilMSG.addSuccessMsg("Plan Acción Guardado", "Se almaceno el plan de acción satisfactoriamente.");
             evaluacionPlanAccionDetalles = new ArrayList<>();
@@ -607,26 +607,20 @@ public class UIPlanAccion {
     }
     
     public void enviarCorreo(){
-        final String username = "francisco.vivas@solutech.com.co";
-        final String password = "Franvivas18*";
-        final String smtp = "solutech.com";
+        final String username = "gestorapp@sisgappcolombia.com";
+        final String password = "4prF$nsL3";
+        final String smtp = "sisgappcolombia.com";
         final String port = "587";
         final String ssltrust = "true";
         final String smtpauth = "true";
+        
 
         Properties props = new Properties();
-        props.put("mail.smtp.port", port);
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        
-        /*props.put("mail.smtp.auth", smtpauth);
+        props.put("mail.smtp.auth", smtpauth);
         props.put("mail.smtp.starttls.enable", ssltrust);
-        //props.put("mail.smtp.ssl.trust", smtp);
-        //props.put("mail.smtp.port", port);
-        props.put("mail.smtp.debug", "true");        
-        props.put("mail.smtp.socketFactory.port", port);
-        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.socketFactory.fallback", "false");*/
+        props.put("mail.smtp.ssl.trust", smtp);
+        props.put("mail.smtp.port", port);
+        
 
         Session session = Session.getInstance(props,
           new javax.mail.Authenticator() {
@@ -652,8 +646,7 @@ public class UIPlanAccion {
             
             message.setSubject("Se ha generado un nuevo PLAN DE ACCION "+epd.getEvaluacionPlanAccionDetallePK().getCodPlanDetalle());            
             message.addRecipient(Message.RecipientType.TO,new InternetAddress(epd.getResponsable().getCorreo()));
-            message.addRecipient(Message.RecipientType.TO,new InternetAddress(correoadmin));
-            
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress(correoadmin));            
             
             
             Date fechareg = new Date();
