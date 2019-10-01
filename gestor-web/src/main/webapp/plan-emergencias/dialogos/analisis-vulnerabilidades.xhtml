@@ -33,6 +33,13 @@
                             <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
                             <f:selectItems value="#{uiPlanEmergencias.cuestionarioVulnerabilidadAnalisisVulnerabilidadList}" var="cvul" itemValue="#{cvul}" itemLabel="#{cvul.nombre}" />
                     </p:selectOneMenu>
+                    
+                    <h:outputLabel value="Calificacion General: " style="font-weight: bold;"/>
+                    <p:selectOneMenu id="console" value="#{uiPlanEmergencias.valEstandar}" style="width:125px">
+                        <f:selectItem itemLabel="0.0" itemValue="0.0" />
+                        <f:selectItem itemLabel="0.5" itemValue="0.5" />
+                        <f:selectItem itemLabel="1.0" itemValue="1.0" />                        
+                    </p:selectOneMenu>
             </h:panelGrid>            
             <h:panelGrid columns="2">
                 <p:commandButton value="Crear " action="#{uiPlanEmergencias.guardarAnalisisVulnerabilidadesList()}"

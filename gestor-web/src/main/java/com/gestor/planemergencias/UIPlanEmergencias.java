@@ -55,6 +55,7 @@ public class UIPlanEmergencias implements Serializable{
     private boolean volverActivo = false;
     private Boolean modificarActivo = Boolean.FALSE;
     private Boolean filtroActivo = Boolean.TRUE;    
+    private Float valEstandar=0.0f;
     
     private List<Establecimiento> establecimientoList = new ArrayList<>();    
     private List<Usuarios> usuariosList = new ArrayList<>();    
@@ -336,6 +337,40 @@ public class UIPlanEmergencias implements Serializable{
                     
             Long codAnalisisVulnerabilidad=gestorGeneral.nextval(GestorGeneral.ANALISIS_VULNERABILIDAD_COD_ANALISIS_VULNERABILIDAD_SEQ);
             analisisVulnerabilidad.setCodAnalisisVulnerabilidad(codAnalisisVulnerabilidad.intValue());
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif1(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif2(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif3(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif4(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif5(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif6(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif7(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif8(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif9(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif10(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif11(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif12(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif13(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif14(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif15(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif16(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif17(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif18(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif19(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif20(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif21(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif22(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif23(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif24(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif25(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif26(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif27(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif28(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif29(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif30(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif31(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif32(valEstandar);
+            analisisVulnerabilidad.getCuestionarioVulnerabilidad().setCalif33(valEstandar);
+            
             
             analisisVulnerabilidadList.add(analisisVulnerabilidad);
             
@@ -996,6 +1031,14 @@ public class UIPlanEmergencias implements Serializable{
             }
         }
     }  
+
+    public Float getValEstandar() {
+        return valEstandar;
+    }
+
+    public void setValEstandar(Float valEstandar) {
+        this.valEstandar = valEstandar;
+    }
 
     public PieChartModel getPieDeterminacionNivelRiesgo() {
         return pieDeterminacionNivelRiesgo;
