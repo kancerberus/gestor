@@ -73,6 +73,11 @@
                     </p:column>
 
                 </p:dataTable>
+            <p:tree value="#{treeBasicView.root}" var="node" dynamic="true" orientation="horizontal">
+                <p:treeNode>
+                    <h:outputText value="#{node}" />
+                </p:treeNode>
+            </p:tree>
 
 
             <p:separator/>

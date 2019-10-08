@@ -719,14 +719,8 @@ public class UIPlanEmergencias implements Serializable{
                     acum=1;
                     
                     
-                    if(prom1 >= 0.3 && prom1 <= 0.5 )                    
-                    {analisisVulnerabilildadResultados.setProm1(0.5f);}
-                    if(prom1>0.5)
-                    {analisisVulnerabilildadResultados.setProm1(1f);}                    
-                    if(prom1<0.3)
-                    {analisisVulnerabilildadResultados.setProm1(0.0f);}
-                    
-                    
+                    if(prom1 >= 0.3 && prom1 <= 0.5 ){analisisVulnerabilildadResultados.setProm1(0.5f);}if(prom1>0.5){analisisVulnerabilildadResultados.setProm1(1f);}                    
+                    if(prom1<0.3){analisisVulnerabilildadResultados.setProm1(0.0f);}                    
                     if(prom2 >= 0.3 && prom2 <= 0.5 ){analisisVulnerabilildadResultados.setProm2(0.5f);}if(prom2>0.5){analisisVulnerabilildadResultados.setProm2(1f);}
                     if(prom2<0.3){analisisVulnerabilildadResultados.setProm2(0.0f);}
                     if(prom3 >= 0.3 && prom3 <= 0.5 ){analisisVulnerabilildadResultados.setProm3(0.5f);}if(prom3>0.5){analisisVulnerabilildadResultados.setProm3(1f);}
@@ -908,16 +902,16 @@ public class UIPlanEmergencias implements Serializable{
                 sb.toString();
                 detNivelRiesgo=new DeterminacionNivelRiesgo();
                 detNivelRiesgo.setCodPlanEmergencia(planEmergencia.getCodPlanEmergencia());
-                if(i<=7){
-                       detNivelRiesgo.setCodOrigen(1);
-                       detNivelRiesgo.setCodTipoOrigen(i);
+                if(i<=14){
+                    detNivelRiesgo.setCodOrigen(1);
+                    detNivelRiesgo.setCodTipoOrigen(i);
                 }
-                if(i>=8&&i<=12){
+                if(i>=15&&i<=24){
                     detNivelRiesgo.setCodOrigen(2);
                     detNivelRiesgo.setCodTipoOrigen(tipoOrigen);
                     tipoOrigen++;
                 }
-                if(i>=13){
+                if(i>=25){
                     detNivelRiesgo.setCodOrigen(3);
                     detNivelRiesgo.setCodTipoOrigen(tipoOrigen2);
                     tipoOrigen2++;
