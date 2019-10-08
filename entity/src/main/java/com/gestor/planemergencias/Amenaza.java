@@ -70,7 +70,39 @@ public class Amenaza implements Serializable{
     private Float prom16=0.0f;
     @Column(name = "prom17")
     private Float prom17=0.0f;
-
+    @Column(name = "prom18")
+    private Float prom18=0.0f;
+    @Column(name = "prom19")
+    private Float prom19=0.0f;
+    @Column(name = "prom20")
+    private Float prom20=0.0f;
+    @Column(name = "prom21")
+    private Float prom21=0.0f;
+    @Column(name = "prom22")
+    private Float prom22=0.0f;
+    @Column(name = "prom23")
+    private Float prom23=0.0f;
+    @Column(name = "prom24")
+    private Float prom24=0.0f;
+    @Column(name = "prom25")
+    private Float prom25=0.0f;
+    @Column(name = "prom26")
+    private Float prom26=0.0f;
+    @Column(name = "prom27")
+    private Float prom27=0.0f;
+    @Column(name = "prom28")
+    private Float prom28=0.0f;
+    @Column(name = "prom29")
+    private Float prom29=0.0f;
+    @Column(name = "prom30")
+    private Float prom30=0.0f;
+    @Column(name = "prom31")
+    private Float prom31=0.0f;
+    @Column(name = "prom32")
+    private Float prom32=0.0f;
+    @Column(name = "prom33")
+    private Float prom33=0.0f;
+    
     private Vulnerabilidad vulnerabilidad;
     private RelVulnerabilidadTipo vulnerabilidadTipo;    
     private RelAnalisisVulnerabilidadCuestionario relCuestionarioVulnerabilidad;       
@@ -80,7 +112,8 @@ public class Amenaza implements Serializable{
 
     public Amenaza(Integer codPlanEmergencia, Integer codVulnerabilidadTipo, Integer codVulnerabilidad, Integer codAnalisisVulResultado,
         Float prom1, Float prom2, Float prom3, Float prom4,Float prom5,Float prom6, Float prom7, Float prom8, Float prom9, Float prom10, Float prom11, Float prom12, Float prom13,
-        Float prom14,Float prom15,Float prom16,Float prom17) {
+        Float prom14,Float prom15,Float prom16,Float prom17,Float prom18,Float prom19,Float prom20,Float prom21,Float prom22,Float prom23,Float prom24,Float prom25,Float prom26,Float prom27
+        ,Float prom28,Float prom29,Float prom30,Float prom31,Float prom32,Float prom33) {
         this.codPlanEmergencia = codPlanEmergencia;
         this.codVulnerabilidadTipo = codVulnerabilidadTipo;
         this.codVulnerabilidad = codVulnerabilidad;
@@ -101,9 +134,29 @@ public class Amenaza implements Serializable{
         this.prom14= prom14;
         this.prom15= prom15;
         this.prom16= prom16;
-        this.prom17= prom17;        
+        this.prom17= prom17;
+        this.prom18= prom18;
+        this.prom19= prom19;
+        this.prom20= prom20;
+        this.prom21= prom21;
+        this.prom22= prom22;
+        this.prom23= prom23;
+        this.prom24= prom24;
+        this.prom25= prom25;
+        this.prom26= prom26;
+        this.prom27= prom27;
+        this.prom28= prom28;
+        this.prom29= prom29;
+        this.prom30= prom30;
+        this.prom31= prom31;
+        this.prom32= prom32;
+        this.prom33= prom33;
+        
+        
+        
     }  
 
+    
     public Amenaza(Integer codPlanEmergencia, Integer codVulnerabilidad, Integer codVulnerabilidadTipo, Integer codAnalisisVulResultado, Float prom1) {
         this.codPlanEmergencia = codPlanEmergencia;
         this.codVulnerabilidad = codVulnerabilidad;
@@ -246,6 +299,134 @@ public class Amenaza implements Serializable{
 
     public void setProm17(Float prom17) {
         this.prom17 = prom17;
+    }
+
+    public Float getProm18() {
+        return prom18;
+    }
+
+    public void setProm18(Float prom18) {
+        this.prom18 = prom18;
+    }
+
+    public Float getProm19() {
+        return prom19;
+    }
+
+    public void setProm19(Float prom19) {
+        this.prom19 = prom19;
+    }
+
+    public Float getProm20() {
+        return prom20;
+    }
+
+    public void setProm20(Float prom20) {
+        this.prom20 = prom20;
+    }
+
+    public Float getProm21() {
+        return prom21;
+    }
+
+    public void setProm21(Float prom21) {
+        this.prom21 = prom21;
+    }
+
+    public Float getProm22() {
+        return prom22;
+    }
+
+    public void setProm22(Float prom22) {
+        this.prom22 = prom22;
+    }
+
+    public Float getProm23() {
+        return prom23;
+    }
+
+    public void setProm23(Float prom23) {
+        this.prom23 = prom23;
+    }
+
+    public Float getProm24() {
+        return prom24;
+    }
+
+    public void setProm24(Float prom24) {
+        this.prom24 = prom24;
+    }
+
+    public Float getProm25() {
+        return prom25;
+    }
+
+    public void setProm25(Float prom25) {
+        this.prom25 = prom25;
+    }
+
+    public Float getProm26() {
+        return prom26;
+    }
+
+    public void setProm26(Float prom26) {
+        this.prom26 = prom26;
+    }
+
+    public Float getProm27() {
+        return prom27;
+    }
+
+    public void setProm27(Float prom27) {
+        this.prom27 = prom27;
+    }
+
+    public Float getProm28() {
+        return prom28;
+    }
+
+    public void setProm28(Float prom28) {
+        this.prom28 = prom28;
+    }
+
+    public Float getProm29() {
+        return prom29;
+    }
+
+    public void setProm29(Float prom29) {
+        this.prom29 = prom29;
+    }
+
+    public Float getProm30() {
+        return prom30;
+    }
+
+    public void setProm30(Float prom30) {
+        this.prom30 = prom30;
+    }
+
+    public Float getProm31() {
+        return prom31;
+    }
+
+    public void setProm31(Float prom31) {
+        this.prom31 = prom31;
+    }
+
+    public Float getProm32() {
+        return prom32;
+    }
+
+    public void setProm32(Float prom32) {
+        this.prom32 = prom32;
+    }
+
+    public Float getProm33() {
+        return prom33;
+    }
+
+    public void setProm33(Float prom33) {
+        this.prom33 = prom33;
     }
    
     

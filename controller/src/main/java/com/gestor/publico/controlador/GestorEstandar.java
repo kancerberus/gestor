@@ -5,12 +5,14 @@
  */
 package com.gestor.publico.controlador;
 import com.gestor.gestor.dao.CicloDAO;
+import com.gestor.gestor.Seccion;
 import com.gestor.gestor.dao.SeccionDAO;
 import com.gestor.gestor.dao.SeccionDetalleDAO;
 import com.gestor.gestor.dao.SeccionDetalleItemsDAO;
 import com.gestor.gestor.dao.SeccionDetalleItemsAyudaDAO;
 import com.gestor.controller.Gestor;
 import com.gestor.gestor.AdjuntosCategoria;
+import com.gestor.gestor.SeccionDetalle;
 import com.gestor.gestor.SeccionDetalleItems;
 import com.gestor.gestor.dao.AdjuntosCategoriaDAO;
 import java.io.Serializable;
@@ -48,6 +50,17 @@ public class GestorEstandar extends Gestor implements Serializable{
         }
     }
     
+    public List<Seccion> cargarListaSecciones(String codCiclo) throws Exception {   
+        
+        try {
+            this.abrirConexion();
+            SeccionDAO seccionDAO = new SeccionDAO(conexion);                                                 
+            return seccionDAO.cargarListaSeccion(codCiclo);
+        } finally {
+            this.cerrarConexion();
+        }
+    }    
+ 
     public List<?> cargarListaSecciondetalle(String codCiclo, Integer codSeccion) throws Exception {   
         
         try {
@@ -59,7 +72,31 @@ public class GestorEstandar extends Gestor implements Serializable{
         }
     }
     
+    
+    public List<SeccionDetalle> cargarListaSecciondetalles(String codCiclo, Integer codSeccion) throws Exception {   
+        
+        try {
+            this.abrirConexion();
+            SeccionDetalleDAO secciondetalleDAO = new SeccionDetalleDAO(conexion);                                                 
+            return secciondetalleDAO.cargarListaSeccionDetalle(codCiclo, codSeccion);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    
     public List<?> cargarListaSecciondetalleitems(String codCiclo, Integer codSeccion, Integer codDetalle) throws Exception {   
+        
+        try {
+            this.abrirConexion();
+            SeccionDetalleItemsDAO secciondetalleitemsDAO = new SeccionDetalleItemsDAO(conexion);                                                 
+            return secciondetalleitemsDAO.cargarListaSeccionDetalleItems(codCiclo, codSeccion, codDetalle);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public List<SeccionDetalleItems> cargarListaSecciondetalleitemss(String codCiclo, Integer codSeccion, Integer codDetalle) throws Exception {   
         
         try {
             this.abrirConexion();

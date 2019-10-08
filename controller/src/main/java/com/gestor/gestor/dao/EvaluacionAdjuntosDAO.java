@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -125,6 +126,43 @@ public class EvaluacionAdjuntosDAO {
             }
         }
     }
+    
+    public Collection<? extends EvaluacionAdjuntos> cargarListaAdjuntosCategoriaTipo(Integer codEstablecimiento,Integer codEvaluacion,String codCiclo,Integer codSeccion,Integer codDetalle, Integer codItem,Integer codCategoria,Integer codCatTipo) throws SQLException {    
+        ResultSet rs = null;
+        Consulta consulta = null;                
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    " SELECT ea.archivo archivo, ea.version  " +
+                    " from gestor.evaluacion_adjuntos ea " +
+                    " where cod_evaluacion='"+codEvaluacion+"' and codigo_establecimiento='"+codEstablecimiento+"'  " +
+                    " and cod_ciclo='"+codCiclo+"' and cod_seccion='"+codSeccion+"' " +
+                    " and cod_detalle='"+codDetalle+"' and cod_item='"+codItem+"' " +
+                    " and cod_categoria='"+codCategoria+"' and cod_categoria_tipo='"+codCatTipo+"' and ea.version = ( " +
+                    " SELECT MAX( version )  FROM gestor.evaluacion_adjuntos)"
+            );
+            
+            rs = consulta.ejecutar(sql);
+            
+            Collection<EvaluacionAdjuntos> evaluacionAdjuntos = new ArrayList<>();
+            
+            while (rs.next()) {
+                EvaluacionAdjuntos ev=new EvaluacionAdjuntos(null, "", rs.getString("archivo"));
+                evaluacionAdjuntos.add(ev);
+            }            
+        
+            return evaluacionAdjuntos;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+           
+                    
 
     public void actualizarEstadoEvaluacionAdjuntos(EvaluacionAdjuntos ea) throws SQLException {
         Consulta consulta = null;

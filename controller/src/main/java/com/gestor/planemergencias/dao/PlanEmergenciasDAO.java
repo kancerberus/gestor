@@ -118,7 +118,7 @@ public class PlanEmergenciasDAO {
                     " JOIN plemergencias.vulnerabilidad vul using (cod_vulnerabilidad) " +
                     " JOIN plemergencias.rel_vulnerabilidad_tipo vult using (cod_vulnerabilidad_tipo, cod_vulnerabilidad) " +
                     " WHERE cod_plan_emergencia='"+codPlanEmergencia+"' " +
-                    " GROUP by prom1,cod_plan_emergencia, cod_vulnerabilidad, cod_vulnerabilidad_tipo,cod_analisis_vul_resultado, anvulres.cod_vulnerabilidad, vul.nombre, anvulres.cod_vulnerabilidad_tipo, vult.nombre "
+                    " GROUP by "+sb+",cod_plan_emergencia, cod_vulnerabilidad, cod_vulnerabilidad_tipo,cod_analisis_vul_resultado, anvulres.cod_vulnerabilidad, vul.nombre, anvulres.cod_vulnerabilidad_tipo, vult.nombre "
             );
             rs = consulta.ejecutar(sql);
             while (rs.next()) {
@@ -313,7 +313,9 @@ public class PlanEmergenciasDAO {
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_analisis_vulnerabilidad, cod_vulnerabilidad, cod_vulnerabilidad_tipo, cod_cuestionario, relvulcu.c1 c1, relvulcu.c2 c2, "+
                     " relvulcu.c3 c3,relvulcu.c4 c4,relvulcu.c5 c5,relvulcu.c6 c6,relvulcu.c7 c7,relvulcu.c8 c8,relvulcu.c9 c9,relvulcu.c10 c10,relvulcu.c11 c11, "+
-                    " relvulcu.c12 c12,relvulcu.c13 c13,relvulcu.c14 c14,relvulcu.c15 c15,relvulcu.c16 c16,relvulcu.c17 c17, " +
+                    " relvulcu.c12 c12,relvulcu.c13 c13,relvulcu.c14 c14,relvulcu.c15 c15,relvulcu.c16 c16,relvulcu.c17 c17, relvulcu.c18 c18,relvulcu.c19 c19,relvulcu.c20 c20,"+
+                    " relvulcu.c21 c21,relvulcu.c22 c22,relvulcu.c23 c23,relvulcu.c24 c24,relvulcu.c25 c25,relvulcu.c26 c26,relvulcu.c27 c27,relvulcu.c28 c28,relvulcu.c29 c29,"+
+                    " relvulcu.c30 c30,relvulcu.c31 c31,relvulcu.c32 c32,relvulcu.c33 c33, " +
                     " vul.nombre nomvul, vult.nombre nomvult, cvul.nombre nomcu, relvulcu.cod_rel_analisis_vul_cuestionario codrelvulcu" +
                     " FROM plemergencias.analisis_vulnerabilidad " +
                     " JOIN plemergencias.rel_analisis_vulnerabilidad_cuestionario relvulcu using (cod_analisis_vulnerabilidad, cod_vulnerabilidad, cod_vulnerabilidad_tipo, cod_cuestionario) " +
@@ -347,7 +349,23 @@ public class PlanEmergenciasDAO {
                 av.getCuestionarioVulnerabilidad().setCalif14(rs.getFloat("c14"));
                 av.getCuestionarioVulnerabilidad().setCalif15(rs.getFloat("c15"));
                 av.getCuestionarioVulnerabilidad().setCalif16(rs.getFloat("c16"));
-                av.getCuestionarioVulnerabilidad().setCalif17(rs.getFloat("c17"));                
+                av.getCuestionarioVulnerabilidad().setCalif17(rs.getFloat("c17"));
+                av.getCuestionarioVulnerabilidad().setCalif18(rs.getFloat("c18"));                
+                av.getCuestionarioVulnerabilidad().setCalif19(rs.getFloat("c19"));                
+                av.getCuestionarioVulnerabilidad().setCalif20(rs.getFloat("c20"));                
+                av.getCuestionarioVulnerabilidad().setCalif21(rs.getFloat("c21"));                
+                av.getCuestionarioVulnerabilidad().setCalif22(rs.getFloat("c22"));                
+                av.getCuestionarioVulnerabilidad().setCalif23(rs.getFloat("c23"));                
+                av.getCuestionarioVulnerabilidad().setCalif24(rs.getFloat("c24"));                
+                av.getCuestionarioVulnerabilidad().setCalif25(rs.getFloat("c25"));                
+                av.getCuestionarioVulnerabilidad().setCalif26(rs.getFloat("c26"));                
+                av.getCuestionarioVulnerabilidad().setCalif27(rs.getFloat("c27"));                
+                av.getCuestionarioVulnerabilidad().setCalif28(rs.getFloat("c28"));                
+                av.getCuestionarioVulnerabilidad().setCalif29(rs.getFloat("c29"));                
+                av.getCuestionarioVulnerabilidad().setCalif30(rs.getFloat("c30"));                
+                av.getCuestionarioVulnerabilidad().setCalif31(rs.getFloat("c31"));                
+                av.getCuestionarioVulnerabilidad().setCalif32(rs.getFloat("c32"));                
+                av.getCuestionarioVulnerabilidad().setCalif33(rs.getFloat("c33"));
                 listaAnalisisVulnerabilidades.add(av);                
             }
 
@@ -372,7 +390,9 @@ public class PlanEmergenciasDAO {
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_analisis_vulnerabilidad, cod_vulnerabilidad, cod_vulnerabilidad_tipo, cod_cuestionario, relvulcu.c1 c1, relvulcu.c2 c2, "+
                     " relvulcu.c3 c3,relvulcu.c4 c4,relvulcu.c5 c5,relvulcu.c6 c6,relvulcu.c7 c7,relvulcu.c8 c8,relvulcu.c9 c9,relvulcu.c10 c10,relvulcu.c11 c11, "+
-                    " relvulcu.c12 c12,relvulcu.c13 c13,relvulcu.c14 c14,relvulcu.c15 c15,relvulcu.c16 c16,relvulcu.c17 c17, " +
+                    " relvulcu.c12 c12,relvulcu.c13 c13,relvulcu.c14 c14,relvulcu.c15 c15,relvulcu.c16 c16,relvulcu.c17 c17, relvulcu.c18 c18,relvulcu.c19 c19,relvulcu.c20 c20,"+
+                    " relvulcu.c21 c21,relvulcu.c22 c22,relvulcu.c23 c23,relvulcu.c24 c24,relvulcu.c25 c25,relvulcu.c26 c26,relvulcu.c27 c27,relvulcu.c28 c28,relvulcu.c29 c29,"+
+                    " relvulcu.c30 c30,relvulcu.c31 c31,relvulcu.c32 c32,relvulcu.c33 c33, " +
                     " vul.nombre nomvul, vult.nombre nomvult, cvul.nombre nomcu, relvulcu.cod_rel_analisis_vul_cuestionario codrelvulcu" +
                     " FROM plemergencias.analisis_vulnerabilidad " +
                     " JOIN plemergencias.rel_analisis_vulnerabilidad_cuestionario relvulcu using (cod_analisis_vulnerabilidad, cod_vulnerabilidad, cod_vulnerabilidad_tipo, cod_cuestionario) " +
@@ -406,7 +426,23 @@ public class PlanEmergenciasDAO {
                 av.getCuestionarioVulnerabilidad().setCalif14(rs.getFloat("c14"));
                 av.getCuestionarioVulnerabilidad().setCalif15(rs.getFloat("c15"));
                 av.getCuestionarioVulnerabilidad().setCalif16(rs.getFloat("c16"));
-                av.getCuestionarioVulnerabilidad().setCalif17(rs.getFloat("c17"));                
+                av.getCuestionarioVulnerabilidad().setCalif17(rs.getFloat("c17"));            
+                av.getCuestionarioVulnerabilidad().setCalif18(rs.getFloat("c18"));                
+                av.getCuestionarioVulnerabilidad().setCalif19(rs.getFloat("c19"));                
+                av.getCuestionarioVulnerabilidad().setCalif20(rs.getFloat("c20"));                
+                av.getCuestionarioVulnerabilidad().setCalif21(rs.getFloat("c21"));                
+                av.getCuestionarioVulnerabilidad().setCalif22(rs.getFloat("c22"));                
+                av.getCuestionarioVulnerabilidad().setCalif23(rs.getFloat("c23"));                
+                av.getCuestionarioVulnerabilidad().setCalif24(rs.getFloat("c24"));                
+                av.getCuestionarioVulnerabilidad().setCalif25(rs.getFloat("c25"));                
+                av.getCuestionarioVulnerabilidad().setCalif26(rs.getFloat("c26"));                
+                av.getCuestionarioVulnerabilidad().setCalif27(rs.getFloat("c27"));                
+                av.getCuestionarioVulnerabilidad().setCalif28(rs.getFloat("c28"));                
+                av.getCuestionarioVulnerabilidad().setCalif29(rs.getFloat("c29"));                
+                av.getCuestionarioVulnerabilidad().setCalif30(rs.getFloat("c30"));                
+                av.getCuestionarioVulnerabilidad().setCalif31(rs.getFloat("c31"));                
+                av.getCuestionarioVulnerabilidad().setCalif32(rs.getFloat("c32"));                
+                av.getCuestionarioVulnerabilidad().setCalif33(rs.getFloat("c33"));                                
                 listaAnalisisVulnerabilidades.add(av);                
             }
 
@@ -431,7 +467,9 @@ public class PlanEmergenciasDAO {
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_analisis_vulnerabilidad, cod_vulnerabilidad, cod_vulnerabilidad_tipo, cod_cuestionario, relvulcu.c1 c1, relvulcu.c2 c2, "+
                     " relvulcu.c3 c3,relvulcu.c4 c4,relvulcu.c5 c5,relvulcu.c6 c6,relvulcu.c7 c7,relvulcu.c8 c8,relvulcu.c9 c9,relvulcu.c10 c10,relvulcu.c11 c11, "+
-                    " relvulcu.c12 c12,relvulcu.c13 c13,relvulcu.c14 c14,relvulcu.c15 c15,relvulcu.c16 c16,relvulcu.c17 c17, " +
+                    " relvulcu.c12 c12,relvulcu.c13 c13,relvulcu.c14 c14,relvulcu.c15 c15,relvulcu.c16 c16,relvulcu.c17 c17, relvulcu.c18 c18,relvulcu.c19 c19,relvulcu.c20 c20,"+
+                    " relvulcu.c21 c21,relvulcu.c22 c22,relvulcu.c23 c23,relvulcu.c24 c24,relvulcu.c25 c25,relvulcu.c26 c26,relvulcu.c27 c27,relvulcu.c28 c28,relvulcu.c29 c29,"+
+                    " relvulcu.c30 c30,relvulcu.c31 c31,relvulcu.c32 c32,relvulcu.c33 c33, " +
                     " vul.nombre nomvul, vult.nombre nomvult, cvul.nombre nomcu, relvulcu.cod_rel_analisis_vul_cuestionario codrelvulcu" +
                     " FROM plemergencias.analisis_vulnerabilidad " +
                     " JOIN plemergencias.rel_analisis_vulnerabilidad_cuestionario relvulcu using (cod_analisis_vulnerabilidad, cod_vulnerabilidad, cod_vulnerabilidad_tipo, cod_cuestionario) " +
@@ -465,7 +503,24 @@ public class PlanEmergenciasDAO {
                 av.getCuestionarioVulnerabilidad().setCalif14(rs.getFloat("c14"));
                 av.getCuestionarioVulnerabilidad().setCalif15(rs.getFloat("c15"));
                 av.getCuestionarioVulnerabilidad().setCalif16(rs.getFloat("c16"));
-                av.getCuestionarioVulnerabilidad().setCalif17(rs.getFloat("c17"));                
+                av.getCuestionarioVulnerabilidad().setCalif17(rs.getFloat("c17"));
+                av.getCuestionarioVulnerabilidad().setCalif18(rs.getFloat("c18"));                
+                av.getCuestionarioVulnerabilidad().setCalif19(rs.getFloat("c19"));                
+                av.getCuestionarioVulnerabilidad().setCalif20(rs.getFloat("c20"));                
+                av.getCuestionarioVulnerabilidad().setCalif21(rs.getFloat("c21"));                
+                av.getCuestionarioVulnerabilidad().setCalif22(rs.getFloat("c22"));                
+                av.getCuestionarioVulnerabilidad().setCalif23(rs.getFloat("c23"));                
+                av.getCuestionarioVulnerabilidad().setCalif24(rs.getFloat("c24"));                
+                av.getCuestionarioVulnerabilidad().setCalif25(rs.getFloat("c25"));                
+                av.getCuestionarioVulnerabilidad().setCalif26(rs.getFloat("c26"));                
+                av.getCuestionarioVulnerabilidad().setCalif27(rs.getFloat("c27"));                
+                av.getCuestionarioVulnerabilidad().setCalif28(rs.getFloat("c28"));                
+                av.getCuestionarioVulnerabilidad().setCalif29(rs.getFloat("c29"));                
+                av.getCuestionarioVulnerabilidad().setCalif30(rs.getFloat("c30"));                
+                av.getCuestionarioVulnerabilidad().setCalif31(rs.getFloat("c31"));                
+                av.getCuestionarioVulnerabilidad().setCalif32(rs.getFloat("c32"));                
+                av.getCuestionarioVulnerabilidad().setCalif33(rs.getFloat("c33"));                
+                
                 listaAnalisisVulnerabilidades.add(av);                
             }
 
@@ -490,7 +545,9 @@ public class PlanEmergenciasDAO {
             StringBuilder sql = new StringBuilder(
                     "SELECT cod_analisis_vulnerabilidad, cod_vulnerabilidad, cod_vulnerabilidad_tipo, cod_cuestionario, relvulcu.c1 c1, relvulcu.c2 c2, "+
                     " relvulcu.c3 c3,relvulcu.c4 c4,relvulcu.c5 c5,relvulcu.c6 c6,relvulcu.c7 c7,relvulcu.c8 c8,relvulcu.c9 c9,relvulcu.c10 c10,relvulcu.c11 c11, "+
-                    " relvulcu.c12 c12,relvulcu.c13 c13,relvulcu.c14 c14,relvulcu.c15 c15,relvulcu.c16 c16,relvulcu.c17 c17, " +
+                    " relvulcu.c12 c12,relvulcu.c13 c13,relvulcu.c14 c14,relvulcu.c15 c15,relvulcu.c16 c16,relvulcu.c17 c17,relvulcu.c18 c18, relvulcu.c19 c19, relvulcu.c20 c20, relvulcu.c21 c21,"+
+                    " relvulcu.c22 c22,relvulcu.c23 c23,relvulcu.c24 c24,relvulcu.c25 c25,relvulcu.c26 c26,relvulcu.c27 c27,relvulcu.c28 c28,relvulcu.c29 c29,relvulcu.c30 c30,relvulcu.c31 c31,relvulcu.c32 c32,"+
+                    " relvulcu.c33 c33," +
                     " vul.nombre nomvul, vult.nombre nomvult, cvul.nombre nomcu, relvulcu.cod_rel_analisis_vul_cuestionario codrelvulcu" +
                     " FROM plemergencias.analisis_vulnerabilidad " +
                     " JOIN plemergencias.rel_analisis_vulnerabilidad_cuestionario relvulcu using (cod_analisis_vulnerabilidad, cod_vulnerabilidad, cod_vulnerabilidad_tipo, cod_cuestionario) " +
@@ -525,6 +582,22 @@ public class PlanEmergenciasDAO {
                 av.getCuestionarioVulnerabilidad().setCalif15(rs.getFloat("c15"));
                 av.getCuestionarioVulnerabilidad().setCalif16(rs.getFloat("c16"));
                 av.getCuestionarioVulnerabilidad().setCalif17(rs.getFloat("c17"));                
+                av.getCuestionarioVulnerabilidad().setCalif18(rs.getFloat("c18"));                
+                av.getCuestionarioVulnerabilidad().setCalif19(rs.getFloat("c19"));                
+                av.getCuestionarioVulnerabilidad().setCalif20(rs.getFloat("c20"));                
+                av.getCuestionarioVulnerabilidad().setCalif21(rs.getFloat("c21"));                
+                av.getCuestionarioVulnerabilidad().setCalif22(rs.getFloat("c22"));                
+                av.getCuestionarioVulnerabilidad().setCalif23(rs.getFloat("c23"));                
+                av.getCuestionarioVulnerabilidad().setCalif24(rs.getFloat("c24"));                
+                av.getCuestionarioVulnerabilidad().setCalif25(rs.getFloat("c25"));                
+                av.getCuestionarioVulnerabilidad().setCalif26(rs.getFloat("c26"));                
+                av.getCuestionarioVulnerabilidad().setCalif27(rs.getFloat("c27"));                
+                av.getCuestionarioVulnerabilidad().setCalif28(rs.getFloat("c28"));                
+                av.getCuestionarioVulnerabilidad().setCalif29(rs.getFloat("c29"));                
+                av.getCuestionarioVulnerabilidad().setCalif30(rs.getFloat("c30"));                
+                av.getCuestionarioVulnerabilidad().setCalif31(rs.getFloat("c31"));                
+                av.getCuestionarioVulnerabilidad().setCalif32(rs.getFloat("c32"));                
+                av.getCuestionarioVulnerabilidad().setCalif33(rs.getFloat("c33"));                
                 listaAnalisisVulnerabilidades.add(av);                
             }
 
@@ -1029,7 +1102,7 @@ public class PlanEmergenciasDAO {
                     " JOIN plemergencias.determinacion_nivel_riesgo det using (cod_det_nivel_riesgo) " +
                     " JOIN plemergencias.vulnerabilidad vul using(cod_vulnerabilidad) " +
                     " JOIN plemergencias.rel_vulnerabilidad_tipo vult using (cod_vulnerabilidad_tipo, cod_vulnerabilidad) " +
-                    " WHERE cod_plan_emergencia='"+codPlanEmergencia+"' and cod_origen='"+rot.getCodOrigen()+"' and cod_tipo_origen='"+rot.getCodTipoOrigen()+"' "+
+                    " WHERE cod_plan_emergencia='"+codPlanEmergencia+"' and cod_origen='"+rot.getCodTipoOrigen()+"' and cod_tipo_origen='"+rot.getCodOrigen()+"' "+
                     " ORDER BY cod_vulnerabilidad ASC, cod_vulnerabilidad_tipo ASC"
                 );            
             rs = consulta.ejecutar(sql);
