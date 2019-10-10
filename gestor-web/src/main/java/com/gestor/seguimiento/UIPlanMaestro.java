@@ -14,12 +14,22 @@ import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
 import com.gestor.entity.UtilTexto;
+import com.gestor.gestor.AdjuntosCategoria;
+import com.gestor.gestor.AdjuntosCategoriaTipo;
+import com.gestor.gestor.Ciclo;
 import com.gestor.gestor.Evaluacion;
+import com.gestor.gestor.Seccion;
+import com.gestor.gestor.SeccionDetalle;
+import com.gestor.gestor.SeccionDetalleItems;
+import com.gestor.gestor.controlador.GestorAdjuntosCategoria;
+import com.gestor.gestor.controlador.GestorCiclo;
 import com.gestor.gestor.controlador.GestorEvaluacion;
+import com.gestor.gestor.controlador.GestorEvaluacionAdjuntos;
 import com.gestor.modelo.Sesion;
 import com.gestor.publico.Establecimiento;
 import com.gestor.publico.EvaluacionAdjuntos;
 import com.gestor.publico.controlador.GestorEstablecimiento;
+import com.gestor.publico.controlador.GestorEstandar;
 import com.gestor.seguimiento.controlador.GestorPlanMaestro;
 import com.gestor.seguimiento.controlador.GestorPlanTitulo;
 import java.io.File;
@@ -34,10 +44,18 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Properties;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import org.primefaces.event.NodeCollapseEvent;
+import org.primefaces.event.NodeExpandEvent;
+import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
+import org.primefaces.model.TreeNode;
 
 /**
  *
@@ -58,19 +76,33 @@ public class UIPlanMaestro {
 
 
     private List<PlanMaestro> planMaestroList;
+    private PlanMaestro planMaestro;
     private Establecimiento establecimiento;
 
     private List<Evaluacion> evaluacionList = new ArrayList<>();
     private Evaluacion evaluacion = new Evaluacion();
 
     private Boolean filtroActivo = Boolean.TRUE;
-
+    private TreeNode raizPlanear;
+    private TreeNode raizHacer;
+    private TreeNode raizVerificar;
+    private TreeNode raizActuar;
+    
     private StreamedContent fileDownload;
 
     //filtros
     private List<Establecimiento> establecimientoList = new ArrayList<>();
     private List<Establecimiento> establecimientosPermitidosList= new ArrayList<>();
     private List<Establecimiento> establecimientoListSeleccionado = new ArrayList<>();
+    private List<String> nombresSeccion=new ArrayList<>();
+    private List<String> nombresDetalle=new ArrayList<>();
+    private List<String> nombresItem=new ArrayList<>();
+    private Ciclo ciclo;    
+    private StreamedContent fileDownloadTree;
+    private EvaluacionAdjuntos eadj=new EvaluacionAdjuntos();
+    private TreeNode selectedNode;
+    
+    
 
 //    private List<Usuarios> usuariosList = new ArrayList<>();
 //    private Usuarios usuariosSeleccionado;
@@ -90,10 +122,315 @@ public class UIPlanMaestro {
         try {            
             Sesion s = (Sesion) UtilJSF.getBean("sesion");
             establecimientoList = new ArrayList<>();
-            establecimientoList.addAll(s.getEstablecimientoList());            
+            planMaestro=new PlanMaestro();
+            establecimientoList.addAll(s.getEstablecimientoList());    
+            
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }
+    }
+    
+    public void rootCiclos() throws Exception{
+        
+        planMaestro= (PlanMaestro) UtilJSF.getBean("varPlanMaestro");
+        
+        GestorCiclo gestorCiclo=new GestorCiclo();
+        GestorEstandar gestorEstandar=new GestorEstandar(); 
+        GestorEvaluacionAdjuntos gestorEvaluacionAdjuntos=new GestorEvaluacionAdjuntos();
+        GestorAdjuntosCategoria gestorAdjuntosCategoria=new GestorAdjuntosCategoria();
+        List<Seccion> secciones=new ArrayList<>();
+        List<SeccionDetalle> sDetalles=new ArrayList<>();
+        List<SeccionDetalleItems> sdItems=new ArrayList<>();
+        List<AdjuntosCategoria> sdiCategorias=new ArrayList<>();
+        List<AdjuntosCategoriaTipo> acTipos=new ArrayList<>();
+        List<EvaluacionAdjuntos> nombresAdjuntos=new ArrayList<>();
+                
+                
+        raizPlanear= new DefaultTreeNode("PLANEAR", null);                                
+            secciones = gestorEstandar.cargarListaSecciones("P");
+            for (Seccion seccion : secciones) {
+                if (seccion != null ) {
+                    TreeNode s = new DefaultTreeNode(seccion.getNombre(),raizPlanear);
+                    sDetalles= gestorEstandar.cargarListaSecciondetalles("P", seccion.getSeccionPK().getCodSeccion());
+                    for(SeccionDetalle seccionDetalle:sDetalles){
+                        TreeNode d=new DefaultTreeNode(seccionDetalle.getNombre(), s);
+                        if(seccionDetalle!=null){
+                            sdItems=gestorEstandar.cargarListaSecciondetalleitemss("P", seccion.getSeccionPK().getCodSeccion(), seccionDetalle.getSeccionDetallePK().getCodDetalle());
+                            for(SeccionDetalleItems seccionDetalleItems: sdItems){
+                                TreeNode i=new DefaultTreeNode(seccionDetalleItems.getNombre(), d);
+                                if(seccionDetalleItems != null){                                                
+                                    sdiCategorias=new ArrayList<>();
+                                    sdiCategorias.addAll((Collection<? extends AdjuntosCategoria>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoria(seccionDetalleItems.getSeccionDetalleItemsPK()));                                                                                                
+                                    for(AdjuntosCategoria aCategoria: sdiCategorias){
+                                        TreeNode c=new DefaultTreeNode(aCategoria.getNombre(), i);
+                                        if(aCategoria!=null){
+                                            acTipos=new ArrayList<>();
+                                            acTipos.addAll((Collection<? extends AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(aCategoria.getCodCategoria()));
+                                            for(AdjuntosCategoriaTipo aCategoriaTipo: acTipos){
+                                                TreeNode t=new DefaultTreeNode(aCategoriaTipo.getNombre(), c);
+                                                if( aCategoriaTipo!=null ){
+                                                    nombresAdjuntos=new ArrayList<>();
+                                                    nombresAdjuntos.addAll(gestorEvaluacionAdjuntos.cargarListaAdjuntosCategoriaTipo(planMaestro.getEstablecimiento().getCodigoEstablecimiento(),
+                                                            planMaestro.getEvaluacion().getEvaluacionPK().getCodEvaluacion().intValue(),"P",seccion.getSeccionPK().getCodSeccion(),
+                                                            seccionDetalle.getSeccionDetallePK().getCodDetalle(),seccionDetalleItems.getSeccionDetalleItemsPK().getCodItem(),aCategoria.getCodCategoria(),aCategoriaTipo.getAdjuntosCategoriaTipoPK().getCodCategoriaTipo()));
+                                                    Integer n=0;
+                                                    List<EvaluacionAdjuntos> nombresAdjuntoss=new ArrayList<>();                                                    
+                                                    EvaluacionAdjuntos ea=new EvaluacionAdjuntos();                                                    
+                                                    if(nombresAdjuntos.size()!=0){
+                                                        n=nombresAdjuntos.size()-1;                                                                                                        
+                                                        ea.setArchivo(nombresAdjuntos.get(n).getArchivo());
+                                                        nombresAdjuntoss.add(ea);
+                                                    }
+                                                    for(EvaluacionAdjuntos eAdjuntos:nombresAdjuntoss){
+                                                        TreeNode ad=new DefaultTreeNode(eAdjuntos.getArchivo(), t);
+                                                    }
+                                                    
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            
+            raizHacer= new DefaultTreeNode("HACER", null);                                
+            secciones = gestorEstandar.cargarListaSecciones("H");
+            for (Seccion seccion : secciones) {
+                if (seccion != null ) {
+                    TreeNode s = new DefaultTreeNode(seccion.getNombre(),raizHacer);
+                    sDetalles= gestorEstandar.cargarListaSecciondetalles("H", seccion.getSeccionPK().getCodSeccion());
+                    for(SeccionDetalle seccionDetalle:sDetalles){
+                        TreeNode d=new DefaultTreeNode(seccionDetalle.getNombre(), s);
+                        if(seccionDetalle!=null){
+                            sdItems=gestorEstandar.cargarListaSecciondetalleitemss("H", seccion.getSeccionPK().getCodSeccion(), seccionDetalle.getSeccionDetallePK().getCodDetalle());
+                            for(SeccionDetalleItems seccionDetalleItems: sdItems){
+                                TreeNode i=new DefaultTreeNode(seccionDetalleItems.getNombre(), d);
+                                if(seccionDetalleItems != null){                                                
+                                    sdiCategorias=new ArrayList<>();
+                                    sdiCategorias.addAll((Collection<? extends AdjuntosCategoria>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoria(seccionDetalleItems.getSeccionDetalleItemsPK()));                                                                                                
+                                    for(AdjuntosCategoria aCategoria: sdiCategorias){
+                                        TreeNode c=new DefaultTreeNode(aCategoria.getNombre(), i);
+                                        if(aCategoria!=null){
+                                            acTipos=new ArrayList<>();
+                                            acTipos.addAll((Collection<? extends AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(aCategoria.getCodCategoria()));
+                                            for(AdjuntosCategoriaTipo aCategoriaTipo: acTipos){
+                                                TreeNode t=new DefaultTreeNode(aCategoriaTipo.getNombre(), c);
+                                                if( aCategoriaTipo!=null ){
+                                                    nombresAdjuntos=new ArrayList<>();
+                                                    nombresAdjuntos.addAll(gestorEvaluacionAdjuntos.cargarListaAdjuntosCategoriaTipo(planMaestro.getEstablecimiento().getCodigoEstablecimiento(),
+                                                            planMaestro.getEvaluacion().getEvaluacionPK().getCodEvaluacion().intValue(),"H",seccion.getSeccionPK().getCodSeccion(),
+                                                            seccionDetalle.getSeccionDetallePK().getCodDetalle(),seccionDetalleItems.getSeccionDetalleItemsPK().getCodItem(),aCategoria.getCodCategoria(),aCategoriaTipo.getAdjuntosCategoriaTipoPK().getCodCategoriaTipo()));
+                                                    Integer n=0;
+                                                    List<EvaluacionAdjuntos> nombresAdjuntoss=new ArrayList<>();                                                    
+                                                    EvaluacionAdjuntos ea=new EvaluacionAdjuntos();                                                    
+                                                    if(nombresAdjuntos.size()!=0){
+                                                        n=nombresAdjuntos.size()-1;                                                                                                        
+                                                        ea.setArchivo(nombresAdjuntos.get(n).getArchivo());
+                                                        nombresAdjuntoss.add(ea);
+                                                    }
+                                                    for(EvaluacionAdjuntos eAdjuntos:nombresAdjuntoss){
+                                                        TreeNode ad=new DefaultTreeNode(eAdjuntos.getArchivo(), t);
+                                                    }
+                                                    
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            raizVerificar= new DefaultTreeNode("VERIFICAR", null);                                
+            secciones = gestorEstandar.cargarListaSecciones("V");
+            for (Seccion seccion : secciones) {
+                if (seccion != null ) {
+                    TreeNode s = new DefaultTreeNode(seccion.getNombre(),raizVerificar);
+                    sDetalles= gestorEstandar.cargarListaSecciondetalles("V", seccion.getSeccionPK().getCodSeccion());
+                    for(SeccionDetalle seccionDetalle:sDetalles){
+                        TreeNode d=new DefaultTreeNode(seccionDetalle.getNombre(), s);
+                        if(seccionDetalle!=null){
+                            sdItems=gestorEstandar.cargarListaSecciondetalleitemss("V", seccion.getSeccionPK().getCodSeccion(), seccionDetalle.getSeccionDetallePK().getCodDetalle());
+                            for(SeccionDetalleItems seccionDetalleItems: sdItems){
+                                TreeNode i=new DefaultTreeNode(seccionDetalleItems.getNombre(), d);
+                                if(seccionDetalleItems != null){                                                
+                                    sdiCategorias=new ArrayList<>();
+                                    sdiCategorias.addAll((Collection<? extends AdjuntosCategoria>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoria(seccionDetalleItems.getSeccionDetalleItemsPK()));                                                                                                
+                                    for(AdjuntosCategoria aCategoria: sdiCategorias){
+                                        TreeNode c=new DefaultTreeNode(aCategoria.getNombre(), i);
+                                        if(aCategoria!=null){
+                                            acTipos=new ArrayList<>();
+                                            acTipos.addAll((Collection<? extends AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(aCategoria.getCodCategoria()));
+                                            for(AdjuntosCategoriaTipo aCategoriaTipo: acTipos){
+                                                TreeNode t=new DefaultTreeNode(aCategoriaTipo.getNombre(), c);
+                                                if( aCategoriaTipo!=null ){
+                                                    nombresAdjuntos=new ArrayList<>();
+                                                    nombresAdjuntos.addAll(gestorEvaluacionAdjuntos.cargarListaAdjuntosCategoriaTipo(planMaestro.getEstablecimiento().getCodigoEstablecimiento(),
+                                                            planMaestro.getEvaluacion().getEvaluacionPK().getCodEvaluacion().intValue(),"V",seccion.getSeccionPK().getCodSeccion(),
+                                                            seccionDetalle.getSeccionDetallePK().getCodDetalle(),seccionDetalleItems.getSeccionDetalleItemsPK().getCodItem(),aCategoria.getCodCategoria(),aCategoriaTipo.getAdjuntosCategoriaTipoPK().getCodCategoriaTipo()));
+                                                    Integer n=0;
+                                                    List<EvaluacionAdjuntos> nombresAdjuntoss=new ArrayList<>();                                                    
+                                                    EvaluacionAdjuntos ea=new EvaluacionAdjuntos();                                                    
+                                                    if(nombresAdjuntos.size()!=0){
+                                                        n=nombresAdjuntos.size()-1;                                                                                                        
+                                                        ea.setArchivo(nombresAdjuntos.get(n).getArchivo());
+                                                        nombresAdjuntoss.add(ea);
+                                                    }
+                                                    for(EvaluacionAdjuntos eAdjuntos:nombresAdjuntoss){
+                                                        TreeNode ad=new DefaultTreeNode(eAdjuntos.getArchivo(), t);
+                                                    }
+                                                    
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            raizActuar= new DefaultTreeNode("ACTUAR", null);                                
+            secciones = gestorEstandar.cargarListaSecciones("A");
+            for (Seccion seccion : secciones) {
+                if (seccion != null ) {
+                    TreeNode s = new DefaultTreeNode(seccion.getNombre(),raizActuar);
+                    sDetalles= gestorEstandar.cargarListaSecciondetalles("A", seccion.getSeccionPK().getCodSeccion());
+                    for(SeccionDetalle seccionDetalle:sDetalles){
+                        TreeNode d=new DefaultTreeNode(seccionDetalle.getNombre(), s);
+                        if(seccionDetalle!=null){
+                            sdItems=gestorEstandar.cargarListaSecciondetalleitemss("A", seccion.getSeccionPK().getCodSeccion(), seccionDetalle.getSeccionDetallePK().getCodDetalle());
+                            for(SeccionDetalleItems seccionDetalleItems: sdItems){
+                                TreeNode i=new DefaultTreeNode(seccionDetalleItems.getNombre(), d);
+                                if(seccionDetalleItems != null){                                                
+                                    sdiCategorias=new ArrayList<>();
+                                    sdiCategorias.addAll((Collection<? extends AdjuntosCategoria>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoria(seccionDetalleItems.getSeccionDetalleItemsPK()));                                                                                                
+                                    for(AdjuntosCategoria aCategoria: sdiCategorias){
+                                        TreeNode c=new DefaultTreeNode(aCategoria.getNombre(), i);
+                                        if(aCategoria!=null){
+                                            acTipos=new ArrayList<>();
+                                            acTipos.addAll((Collection<? extends AdjuntosCategoriaTipo>) gestorAdjuntosCategoria.cargarListaAdjuntosCategoriaTipo(aCategoria.getCodCategoria()));
+                                            for(AdjuntosCategoriaTipo aCategoriaTipo: acTipos){
+                                                TreeNode t=new DefaultTreeNode(aCategoriaTipo.getNombre(), c);
+                                                if( aCategoriaTipo!=null ){
+                                                    nombresAdjuntos=new ArrayList<>();
+                                                    nombresAdjuntos.addAll(gestorEvaluacionAdjuntos.cargarListaAdjuntosCategoriaTipo(planMaestro.getEstablecimiento().getCodigoEstablecimiento(),
+                                                            planMaestro.getEvaluacion().getEvaluacionPK().getCodEvaluacion().intValue(),"A",seccion.getSeccionPK().getCodSeccion(),
+                                                            seccionDetalle.getSeccionDetallePK().getCodDetalle(),seccionDetalleItems.getSeccionDetalleItemsPK().getCodItem(),aCategoria.getCodCategoria(),aCategoriaTipo.getAdjuntosCategoriaTipoPK().getCodCategoriaTipo()));
+                                                    Integer n=0;
+                                                    List<EvaluacionAdjuntos> nombresAdjuntoss=new ArrayList<>();                                                    
+                                                    EvaluacionAdjuntos ea=new EvaluacionAdjuntos();                                                    
+                                                    if(nombresAdjuntos.size()!=0){
+                                                        n=nombresAdjuntos.size()-1;                                                                                                        
+                                                        ea.setArchivo(nombresAdjuntos.get(n).getArchivo());
+                                                        nombresAdjuntoss.add(ea);
+                                                    }
+                                                    for(EvaluacionAdjuntos eAdjuntos:nombresAdjuntoss){
+                                                        TreeNode ad=new DefaultTreeNode(eAdjuntos.getArchivo(), t);
+                                                    }
+                                                    
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        
+        /*GestorEstandar gestorEstandar=new GestorEstandar();
+        List<Seccion> seccionList=gestorEstandar.cargarListaSecciones("P");
+        List<SeccionDetalle> seccionDetalleList=gestorEstandar.cargarListaSecciondetalle(COMPONENTES_REFRESCAR, Integer.SIZE)
+        
+        
+        for(int i=0;i<seccionList.size();i++){
+            nombresSeccion.add(seccionList.get(i).getNombre());
+        }
+        
+        adicionarSeccion(nombresSeccion, raizPlanear);
+        adicionarDetalle(nombresDetalle, raizHacer);*/
+    }
+    
+    
+    public void onNodeSelect(NodeSelectEvent event) throws FileNotFoundException, Exception {
+        
+        String node = event.getTreeNode().getData().toString();                
+        this.getFileDownloadTree();
+        
+    }
+    
+    public void onNodeExpand(NodeExpandEvent event) {
+        
+        
+    }
+ 
+    public void onNodeCollapse(NodeCollapseEvent event) {
+        
+        
+    }
+ 
+    public void onNodeUnselect(NodeUnselectEvent event) {
+        
+        
+    }   
+
+
+    public StreamedContent getFileDownloadTree() {
+        try {
+            GestorEvaluacionAdjuntos gestorEvaluacionAdjuntos=new GestorEvaluacionAdjuntos();
+        
+        String archivo=(String) UtilJSF.getBean("varPlanear");
+        
+            
+            String direccion= gestorEvaluacionAdjuntos.cargarDireccionAdjunto(archivo);
+            
+            if(!direccion.equals("")){
+                InputStream stream = new FileInputStream(direccion);
+                fileDownloadTree = new DefaultStreamedContent(stream, null, archivo);            
+                return fileDownloadTree;
+            }            
+            
+        } catch (Exception e) {
+            
+        }
+        return null;
+    }
+
+    public void setFileDownloadTree(StreamedContent fileDownloadTree) {
+        this.fileDownloadTree = fileDownloadTree;
+    }
+    
+    public void adicionarSeccion(List<String> nombres, TreeNode raiz){
+        
+        for(String nombre: nombres ){
+            TreeNode no=new DefaultTreeNode(nombres,raiz);            
+        }        
+        
+    }
+    
+    public void adicionarDetalle(List<String> nombres, TreeNode raiz){
+        
+        for(String nombre: nombres ){
+            TreeNode no=new DefaultTreeNode(nombres,raiz);            
+        }        
+        
+    }
+    
+    public void adicionarItem(List<String> nombres, TreeNode raiz){
+        
+        for(String nombre: nombres ){
+            TreeNode no=new DefaultTreeNode(nombres,raiz);            
+        }        
+        
     }
     
     public void cargarEstablecimientos() {
@@ -118,7 +455,9 @@ public class UIPlanMaestro {
             return ("/seguimiento/pm/vuwopux.xhtml?faces-redirect=true");            
             }else{
                 this.procesarPlanMaestro();
-                return ("/seguimiento/plan-maestro.xhtml?faces-redirect=true");
+                rootCiclos();
+                return ("/seguimiento/plan-maestro_1.xhtml?faces-redirect=true");
+                
             }
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
@@ -368,7 +707,55 @@ public class UIPlanMaestro {
 
     public void eliminar() {
     }
+    
+    public TreeNode getSelectedNode() {
+        return selectedNode;
+    }
 
+    public void setSelectedNode(TreeNode selectedNode) {
+        this.selectedNode = selectedNode;
+    }
+
+    public List<String> getNombresSeccion() {
+        return nombresSeccion;
+    }
+
+    public void setNombresSeccion(List<String> nombresSeccion) {
+        this.nombresSeccion = nombresSeccion;
+    }
+
+    public TreeNode getRaizPlanear() {
+        return raizPlanear;
+    }
+
+    public void setRaizPlanear(TreeNode raizPlanear) {
+        this.raizPlanear = raizPlanear;
+    }
+
+    public TreeNode getRaizHacer() {
+        return raizHacer;
+    }
+
+    public void setRaizHacer(TreeNode raizHacer) {
+        this.raizHacer = raizHacer;
+    }
+
+    public TreeNode getRaizVerificar() {
+        return raizVerificar;
+    }
+
+    public void setRaizVerificar(TreeNode raizVerificar) {
+        this.raizVerificar = raizVerificar;
+    }
+
+    public TreeNode getRaizActuar() {
+        return raizActuar;
+    }
+
+    public void setRaizActuar(TreeNode raizActuar) {
+        this.raizActuar = raizActuar;
+    }
+    
     public String getComponentesRefrescar() {
         return COMPONENTES_REFRESCAR;
     }
