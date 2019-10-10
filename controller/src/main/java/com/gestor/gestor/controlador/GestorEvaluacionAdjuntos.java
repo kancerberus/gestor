@@ -78,6 +78,17 @@ public class GestorEvaluacionAdjuntos extends Gestor {
             this.cerrarConexion();
         }
     }
+    
+    public String cargarDireccionAdjunto(String archivo) throws Exception{
+        try{            
+            this.abrirConexion();
+            EvaluacionAdjuntosDAO evaluacionAdjuntosDAO = new EvaluacionAdjuntosDAO(conexion);
+            String direccionArchivo=evaluacionAdjuntosDAO.cargarDireccionArchivo(archivo);
+            return direccionArchivo;
+            } finally {
+            this.cerrarConexion();
+        }
+    }
 
     public Collection<? extends EvaluacionAdjuntos> cargarEvaluacionAdjuntos(EvaluacionAdjuntosPK evaluacionAdjuntosPK) throws Exception {
         try {
@@ -93,7 +104,18 @@ public class GestorEvaluacionAdjuntos extends Gestor {
             this.cerrarConexion();
         }
     }
-
+    
+    public Collection<? extends EvaluacionAdjuntos> cargarListaAdjuntosCategoriaTipo(Integer codEstablecimiento,Integer codEvaluacion,String codCiclo,Integer codSeccion,Integer codDetalle, Integer codItem,Integer codCategoria,Integer codCatTipo) throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionAdjuntosDAO evaluacionAdjuntosDAO = new EvaluacionAdjuntosDAO(conexion);            
+            return evaluacionAdjuntosDAO.cargarListaAdjuntosCategoriaTipo(codEstablecimiento, codEvaluacion, codCiclo, codSeccion, codDetalle, codItem, codCategoria, codCatTipo);                                                
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    
     public void actualizarEstadoEvaluacionAdjuntos(EvaluacionAdjuntos ea) throws Exception {
         try {
             this.abrirConexion();

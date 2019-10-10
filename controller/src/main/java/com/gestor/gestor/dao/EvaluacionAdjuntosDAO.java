@@ -65,6 +65,36 @@ public class EvaluacionAdjuntosDAO {
             }
         }
     }
+    
+    public String cargarDireccionArchivo(String archivo) throws SQLException{
+        ResultSet rs = null;
+        Consulta consulta = null;
+        String direccion="";
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    " SELECT nombre "
+                    + " FROM gestor.evaluacion_adjuntos "
+                    + " WHERE archivo='"+archivo+"'"
+            );
+            
+            rs = consulta.ejecutar(sql);
+            
+            while (rs.next()) {
+                direccion=rs.getString("nombre");
+            }
+            
+            return direccion;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+            
+    }
 
     public Collection<? extends EvaluacionAdjuntos> cargarEvaluacionAdjuntos(EvaluacionAdjuntosPK pk) throws SQLException {
         ResultSet rs = null;
@@ -133,13 +163,12 @@ public class EvaluacionAdjuntosDAO {
         try {
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    " SELECT ea.archivo archivo, ea.version  " +
+                    " SELECT ea.archivo archivo, ea.version, ea.nombre " +
                     " from gestor.evaluacion_adjuntos ea " +
                     " where cod_evaluacion='"+codEvaluacion+"' and codigo_establecimiento='"+codEstablecimiento+"'  " +
                     " and cod_ciclo='"+codCiclo+"' and cod_seccion='"+codSeccion+"' " +
                     " and cod_detalle='"+codDetalle+"' and cod_item='"+codItem+"' " +
-                    " and cod_categoria='"+codCategoria+"' and cod_categoria_tipo='"+codCatTipo+"' and ea.version = ( " +
-                    " SELECT MAX( version )  FROM gestor.evaluacion_adjuntos)"
+                    " and cod_categoria='"+codCategoria+"' and cod_categoria_tipo='"+codCatTipo+"' "
             );
             
             rs = consulta.ejecutar(sql);
@@ -149,8 +178,7 @@ public class EvaluacionAdjuntosDAO {
             while (rs.next()) {
                 EvaluacionAdjuntos ev=new EvaluacionAdjuntos(null, "", rs.getString("archivo"));
                 evaluacionAdjuntos.add(ev);
-            }            
-        
+            }                                    
             return evaluacionAdjuntos;
         } finally {
             if (rs != null) {
