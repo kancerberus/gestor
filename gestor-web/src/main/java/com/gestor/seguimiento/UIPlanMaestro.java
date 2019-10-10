@@ -89,6 +89,7 @@ public class UIPlanMaestro {
     private TreeNode raizActuar;
     
     private StreamedContent fileDownload;
+    private Boolean siAdjunto;
 
     //filtros
     private List<Establecimiento> establecimientoList = new ArrayList<>();
@@ -99,8 +100,7 @@ public class UIPlanMaestro {
     private List<String> nombresItem=new ArrayList<>();
     private Ciclo ciclo;    
     private StreamedContent fileDownloadTree;
-    private EvaluacionAdjuntos eadj=new EvaluacionAdjuntos();
-    private TreeNode selectedNode;
+    private EvaluacionAdjuntos eadj=new EvaluacionAdjuntos();    
     
     
 
@@ -144,9 +144,10 @@ public class UIPlanMaestro {
         List<AdjuntosCategoria> sdiCategorias=new ArrayList<>();
         List<AdjuntosCategoriaTipo> acTipos=new ArrayList<>();
         List<EvaluacionAdjuntos> nombresAdjuntos=new ArrayList<>();
+        
                 
                 
-        raizPlanear= new DefaultTreeNode("PLANEAR", null);                                
+        raizPlanear= new DefaultTreeNode("PLANEAR", null);               
             secciones = gestorEstandar.cargarListaSecciones("P");
             for (Seccion seccion : secciones) {
                 if (seccion != null ) {
@@ -169,19 +170,22 @@ public class UIPlanMaestro {
                                             for(AdjuntosCategoriaTipo aCategoriaTipo: acTipos){
                                                 TreeNode t=new DefaultTreeNode(aCategoriaTipo.getNombre(), c);
                                                 if( aCategoriaTipo!=null ){
+                                                    siAdjunto=true;
                                                     nombresAdjuntos=new ArrayList<>();
                                                     nombresAdjuntos.addAll(gestorEvaluacionAdjuntos.cargarListaAdjuntosCategoriaTipo(planMaestro.getEstablecimiento().getCodigoEstablecimiento(),
                                                             planMaestro.getEvaluacion().getEvaluacionPK().getCodEvaluacion().intValue(),"P",seccion.getSeccionPK().getCodSeccion(),
                                                             seccionDetalle.getSeccionDetallePK().getCodDetalle(),seccionDetalleItems.getSeccionDetalleItemsPK().getCodItem(),aCategoria.getCodCategoria(),aCategoriaTipo.getAdjuntosCategoriaTipoPK().getCodCategoriaTipo()));
                                                     Integer n=0;
                                                     List<EvaluacionAdjuntos> nombresAdjuntoss=new ArrayList<>();                                                    
-                                                    EvaluacionAdjuntos ea=new EvaluacionAdjuntos();                                                    
-                                                    if(nombresAdjuntos.size()!=0){
+                                                    EvaluacionAdjuntos ea=new EvaluacionAdjuntos();                                                       
+                                                    
+                                                    if(nombresAdjuntos.size()!=0){                                                                                                                
                                                         n=nombresAdjuntos.size()-1;                                                                                                        
                                                         ea.setArchivo(nombresAdjuntos.get(n).getArchivo());
                                                         nombresAdjuntoss.add(ea);
                                                     }
                                                     for(EvaluacionAdjuntos eAdjuntos:nombresAdjuntoss){
+                                                        
                                                         TreeNode ad=new DefaultTreeNode(eAdjuntos.getArchivo(), t);
                                                     }
                                                     
@@ -361,6 +365,8 @@ public class UIPlanMaestro {
     }
     
     
+    
+    
     public void onNodeSelect(NodeSelectEvent event) throws FileNotFoundException, Exception {
         
         String node = event.getTreeNode().getData().toString();                
@@ -455,7 +461,7 @@ public class UIPlanMaestro {
             return ("/seguimiento/pm/vuwopux.xhtml?faces-redirect=true");            
             }else{
                 this.procesarPlanMaestro();
-                rootCiclos();
+                rootCiclos();                
                 return ("/seguimiento/plan-maestro_1.xhtml?faces-redirect=true");
                 
             }
@@ -672,6 +678,21 @@ public class UIPlanMaestro {
         }
         return null;
     }
+    
+    public String getStyleEstado() {
+        String style = "";
+                
+        if(siAdjunto==true){
+            style=" background: #4cae4c;";
+        }else{
+            style="";
+        }
+        
+        return style;
+        
+    }
+        
+    
     public String administrar(){        
         return("/seguimiento/titulo.xhtml?faces-redirect=true");
     }
@@ -706,15 +727,16 @@ public class UIPlanMaestro {
     }
 
     public void eliminar() {
-    }
-    
-    public TreeNode getSelectedNode() {
-        return selectedNode;
+    }   
+
+    public Boolean getSiAdjunto() {
+        return siAdjunto;
     }
 
-    public void setSelectedNode(TreeNode selectedNode) {
-        this.selectedNode = selectedNode;
+    public void setSiAdjunto(Boolean siAdjunto) {
+        this.siAdjunto = siAdjunto;
     }
+
 
     public List<String> getNombresSeccion() {
         return nombresSeccion;

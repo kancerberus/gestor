@@ -20,12 +20,12 @@
                 <p:progressBar style="margin-left: 80%; margin: 0% 1% 1% 80%;" value="#{uiPlanMaestro.avanceEvaluacion}" labelTemplate="Avance Evaluación {value}%" displayOnly="true" interval="10"/>
             
                 
-                <p:tree value="#{uiPlanMaestro.raizPlanear}" var="varPlanear" dynamic="true" orientation="horizontal"  filterBy="#{varPlanear}"
-                        selectionMode="single" selection="#{uiPlanMaestro.selectedNode}"
+                <p:tree  value="#{uiPlanMaestro.raizPlanear}" var="varPlanear" dynamic="true" orientation="horizontal"  filterBy="#{varPlanear}"
+                         style="background: #5c9ddb; width: 60%"
                         >                                        
                     
-                    <p:treeNode  expandedIcon="ui-icon-folder-open" collapsedIcon=" ui-icon-folder-collapsed">                        
-                        <p:commandButton  ajax="disabled" value="#{varPlanear}" update=":formPlanMaestro:messages"  >
+                    <p:treeNode  expandedIcon="ui-icon-folder-open" collapsedIcon=" ui-icon-folder-collapsed"   >                        
+                        <p:commandButton  ajax="disabled" disabled="#{empty uiPlanMaestro.fileDownloadTree}" value="#{varPlanear}" update=":formPlanMaestro:messages" style=" #{not empty uiPlanMaestro.fileDownloadTree ? 'background: #4cae4c;':'background: #ffffff;'}"  >
                             <p:fileDownload value="#{uiPlanMaestro.fileDownloadTree}" />
                         </p:commandButton>
                     </p:treeNode>
