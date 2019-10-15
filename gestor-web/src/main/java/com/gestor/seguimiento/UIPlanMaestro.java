@@ -391,10 +391,22 @@ public class UIPlanMaestro {
 
 
     public StreamedContent getFileDownloadTree() {
+        
+        String archivo;
         try {
             GestorEvaluacionAdjuntos gestorEvaluacionAdjuntos=new GestorEvaluacionAdjuntos();
         
-        String archivo=(String) UtilJSF.getBean("varPlanear");
+        archivo=(String) UtilJSF.getBean("varPlanear");
+        if(archivo==null){
+            archivo=(String) UtilJSF.getBean("varHacer");
+        }if(archivo==null){
+            archivo=(String) UtilJSF.getBean("varVerificar");
+        }if(archivo==null){
+            archivo=(String) UtilJSF.getBean("varActuar");
+        }
+        
+        
+        
         
             
             String direccion= gestorEvaluacionAdjuntos.cargarDireccionAdjunto(archivo);
@@ -458,7 +470,8 @@ public class UIPlanMaestro {
             UtilJSF.setBean("planMaestro", pm, UtilJSF.SESSION_SCOPE);
             if(s.getUsuarios().getRoles().getCodigoRol()==4){
                 this.procesarPlanMaestro();
-            return ("/seguimiento/pm/vuwopux.xhtml?faces-redirect=true");            
+                rootCiclos();
+            return ("/seguimiento/pm/vuwopux_1.xhtml?faces-redirect=true");            
             }else{
                 this.procesarPlanMaestro();
                 rootCiclos();                
