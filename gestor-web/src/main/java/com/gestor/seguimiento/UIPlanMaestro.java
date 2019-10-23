@@ -32,10 +32,14 @@ import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorEstandar;
 import com.gestor.seguimiento.controlador.GestorPlanMaestro;
 import com.gestor.seguimiento.controlador.GestorPlanTitulo;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -48,6 +52,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -90,6 +95,10 @@ public class UIPlanMaestro {
     
     private StreamedContent fileDownload;
     private Boolean siAdjunto;
+    
+    private TreeNode selectedNode;    
+    private String node;
+    private File destination;
 
     //filtros
     private List<Establecimiento> establecimientoList = new ArrayList<>();
@@ -364,93 +373,57 @@ public class UIPlanMaestro {
         adicionarDetalle(nombresDetalle, raizHacer);*/
     }
     
-    
-    
-    
-    public void onNodeSelect(NodeSelectEvent event) throws FileNotFoundException, Exception {
-        
-        String node = event.getTreeNode().getData().toString();                
-        this.getFileDownloadTree();
-        
-    }
-    
-    public void onNodeExpand(NodeExpandEvent event) {
-        
-        
-    }
- 
-    public void onNodeCollapse(NodeCollapseEvent event) {
-        
-        
-    }
- 
-    public void onNodeUnselect(NodeUnselectEvent event) {
-        
-        
-    }   
 
+    
+    
+    public void onNodeSelect(NodeSelectEvent event) throws FileNotFoundException, Exception {        
+        
+        GestorEvaluacionAdjuntos gestorEvaluacionAdjuntos=new GestorEvaluacionAdjuntos();
+        
+        String nodes = event.getTreeNode().getData().toString();                                
+        
+        String direccion= gestorEvaluacionAdjuntos.cargarDireccionAdjunto(nodes);       
+        
+        if(direccion!=""){
+            
+            InputStream inputStream = new FileInputStream(direccion);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-    public StreamedContent getFileDownloadTree() {
-        
-        String archivo;
-        try {
-            GestorEvaluacionAdjuntos gestorEvaluacionAdjuntos=new GestorEvaluacionAdjuntos();
-        
-        archivo=(String) UtilJSF.getBean("varPlanear");
-        if(archivo==null){
-            archivo=(String) UtilJSF.getBean("varHacer");
-        }if(archivo==null){
-            archivo=(String) UtilJSF.getBean("varVerificar");
-        }if(archivo==null){
-            archivo=(String) UtilJSF.getBean("varActuar");
+                byte[] buffer = new byte[1024];
+                baos = new ByteArrayOutputStream();
+
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    baos.write(buffer, 0, bytesRead);
+                }
+
+            fileDownloadTree=new DefaultStreamedContent(new ByteArrayInputStream(baos.toByteArray()));
+
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
+
+            session.setAttribute("pdfBytesArray", baos.toByteArray());        
+        }else{
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
+            session.setAttribute("pdfBytesArray", node);
         }
         
         
-        
-        
-            
-            String direccion= gestorEvaluacionAdjuntos.cargarDireccionAdjunto(archivo);
-            
-            if(!direccion.equals("")){
-                InputStream stream = new FileInputStream(direccion);
-                fileDownloadTree = new DefaultStreamedContent(stream, null, archivo);            
-                return fileDownloadTree;
-            }            
-            
-        } catch (Exception e) {
-            
-        }
-        return null;
     }
+
+    public File getDestination() {
+        return destination;
+    }
+
+    public void setDestination(File destination) {
+        this.destination = destination;
+    }    
 
     public void setFileDownloadTree(StreamedContent fileDownloadTree) {
         this.fileDownloadTree = fileDownloadTree;
     }
-    
-    public void adicionarSeccion(List<String> nombres, TreeNode raiz){
-        
-        for(String nombre: nombres ){
-            TreeNode no=new DefaultTreeNode(nombres,raiz);            
-        }        
-        
-    }
-    
-    public void adicionarDetalle(List<String> nombres, TreeNode raiz){
-        
-        for(String nombre: nombres ){
-            TreeNode no=new DefaultTreeNode(nombres,raiz);            
-        }        
-        
-    }
-    
-    public void adicionarItem(List<String> nombres, TreeNode raiz){
-        
-        for(String nombre: nombres ){
-            TreeNode no=new DefaultTreeNode(nombres,raiz);            
-        }        
-        
-    }
-    
+            
     public void cargarEstablecimientos() {
         try {                              
             establecimientosPermitidosList = new ArrayList<>();
@@ -704,7 +677,15 @@ public class UIPlanMaestro {
         return style;
         
     }
-        
+
+    public String getNode() {
+        return node;
+    }
+
+    public void setNode(String node) {
+        this.node = node;
+    }
+
     
     public String administrar(){        
         return("/seguimiento/titulo.xhtml?faces-redirect=true");
@@ -741,6 +722,14 @@ public class UIPlanMaestro {
 
     public void eliminar() {
     }   
+
+    public TreeNode getSelectedNode() {
+        return selectedNode;
+    }
+
+    public void setSelectedNode(TreeNode selectedNode) {
+        this.selectedNode = selectedNode;
+    }
 
     public Boolean getSiAdjunto() {
         return siAdjunto;

@@ -21,37 +21,46 @@
             
                 
                 <p:tree  value="#{uiPlanMaestro.raizPlanear}" var="varPlanear" dynamic="true" orientation="horizontal"  filterBy="#{varPlanear}"
-                         style="background: #5c9ddb; width: 60%"
+                         style="background: #5c9ddb; width: 60%" selectionMode="single" selection="#{uiPlanMaestro.selectedNode}" 
                         >                                        
                     
+                    <p:ajax event="select" update="@(.dlgpdf),formPlanMaestro" oncomplete="PF('dlg1').show();"  listener="#{uiPlanMaestro.onNodeSelect}" />
+                    
                     <p:treeNode  expandedIcon="ui-icon-folder-open" collapsedIcon=" ui-icon-folder-collapsed"   >                        
-                        <p:commandButton  ajax="disabled" disabled="#{empty uiPlanMaestro.fileDownloadTree}" value="#{varPlanear}" update=":formPlanMaestro:messages" style=" #{not empty uiPlanMaestro.fileDownloadTree ? 'background: #4cae4c;':'background: #ffffff;'}"  >
-                            <p:fileDownload value="#{uiPlanMaestro.fileDownloadTree}" />
-                        </p:commandButton>
+                        <h:outputText value="#{varPlanear}"/>
                     </p:treeNode>
                 </p:tree>
                 
-                <p:tree value="#{uiPlanMaestro.raizHacer}" var="varHacer" dynamic="true" orientation="horizontal"  filterBy="#{raizHacer}">
+                <p:tree value="#{uiPlanMaestro.raizHacer}" var="varHacer" dynamic="true" orientation="horizontal"  filterBy="#{raizHacer}"
+                        selectionMode="single" selection="#{uiPlanMaestro.selectedNode}"                         
+                        >
+                    
+                    <p:ajax event="select" update="@(.dlgpdf),formPlanMaestro" oncomplete="PF('dlg1').show();"  listener="#{uiPlanMaestro.onNodeSelect}" />
+                    
                     <p:treeNode  expandedIcon="ui-icon-folder-open" collapsedIcon=" ui-icon-folder-collapsed">
-                        <p:commandButton  ajax="disabled" disabled="#{empty uiPlanMaestro.fileDownloadTree}" value="#{varHacer}" update=":formPlanMaestro:messages" style=" #{not empty uiPlanMaestro.fileDownloadTree ? 'background: #4cae4c;':'background: #ffffff;'}"  >
-                            <p:fileDownload value="#{uiPlanMaestro.fileDownloadTree}" />
-                        </p:commandButton>                        
+                        <h:outputText value="#{varHacer}"/>
                     </p:treeNode>
                 </p:tree>
                 
-                <p:tree value="#{uiPlanMaestro.raizVerificar}" var="varVerificar" dynamic="true" orientation="horizontal"  filterBy="#{raizVerificar}">
+                <p:tree value="#{uiPlanMaestro.raizVerificar}" var="varVerificar" dynamic="true" orientation="horizontal"  filterBy="#{raizVerificar}"
+                        selectionMode="single" selection="#{uiPlanMaestro.selectedNode}"                         
+                        >
+                    
+                    <p:ajax event="select" update="@(.dlgpdf),formPlanMaestro" oncomplete="PF('dlg1').show();"  listener="#{uiPlanMaestro.onNodeSelect}" />
+                    
                     <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon=" ui-icon-folder-collapsed">
-                        <p:commandButton  ajax="disabled" disabled="#{empty uiPlanMaestro.fileDownloadTree}" value="#{varVerificar}" update=":formPlanMaestro:messages" style=" #{not empty uiPlanMaestro.fileDownloadTree ? 'background: #4cae4c;':'background: #ffffff;'}"  >
-                            <p:fileDownload value="#{uiPlanMaestro.fileDownloadTree}" />
-                        </p:commandButton>                        
+                        <h:outputText value="#{varVerificar}"/>
                     </p:treeNode>
                 </p:tree>
                 
-                <p:tree value="#{uiPlanMaestro.raizActuar}" var="varActuar" dynamic="true" orientation="horizontal"  filterBy="#{raizActuar}">
+                <p:tree value="#{uiPlanMaestro.raizActuar}" var="varActuar" dynamic="true" orientation="horizontal"  filterBy="#{raizActuar}"
+                        selectionMode="single" selection="#{uiPlanMaestro.selectedNode}"                         
+                        >
+                    
+                    <p:ajax event="select" update="@(.dlgpdf),formPlanMaestro" oncomplete="PF('dlg1').show();"  listener="#{uiPlanMaestro.onNodeSelect}" />
+                    
                     <p:treeNode  expandedIcon="ui-icon-folder-open" collapsedIcon=" ui-icon-folder-collapsed">
-                        <p:commandButton  ajax="disabled" disabled="#{empty uiPlanMaestro.fileDownloadTree}" value="#{varActuar}" update=":formPlanMaestro:messages" style=" #{not empty uiPlanMaestro.fileDownloadTree ? 'background: #4cae4c;':'background: #ffffff;'}"  >
-                            <p:fileDownload value="#{uiPlanMaestro.fileDownloadTree}" />
-                        </p:commandButton>                                                
+                        <h:outputText value="#{varActuar}"/>
                     </p:treeNode>
                 </p:tree>
             <p:separator/>
@@ -62,6 +71,12 @@
                 <ui:include src="#{dialogo.src}"/>
             </p:dialog>
             <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}"  update="dialog" />            
-        </h:form>
+            
+            
+            <p:dialog styleClass="dlgpdf" header="PDF" widgetVar="dlg1" width="100%" height="100%" >
+                <p:media value="/pdfPreviewServlet" player="pdf" width="1200px" height="600px" >                    
+                </p:media>
+            </p:dialog>            
+        </h:form>        
     </ui:define>
 </ui:composition>
