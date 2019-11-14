@@ -79,7 +79,7 @@ public class UIExportar extends HttpServlet {
             Class.forName(controlador).newInstance();
             String url = "jdbc:postgresql://localhost:5432/gestor";
             String usuario = "postgres";
-            String clave = "1234";
+            String clave = "Sptadmin323611";
             Connection conexion = java.sql.DriverManager.getConnection(url, usuario, clave);
             //reportFile = new File(this.getClass().getClassLoader().getResource("valoracion.jasper").getPath());
             reportFile = new File(sc.getRealPath("/reportes/" + nomReporte + ".jasper"));

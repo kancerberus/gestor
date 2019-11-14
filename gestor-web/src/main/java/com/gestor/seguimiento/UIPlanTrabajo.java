@@ -806,8 +806,6 @@ public class UIPlanTrabajo implements Serializable{
     public void setPtaPdf(String ptaPdf) {
         this.ptaPdf = ptaPdf;
     }
-
-
     
     public Integer getCons() {
         return cons;

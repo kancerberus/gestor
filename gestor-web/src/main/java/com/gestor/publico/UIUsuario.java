@@ -11,14 +11,22 @@ import com.gestor.entity.UtilJSF;
 import com.gestor.entity.UtilLog;
 import com.gestor.entity.UtilMSG;
 import com.gestor.gestor.Evaluacion;
+import com.gestor.gestor.EvaluacionPuntajeSeccionDetalleCombos;
+import com.gestor.gestor.UIEvaluacion;
+import com.gestor.gestor.controlador.GestorEvaluacion;
+import com.gestor.gestor.controlador.GestorEvaluacionAdjuntos;
 import com.gestor.gestor.controlador.GestorPuntajes;
+import com.gestor.gestor.controlador.GestorSeccionDetalleItems;
 import com.gestor.modelo.Sesion;
 import com.gestor.publico.controlador.GestorEstablecimiento;
 import com.gestor.publico.controlador.GestorConfiguracion;
 import com.gestor.publico.controlador.GestorLista;
 import com.gestor.publico.controlador.GestorUsuario;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -54,7 +62,6 @@ public class UIUsuario {
     private boolean cancelarActivo = false;
     private boolean consultarActivo = false;
     private boolean volverActivo = false;
-
 
     public void cancelar() {
     }
@@ -118,7 +125,7 @@ public class UIUsuario {
     }
 
     public String validarUsuario() throws Exception {
-        Sesion sesion = new Sesion();
+        final Sesion sesion = new Sesion();
         Usuarios usuarios = new Usuarios();
 
         Establecimiento e;
@@ -130,6 +137,8 @@ public class UIUsuario {
             GestorGeneral gestorGeneral = new GestorGeneral();
             GestorPuntajes gestorPuntajes = new GestorPuntajes();
             GestorLista gestorLista = new GestorLista();
+            
+                
 
             usuarios.setUsuario(usuario);
             usuarios.setClave(clave);
@@ -153,7 +162,7 @@ public class UIUsuario {
                 sesion.setCiclos(gestorGeneral.cargarCiclosEvaluacion());
                 sesion.setPuntajesList(gestorPuntajes.cargarPuntajes(e.getCodigoEstablecimiento()));
                 sesion.setEstablecimientoList(usuarios.getListaEstablecimientos());
-                sesion.setListaVigenciaArchivos(gestorLista.cargarLista(App.LISTA_VIGENCIA_ARCHIVOS));
+                sesion.setListaVigenciaArchivos(gestorLista.cargarLista(App.LISTA_VIGENCIA_ARCHIVOS));                
                 
                 usuarios = new Usuarios();
                 UtilJSF.setBean("usuarios", usuarios, UtilJSF.SESSION_SCOPE);

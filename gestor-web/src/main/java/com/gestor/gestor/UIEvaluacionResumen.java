@@ -95,7 +95,7 @@ public class UIEvaluacionResumen {
             GestorEvaluacion gestorEvaluacion = new GestorEvaluacion();
             evaluacion = (Evaluacion) UtilJSF.getBean("varEvaluacionResumen");
             evaluacionResumenList = new ArrayList<>();
-            GestorEvaluacionResumen gestorEvaluacionResumen = new GestorEvaluacionResumen();
+            GestorEvaluacionResumen gestorEvaluacionResumen = new GestorEvaluacionResumen();            
             
             evaluacionResumenList.addAll(gestorEvaluacionResumen.cargarEvaluacionResumen(evaluacion.getEvaluacionPK().getCodEvaluacion(), evaluacion.getEvaluacionPK().getCodigoEstablecimiento(), evaluacion.getFechaResumen()));
             evaluacion.setResumenesList(gestorEvaluacion.getResumenesFromJson(evaluacion.getResumenes()));
