@@ -77,6 +77,13 @@ public class EvaluacionAdjuntos implements Serializable {
         this.nombre = nombre;
         this.archivo = archivo;
     }
+    
+    public EvaluacionAdjuntos(EvaluacionAdjuntosPK evaluacionAdjuntosPK,Integer version) {
+        this.evaluacionAdjuntosPK = evaluacionAdjuntosPK;        
+        this.version = version;
+    }
+    
+    
 
     public EvaluacionAdjuntos(Long codEvaluacion, int codigoEstablecimiento, String codCiclo, int codSeccion, int codDetalle, int codItem, Long codAdjunto) {
         this.evaluacionAdjuntosPK = new EvaluacionAdjuntosPK(codEvaluacion, codigoEstablecimiento, codCiclo, codSeccion, codDetalle, codItem, codAdjunto);

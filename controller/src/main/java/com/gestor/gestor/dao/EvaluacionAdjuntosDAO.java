@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -188,6 +189,69 @@ public class EvaluacionAdjuntosDAO {
                 consulta.desconectar();
             }
         }
+    }
+    
+    public Collection<? extends EvaluacionAdjuntos> cargarArchivosMaxVersion(Long codEvaluacion) throws SQLException {    
+        ResultSet rs = null;
+        Consulta consulta = null;                
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    " SELECT ea1.cod_ciclo, ea1.cod_seccion, ea1.cod_detalle, ea1.cod_item, ea1.cod_categoria, ea1.cod_categoria_tipo, max(version) ver " +
+                    " from gestor.evaluacion_adjuntos ea1 " +
+                    " where cod_evaluacion='"+codEvaluacion.intValue()+"' " +
+                    " group by ea1.cod_ciclo, ea1.cod_seccion, ea1.cod_detalle, ea1.cod_item, ea1.cod_categoria, ea1.cod_categoria_tipo "
+            );
+            
+            rs = consulta.ejecutar(sql);
+            
+            Collection<EvaluacionAdjuntos> evaluacionAdjuntos = new ArrayList<>();
+            
+            while (rs.next()) {
+                EvaluacionAdjuntos ev=new EvaluacionAdjuntos(new EvaluacionAdjuntosPK(codEvaluacion , 0, rs.getString("cod_ciclo"), rs.getInt("cod_seccion"), rs.getInt("cod_detalle"), rs.getInt("cod_item"), new AdjuntosCategoria(rs.getInt("cod_categoria")), new AdjuntosCategoriaTipoPK(0,rs.getInt("cod_categoria_tipo"))), rs.getInt("ver"));
+                evaluacionAdjuntos.add(ev);
+            }                                    
+            return evaluacionAdjuntos;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
+    
+    
+    public Date cargarFechaVigencia(EvaluacionAdjuntos ea) throws SQLException{
+        ResultSet rs = null;
+        Consulta consulta = null;                
+        Date fecha_vigencia=null;
+    
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    " SELECT ea1.fecha_fin_vigencia fv" +
+                    " FROM gestor.evaluacion_adjuntos ea1 " +
+                    " WHERE ea1.cod_evaluacion=12 and ea1.cod_ciclo='P' and ea1.cod_seccion=1 and ea1.cod_detalle=1 and ea1.cod_item=1 " +
+                    " and ea1.cod_categoria=1 and ea1.cod_categoria_tipo=1 and version=9 "
+            );
+            
+            rs = consulta.ejecutar(sql);
+            
+            while (rs.next()) {
+                fecha_vigencia=rs.getDate("fv");
+            }                                    
+            return fecha_vigencia;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+        
     }
            
                     

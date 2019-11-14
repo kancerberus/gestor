@@ -67,6 +67,33 @@ public class GeneralDAO {
             }
         }
     }
+    
+    public Date cargarFechaActualizo(String usuario) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        Date fechaActualizo=null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    " SELECT fecha_actualizo "
+                    + " from public.fecha_actualizacion "
+                    + " where usuario='"+usuario+"' "
+            );
+            rs = consulta.ejecutar(sql);
+            if(rs.next()){
+                fechaActualizo=rs.getDate("fecha_actualizo");
+            }
+            
+            return fechaActualizo;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 
     public Date now() throws SQLException {
          ResultSet rs = null;

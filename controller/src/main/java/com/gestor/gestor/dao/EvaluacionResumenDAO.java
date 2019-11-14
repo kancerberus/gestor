@@ -78,17 +78,12 @@ public class EvaluacionResumenDAO {
             }            
             consulta = new Consulta(this.conexion);
             StringBuilder sql = new StringBuilder(
-                    "SELECT cod_evaluacion, codigo_establecimiento, cod_resumen, documento_usuario,"
-                    + " cod_ciclo, ciclo, numeral, ciclo_calificacion, seccion, seccion_peso,"
-                    + " seccion_orden, seccion_calificacion, detalle, detalle_peso, detalle_calificacion,"
-                    + " detalle_orden, items, items_detalle, items_peso, items_orden,"
-                    + " cod_puntaje, califica, fecha_registro"
-                    + " FROM gestor.evaluacion_resumen"
-                    + " WHERE cod_evaluacion = '"+codEvaluacion+"' and codigo_establecimiento='"+codigoEstablecimiento+"' and fecha_registro::TIMESTAMP >= '"+fulreg+"' " 
-                    + " GROUP BY cod_evaluacion, codigo_establecimiento, fecha_registro, cod_resumen, documento_usuario, " 
-                    + " cod_ciclo, ciclo, numeral, ciclo_calificacion, seccion, seccion_peso, seccion_orden, seccion_calificacion, detalle, detalle_peso, detalle_calificacion, " 
-                    + " detalle_orden, items, items_detalle, items_peso, items_orden, cod_puntaje, califica, numeral "
-                    + " ORDER BY numeral"
+                    " SELECT cod_evaluacion, codigo_establecimiento, cod_resumen, documento_usuario, cod_ciclo, ciclo, numeral, ciclo_calificacion, seccion, seccion_peso, seccion_orden, seccion_calificacion, detalle, detalle_peso, detalle_calificacion, detalle_orden, items, items_detalle, items_peso, items_orden, cod_puntaje, califica, fecha_registro " +
+                    " FROM gestor.evaluacion_resumen " +
+                    " WHERE cod_evaluacion = '"+codEvaluacion+"' and codigo_establecimiento='"+codigoEstablecimiento+"' " +
+                    " GROUP BY cod_evaluacion, codigo_establecimiento, fecha_registro, cod_resumen, documento_usuario,  cod_ciclo, ciclo, numeral, ciclo_calificacion, seccion, seccion_peso, seccion_orden, seccion_calificacion, detalle, detalle_peso, detalle_calificacion,  detalle_orden, items, items_detalle, items_peso, items_orden, cod_puntaje, califica, numeral " +
+                    " order by fecha_registro desc " +
+                    " fetch first 60 rows only "
             );
             rs = consulta.ejecutar(sql);
             List<EvaluacionResumen> evaluacionResumens = new ArrayList<>();

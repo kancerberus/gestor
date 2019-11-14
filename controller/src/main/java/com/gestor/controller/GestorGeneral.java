@@ -70,6 +70,16 @@ public class GestorGeneral extends Gestor implements Serializable {
         }
     }
     
+    public Date cargarFechaActualizo(String usuario) throws Exception{
+        try {
+            this.abrirConexion();
+            GeneralDAO generalDAO = new GeneralDAO(this.conexion);
+            return generalDAO.cargarFechaActualizo(usuario);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
 
 
     public List<Ciclo> cargarCiclosEvaluacion() throws Exception {

@@ -90,7 +90,7 @@ public class SeccionDetalleItemsDAO {
         }
     }
 
-    public void upsertEvaluacionPuntajeSeccionDetalleCombos(EvaluacionPuntajeSeccionDetalleCombos epsc) throws SQLException {
+     public void upsertEvaluacionPuntajeSeccionDetalleCombos(EvaluacionPuntajeSeccionDetalleCombos epsc) throws SQLException {
         Consulta consulta = null;
         try {
             consulta = new Consulta(this.conexion);

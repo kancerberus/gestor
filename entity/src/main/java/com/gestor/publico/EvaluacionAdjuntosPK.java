@@ -5,6 +5,10 @@
  */
 package com.gestor.publico;
 
+import com.gestor.gestor.AdjuntosCategoria;
+import com.gestor.gestor.AdjuntosCategoriaTipo;
+import com.gestor.gestor.AdjuntosCategoriaTipoPK;
+import com.gestor.matriz.CategoriaRiesgo;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -38,6 +42,10 @@ public class EvaluacionAdjuntosPK implements Serializable {
     @Basic(optional = false)
     @Column(name = "cod_adjunto")
     private Long codAdjunto;
+    
+    private AdjuntosCategoria adjuntoCategoria;    
+    private AdjuntosCategoriaTipoPK adjuntoCategoriaTipoPk;
+    
 
     public EvaluacionAdjuntosPK() {
     }
@@ -61,6 +69,18 @@ public class EvaluacionAdjuntosPK implements Serializable {
         this.codItem = codItem;
     }
 
+    public EvaluacionAdjuntosPK(Long codEvaluacion, int codigoEstablecimiento, String codCiclo, int codSeccion, int codDetalle, int codItem, AdjuntosCategoria adjuntosCategoria, AdjuntosCategoriaTipoPK adjuntosCategoriaTipoPk) {
+        this.codEvaluacion = codEvaluacion;
+        this.codigoEstablecimiento = codigoEstablecimiento;
+        this.codCiclo = codCiclo;
+        this.codSeccion = codSeccion;
+        this.codDetalle = codDetalle;
+        this.codItem = codItem;
+        this.codAdjunto = codAdjunto;
+        this.adjuntoCategoria=adjuntosCategoria;
+        this.adjuntoCategoriaTipoPk=adjuntosCategoriaTipoPk;
+    }
+    
     public Long getCodEvaluacion() {
         return codEvaluacion;
     }

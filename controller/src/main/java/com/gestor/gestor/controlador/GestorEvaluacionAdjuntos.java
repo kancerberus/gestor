@@ -20,6 +20,7 @@ import com.gestor.publico.dao.ResponsableDAO;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -100,6 +101,26 @@ public class GestorEvaluacionAdjuntos extends Gestor {
                 ea.getAdjuntosCategoria().setAdjuntosCategoriaTipoList((List<AdjuntosCategoriaTipo>) adjuntosCategoriaDAO.cargarListaAdjuntosCategoriaTipo(ea.getAdjuntosCategoria().getCodCategoria()));
             }
             return evaluacionAdjuntosList;
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends EvaluacionAdjuntos> cargarArchivosMaxVersion(Long codEvaluacion) throws Exception{
+        try {
+            this.abrirConexion();
+            EvaluacionAdjuntosDAO evaluacionAdjuntosDAO = new EvaluacionAdjuntosDAO(conexion);            
+            return evaluacionAdjuntosDAO.cargarArchivosMaxVersion(codEvaluacion);
+        } finally {
+            this.cerrarConexion();
+        }
+    }
+    
+    public Date cargarFechaVigencia(EvaluacionAdjuntos ea) throws Exception{
+        try {
+            this.abrirConexion();
+            EvaluacionAdjuntosDAO evaluacionAdjuntosDAO = new EvaluacionAdjuntosDAO(conexion);            
+            return evaluacionAdjuntosDAO.cargarFechaVigencia(ea);
         } finally {
             this.cerrarConexion();
         }
