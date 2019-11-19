@@ -80,6 +80,14 @@ public class EvaluacionAdjuntosPK implements Serializable {
         this.adjuntoCategoria=adjuntosCategoria;
         this.adjuntoCategoriaTipoPk=adjuntosCategoriaTipoPk;
     }
+
+    public AdjuntosCategoria getAdjuntoCategoria() {
+        return adjuntoCategoria;
+    }
+
+    public AdjuntosCategoriaTipoPK getAdjuntoCategoriaTipoPk() {
+        return adjuntoCategoriaTipoPk;
+    }
     
     public Long getCodEvaluacion() {
         return codEvaluacion;

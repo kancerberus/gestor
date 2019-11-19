@@ -54,6 +54,7 @@ public class PlanMaestro implements Serializable, Cloneable {
     private Evaluacion evaluacion;
     private PlanTitulo planTitulo;
     private List<PlanTitulo> planTituloList;
+    private Integer numArchivosVencidos;
 
     public PlanMaestro() {
     }
@@ -66,6 +67,14 @@ public class PlanMaestro implements Serializable, Cloneable {
         this.planMaestroPK = planMaestroPK;
         this.fechaRegistro = fechaRegistro;
         this.fechaActualiza = fechaActualiza;
+    }
+
+    public Integer getNumArchivosVencidos() {
+        return numArchivosVencidos;
+    }
+
+    public void setNumArchivosVencidos(Integer numArchivosVencidos) {
+        this.numArchivosVencidos = numArchivosVencidos;
     }
 
     public PlanMaestro(Long codEvaluacion, int codigoEstablecimiento, Long codMaestro) {

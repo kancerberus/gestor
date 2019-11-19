@@ -233,8 +233,8 @@ public class EvaluacionAdjuntosDAO {
             StringBuilder sql = new StringBuilder(
                     " SELECT ea1.fecha_fin_vigencia fv" +
                     " FROM gestor.evaluacion_adjuntos ea1 " +
-                    " WHERE ea1.cod_evaluacion=12 and ea1.cod_ciclo='P' and ea1.cod_seccion=1 and ea1.cod_detalle=1 and ea1.cod_item=1 " +
-                    " and ea1.cod_categoria=1 and ea1.cod_categoria_tipo=1 and version=9 "
+                    " WHERE ea1.cod_evaluacion='"+ea.getEvaluacionAdjuntosPK().getCodEvaluacion()+"' and ea1.cod_ciclo='"+ea.getEvaluacionAdjuntosPK().getCodCiclo()+"' and ea1.cod_seccion='"+ea.getEvaluacionAdjuntosPK().getCodSeccion()+"' and ea1.cod_detalle='"+ea.getEvaluacionAdjuntosPK().getCodDetalle()+"' and ea1.cod_item='"+ea.getEvaluacionAdjuntosPK().getCodItem()+"' " +
+                    " and ea1.cod_categoria='"+ea.getEvaluacionAdjuntosPK().getAdjuntoCategoria().getCodCategoria()+"' and ea1.cod_categoria_tipo='"+ea.getEvaluacionAdjuntosPK().getAdjuntoCategoriaTipoPk().getCodCategoriaTipo()+"' and version='"+ea.getVersion()+"' "
             );
             
             rs = consulta.ejecutar(sql);

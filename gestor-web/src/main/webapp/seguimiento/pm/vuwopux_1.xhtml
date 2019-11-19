@@ -5,63 +5,111 @@
                 xmlns:p="http://primefaces.org/ui"                
                 xmlns:f="http://java.sun.com/jsf/core"
                 template="/modelovista.xhtml">
-    <ui:define name="content">
+        <ui:define name="content">
         <h:form enctype="multipart/form-data" id="formPlanMaestro" >
              <p:growl id="messages" showDetail="true" />
             <h1>
-                PLAN MAESTRO
+                ARBOL DE DOCUMENTOS
             </h1>
-            <div align="left">
-                <p:graphicImage  value="#{planMaestro.establecimiento.logo}" cache="false" width="80"/>
-                <p:graphicImage url="/resources/imagenes/establecimientos/establecimiento.png" width="40" 
-                    rendered="#{empty planMaestro.establecimiento.logo}"/>                                                                        
-                <p:outputLabel style="font-size: 25px; font-family: bolder"  value="#{planMaestro.establecimiento.nombre}"/>                                     
-            </div>
-                <p:progressBar style="margin-left: 80%; margin: 0% 1% 1% 80%;" value="#{uiPlanMaestro.avanceEvaluacion}" labelTemplate="Avance Evaluación {value}%" displayOnly="true" interval="10"/>
-            
-                
-                <p:tree  value="#{uiPlanMaestro.raizPlanear}" var="varPlanear" dynamic="true" orientation="horizontal"  filterBy="#{varPlanear}"
-                         style="background: #5c9ddb; width: 60%"
+             <p:panel header="" >
+                 <table border="0" width="30%" align="left" >                 
+                 <tbody>
+                     <tr>
+                         <td>
+                             <p:graphicImage style="margin-left: 40%;min-width: 40px;max-width: 90px" value="#{uiPlanMaestro.establecimiento.logo}"  cache="false" width="10%" />
+                                            <p:graphicImage style="min-width: 40px;max-width: 90px;float: left" url="/resources/imagenes/establecimientos/establecimiento.png" width="40" 
+                                                            rendered="#{empty uiPlanMaestro.establecimiento.logo}"/>                                                                                                        
+                             
+                         </td>
+                     </tr>
+                     <tr>
+                         <td>
+                             <p:outputLabel style="margin-left: 5%;font-weight: bolder;font-size: 24px" value="#{uiPlanMaestro.establecimiento.nombre}"/>                                                                                               
+                         </td>
+                     </tr>
+                 </tbody>
+             </table>
+             
+                 <table border="0" width="30%" style="margin-left: 70%" >                 
+                 <tbody>
+                     <tr>
+                         <td>
+                             <p:outputLabel style="margin-left: 50%;font-weight: bolder;font-size: 20px"  value="Estadisticas Evaluacion "/>                          
+                         </td>
+                     </tr>
+                     <tr>
+                         <td>
+                             <p:outputLabel style="margin-left: 50%;font-weight: bolder"  value="Numero de Archivos Vencidos:  "/>
+                             <p:outputLabel value="#{planMaestro.numArchivosVencidos}" style="font-size: 20px;font-weight: bolder;background: yellow" />                                             
+                         </td>
+                     </tr>
+                     <tr>
+                         <td>
+                             <p:progressBar style="margin-left: 30%;width: 70%" value="#{uiPlanMaestro.avanceEvaluacion}" labelTemplate="Avance Evaluación {value}%" displayOnly="true" interval="10"/>                                                          
+                         </td>
+                     </tr>
+                     <tr>
+                         <td height="25px" align="right">                             
+                             <p:outputLabel value="Fecha: " style=";font-weight: bolder;font-size: 15px" />
+                             <p:clock pattern=" dd/MM/yyyy HH:mm:ss" >
+                                 
+                             </p:clock>
+                         </td>
+                     </tr>
+                 </tbody>
+             </table>
+             </p:panel>
+             
+             
+             <p:panel header=" ">
+                 <p:tree  value="#{uiPlanMaestro.raizPlanear}" var="varPlanear" dynamic="true" orientation="horizontal"  filterBy="#{varPlanear}"
+                         style="background: #5c9ddb; width: 60%" 
                         >                                        
-                    
-                    <p:treeNode  expandedIcon="ui-icon-folder-open" collapsedIcon=" ui-icon-folder-collapsed"   >                        
-                        <p:commandButton  ajax="disabled" disabled="#{empty uiPlanMaestro.fileDownloadTree}" value="#{varPlanear}" update=":formPlanMaestro:messages" style=" #{not empty uiPlanMaestro.fileDownloadTree ? 'background: #4cae4c;':'background: #ffffff;'}"  >
-                            <p:fileDownload value="#{uiPlanMaestro.fileDownloadTree}" />
+                     <p:treeNode rendererType="file" expandedIcon="ui-icon-folder-open" collapsedIcon=" ui-icon-folder-collapsed" >
+                         <p:commandButton ajax="false" value="#{varPlanear}" ignoreAutoUpdate="true"   > 
+                            <p:fileDownload value="#{uiPlanMaestro.getFileDownloadTree(varPlanear)}" />
                         </p:commandButton>
                     </p:treeNode>
                 </p:tree>
                 
-                <p:tree value="#{uiPlanMaestro.raizHacer}" var="varHacer" dynamic="true" orientation="horizontal"  filterBy="#{raizHacer}">
-                    <p:treeNode  expandedIcon="ui-icon-folder-open" collapsedIcon=" ui-icon-folder-collapsed">
-                        <p:commandButton  ajax="disabled" disabled="#{empty uiPlanMaestro.fileDownloadTree}" value="#{varHacer}" update=":formPlanMaestro:messages" style=" #{not empty uiPlanMaestro.fileDownloadTree ? 'background: #4cae4c;':'background: #ffffff;'}"  >
-                            <p:fileDownload value="#{uiPlanMaestro.fileDownloadTree}" />
-                        </p:commandButton>                        
+                <p:tree value="#{uiPlanMaestro.raizHacer}" var="varHacer" dynamic="true" orientation="horizontal"  filterBy="#{raizHacer}"
+                        selectionMode="single" selection="#{uiPlanMaestro.selectedNode}"                         
+                        >                    
+                    <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon=" ui-icon-folder-collapsed" >
+                        <p:commandButton ajax="false" value="#{varHacer}"  > 
+                            <p:fileDownload value="#{uiPlanMaestro.getFileDownloadTree(varHacer)}"/>
+                        </p:commandButton>
+                    </p:treeNode>                    
+                </p:tree>
+                
+                <p:tree value="#{uiPlanMaestro.raizVerificar}" var="varVerificar" dynamic="true" orientation="horizontal"  filterBy="#{raizVerificar}"
+                        selectionMode="single" selection="#{uiPlanMaestro.selectedNode}"                         
+                        >
+                    
+                    <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon=" ui-icon-folder-collapsed" >
+                        <p:commandButton ajax="false" value="#{varVerificar}"  > 
+                            <p:fileDownload value="#{uiPlanMaestro.getFileDownloadTree(varVerificar)}"/>
+                        </p:commandButton>
                     </p:treeNode>
                 </p:tree>
                 
-                <p:tree value="#{uiPlanMaestro.raizVerificar}" var="varVerificar" dynamic="true" orientation="horizontal"  filterBy="#{raizVerificar}">
-                    <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon=" ui-icon-folder-collapsed">
-                        <p:commandButton  ajax="disabled" disabled="#{empty uiPlanMaestro.fileDownloadTree}" value="#{varVerificar}" update=":formPlanMaestro:messages" style=" #{not empty uiPlanMaestro.fileDownloadTree ? 'background: #4cae4c;':'background: #ffffff;'}"  >
-                            <p:fileDownload value="#{uiPlanMaestro.fileDownloadTree}" />
-                        </p:commandButton>                        
+                <p:tree value="#{uiPlanMaestro.raizActuar}" var="varActuar" dynamic="true" orientation="horizontal"  filterBy="#{raizActuar}"
+                        selectionMode="single" selection="#{uiPlanMaestro.selectedNode}"                         
+                        >
+                    
+                    <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon=" ui-icon-folder-collapsed" >
+                        <p:commandButton ajax="false" value="#{varActuar}"  > 
+                            <p:fileDownload value="#{uiPlanMaestro.getFileDownloadTree(varActuar)}"/>
+                        </p:commandButton>
                     </p:treeNode>
                 </p:tree>
-                
-                <p:tree value="#{uiPlanMaestro.raizActuar}" var="varActuar" dynamic="true" orientation="horizontal"  filterBy="#{raizActuar}">
-                    <p:treeNode  expandedIcon="ui-icon-folder-open" collapsedIcon=" ui-icon-folder-collapsed">
-                        <p:commandButton  ajax="disabled" disabled="#{empty uiPlanMaestro.fileDownloadTree}" value="#{varActuar}" update=":formPlanMaestro:messages" style=" #{not empty uiPlanMaestro.fileDownloadTree ? 'background: #4cae4c;':'background: #ffffff;'}"  >
-                            <p:fileDownload value="#{uiPlanMaestro.fileDownloadTree}" />
-                        </p:commandButton>                                                
-                    </p:treeNode>
-                </p:tree>
-            <p:separator/>
-
+             </p:panel>
 
             <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}" width="#{dialogo.width}"
                       onHide="limpiarModal()">
                 <ui:include src="#{dialogo.src}"/>
             </p:dialog>
-            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}"  update="dialog" />            
-        </h:form>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}"  update="dialog" />                      
+        </h:form>        
     </ui:define>
 </ui:composition>

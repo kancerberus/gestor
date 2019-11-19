@@ -40,6 +40,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -99,6 +100,7 @@ public class UIPlanMaestro {
     private TreeNode selectedNode;    
     private String node;
     private File destination;
+    Date hoy=new Date();
 
     //filtros
     private List<Establecimiento> establecimientoList = new ArrayList<>();
@@ -373,7 +375,7 @@ public class UIPlanMaestro {
         adicionarDetalle(nombresDetalle, raizHacer);*/
     }
     
-
+    
     
     
     public void onNodeSelect(NodeSelectEvent event) throws FileNotFoundException, Exception {        
@@ -382,9 +384,31 @@ public class UIPlanMaestro {
         
         String nodes = event.getTreeNode().getData().toString();                                
         
-        String direccion= gestorEvaluacionAdjuntos.cargarDireccionAdjunto(nodes);       
+        String direccion= gestorEvaluacionAdjuntos.cargarDireccionAdjunto(nodes); 
         
-        if(direccion!=""){
+        int ini=direccion.length()-3;
+        
+        
+        String fmt=direccion.substring(ini, direccion.length());
+        
+        
+        if(!fmt.equals("pdf")){
+            
+            InputStream inputStream = new FileInputStream(direccion);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                byte[] buffer = new byte[1024];
+                baos = new ByteArrayOutputStream();
+
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    baos.write(buffer, 0, bytesRead);
+                }
+
+            fileDownloadTree=new DefaultStreamedContent(new ByteArrayInputStream(baos.toByteArray()));
+            
+        }else{
+            if(direccion!=""){
             
             InputStream inputStream = new FileInputStream(direccion);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -403,13 +427,50 @@ public class UIPlanMaestro {
             HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
 
             session.setAttribute("pdfBytesArray", baos.toByteArray());        
-        }else{
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
-            session.setAttribute("pdfBytesArray", node);
+            }else{
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
+                session.setAttribute("pdfBytesArray", node);
+            }
         }
         
+       
         
+    }
+
+    public StreamedContent getFileDownloadTree(String name) throws Exception {
+        
+        try {
+            GestorEvaluacionAdjuntos gestorEvaluacionAdjuntos=new GestorEvaluacionAdjuntos();
+
+            String direccion= gestorEvaluacionAdjuntos.cargarDireccionAdjunto(name); 
+            
+            if(!direccion.equals("")){
+                InputStream inputStream = new FileInputStream(direccion);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                    byte[] buffer = new byte[1024];
+                    baos = new ByteArrayOutputStream();
+
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        baos.write(buffer, 0, bytesRead);
+                    }
+                    
+                fileDownloadTree=new DefaultStreamedContent(new ByteArrayInputStream(baos.toByteArray()),"", name);
+                return fileDownloadTree;
+            }
+            
+        } catch (Exception e) {
+            UtilMSG.addErrorMsg("Archivo No Existe", "El adjunto " + node+ ", no fue encontrado. Si el problema persiste contactenos para asistirle.");
+            UtilLog.generarLog(this.getClass(), e);
+        }
+        fileDownloadTree=null;
+        return fileDownloadTree;
+    }
+
+    public void setFileDownloadTree(StreamedContent fileDownloadTree) {
+        this.fileDownloadTree = fileDownloadTree;
     }
 
     public File getDestination() {
@@ -418,11 +479,7 @@ public class UIPlanMaestro {
 
     public void setDestination(File destination) {
         this.destination = destination;
-    }    
-
-    public void setFileDownloadTree(StreamedContent fileDownloadTree) {
-        this.fileDownloadTree = fileDownloadTree;
-    }
+    }      
             
     public void cargarEstablecimientos() {
         try {                              
@@ -437,10 +494,29 @@ public class UIPlanMaestro {
     public String consultarPlanMaestro() {
         try {
             Sesion s = (Sesion) UtilJSF.getBean("sesion");            
+            
             GestorPlanTitulo gestorPlanTitulo = new GestorPlanTitulo();
+            List<EvaluacionAdjuntos> evaluacionAdjuntosList=new ArrayList<>();
+            GestorEvaluacionAdjuntos gestorEvaluacionAdjuntos=new GestorEvaluacionAdjuntos();
             PlanMaestro pm = (PlanMaestro) UtilJSF.getBean("varPlanMaestro");
             pm.setPlanTituloList((List<PlanTitulo>) gestorPlanTitulo.cargarPlanTituloList(pm.getPlanMaestroPK().getCodigoEstablecimiento(), pm.getPlanMaestroPK().getCodEvaluacion()));
-            UtilJSF.setBean("planMaestro", pm, UtilJSF.SESSION_SCOPE);
+            UtilJSF.setBean("planMaestro", pm, UtilJSF.SESSION_SCOPE);            
+            evaluacion=pm.getEvaluacion();
+            establecimiento=pm.getEstablecimiento();
+            evaluacionAdjuntosList.addAll(gestorEvaluacionAdjuntos.cargarArchivosMaxVersion(pm.getEvaluacion().getEvaluacionPK().getCodEvaluacion()));           
+            Date fecha_vigencia=null;          
+           
+            Integer num=0;
+            for(int k=0; k<evaluacionAdjuntosList.size();k++){
+                //fecha vigencia de archivo de evaluacion
+                evaluacionAdjuntosList.get(k).getEvaluacionAdjuntosPK().setCodigoEstablecimiento(pm.getEvaluacion().getEvaluacionPK().getCodigoEstablecimiento());
+                fecha_vigencia= gestorEvaluacionAdjuntos.cargarFechaVigencia(evaluacionAdjuntosList.get(k));
+                if(hoy.after(fecha_vigencia)){                                        
+                    num++;
+                    pm.setNumArchivosVencidos(num);
+                }
+
+            }            
             if(s.getUsuarios().getRoles().getCodigoRol()==4){
                 this.procesarPlanMaestro();
                 rootCiclos();
@@ -582,11 +658,12 @@ public class UIPlanMaestro {
 
     }
     
+    
     public Integer getAvanceEvaluacion() {
         try {
-            PlanMaestro pm = (PlanMaestro) UtilJSF.getBean("planMaestro");
             GestorEvaluacion gestorEvaluacion = new GestorEvaluacion();
-            return gestorEvaluacion.avanceEvaluacion(pm.getEvaluacion().getEvaluacionPK().getCodigoEstablecimiento(), pm.getEvaluacion().getEvaluacionPK().getCodEvaluacion());
+            PlanMaestro pm = (PlanMaestro) UtilJSF.getBean("planMaestro");            
+            return gestorEvaluacion.avanceEvaluacion(pm.getPlanMaestroPK().getCodigoEstablecimiento(), pm.getPlanMaestroPK().getCodEvaluacion());            
         } catch (Exception e) {
             UtilLog.generarLog(this.getClass(), e);
         }
@@ -684,6 +761,16 @@ public class UIPlanMaestro {
 
     public void setNode(String node) {
         this.node = node;
+    }
+
+    public Date getHoy() {
+        SimpleDateFormat f=new SimpleDateFormat("dd/MM/yyyy");
+        f.format(hoy);
+        return hoy;
+    }
+
+    public void setHoy(Date hoy) {
+        this.hoy = hoy;
     }
 
     
