@@ -410,5 +410,45 @@ public class EvaluacionDAO {
             }
         }
     }
+    
+    public Collection<? extends Evaluacion> cargarListaEvaluacionesPlanMaestros() throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(this.conexion);
+            StringBuilder sql = new StringBuilder(
+                    " SELECT e.cod_evaluacion cod_evaluacion, e.codigo_establecimiento codigo_establecimiento, e.documento_usuario documento_usuario, e.fecha fecha, " +
+                    " e.fecha_registro fecha_registro, e.estado estado, e.resumenes resumenes, e.calificacion calificacion, e.peso peso, e.fecha_resumen fecha_resumen, " +
+                    " U.documento_usuario, U.nombre, U.apellido, ES.codigo_establecimiento, ES.nombre AS nombre_establecimiento " +
+                    " FROM gestor.evaluacion E " +
+                    " JOIN public.usuarios U USING (documento_usuario) " +
+                    " JOIN public.establecimiento ES USING (codigo_establecimiento) " +
+                    " where E.cod_evaluacion not in(select cod_evaluacion from seguimiento.plan_maestro) " +
+                    " order by cod_evaluacion"
+            );
+            rs = consulta.ejecutar(sql);
+            List<Evaluacion> evaluacions = new ArrayList<>();
+            while (rs.next()) {
+                Evaluacion e = new Evaluacion(new EvaluacionPK(rs.getLong("cod_evaluacion"), rs.getInt("codigo_establecimiento")), rs.getString("documento_usuario"),
+                        rs.getDate("fecha"), rs.getDate("fecha_registro"), rs.getString("estado"));
+                e.setUsuarios(new Usuarios(new UsuariosPK(rs.getString("documento_usuario")), rs.getString("nombre"), rs.getString("apellido")));
+                e.setEstablecimiento(new Establecimiento(rs.getInt("codigo_establecimiento"), rs.getString("nombre_establecimiento")));
+                e.setResumenes(rs.getString("resumenes"));
+                e.setCalificacion(rs.getDouble("calificacion"));
+                e.setPeso(rs.getDouble("peso"));
+                e.setFechaResumen(rs.getDate("fecha_resumen"));
+                evaluacions.add(e);
+            }
+            return evaluacions;
+
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (consulta != null) {
+                consulta.desconectar();
+            }
+        }
+    }
 
 }

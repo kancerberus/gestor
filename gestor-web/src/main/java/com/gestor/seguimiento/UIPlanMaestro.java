@@ -699,13 +699,41 @@ public class UIPlanMaestro {
 
     public String cargarPlanMaestro() {
         try {
+            
+            GestorEvaluacion gestorEvaluacion =new GestorEvaluacion();
+            GestorGeneral gestorGeneral=new GestorGeneral();
+            GestorPlanMaestro gestorPlanMaestro=new GestorPlanMaestro();
             Sesion s = (Sesion) UtilJSF.getBean("sesion");            
             UtilJSF.setBean("dialogo", new Dialogo(), UtilJSF.SESSION_SCOPE);
             
-//            Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
-            planMaestroList = new ArrayList<>();            
-            GestorPlanMaestro gestorPlanMaestro = new GestorPlanMaestro();
-            GestorGeneral gestorGeneral = new GestorGeneral();
+//          Usuarios usuarios = ((Sesion) UtilJSF.getBean("sesion")).getUsuarios();
+
+            ArrayList<Evaluacion> evaluacionPmList=new ArrayList<>();
+            
+            
+            evaluacionPmList.addAll(gestorEvaluacion.cargarListaEvaluacionesPlanMaestros());
+            
+            if(!evaluacionPmList.isEmpty()){
+                    for(int i=0;i<evaluacionPmList.size();i++){
+
+                    PlanMaestro pm = (PlanMaestro) new PlanMaestro(new PlanMaestroPK(                    
+                        evaluacionPmList.get(i).getEvaluacionPK().getCodEvaluacion(),
+                        evaluacionPmList.get(i).getEvaluacionPK().getCodigoEstablecimiento(),
+                        null
+                    ), gestorGeneral.now(), gestorGeneral.now()).clone();
+
+                    pm.getPlanMaestroPK().setCodMaestro(gestorPlanMaestro.consultarCodMaestroPlanMaestro(pm.getPlanMaestroPK().getCodigoEstablecimiento(), pm.getPlanMaestroPK().getCodEvaluacion()));
+                    if (pm.getPlanMaestroPK().getCodMaestro() == null
+                            || pm.getPlanMaestroPK().getCodMaestro() == 0) {
+                        pm.getPlanMaestroPK().setCodMaestro(gestorGeneral.nextval(GestorGeneral.SEGUIMIENTO_PLAN_MAESTRO_COD_MAESTRO_SEQ));
+                    }
+
+                    gestorPlanMaestro.procesarPlanMaestro(pm);
+
+                }
+            }            
+
+            planMaestroList = new ArrayList<>();                        
 
             List<String> condicionesConsulta = new ArrayList<>();
             GregorianCalendar gc = new GregorianCalendar();

@@ -12,19 +12,19 @@
                 ARBOL DE DOCUMENTOS
             </h1>
              <p:panel header="" >
-                 <table border="0" width="30%" align="left" >                 
+                 <table border="" width="30%" align="left" >                 
                  <tbody>
                      <tr>
-                         <td>
-                             <p:graphicImage style="margin-left: 40%;min-width: 40px;max-width: 90px" value="#{uiPlanMaestro.establecimiento.logo}"  cache="false" width="10%" />
+                         <td align="center">
+                             <p:graphicImage style="align-items: center" value="#{uiPlanMaestro.establecimiento.logo}"  cache="false" width="10%" />
                                             <p:graphicImage style="min-width: 40px;max-width: 90px;float: left" url="/resources/imagenes/establecimientos/establecimiento.png" width="40" 
                                                             rendered="#{empty uiPlanMaestro.establecimiento.logo}"/>                                                                                                        
                              
                          </td>
                      </tr>
                      <tr>
-                         <td>
-                             <p:outputLabel style="margin-left: 5%;font-weight: bolder;font-size: 24px" value="#{uiPlanMaestro.establecimiento.nombre}"/>                                                                                               
+                         <td align="center">
+                             <p:outputLabel style="align-content: center;align-items: center;justify-content: center;font-weight: bolder;font-size: 24px;position: relative" value="#{uiPlanMaestro.establecimiento.nombre}"/>                                                                                               
                          </td>
                      </tr>
                  </tbody>
@@ -34,12 +34,12 @@
                  <tbody>
                      <tr>
                          <td>
-                             <p:outputLabel style="margin-left: 50%;font-weight: bolder;font-size: 20px"  value="Estadisticas Evaluacion "/>                          
+                             <p:outputLabel style="margin-left: 50%;font-weight: bolder;font-size: 20px"  value="Estadísticas Evaluación "/>                          
                          </td>
                      </tr>
                      <tr>
                          <td>
-                             <p:outputLabel style="margin-left: 50%;font-weight: bolder"  value="Numero de Archivos Vencidos:  "/>
+                             <p:outputLabel style="margin-left: 50%;font-weight: bolder"  value="Número de Archivos Vencidos:  "/>
                              <p:outputLabel value="#{planMaestro.numArchivosVencidos}" style="font-size: 20px;font-weight: bolder;background: yellow" />                                             
                          </td>
                      </tr>

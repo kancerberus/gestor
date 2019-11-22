@@ -54,7 +54,7 @@ public class PlanMaestro implements Serializable, Cloneable {
     private Evaluacion evaluacion;
     private PlanTitulo planTitulo;
     private List<PlanTitulo> planTituloList;
-    private Integer numArchivosVencidos;
+    private Integer numArchivosVencidos=0;
 
     public PlanMaestro() {
     }

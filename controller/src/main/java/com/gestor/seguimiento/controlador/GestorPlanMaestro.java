@@ -38,6 +38,7 @@ public class GestorPlanMaestro extends Gestor {
 
             PlanMaestroDAO planMaestroDAO = new PlanMaestroDAO(conexion);
             return planMaestroDAO.cargarListaPlanMaestroGerente(condicion);
+            
         } finally {
             this.cerrarConexion();
         }

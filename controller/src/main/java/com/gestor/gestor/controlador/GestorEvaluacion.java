@@ -227,5 +227,15 @@ public class GestorEvaluacion extends Gestor {
             this.cerrarConexion();
         }
     }
+    
+    public Collection<? extends Evaluacion> cargarListaEvaluacionesPlanMaestros() throws Exception {
+        try {
+            this.abrirConexion();
+            EvaluacionDAO evaluacionDAO = new EvaluacionDAO(conexion);
+            return evaluacionDAO.cargarListaEvaluacionesPlanMaestros();
+        } finally {
+            this.cerrarConexion();
+        }
+    }
 
 }
