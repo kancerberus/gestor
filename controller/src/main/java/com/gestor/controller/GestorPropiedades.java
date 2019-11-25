@@ -15,7 +15,8 @@ public class GestorPropiedades {
         Properties p = new Properties();
         try {
 //    p.setProperty("urlbd", "jdbc:postgresql://localhost:5432/gestor");
-            p.setProperty("urlbd", "jdbc:postgresql://192.168.1.29:5432/gestor");
+            p.setProperty("urlbd", "jdbc:postgresql://localhost:5432/gestor");
+
             p.setProperty("controlador", "org.postgresql.Driver");
             p.setProperty("usuario", "postgres");
 //    p.setProperty("clave", "postgres");
