@@ -770,6 +770,21 @@ public class UIPlanMaestro {
         return null;
     }
     
+    
+    public void verificarSesion(){
+        try {
+            
+            Sesion sesion = (Sesion) UtilJSF.getBean("sesion");
+            
+            if(sesion.getUsuarios().getRoles().getCodigoRol()==4){
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/invalido.xhtml?faces-redirect=true");
+            }
+            
+        } catch (Exception e) {
+        }
+    
+    }
+    
     public String getStyleEstado() {
         String style = "";
                 
