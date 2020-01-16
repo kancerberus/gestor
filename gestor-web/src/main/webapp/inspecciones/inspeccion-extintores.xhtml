@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                                
+                template="/template.xhtml"                    
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formInspeccionExtintores" style="font-size: small">            
+            <p:panel id="panelInspeccionExtintores" header="FORMATO DE INSPECIONES DE EXTINTORES"  > 
+                <p:panelGrid columns="2" style="height: 40%;float: left"  >
+                    <p:outputLabel value="CODIGO: " style="font-weight: bolder;margin-left: 8%"/>
+                    <p:outputLabel  value=" SGSST-F03" style="font-weight: bolder"/>
+                    <p:outputLabel value="Vigencia: " style="font-weight: bolder"/>
+                    <p:calendar value="#{uiInspecciones.inspeccionExtintor.fechaVence}" pattern="dd/MM/yyyy" />
+                        
+                    <p:outputLabel value="Version: " style="font-weight: bolder"/>
+                    <p:outputLabel value=" 03 " style="font-weight: bolder"/>                    
+                </p:panelGrid>                
+                <p:panelGrid columns="2" style="margin-right: 20%;height: 40%" >
+                    <p:outputLabel value="Centro de Trabajo" style="font-weight: bolder;margin-left: 8%"/>
+                    <p:outputLabel value="#{uiInspecciones.inspeccionExtintor.centroTrabajo.nombre}" style="font-weight: bolder;margin-left: 8%"/>                    
+                    <p:outputLabel value="Responsable 1: " style="font-weight: bolder;"/>
+                    <p:inputText value="#{uiInspecciones.inspeccionExtintor.responsableuno}"/>
+                    <p:outputLabel value="Responsable 2: " style="font-weight: bolder;"/>
+                    <p:inputText value="#{uiInspecciones.inspeccionExtintor.responsabledos}"/>
+                </p:panelGrid>
+                <p:separator/>
+                <p:separator/>
+                <br></br>
+                <p:panelGrid id="In1" columns="6" style="font-weight: bolder">
+                    <p:outputLabel value="No Extintor: " style="font-weight: bolder;" />                    
+                    <p:inputMask value="#{uiInspecciones.inspeccionExtintor.noExtintor}" mask="9?9" />
+                    <p:outputLabel value="Area: " style="font-weight: bolder;"/>                    
+                    <p:inputText value="#{uiInspecciones.inspeccionExtintor.area}"/>
+                    <p:outputLabel value="Tipo: " style="font-weight: bolder;"/>                                        
+                    <p:inputText value="#{uiInspecciones.inspeccionExtintor.tipo}"/>
+                    <p:outputLabel value="Capacidad: (Libras) " style="font-weight: bolder;"/>                                        
+                    <p:inputMask value="#{uiInspecciones.inspeccionExtintor.capacidad}" mask="9?99"  />
+                    <p:outputLabel value="Cilindro: " style="font-weight: bolder;"/>                    
+                    
+                    <p:selectBooleanButton value="#{uiInspecciones.inspeccionExtintor.cilindro}" onLabel="Si" offLabel="No" style="width:60px" />
+                    <p:outputLabel value="Boquilla: " style="font-weight: bolder;"/>                    
+                    
+                    <p:selectBooleanButton value="#{uiInspecciones.inspeccionExtintor.boquilla}" onLabel="Si" offLabel="No" style="width:60px" />
+                    <p:outputLabel value="Manguera: " style="font-weight: bolder;"/>                    
+                    
+                    <p:selectBooleanButton value="#{uiInspecciones.inspeccionExtintor.manguera}" onLabel="Si" offLabel="No" style="width:60px" />
+                    
+                    <p:outputLabel value="Manómetro: " style="font-weight: bolder;"/>                    
+                    <p:selectBooleanButton value="#{uiInspecciones.inspeccionExtintor.manometro}" onLabel="Si" offLabel="No" style="width:60px" />
+                    <p:outputLabel value="Señalizacion: " style="font-weight: bolder;"/>                    
+                    
+                    <p:selectBooleanButton value="#{uiInspecciones.inspeccionExtintor.senalizacion}" onLabel="Si" offLabel="No" style="width:60px" />
+                    <p:outputLabel value="Fecha Regarga: " style="font-weight: bolder;"/>                                        
+                    <p:calendar  value="#{uiInspecciones.inspeccionExtintor.fechaRecarga}"  pattern="dd/MM/yyyy" >
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </p:calendar>
+                    
+                    <p:outputLabel value="Observacion: " style="font-weight: bolder;"/>                                        
+                    <p:inputText value="#{uiInspecciones.inspeccionExtintor.observacion}"/>
+                    
+                </p:panelGrid>
+                <br></br>   
+                <div class="ui-g">
+                            <div class="ui-g-12">
+                                <p:commandButton value="Agregar Extintor" styleClass="ui-priority-primary" 
+                                                 actionListener="#{uiInspecciones.agregarExtinguidor()}" update="In1,dtExtintores"
+                                                 />                                    
+                                
+                            </div>
+                        </div>                
+                <br></br>
+                <p:separator/>                    
+                <p:separator/>
+                <br></br>
+                
+                
+                <p:dataTable id="dtExtintores" widgetVar="extintores" var="varExtintores" value="#{uiInspecciones.extintoresList}" editable="true" style="margin-bottom:20px"
+                             selection="#{uiInspecciones.selectedExtinguidor}" selectionMode="single" rowKey="#{varExtintores.codInspeccionExtintor}"
+                             >
+                    <p:columnGroup type="header">
+                        <p:row>                              
+                            <p:column headerText="No Extintor"/>                            
+                            <p:column headerText="Area"/>
+                            <p:column headerText="Tipo"/>
+                            <p:column headerText="Capacidad"/>
+                            <p:column headerText="Cilindro"/>
+                            <p:column headerText="Boquilla"/>
+                            <p:column headerText="Manguera"/>
+                            <p:column headerText="Manometro"/>                            
+                            <p:column headerText="Señalizacion"/>
+                            <p:column headerText="Fecha Recarga"/>
+                            <p:column headerText="Observacion"/>
+                        </p:row>
+                    </p:columnGroup>                    
+                    
+                    <p:column>
+                        <h:outputText value="#{varExtintores.noExtintor}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varExtintores.area}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varExtintores.tipo}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varExtintores.capacidad}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varExtintores.cilindro ? 'SI':'NO'}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varExtintores.boquilla ? 'SI':'NO'}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varExtintores.manguera ? 'SI':'NO'}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varExtintores.manometro ? 'SI':'NO'}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varExtintores.senalizacion ? 'SI':'NO'}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varExtintores.fechaRecarga}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varExtintores.observacion}"/>
+                    </p:column>                    
+                </p:dataTable>
+                
+                <p:contextMenu for="dtExtintores">                    
+                    <p:menuitem value="Eliminar" update="dtExtintores" icon="pi pi-times" action="#{uiInspecciones.deleteExtinguidor()}"/>
+                </p:contextMenu>
+                    
+                
+            </p:panel>              
+               
+            
+            
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}" update="dialog" />
+            <p:panel style="float: right;width: 100%">
+            <ui:include src="/barra.xhtml">
+                <ui:param name="bean" value="#{uiInspecciones}"/>
+            </ui:include>
+            </p:panel>
+            
+        </h:form>
+    </ui:define>
+</ui:composition>

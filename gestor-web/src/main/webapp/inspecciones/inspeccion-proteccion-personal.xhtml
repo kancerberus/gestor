@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml">
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formInspeccionProteccionPersonal" style="font-size: small">                        
+            <p:panel id="panelInspeccionProteccionPersonal" header="FORMATO DE INSPECION ELEMENTOS PROTECCION PERSONAL"  > 
+                <p:panelGrid columns="2" style="height: 40%;float: left"  >
+                    <p:outputLabel value="CODIGO: " style="font-weight: bolder;margin-left: 8%"/>
+                    <p:outputLabel  value=" SGSST-F03" style="font-weight: bolder"/>
+                    <p:outputLabel value="Vigencia: " style="font-weight: bolder"/>
+                    <p:calendar value="#{uiInspecciones.inspeccionProteccionPersonal.vigencia}" pattern="dd/MM/yyyy" />
+                        
+                    <p:outputLabel value="Version: " style="font-weight: bolder"/>
+                    <p:outputLabel value=" 03 " style="font-weight: bolder"/>                    
+                    <p:outputLabel value="Fecha Inspeccion: " style="font-weight: bolder"/>
+                    <p:calendar value="#{uiInspecciones.inspeccionProteccionPersonal.fechaInspeccion}" pattern="dd/MM/yyyy" />
+                </p:panelGrid>                
+                <p:panelGrid columns="2" style="margin-right: 20%;height: 40%" >
+                    <p:outputLabel value="Centro de Trabajo" style="font-weight: bolder;margin-left: 8%"/>
+                    <p:outputLabel value="#{uiInspecciones.inspeccionProteccionPersonal.centroTrabajo.nombre}" style="font-weight: bolder;margin-left: 8%"/>                    
+                    <p:outputLabel value="Responsable 1: " style="font-weight: bolder;"/>
+                    <p:inputText value="#{uiInspecciones.inspeccionProteccionPersonal.responsableuno}"/>
+                    <p:outputLabel value="Responsable 2: " style="font-weight: bolder;"/>
+                    <p:inputText value="#{uiInspecciones.inspeccionProteccionPersonal.responsabledos}"/>
+                </p:panelGrid>
+                <br></br>
+                <p:separator/>
+                <p:separator/>
+                <br></br>
+                <p:panelGrid id="In1" columns="3" style="font-weight: bolder">                    
+                    <p:outputLabel for="timeS" value="Hora Inspeccion:" />
+                    <p:outputLabel value="Nombre Empleado: " style="font-weight: bolder;"/>
+                    <p:outputLabel value="Activdad Que Esta Realizando: " style="font-weight: bolder;"/>
+                    <p:calendar id="timeS"  value="#{uiInspecciones.inspeccionProteccionPersonal.hora_inspeccion}" pattern="HH:mm" timeOnly="true"  />                   
+                    <p:inputText value="#{uiInspecciones.inspeccionProteccionPersonal.nomEmpleado}" style="width: 300px"/>                    
+                    <p:inputText value="#{uiInspecciones.inspeccionProteccionPersonal.actividad}"/>
+                    
+                    <p:separator/>                    
+                    <p:outputLabel value="USO DE LOS ELEMENTOS DE PROTECCION PERSONAL" style="font-weight: bolder;font-size: 15px"/>
+                        <p:separator/>      
+                        <p:selectBooleanCheckbox value="#{uiInspecciones.inspeccionProteccionPersonal.botas}" itemLabel="Botas"/>
+                        <p:selectBooleanCheckbox value="#{uiInspecciones.inspeccionProteccionPersonal.guantes}" itemLabel="Guantes"/>
+                        <p:selectBooleanCheckbox value="#{uiInspecciones.inspeccionProteccionPersonal.tapabocas}" itemLabel="Tapa Bocas"/>
+                        <p:selectBooleanCheckbox value="#{uiInspecciones.inspeccionProteccionPersonal.gorras}" itemLabel="Gorros"/>
+                        <p:selectBooleanCheckbox value="#{uiInspecciones.inspeccionProteccionPersonal.zapatos}" itemLabel="Zapatos"/>
+                        <p:selectBooleanCheckbox value="#{uiInspecciones.inspeccionProteccionPersonal.delantal}" itemLabel="Delantal"/>
+                        
+                    <p:separator/>                    
+                    <p:separator/>                    
+                    <p:separator/> 
+
+                    <p:separator/>                    
+                    <p:outputLabel value="REPOSICION EEP" style="font-weight: bolder;font-size: 15px"/>
+                        <p:separator/>      
+                        
+                        <p:outputLabel value="Indique El EEP"/>
+                        <p:outputLabel value="Motivo"/>
+                        <p:outputLabel />                        
+                        
+                        
+                        <p:inputText value="#{uiInspecciones.inspeccionProteccionPersonal.elePP}"/>
+                        
+                        <p:inputText value="#{uiInspecciones.inspeccionProteccionPersonal.motivo}" style="width: 300px"/>
+                        <p:outputLabel />
+                        
+                    <p:separator/>                    
+                    <p:separator/>                    
+                    <p:separator/> 
+                    
+                    
+                    <p:outputLabel value="Motivo Del No Uso"/>
+                    <p:outputLabel value="Observaciones: "/>
+                    <p:outputLabel />
+                    
+                    <p:selectOneMenu value="#{uiInspecciones.inspeccionProteccionPersonal.motivoNoUso}" converter="convertidorGenerico"
+                                         style="text-align: center;width: 180px;">  
+                            <f:selectItem itemLabel="Seleccionar" itemValue="" /> 
+                            <f:selectItems value="#{uiInspecciones.motivosNoUsoList}" var="mnu" itemValue="#{mnu}" itemLabel="#{mnu.nombre}" />                            
+                    </p:selectOneMenu>
+                    <p:inputText value="#{uiInspecciones.inspeccionProteccionPersonal.observacion}" style="width: 300px"/>
+                    
+                    
+                    
+                    
+                </p:panelGrid>
+                                
+                <br></br>   
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <p:commandButton value="Agregar Inspeccion" styleClass="ui-priority-primary" update="In1, dtProteccionPersonal"
+                                         action="#{uiInspecciones.agregarInpseccionProteccionPersonal()}" />
+
+                    </div>
+                </div>                
+                <br></br>
+                <p:separator/>                    
+                <p:separator/>
+                <br></br>     
+                     
+                <p:dataTable id="dtProteccionPersonal" widgetVar="dtElBotiquin" var="varPPersonal" value="#{uiInspecciones.inspeccionProteccionPersonalList}" editable="true" style="margin-bottom:20px"
+                             selection="#{uiInspecciones.selectedProteccionPersonal}" selectionMode="single" rowKey="#{varPPersonal.codInsProteccionPersonal}"
+                             >
+                    
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="2" headerText="Fecha Inspeccion" />
+                            <p:column rowspan="2" headerText="Hora" />
+                            <p:column rowspan="2" headerText="Nombre Del Empleado" />
+                            <p:column rowspan="2" headerText="Actividad Que Esta Realizando" />
+                            <p:column colspan="6" headerText="Uso De Elementos Proteccion Personal" />
+                            <p:column colspan="2" headerText="Reposicion EPP" />
+                            <p:column rowspan="2" headerText="Motivo Del No Uso" />
+                            <p:column rowspan="2" headerText="Observaciones" />
+                        </p:row>
+                        <p:row>                            
+                            <p:column headerText="Botas" />
+                            <p:column headerText="Guantes" />
+                            <p:column headerText="Tapabocas" />
+                            <p:column headerText="Gorros" />
+                            <p:column headerText="Zapatos" />
+                            <p:column headerText="Delantal" />                        
+                            <p:column headerText="Indique el EPP" />                           
+                            <p:column headerText="Motivo" />
+                        </p:row>
+                    </p:columnGroup>
+                    
+                    <p:column>
+                        <h:outputText value="#{varPPersonal.fechaInspeccion}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPPersonal.hora_inspeccion}">
+                            <f:convertDateTime pattern="HH:MM:"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPPersonal.nomEmpleado}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPPersonal.actividad}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPPersonal.botas ? 'SI':'NO'}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPPersonal.guantes ? 'SI':'NO'}"/>
+                    </p:column>          
+                    <p:column>
+                        <h:outputText value="#{varPPersonal.tapabocas ? 'SI':'NO'}"/>
+                    </p:column>          
+                    <p:column>
+                        <h:outputText value="#{varPPersonal.gorras ? 'SI':'NO'}"/>
+                    </p:column>          
+                    <p:column>
+                        <h:outputText value="#{varPPersonal.zapatos ? 'SI':'NO'}"/>
+                    </p:column>          
+                    <p:column>
+                        <h:outputText value="#{varPPersonal.delantal ? 'SI':'NO'}"/>
+                    </p:column>          
+                    <p:column>
+                        <h:outputText value="#{varPPersonal.elePP}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPPersonal.motivo}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPPersonal.motivoNoUso.nombre}"/>                        
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varPPersonal.observacion}"/>
+                    </p:column>
+                                    
+                </p:dataTable>
+                
+                <p:contextMenu for="dtProteccionPersonal">                    
+                    <p:menuitem value="Eliminar" update="dtProteccionPersonal" icon="pi pi-times" action="#{uiInspecciones.deleteExtinguidor()}"/>
+                </p:contextMenu>
+                
+                
+                
+            </p:panel>              
+               
+            
+            
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}" update="dialog" />
+            <p:panel style="float: right;width: 100%">
+            <ui:include src="/barra.xhtml">
+                <ui:param name="bean" value="#{uiInspecciones}"/>
+            </ui:include>
+            </p:panel>
+            
+        </h:form>
+    </ui:define>
+</ui:composition>

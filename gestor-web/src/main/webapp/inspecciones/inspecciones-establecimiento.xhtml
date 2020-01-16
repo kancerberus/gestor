@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml">
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data"  id="formInspeccionesEstablecimiento" style="font-size: small;">
+            <h2>INSPECCIONES </h2>
+            <h3>EMPRESA: <p:outputLabel style="font-family: bolder"  value="#{evaluacion.establecimiento.nombre}"/></h3>
+            <h:panelGroup rendered="#{uiInspecciones.filtroActivo}">
+                <p:separator style="height: 3px"/>
+                <p:panelGrid columns="3" styleClass="letra-xx-small-centro" style="font-size: xx-small">                               
+                
+                <p:commandButton icon="ui-icon-plus" value="Crear Inspeccion" style="margin: auto auto; margin-left: 55%;width: 210px;height: 30px; border-radius: 10px;"
+                                 action="#{uiInspecciones.dialogoCrearInspeccion()}" update="formInspeccionesEstablecimiento"/>                
+                                 />
+                </p:panelGrid>
+                <p:separator style="height: 3px"/>
+                
+            </h:panelGroup> 
+            
+            <p:dataTable  value="#{uiInspecciones.relInspeccionesCentroTrabajoList}" var="varInspeccionesEstablecimiento" emptyMessage="No hay Inspecciones generados."
+                          widgetVar="varInspeccionesEstablecimiento" style="width: auto" sortBy="#{varInspeccionesEstablecimiento.centroTrabajo.nombre}" expandableRowGroups="true"
+                              rowStyleClass="letra-xx-small-centro" styleClass="letra-xx-small-centro"
+                              rowHover="true">
+                    <p:columnGroup type="header">
+                        <p:row>  
+                            <p:column  headerText="Opciones" />                            
+                            <p:column headerText="Inspeccion" />                                                                                          
+                        </p:row>
+                    </p:columnGroup>
+                
+                <p:headerRow>
+                    <p:column>
+                        <h:outputText value="#{varInspeccionesEstablecimiento.centroTrabajo.nombre}"/>
+                    </p:column>
+                </p:headerRow>
+
+                    <p:column>
+                        <p:commandButton icon="ui-icon-pencil" title="Administrar Inspecciones" 
+                                         update="formInspeccionesEstablecimiento"
+                                         action="#{uiInspecciones.subirItemInspeccion()}">                            
+                        </p:commandButton>                        
+                        <p:commandButton label="Tareas" value="Tareas" title="Crear Plan Accion" action="#{uiInspecciones}" update="formInspeccionesEstablecimiento" >
+                        </p:commandButton>                        
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varInspeccionesEstablecimiento.inspeccionesTipo.nombre}"/>
+                    </p:column>
+                </p:dataTable>
+            <p:separator/>
+            
+            
+
+            <style type="text/css">
+                .white-button.ui-button.ui-state-default {
+                    background-color: #ffffff;
+                    color: #222222;
+                    border-color: #d6d6d6;
+                }
+
+                .white-button.ui-button.ui-state-default:enabled:hover, 
+                .white-button.ui-button.ui-state-default:focus {
+                    background-color: #f2f2f2;
+                    border-color: #ccc;
+                    color: #373a3c;
+                }
+
+                .green-button.ui-button.ui-state-default {
+                    background-color: #5cb85c;
+                    border-color: #5cb85c;
+                    color: #fff;
+                }
+
+                .green-button.ui-button.ui-state-default:enabled:hover, 
+                .green-button.ui-button.ui-state-default:focus {
+                    background-color: #4cae4c;
+                    border-color: #5cb85c;
+                }
+
+                .red-button.ui-button.ui-state-default {
+                    background-color: #d9534f;
+                    border-color: #d9534f;
+                    color: #fff;
+                }
+
+                .red-button.ui-button.ui-state-default:enabled:hover, 
+                .red-button.ui-button.ui-state-default:focus {
+                    background-color: #d43f3a;
+                    border-color: #d9534f;
+                }
+
+            </style>
+
+
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}" width="#{dialogo.width}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}"  update="dialog" />
+         
+        </h:form>
+
+    </ui:define>
+</ui:composition>

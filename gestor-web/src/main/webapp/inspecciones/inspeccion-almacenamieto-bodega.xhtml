@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml">
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formInspeccionAlmacenBodega" style="font-size: small">                        
+            <p:panel id="panelInspeccionAlmacenBodega" header="FORMATO DE INSPECIONES DE ALMACENAMIETO EN BODEGA"  > 
+                <p:panelGrid columns="2" style="height: 40%;float: left"  >
+                    <p:outputLabel value="CODIGO: " style="font-weight: bolder;margin-left: 8%"/>
+                    <p:outputLabel  value=" SGSST-F06" style="font-weight: bolder"/>
+                    <p:outputLabel value="FECHA INSPECCION " style="font-weight: bolder"/>
+                    <p:calendar value="#{uiInspecciones.inspeccionAlmacenBodega.fechaInspeccion}" pattern="dd/MM/yyyy" />
+                        
+                    <p:outputLabel value="Version: " style="font-weight: bolder"/>
+                    <p:outputLabel value=" 02 " style="font-weight: bolder"/>                         
+                    
+                </p:panelGrid>                
+                <p:panelGrid columns="2" style="margin-right: 20%;height: 40%" >
+                    <p:outputLabel value="Centro de Trabajo" style="font-weight: bolder;margin-left: 8%"/>
+                    <p:outputLabel value="#{uiInspecciones.inspeccionAlmacenBodega.centroTrabajo.nombre}" style="font-weight: bolder;margin-left: 8%"/>                    
+                    <p:outputLabel value="Responsable 1: " style="font-weight: bolder;"/>
+                    <p:inputText value="#{uiInspecciones.inspeccionAlmacenBodega.responsableuno}"/>
+                    <p:outputLabel value="Responsable 2: " style="font-weight: bolder;"/>
+                    <p:inputText value="#{uiInspecciones.inspeccionAlmacenBodega.responsabledos}"/>
+                </p:panelGrid>
+                <br></br>   
+                <p:separator/>
+                <p:separator/>
+                <br></br>
+                <p:panelGrid id="In1" columns="6" style="font-weight: bolder">
+                    <p:outputLabel value="Metrica:"/>                    
+                    <p:selectOneMenu id="car" value="#{uiInspecciones.inspeccionAlmacenBodega.almBodegaMetricas}" converter="convertidorGenerico" >
+                        <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                        <f:selectItems value="#{uiInspecciones.almacenBodegaMetricas}" var="alB" itemLabel="#{alB.nombre}" />                                                
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel value="Cumple:"/>
+                    <p:selectBooleanButton id="va1" value="#{uiInspecciones.inspeccionAlmacenBodega.cumple}" onLabel="Si" offLabel="No" style="width:60px" />
+                    
+                    <p:outputLabel value="Valoracion"/>
+                    <p:selectOneMenu id="console" value="#{uiInspecciones.inspeccionAlmacenBodega.valoracion}" style="width:125px">
+                        <f:selectItem itemLabel="BUENO" itemValue="BUENO" />
+                        <f:selectItem itemLabel="MALO" itemValue="MALO" />
+                        <f:selectItem itemLabel="REGULAR" itemValue="REGULAR" />                                                
+                    </p:selectOneMenu>
+                </p:panelGrid>
+                
+                <br></br>                   
+                <p:outputLabel value="Observacion: " style="font-weight: bolder"/>
+                <p:inputText id="ob1" value="#{uiInspecciones.inspeccionAlmacenBodega.observacion}" style="width: 400px"/>
+                
+                <br></br>   
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <p:commandButton value="Calificar" styleClass="ui-priority-primary" update="dtCalAlmacenBodega,In1,ob1"
+                                         action="#{uiInspecciones.calificarAlmacenBodega()}" />
+
+                    </div>
+                </div>                
+                <br></br>
+                <p:separator/>                    
+                <p:separator/>
+                <br></br>     
+                <p:dataTable id="dtCalAlmacenBodega" widgetVar="dtCalAlmacenBodega" var="varMetrica" value="#{uiInspecciones.inspeccionAlmacenBodegaList}" editable="true" style="margin-bottom:20px"
+                             selection="#{uiInspecciones.selectedAlmacenBodega}" selectionMode="single" rowKey="#{varMetrica.codInspeccionAlmacenBodega}"
+                             >
+                    <p:columnGroup type="header">
+                        <p:row>                              
+                            <p:column headerText="Bodega"/>                            
+                            <p:column headerText="Cumple"/>
+                            <p:column headerText="Valoracion"/>                            
+                            <p:column headerText="Observacion"/>
+                        </p:row>
+                    </p:columnGroup>                    
+                    
+                    <p:column>
+                        <h:outputText value="#{varMetrica.almBodegaMetricas.nombre}"/>
+                    </p:column>                    
+                    <p:column>
+                        <h:outputText value="#{varMetrica.cumple  ? 'SI':'NO'}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varMetrica.valoracion}"/>
+                    </p:column>                    
+                    <p:column>
+                        <h:outputText value="#{varMetrica.observacion}"/>
+                    </p:column>                    
+                </p:dataTable>
+                
+                <p:contextMenu for="dtCalAlmacenBodega">                    
+                    <p:menuitem value="Eliminar" update="dtCalAlmacenBodega" icon="pi pi-times" action="#{uiInspecciones.deleteMetrica()}"/>
+                </p:contextMenu>
+            </p:panel>              
+               
+            
+            
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}" update="dialog" />
+            <p:panel style="float: right;width: 100%">
+            <ui:include src="/barra.xhtml">
+                <ui:param name="bean" value="#{uiInspecciones}"/>
+            </ui:include>
+            </p:panel>
+            
+        </h:form>
+    </ui:define>
+</ui:composition>

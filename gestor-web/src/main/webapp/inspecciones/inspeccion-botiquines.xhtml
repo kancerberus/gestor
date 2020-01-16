@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml">
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data" id="formInspeccionBotiquines" style="font-size: small">                        
+            <p:panel id="panelInspeccionBotiquines" header="FORMATO DE INSPECIONES DE BOTIQUINES"  > 
+                <p:panelGrid columns="2" style="height: 40%;float: left"  >
+                    <p:outputLabel value="CODIGO: " style="font-weight: bolder;margin-left: 8%"/>
+                    <p:outputLabel  value=" SGSST-F04" style="font-weight: bolder"/>
+                    <p:outputLabel value="FECHA INSPECCION " style="font-weight: bolder"/>
+                    <p:calendar value="#{uiInspecciones.inspeccionBotiquin.fechaInspeccion}" pattern="dd/MM/yyyy" />
+                        
+                    <p:outputLabel value="Version: " style="font-weight: bolder"/>
+                    <p:outputLabel value=" 02 " style="font-weight: bolder"/>     
+                    <p:outputLabel value="Botiquin: " style="font-weight: bolder"/>
+                    
+                    <p:selectOneRadio id="cons" value="#{uiInspecciones.inspeccionBotiquin.botPortatil}" >
+                        <f:selectItem itemLabel="Fijo" itemValue="true" />
+                        <f:selectItem itemLabel="Portatil" itemValue="false" />                        
+                    </p:selectOneRadio>
+                    
+                    
+                </p:panelGrid>                
+                <p:panelGrid columns="2" style="margin-right: 20%;height: 40%" >
+                    <p:outputLabel value="Centro de Trabajo" style="font-weight: bolder;margin-left: 8%"/>
+                    <p:outputLabel value="#{uiInspecciones.inspeccionBotiquin.centroTrabajo.nombre}" style="font-weight: bolder;margin-left: 8%"/>                    
+                    <p:outputLabel value="Responsable 1: " style="font-weight: bolder;"/>
+                    <p:inputText value="#{uiInspecciones.inspeccionBotiquin.responsableuno}"/>
+                    <p:outputLabel value="Responsable 2: " style="font-weight: bolder;"/>
+                    <p:inputText value="#{uiInspecciones.inspeccionBotiquin.responsabledos}"/>
+                </p:panelGrid>
+                <br></br>   
+                <p:separator/>
+                <p:separator/>
+                <br></br>
+                <p:panelGrid id="In1" columns="6" style="font-weight: bolder">
+                    <p:outputLabel value="Elementos Botiquin:"/>                    
+                    <p:selectOneMenu id="car" value="#{uiInspecciones.inspeccionBotiquin.elementosBotiquin}" converter="convertidorGenerico" >
+                        <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                        <f:selectItems value="#{uiInspecciones.elementosBotiquinListCombo}" var="ele" itemLabel="#{ele.nombre}" />                        
+                        <p:ajax update="unidades" />
+                    </p:selectOneMenu>
+                        
+                        
+                    
+                    <p:outputLabel value="Unidades:"/>
+                    <h:outputText id="unidades" value="#{uiInspecciones.inspeccionBotiquin.elementosBotiquin.unidades}"/>
+                    
+                    <p:outputLabel value="Cantidad Requerida"/>
+                    <p:inputText value="#{uiInspecciones.inspeccionBotiquin.cantidadReq}"/>
+                    
+                    <p:outputLabel value="Cantidad Existente"/>
+                    <p:inputText value="#{uiInspecciones.inspeccionBotiquin.cantidadExis}"/>
+                    
+                    <p:outputLabel value="Fecha Vencimiento"/>
+                    <p:calendar value="#{uiInspecciones.inspeccionBotiquin.fvenceEle}"/>                    
+                    
+                    <p:outputLabel value="Observacion"/>
+                    <p:inputText value="#{uiInspecciones.inspeccionBotiquin.observacion}"/>
+                </p:panelGrid>
+                <br></br>   
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <p:commandButton value="Agregar Elemento" styleClass="ui-priority-primary" update="dtElBotiquin,In1"
+                                         action="#{uiInspecciones.agregarElementoBotiquin()}" />
+
+                    </div>
+                </div>                
+                <br></br>
+                <p:separator/>                    
+                <p:separator/>
+                <br></br>     
+                <p:dataTable id="dtElBotiquin" widgetVar="dtElBotiquin" var="varElementos" value="#{uiInspecciones.elementosBotiquinList}" editable="true" style="margin-bottom:20px"
+                             selection="#{uiInspecciones.selectedBotiquin}" selectionMode="single" rowKey="#{varElementos.codInspeccionBotiquin}"
+                             >
+                    <p:columnGroup type="header">
+                        <p:row>                              
+                            <p:column headerText="Elemento"/>                            
+                            <p:column headerText="Unidades"/>
+                            <p:column headerText="Cantidad Requerida"/>
+                            <p:column headerText="Cantidad Existente"/>
+                            <p:column headerText="Fecha Vencimiento"/>                            
+                            <p:column headerText="Observacion"/>
+                        </p:row>
+                    </p:columnGroup>                    
+                    
+                    <p:column>
+                        <h:outputText value="#{varElementos.elementosBotiquin.nombre}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varElementos.elementosBotiquin.unidades}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varElementos.cantidadReq}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varElementos.cantidadExis}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varElementos.fvenceEle}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{varElementos.observacion}"/>
+                    </p:column>                    
+                </p:dataTable>
+                
+                <p:contextMenu for="dtElBotiquin">                    
+                    <p:menuitem value="Eliminar" update="dtElBotiquin" icon="pi pi-times" action="#{uiInspecciones.deleteElemBotiquin()}"/>
+                </p:contextMenu>
+            </p:panel>              
+               
+            
+            
+            <p:dialog id="dialog" widgetVar="dialog" header="#{dialogo.header}" showEffect="#{dialogo.effect}" hideEffect="#{dialogo.effect}"
+                      onHide="limpiarModal()">
+                <ui:include src="#{dialogo.src}"/>
+            </p:dialog>
+            <p:remoteCommand name="limpiarModal" action="#{uiSesion.limpiarDialogo()}" update="dialog" />
+            <p:panel style="float: right;width: 100%">
+            <ui:include src="/barra.xhtml">
+                <ui:param name="bean" value="#{uiInspecciones}"/>
+            </ui:include>
+            </p:panel>
+            
+        </h:form>
+    </ui:define>
+</ui:composition>
