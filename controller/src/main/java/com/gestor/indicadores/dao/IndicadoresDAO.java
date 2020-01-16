@@ -187,7 +187,7 @@ public class IndicadoresDAO {
             StringBuilder sql1 = new StringBuilder(
                     "SELECT count (cod_plan_detalle) total " +
                     "FROM gestor.evaluacion_plan_accion_detalle EPAD  " +
-                    condicion+" AND estado<>'E' " 
+                    condicion+" AND estado<>'E' and cod_tipo_plan_accion IN ('0','1','2')  " 
                     
             );
             rs = consulta.ejecutar(sql1);
@@ -198,7 +198,7 @@ public class IndicadoresDAO {
             StringBuilder sql = new StringBuilder(
                     "SELECT count (cod_plan_detalle) cantidad, estado, fecha_plazo " +
                     "FROM gestor.evaluacion_plan_accion_detalle EPAD " +
-                    condicion+" AND estado<>'E' " +
+                    condicion+" AND estado<>'E' and cod_tipo_plan_accion IN ('0','1','2')  " +
                     "GROUP BY estado,fecha_plazo "
             );
             rs = consulta.ejecutar(sql);

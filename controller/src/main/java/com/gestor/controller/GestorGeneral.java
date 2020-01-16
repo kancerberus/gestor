@@ -40,6 +40,10 @@ public class GestorGeneral extends Gestor implements Serializable {
     public static String ANALISIS_VULNERABILIDAD_COD_REL_ANALISIS_VUL_CUESTIONARIO_SEQ= "plemergencias.cod_rel_analisis_vul_cuestionario_seq";
     public static String ANALISIS_VULNERABILIDAD_RESULTADOS_COD_ANALISIS_VUL_RESULTADOS_SEQ= "plemergencias.cod_analisis_vul_resultado_seq";
     public static String DETERMINACION_NIVEL_RIESGO_COD_DET_NIVEL_RIESGO_SEQ = "plemergencias.determinacion_nivel_riesgo_cod_det_nivel_riesgo_seq";
+    public static String INSPECCION_EXTINTORES_COD_INSPECCION_EXTINTOR_SEQ = "inspecciones.inspeccion_extintor_cod_inspeccion_extintor_seq";
+    public static String INSPECCION_BOTIQUINES_COD_INSPECCION_BOTIQUIN_SEQ = "inspecciones.inspeccion_botiquines_cod_inspeccion_botiquin_seq";
+    public static String INSPECCION_ALMACEN_BODEGA_COD_INSPECCION_ALMACEN_BODEGA_SEQ = "inspecciones.inspeccion_almacen_bodega_cod_inspeccion_almacen_bodega_seq";
+    public static String INSPECCION_PROTECCION_PERSONAL_COD_INSPECCION_PROTECCION_PERSONAL_SEQ = "inspecciones.inspeccion_proteccion_personal_cod_inspeccion_proteccion_personal_seq";
     
     public static boolean VALIDA_PK = true;
     public static boolean NO_VALIDA_PK = false;
